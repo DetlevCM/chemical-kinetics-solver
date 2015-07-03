@@ -40,8 +40,6 @@ using std::istringstream;
 
 
 #include <Structs.h>
-#include <Namespaces.hpp>
-#include <Global_Variables.hpp>
 
 // Definitions of my functions
 #include <Get_Input.h>

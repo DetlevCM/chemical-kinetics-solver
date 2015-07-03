@@ -18,8 +18,7 @@ void Calculate_Rate_Constant(
 		vector< double >& ,
 		const double ,
 		const vector< ReactionParameter >& ,
-		//const vector< vector< double > >& ,
-		const vector< CalculatedThermodynamics >& ,
+		const vector< vector< double > >& ,
 		const vector< TrackSpecies >& ,
 		const vector< double >&
 );
@@ -38,8 +37,7 @@ void CalculateReactionRates(
 
 
 void Calculate_Thermodynamics(
-		//vector< vector< double > >& ,
-		vector< CalculatedThermodynamics >& ,
+		vector< vector< double > >& ,
 		const double& ,
 		const vector< ThermodynamicData >&
 );

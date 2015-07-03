@@ -23,8 +23,7 @@ void Calculate_Rate_Constant(
 		vector< double >& Kr,
 		const double Temperature,
 		const vector< ReactionParameter >& ReactionParameters,
-		//const vector< vector< double > >& CalculatedThermo,
-		const vector< CalculatedThermodynamics >& CalculatedThermo,
+		const vector< vector< double > >& CalculatedThermo,
 		const vector< TrackSpecies >& SpeciesAll,
 		const vector< double >& Delta_N
 )
@@ -63,12 +62,12 @@ void Calculate_Rate_Constant(
 
 		delta_H[SpeciesAll[i].ReactionID] =
 				delta_H[SpeciesAll[i].ReactionID] +
-				CalculatedThermo[SpeciesAll[i].SpeciesID].Hf *
+				CalculatedThermo[SpeciesAll[i].SpeciesID][0] *
 				SpeciesAll[i].coefficient;
 
 		delta_S[SpeciesAll[i].ReactionID] =
 				delta_S[SpeciesAll[i].ReactionID] +
-				CalculatedThermo[SpeciesAll[i].SpeciesID].S *
+				CalculatedThermo[SpeciesAll[i].SpeciesID][3] *
 				SpeciesAll[i].coefficient;
 	}
 
