@@ -21,15 +21,21 @@ int main(int argc, char* argv[])
 
 	// Add a switch to have regular ouput to a log file or debug to command line
 	// http://stackoverflow.com/questions/12774207/fastest-way-to-check-if-a-file-exist-using-standard-c-c11-c
-	ifstream file_exists("debug");
+	ifstream debug_file_exists("debug");
 	// File does not exist, so redirect to log file
-			// http://stackoverflow.com/questions/10150468/how-to-redirect-cin-and-cout-to-files
-			std::ofstream out("log.txt");
-	if (!file_exists.good()){
-		//std::streambuf *coutbuf = std::cout.rdbuf(); //save old buf
+	// http://stackoverflow.com/questions/10150468/how-to-redirect-cin-and-cout-to-files
+	std::ofstream out("log.txt");
+	std::streambuf *coutbuf = std::cout.rdbuf(); //save old buffer
+	if (!debug_file_exists.good()){
 		std::cout.rdbuf(out.rdbuf());
+	}//*
+	else
+	{
+		std::cout.rdbuf(coutbuf);
 	}
-	file_exists.close();
+	//*/
+	debug_file_exists.close();
+
 
 
 
@@ -245,6 +251,8 @@ int main(int argc, char* argv[])
 
 	}
 
+	out.close(); // close output stream
+	std::cout.rdbuf(coutbuf); // reassign buffer to avoid crash
 	// And it is done. Return 0 as the code has finished.
 	return 0;
 }

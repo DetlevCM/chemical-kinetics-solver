@@ -65,8 +65,8 @@ vector< int > Map_Species_Classes(
 	NumberOfClasses = CountUnmappedSpecies + BiggestClass; // sum of unmapped species and the number of classes
 
 	cout << "The Mapping consists of " << CountUnmappedSpecies << " unmapped Species, and "
-		 << BiggestClass << "dedicated class mappings, resulting in " << NumberOfClasses
-		 << "Species Classes. \n";
+		 << BiggestClass << " dedicated class mappings, resulting in " << NumberOfClasses
+		 << " Species Classes. \n";
 
 	// Classed species have a number, unclassed species get identified via a negative ID:
 	// This will only work if I coded the rest well as position 0 drops out
