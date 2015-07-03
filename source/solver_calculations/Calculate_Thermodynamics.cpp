@@ -21,7 +21,8 @@
  */
 
 void Calculate_Thermodynamics(
-		vector< vector< double > >& CalculatedThermo,
+		//vector< vector< double > >& CalculatedThermo,
+		vector< CalculatedThermodynamics >& CalculatedThermo,
 		const double& CurrentTemp,
 		const vector< ThermodynamicData >& Thermodynamics
 		)
@@ -51,7 +52,7 @@ void Calculate_Thermodynamics(
 
 
 			//Hf
-			CalculatedThermo[i][0] = R*CurrentTemp*(
+			CalculatedThermo[i].Hf = R*CurrentTemp*(
 				Thermodynamics[i].NasaLow1 +
 				Thermodynamics[i].NasaLow2*CurrentTemp*0.5 +
 				Thermodynamics[i].NasaLow3*CurrentTemp2/3 +
@@ -60,7 +61,7 @@ void Calculate_Thermodynamics(
 				Thermodynamics[i].NasaLow6/CurrentTemp);
 
 			//Cp
-			CalculatedThermo[i][1] = R*(
+			CalculatedThermo[i].Cp = R*(
 				Thermodynamics[i].NasaLow1+
 				Thermodynamics[i].NasaLow2*CurrentTemp +
 				Thermodynamics[i].NasaLow3*CurrentTemp2 +
@@ -68,10 +69,10 @@ void Calculate_Thermodynamics(
 				Thermodynamics[i].NasaLow5*CurrentTemp4);
 
 			//Cv = Cp - R;
-			CalculatedThermo[i][2] = CalculatedThermo[i][1] - R;//Cv;
+			CalculatedThermo[i].Cp = CalculatedThermo[i].Cp - R;//Cv;
 
 			//S
-			CalculatedThermo[i][3] = R*(
+			CalculatedThermo[i].S = R*(
 				Thermodynamics[i].NasaLow1*logCurrentTemp +
 				Thermodynamics[i].NasaLow2*CurrentTemp +
 				Thermodynamics[i].NasaLow3*CurrentTemp2*0.5 +
@@ -83,7 +84,7 @@ void Calculate_Thermodynamics(
 		else
 		{
 			//Hf =
-			CalculatedThermo[i][0] = R*CurrentTemp*(
+			CalculatedThermo[i].Hf = R*CurrentTemp*(
 				Thermodynamics[i].NasaHigh1+
 				Thermodynamics[i].NasaHigh2*CurrentTemp*0.5 +
 				Thermodynamics[i].NasaHigh3*CurrentTemp2/3 +
@@ -92,7 +93,7 @@ void Calculate_Thermodynamics(
 				Thermodynamics[i].NasaHigh6/CurrentTemp);
 
 			//Cp
-			CalculatedThermo[i][1] = R*(
+			CalculatedThermo[i].Cp = R*(
 				Thermodynamics[i].NasaHigh1+
 				Thermodynamics[i].NasaHigh2*CurrentTemp +
 				Thermodynamics[i].NasaHigh3*CurrentTemp2 +
@@ -100,10 +101,10 @@ void Calculate_Thermodynamics(
 				Thermodynamics[i].NasaHigh5*CurrentTemp4);
 
 			//Cv = Cp - R;
-			CalculatedThermo[i][2] = CalculatedThermo[i][1] - R;
+			CalculatedThermo[i].Cv = CalculatedThermo[i].Cp - R;
 
 			//S
-			CalculatedThermo[i][3] = R*(
+			CalculatedThermo[i].S = R*(
 				Thermodynamics[i].NasaHigh1*logCurrentTemp +
 				Thermodynamics[i].NasaHigh2*CurrentTemp +
 				Thermodynamics[i].NasaHigh3*CurrentTemp2*0.5 +

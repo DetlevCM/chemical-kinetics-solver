@@ -35,7 +35,7 @@ vector< bool > Read_Kill_List(
 	// first I need to read in my species to remove
 	if (InputFile.is_open())
 	{
-		cout << "Let us start the cull! Killing selected species \n";
+		cout << "Killing selected species\n";
 
 		while (InputFile.good())
 		{
@@ -178,7 +178,7 @@ void Reduce_Species_Thermo_Mechanism(
 	Thermodynamics.clear();
 
 
-	cout << "The Scheme now contains the following counts \n" <<
+	cout << "\nThe Scheme now contains the following counts\n" <<
 			"Species: " << NewSpecies.size() << "\n" <<
 			"Thermodynamic Entries: " << NewThermodynamics.size() << "\n" <<
 			"Reactions: " << NewReactions.size() << "\n\n";

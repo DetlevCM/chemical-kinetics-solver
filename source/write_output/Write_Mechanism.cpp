@@ -43,7 +43,7 @@ void WriteReactions(
 	}
 	else cout << "Unable to open file";
 
-	printf("File %s written. \n",filename.c_str());
+	cout << "File " << filename << " written.\n";
 }
 
 

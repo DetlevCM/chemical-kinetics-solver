@@ -10,7 +10,7 @@
 void Write_Stoichiometric_Matrix_For_Opt
 (
 		string filename ,
-		const vector< string >& Species,
+		//const vector< string >& Species,
 		const vector< SingleReactionData >& Reactions
 )
 {

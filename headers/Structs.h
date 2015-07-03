@@ -23,9 +23,9 @@ struct JacobianSpecies{
 };
 
 struct JacobianData {
-	int ColumnWiseArrayPosition;
 	bool IsForward;
 	bool IsProduction;
+	int ColumnWiseArrayPosition;
 	int ReactionID;
 	double coefficient;
 	vector< JacobianSpecies > Species;
@@ -34,22 +34,22 @@ struct JacobianData {
 
 
 struct SingleReactionData {
-	vector<double> Reactants;
-	vector<double> Products;
+	bool Reversible;
+	bool IsDuplicate;
 	double paramA;
 	double paramN;
 	double paramEa;
-	bool Reversible;
-	bool IsDuplicate;
+	vector<double> Reactants;
+	vector<double> Products;
 };
 //*/
 
 //*
 struct ReactionParameter {
+	bool Reversible;
 	double paramA;
 	double paramN;
 	double paramEa;
-	bool Reversible;
 };
 //*/
 
@@ -70,6 +70,20 @@ struct InitSpecies {
 	double SpecConc;
 };
 
+
+struct ConstantInitRHSODE {
+	bool EnforceStability;
+	bool PetroOxy;
+	double temperature;
+	double PetroOxyTemperatureRise;
+};
+
+struct CalculatedThermodynamics {
+	double Hf;
+	double Cp;
+	double Cv;
+	double S;
+};
 
 struct InitParam {
 	bool irrev; // shoud be bool
@@ -118,13 +132,13 @@ struct InitParam {
 
 
 struct PetroOxyCalculation {
+	bool HenryLawDiffusionLimitSet;
 	double SampleSize ; // Old 0
 	double HeadSpaceGas ; // Old 4
 	double HeadSpaceGasMol; // Old 6
 	double HenryConstantk; // Old 10
 	double HeadSpaceGasPressure; // Old 7
 	double HeadSpaceSolventComponentPressure; // Old 8
-	bool HenryLawDiffusionLimitSet;
 	double HenryLawDiffusionLimit;
 };
 

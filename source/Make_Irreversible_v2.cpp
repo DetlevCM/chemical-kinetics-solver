@@ -55,11 +55,13 @@ vector< SingleReactionData > Make_Irreversible(
 	// store the k for every reaction and every temperature
 
 	//cout << "checkpoint 1 \n";
-	vector< vector< double > > CalculatedThermo(Number_Species);
-	for(i=0;i<Number_Species;i++)
+	//vector< vector< double > > CalculatedThermo(Number_Species);
+	vector< CalculatedThermodynamics > CalculatedThermo(Number_Species);
+
+	/*for(i=0;i<Number_Species;i++)
 	{
 		CalculatedThermo[i].resize(4);
-	}
+	}//*/
 	vector< double > Kf(Number_Reactions) ;
 	vector< double > Kr(Number_Reactions) ;
 

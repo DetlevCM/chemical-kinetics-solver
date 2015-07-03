@@ -73,7 +73,7 @@ void WriteReactions(
 
 void Write_Stoichiometric_Matrix_For_Opt(
 		string ,
-		const vector< string >& ,
+//		const vector< string >& ,
 		const vector< SingleReactionData >&
 );
 

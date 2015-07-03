@@ -35,7 +35,7 @@ void WriteSpecies(string filename ,const vector< string >& Species)
 	}
 	else cout << "Unable to open file";
 
-	printf("File %s written. \n",filename.c_str());
+	cout << "File " << filename << " written.\n";
 
 }
 

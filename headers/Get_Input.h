@@ -13,7 +13,8 @@
 #define INPUT_FUNCTIONS_
 
 
-void Handle_Mechanism_Input(
+//void Handle_Mechanism_Input(
+bool Handle_Mechanism_Input(
 		string ,
 		vector< string >& ,
 		vector< ThermodynamicData >& ,

@@ -19,6 +19,7 @@
 // Pass vector by reference as input needs not be changed
 
 
+
 struct SpeciesWithCoefficient
 {
 	int SpeciesID;
@@ -32,14 +33,13 @@ SpeciesWithCoefficient Return_Species_With_Coefficient(string  , const vector< s
 
 vector< SingleReactionData > Read_Reaction_Matrix(string filename, const vector< string >& Species){
 
-	//vector< vector< vector< double > > > Get_Reactions(string filename, const vector< string >& Species)
+
 
 	/* Struct Reaction Matrix
 	 * 1) Vector Ractants
 	 * 2) Vectro Reactants
 	 * 3) boolean reversible, doubles for A, n, Ea
 	 */
-
 
 
 	vector< SingleReactionData > Reaction_Matrix;

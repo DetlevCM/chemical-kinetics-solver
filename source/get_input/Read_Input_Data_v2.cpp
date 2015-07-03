@@ -101,7 +101,6 @@ void Read_Input_Data_v2(
 		string str;
 		size_t found;
 
-		//printf("Line In: %s \n\n",line1.c_str());
 
 		// while the file is open
 		while (Input_Data.good())
@@ -235,7 +234,6 @@ void Read_Input_Data_v2(
 					line1.clear();
 					delete[] cstr;
 					SetupParam.ReduceReactions = LineIn[0];
-					//printf("Test - Temperature is: %.3e \n",LineIn[0]);
 				}
 
 
@@ -260,7 +258,6 @@ void Read_Input_Data_v2(
 						line1.clear();
 						delete[] cstr;
 						SetupParam.temperature = LineIn[0];
-						//printf("Test - Temperature is: %.3e \n",LineIn[0]);
 					}
 				}
 
@@ -283,7 +280,6 @@ void Read_Input_Data_v2(
 					line1.clear();
 					delete[] cstr;
 					//SetupParam.RatesAnalysisAtTimeData = LineIn;
-					//printf("Test - Temperature is: %.3e \n",LineIn[0]);
 				}
 
 
@@ -303,7 +299,6 @@ void Read_Input_Data_v2(
 					line1.clear();
 					delete[] cstr;
 					SetupParam.hm = LineIn[0];
-					//printf("Test - Temperature is: %.3e \n",LineIn[0]);
 				}
 
 				found = line1.find("initialh");
@@ -322,7 +317,6 @@ void Read_Input_Data_v2(
 					line1.clear();
 					delete[] cstr;
 					SetupParam.h = LineIn[0];
-					//printf("Test - Temperature is: %.3e \n",LineIn[0]);
 				}
 
 
@@ -343,7 +337,6 @@ void Read_Input_Data_v2(
 					delete[] cstr;
 					SetupParam.rtol = LineIn[0];
 					SetupParam.threshold = LineIn[1];
-					//printf("Test - Tolerance is: %.3e and Threshhold is: %.3e \n",LineIn[0],LineIn[1]);
 				}
 
 				found = line1.find("Threshold");
@@ -361,7 +354,6 @@ void Read_Input_Data_v2(
 					line1.clear();
 					delete[] cstr;
 					SetupParam.threshold = LineIn[0];
-					//printf("Test - Tolerance is: %.3e and Threshhold is: %.3e \n",LineIn[0],LineIn[1]);
 				}
 
 				found = line1.find("RTOL");
@@ -379,7 +371,6 @@ void Read_Input_Data_v2(
 					line1.clear();
 					delete[] cstr;
 					SetupParam.rtol = LineIn[0];
-					//printf("Test - Tolerance is: %.3e and Threshhold is: %.3e \n",LineIn[0],LineIn[1]);
 				}
 
 
@@ -401,29 +392,7 @@ void Read_Input_Data_v2(
 					// allows users to provide multiple time points
 					SetupParam.TimeEnd.push_back(LineIn[0]);
 					SetupParam.TimeStep.push_back(LineIn[1]);
-					//printf("Test - End Time is: %.3e and Time Step is;  %.3e \n",LineIn[0],LineIn[1]);
 				}
-
-
-				// Legacy function
-				/*
-				found = line1.find("TimeStepChange");
-				if (found!=string::npos)
-				{
-					LineIn.clear(); // make sure storage array is empty
-
-					p=strtok (cstr," \t"); // break at space or tab
-					p=strtok(NULL," \t"); // break again as first is the keyword
-
-					while(p!=NULL){ // only read remainder is something is left
-						LineIn.push_back(strtod(p,NULL));
-						p=strtok(NULL," \t");
-					}
-					line1.clear();
-					delete[] cstr;
-					// Not implemented with new system
-					//printf("Test - Time Step Change Time is: %.3e and New Time Step is;  %.3e \n",LineIn[0],LineIn[1]);
-				}//*/
 
 
 				/*
@@ -495,7 +464,6 @@ void Read_Input_Data_v2(
 					while (p!=NULL)
 					{
 						Readout.push_back(p);
-						//cout << p << "\n";
 						p=strtok(NULL,"<>");
 					}
 					delete[] cstr;
@@ -522,7 +490,6 @@ void Read_Input_Data_v2(
 					while (p!=NULL)
 					{
 						Readout.push_back(p);
-						//cout << p << "\n";
 						p=strtok(NULL,"<>");
 					}
 					delete[] cstr;
@@ -545,7 +512,6 @@ void Read_Input_Data_v2(
 					while (p!=NULL)
 					{
 						Readout.push_back(p);
-						//cout << p << "\n";
 						p=strtok(NULL,"<>");
 					}
 					delete[] cstr;
@@ -568,7 +534,6 @@ void Read_Input_Data_v2(
 					while (p!=NULL)
 					{
 						Readout.push_back(p);
-						//cout << p << "\n";
 						p=strtok(NULL,"<>");
 					}
 					delete[] cstr;
@@ -592,7 +557,6 @@ void Read_Input_Data_v2(
 					while (p!=NULL)
 					{
 						Readout.push_back(p);
-						//cout << p << "\n";
 						p=strtok(NULL,"<>");
 					}
 					delete[] cstr;
@@ -600,12 +564,9 @@ void Read_Input_Data_v2(
 
 					for(int i = 0;i<(int)Species.size();i++)
 					{
-						//if(strcmp(species_name.c_str(),Comparator.c_str()) == 0){
 						if(strcmp(Readout[1].c_str(),Species[i].c_str()) == 0){
 							SetupParam.PetroOxyGasSpecies = i;
 							OxyGasSpeciesDefined = true;
-							//PetroOxyData[5] = i; //strtod(Readout[1].c_str(),NULL);
-							//cout << i << "\n";
 						}
 
 					}
@@ -624,7 +585,6 @@ void Read_Input_Data_v2(
 					while (p!=NULL)
 					{
 						Readout.push_back(p);
-						//cout << p << "\n";
 						p=strtok(NULL,"<>");
 					}
 					delete[] cstr;
@@ -673,7 +633,6 @@ void Read_Input_Data_v2(
 					SetupParam.HenryLawDiffusionLimitSet = true;
 					Readout.clear();
 
-					//cout << "Henry Law Limiter is Set! \n"; // checked, works
 				}
 
 

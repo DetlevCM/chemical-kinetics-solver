@@ -17,13 +17,6 @@ vector< string > Get_Species(string filename)
 		while (Mechanism_Data.good())
 		{
 
-			// http://www.cplusplus.com/forum/general/51349/
-			//#ifdef Win32
-			//		getline (Mechanism_Data,line,r);
-			//else
-			//			getline (Mechanism_Data,line,n);
-			//#endif
-
 			getline (Mechanism_Data,line1);
 
 			if(spec_flag && !end_flag)
@@ -37,22 +30,6 @@ vector< string > Get_Species(string filename)
 				}
 
 				if(!end_flag){
-
-					/*
-				// http://stackoverflow.com/questions/236129/splitting-a-string-in-c
-				istringstream iss(line1);
-
-				do
-				{
-					string sub;
-					iss >> sub;
-					if(!sub.empty()){ // avoid empty lines
-						temp_species.push_back(sub);
-						//printf("%s\r\n",sub.c_str()); // Species read in correctly
-					}
-				}while (iss);//*/
-
-
 
 					char *cstr, *p;
 					vector< string > SplitLine;
@@ -83,9 +60,9 @@ vector< string > Get_Species(string filename)
 						temp_species.push_back(p);
 						p=strtok(NULL," 	");
 					}
+
 					delete[] cstr;
-
-
+					delete[] p;
 				}
 			}
 
@@ -93,7 +70,6 @@ vector< string > Get_Species(string filename)
 			found = line1.find("SPEC");
 			if (found!=string::npos && !end_flag)
 			{
-				//printf("Species found!\n\r");
 				spec_flag=1;
 			}
 

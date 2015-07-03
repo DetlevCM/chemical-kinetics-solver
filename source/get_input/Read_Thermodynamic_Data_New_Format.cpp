@@ -23,12 +23,11 @@ vector< ThermodynamicData > Get_Thermodynamic_Data_New_Format(
 
 	int Number_Species = Species.size();
 	int i;
+
 	// Vector to store all data as a struct (more efficient than vector< vector> >
 	vector< ThermodynamicData > read_in_thermodynamics(Number_Species);
 
-	//vector< vector< double > > temp_thermodynamics_sorted;
 
-	//*
 
 	if (Mechanism_Data.is_open())
 	{
@@ -107,21 +106,18 @@ vector< ThermodynamicData > Get_Thermodynamic_Data_New_Format(
 
 					// now the 3 temperature readings
 					getline (Mechanism_Data,line1);
-					//char *cstr, *p;
-					//vector< string > temp_split_line;
 
 					str = line1;
 					cstr = new char [str.size()+1];
 					strcpy (cstr, str.c_str());
 					p=strtok (cstr," 	"); // split by space and tab
 
-					//cout << "Checpoint 1\n";
-
 					while (p!=NULL)
 					{
 						temp_split_line.push_back(p);
 						p=strtok(NULL," 	");
 					}
+
 					delete[] cstr;
 
 					temp_read_in_single_species.TLow = strtod(temp_split_line[0].c_str(),NULL);
@@ -143,6 +139,7 @@ vector< ThermodynamicData > Get_Thermodynamic_Data_New_Format(
 						temp_split_line.push_back(p);
 						p=strtok(NULL," 	");
 					}
+
 					delete[] cstr;
 
 					temp_read_in_single_species.NasaLow1 = strtod(temp_split_line[0].c_str(),NULL);
@@ -168,7 +165,9 @@ vector< ThermodynamicData > Get_Thermodynamic_Data_New_Format(
 						temp_split_line.push_back(p);
 						p=strtok(NULL," 	");
 					}
+
 					delete[] cstr;
+					delete[] p;
 
 					temp_read_in_single_species.NasaHigh1 = strtod(temp_split_line[0].c_str(),NULL);
 					temp_read_in_single_species.NasaHigh2 = strtod(temp_split_line[1].c_str(),NULL);
@@ -184,20 +183,19 @@ vector< ThermodynamicData > Get_Thermodynamic_Data_New_Format(
 					read_in_thermodynamics[temp_species_id] = temp_read_in_single_species;
 					//cout << read_in_thermodynamics.size() << "\n";
 					//cout << temp_species_id << "\n";
+
 				}
 			}
 
 
-			//cout << "Checkpoint 1\n";
+
 			// Check if the Thermodynamics Data Begins, if yes set a start flag
 			found = line1.find("ThermData");
 			if (found!=string::npos && !end_flag)
 			{
 				begin_flag=true;
-				//cout << "check!\n";
 			}
 
-			//cout << "Checkpoint 2 \n";
 
 		}
 
@@ -205,16 +203,14 @@ vector< ThermodynamicData > Get_Thermodynamic_Data_New_Format(
 
 	}
 
-	//*/
 
-	//cout << read_in_thermodynamics.size() << "\n";
+
 
 	Mechanism_Data.open (filename.c_str());
 
 	// standard data structure
 	if (Mechanism_Data.is_open())
 	{
-		//cout << "Getting Thermo \n";
 
 		string line1;
 		size_t found;
@@ -226,18 +222,14 @@ vector< ThermodynamicData > Get_Thermodynamic_Data_New_Format(
 			getline (Mechanism_Data,line1);
 
 
-			//cout << "checkpoint 1 \n";
-
 			if(begin_flag && !end_flag)
 			{
-				//cout << "checkpoint 2";
 				found = line1.find("END"); // need to check for end in loop for 4 line blocks
 				if (found!=string::npos && begin_flag)
 				{
 					end_flag = true;
 				}
 
-				//cout << "Checkpoint \2 n";
 
 				if(
 						!end_flag &&
@@ -358,48 +350,6 @@ vector< ThermodynamicData > Get_Thermodynamic_Data_New_Format(
 
 		Mechanism_Data.close();
 	}
-
-
-
-
-
-
-	//cout << read_in_thermodynamics.size() << "\n";
-
-
-	// now sort the data to fit the legacy input
-
-	/*
-	for(i=0;i<Number_Species;i++){
-
-		vector< double > temp(17);
-
-		temp[0] = read_in_thermodynamics[i].TLow;
-		temp[1] = read_in_thermodynamics[i].THigh;
-		temp[2] = read_in_thermodynamics[i].TChange;
-
-		temp[3] = read_in_thermodynamics[i].NasaLow1;
-		temp[4] = read_in_thermodynamics[i].NasaLow2;
-		temp[5] = read_in_thermodynamics[i].NasaLow3;
-		temp[6] = read_in_thermodynamics[i].NasaLow4;
-		temp[7] = read_in_thermodynamics[i].NasaLow5;
-		temp[8] = read_in_thermodynamics[i].NasaLow6;
-		temp[9] = read_in_thermodynamics[i].NasaLow7;
-
-
-		temp[10] = read_in_thermodynamics[i].NasaHigh1;
-		temp[11] = read_in_thermodynamics[i].NasaHigh2;
-		temp[12] = read_in_thermodynamics[i].NasaHigh3;
-		temp[13] = read_in_thermodynamics[i].NasaHigh4;
-		temp[14] = read_in_thermodynamics[i].NasaHigh5;
-		temp[15] = read_in_thermodynamics[i].NasaHigh6;
-		temp[16] = read_in_thermodynamics[i].NasaHigh7;
-
-		temp_thermodynamics_sorted.push_back(temp);
-	}//*/
-
-
-	//return temp_thermodynamics_sorted;
 
 
 	return read_in_thermodynamics;

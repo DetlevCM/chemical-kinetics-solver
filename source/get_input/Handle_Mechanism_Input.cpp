@@ -16,7 +16,8 @@
  * 5) Extras, e.g. PetroOxyData
  */
 
-void Handle_Mechanism_Input(
+//void Handle_Mechanism_Input(
+bool Handle_Mechanism_Input(
 		string Filename_Mechanism,
 		vector< string >& Species,
 		vector< ThermodynamicData >& Thermodynamics,
@@ -42,13 +43,13 @@ void Handle_Mechanism_Input(
 	// check the existence of the 1st input file - the mechanism
 	DataInputFromFile.open(MechanismData.c_str());
 	if (!DataInputFromFile.is_open()) {
-		printf("Error opening chem.inp - testing mechanism_data \n");
+		cout << "Error opening chem.inp - testing mechanism_data \n";
 		// for the chemkin users, let the input file be named chem.inp
 		MechanismData = "mechanism_data";
 		DataInputFromFile.open(MechanismData.c_str());
 		if (!DataInputFromFile.is_open()) {
-			printf("Error opening either chem.inp or mechanism_data \n");
-			//return -1;
+			cout << "Error opening either chem.inp or mechanism_data \n";
+			return false;
 		}
 	}
 	DataInputFromFile.close();
@@ -57,8 +58,8 @@ void Handle_Mechanism_Input(
 	// check the existence of the 2nd input file - the input data
 	DataInputFromFile.open(InputData.c_str());
 	if (!DataInputFromFile.is_open()) {
-		printf("Error opening initial.inp \n");
-		//return -1;
+		cout << "Error opening initial.inp \n";
+		return false;
 	}
 	DataInputFromFile.close();
 
@@ -66,23 +67,24 @@ void Handle_Mechanism_Input(
 	// As we now know that the input files exist, let us continue by reading in
 	// the species list, thermodynamic data and mechanism
 
+
+
 	// Get and store Species Information
 	Species = Get_Species(MechanismData);
 	Number_Species = Species.size();
-	printf("The Input File contains %u Species. \n", Number_Species);
-
+	cout << "The Input File contains " << Number_Species <<" Species.\n";
 
 	Thermodynamics = Get_Thermodynamic_Data_New_Format(MechanismData, Species);
-	printf("The Input File contains %u Thermodynamic Data Entries. \n",	(int) Thermodynamics.size());
-
-
+	cout << "The Input File contains " << Thermodynamics.size()
+		 << " Thermodynamic Data Entries.\n";
 
 	// Get and store the Reaction Mechanism data
 	Reactions = Read_Reaction_Matrix(MechanismData, Species);
 
-
 	Number_Reactions = Reactions.size();
-	printf("The Input File contains %u Reactions. \n", Number_Reactions);
+	cout << "The Input File contains " << Number_Reactions << " Reactions.\n";
+
+
 
 	// did the user request species killing? - If yes, execute
 	DataInputFromFile.open("kill.txt");
@@ -144,8 +146,9 @@ void Handle_Mechanism_Input(
 			InitalSpecies
 	); // new function for improved input reading
 
-	printf("Initial concentrations are supplied for %u species as follow: \n",
-			(int) InitalSpecies.size());//InitialParameters.nrspec);
+
+	cout << "Initial concentrations are supplied for " << InitalSpecies.size()
+		 << " species as follow:\n";
 
 
 	/*
@@ -237,13 +240,13 @@ void Handle_Mechanism_Input(
 
 	// and the Initial Temperature
 	InitialSpeciesConcentration[Number_Species] = InitialParameters.temperature; //Input[1][0];
-	printf("\n");
+	cout << "\n";
 
 
 	// Did the user request an irreversible scheme?
 	if (InitialParameters.irrev) // contains true of false
 	{
-		printf("Transformation to irreversible scheme requested! \n");
+		cout << "Transformation to irreversible scheme requested!\n";
 		Reactions = Make_Irreversible(Reactions, Thermodynamics);
 		WriteReactions("irreversible_scheme.txt", Species, Reactions);
 	}
@@ -278,7 +281,7 @@ void Handle_Mechanism_Input(
 
 		/* Handle Input In here if it exists */
 		SpeciesMapping = Get_Combine_Species_Mapping("species_mapping.txt");
-		printf("Species Mapping Information Read in. \n");
+		cout << "Species Mapping Information Read in. \n";
 
 		/*
 		 * By supplying the mapping, the user has to agreed to try and combine the species.
@@ -322,29 +325,16 @@ void Handle_Mechanism_Input(
 		InitialSpeciesConcentration.clear(); // we overwrite the reactions, so why not the initial concentrations, can be used later for reset
 		InitialSpeciesConcentration = temp;
 
-		printf("Reduced Reaction matrix consists of %i reactions and %i species. \n",
-				(int) Reactions.size(), (int) Reactions[0].Reactants.size());
+		cout << "Reduced Reaction matrix consists of " << Reactions.size()
+			 <<	" reactions and " << Reactions[0].Reactants.size() << " species.\n";
 
 	}
 	DataInputFromFile.close();
 
+
+
+
 	// did the user request a PetroOxy modification?
-
-	/* Data is:
-	 * 0) Sample Size <- m^3
-	 * p - 1) Initial Pressure
-	 * T - 2) Target Temperature
-	 * pmax - 3) Maximum Pressure
-	 * 4) O2 space in PetroOxy <- m^3
-	 * 5) Gas Species
-	 * 6) mol of gas species at 25 degree celsius
-	 * 7) O2 derived pressure
-	 * 8) Vapour Pressure solvent component
-	 * 9) solubility of gas at 298K, 1atm mol/L
-	 * 10) "k" as Henry's Law Constant, M / L
-	 */
-
-	/* New PetroOxy handling */
 
 	if(InitialParameters.PetroOxy)
 	{
@@ -353,12 +343,6 @@ void Handle_Mechanism_Input(
 		double R = 8.314472e0;
 		//double Na = 6.0221415e23;
 
-		//PetroOxyData[0] = InitialParameters.PetroOxySampleSize;
-		//PetroOxyData[1] = InitialParameters.PetroOxyInitPressure;
-		//PetroOxyData[2] = InitialParameters.temperature;
-		//PetroOxyData[3] = InitialParameters.PetroOxyMaxPressure;
-		//PetroOxyData[5] = InitialParameters.PetroOxyGasSpecies;
-		//PetroOxyData[9] = InitialParameters.PetroOxyGasSolubility;
 
 		PetroOxyData.SampleSize = InitialParameters.PetroOxySampleSize;
 
@@ -386,14 +370,12 @@ void Handle_Mechanism_Input(
 		// Mod for limitied diffusion
 		PetroOxyData.HenryLawDiffusionLimitSet = InitialParameters.HenryLawDiffusionLimitSet;
 		PetroOxyData.HenryLawDiffusionLimit = InitialParameters.HenryLawDiffusionLimit;
-		//cout << PetroOxyData.HenryLawDiffusionLimitSet << "\n";
-		//cout << PetroOxyData.HenryLawDiffusionLimit << "\n";
 	}
 
 
 
 
 
-
+	return true;
 }
 

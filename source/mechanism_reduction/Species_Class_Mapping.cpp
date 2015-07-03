@@ -34,7 +34,7 @@ vector< int > Map_Species_Classes(
 				stringstream MappingParameter(SpeciesMapping[i][1]);
 				if( (MappingParameter >> OrderedSpeciesMapping[j]).fail() )
 				{
-					printf("Failure in Species Ordering... \n");
+					cout << "Failure in Species Ordering... \n";
 				}
 				//OrderedSpeciesMapping[j] = strtod(SpeciesMapping[i][j].c_str(),NULL); // compare class ID to int
 
@@ -63,9 +63,10 @@ vector< int > Map_Species_Classes(
 		}
 	}
 	NumberOfClasses = CountUnmappedSpecies + BiggestClass; // sum of unmapped species and the number of classes
-	printf("The Mapping consists of %u unmapped Species, "
-			"and %u dedicated class mappings, resulting in %u Species Classes. \n"
-			,CountUnmappedSpecies,BiggestClass,NumberOfClasses);
+
+	cout << "The Mapping consists of " << CountUnmappedSpecies << " unmapped Species, and "
+		 << BiggestClass << "dedicated class mappings, resulting in " << NumberOfClasses
+		 << "Species Classes. \n";
 
 	// Classed species have a number, unclassed species get identified via a negative ID:
 	// This will only work if I coded the rest well as position 0 drops out
@@ -78,13 +79,11 @@ vector< int > Map_Species_Classes(
 			OrderedSpeciesMapping[i] = -UnclassedSpeciesGrouping;
 			UnclassedSpeciesGrouping = UnclassedSpeciesGrouping + 1;
 		}
-		// printf("%i \n",OrderedSpeciesMapping[i]);
 	}
 
 	for(i=0;i<Number_Species;i++)
 	{
 		OrderedSpeciesMapping[i]= abs(OrderedSpeciesMapping[i])-1; // correct to use zero based array and turn negative to positive
-		//printf("%i|%i \n",i,OrderedSpeciesMapping[i]);
 	}
 	return OrderedSpeciesMapping;
 }

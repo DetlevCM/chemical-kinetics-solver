@@ -34,7 +34,7 @@ vector< vector< string > > Get_Combine_Species_Mapping(string filename)
 				found = line.find("END");
 				if (found!=string::npos && continue_flag)
 				{
-					printf("End found\n\r");
+					//cout << "End found\n";
 					end_flag = 1;
 				}
 
@@ -92,7 +92,7 @@ vector< vector< string > > Get_Combine_Species_Mapping(string filename)
 			found = line.find("MAPPING");
 			if (found!=string::npos)
 			{
-				printf("Mapping found!\n\r");
+				//cout << "Mapping found!\n";
 				continue_flag=1;
 			}
 

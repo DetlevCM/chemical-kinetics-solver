@@ -103,4 +103,16 @@ vector< SingleReactionData > Make_Irreversible(
 );
 
 
+void Integrate(
+		string,
+		string,
+		string,
+		string,
+		vector< double >,
+		vector< string > ,
+		vector< SingleReactionData > &,
+		InitParam,
+		vector< double >&
+		);
+
 #endif /* _MY_OTHER_FUNCTIONS_ */

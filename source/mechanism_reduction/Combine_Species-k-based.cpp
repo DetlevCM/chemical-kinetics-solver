@@ -24,8 +24,6 @@ vector< SingleReactionData > Process_Species_Combination_Reactions_v2(
 	 * as well as a count of unmapped species and species classes
 	 * , we can begin to compact the reaction matrix */
 
-	//vector< vector< vector< double > > > temp_reactions1; // output
-	//vector< vector< double > > SingleReactionData;
 
 	vector< SingleReactionData > temp_reactions1;
 
@@ -35,7 +33,7 @@ vector< SingleReactionData > Process_Species_Combination_Reactions_v2(
 	vector< double > ProductData; // Product Information
 	ProductData.resize(Number_Species_Classes);
 	vector< double > ReactionData; // Reaction parameters such as Arrhenius parameters and whether irreversible or not
-	//ReactionData.resize(4);
+
 
 	vector< int > SpeciesClassesSize;
 	SpeciesClassesSize.resize(Number_Species_Classes);
@@ -47,7 +45,8 @@ vector< SingleReactionData > Process_Species_Combination_Reactions_v2(
 
 
 	// Per reaction:
-	printf("%i reactions and %i species classes to process. \n",Number_Reactions,Number_Species_Classes);
+	cout << Number_Reactions << " reactions and " << Number_Species_Classes << " species classes to process.\n";
+
 	for(i=0;i<Number_Reactions;i++)
 	{
 		SingleReactionData SingleReactionData;
@@ -67,7 +66,6 @@ vector< SingleReactionData > Process_Species_Combination_Reactions_v2(
 
 
 		// Reaction Parameters Unaffected
-		//ReactionData = Reactions[i][2];
 
 		// reassemble output
 		SingleReactionData.Reactants = ReactantData;
@@ -189,8 +187,6 @@ vector< SingleReactionData > Process_Species_Combination_Reactions_v2(
 
 		vector< double > ReactantData(temp_reactions3[i].Reactants); // Reactant Information
 		vector< double > ProductData(temp_reactions3[i].Products); // Product Information
-		//vector< double > ReactionData; // Reaction parameters such as Arrhenius parameters and whether irreversible or not
-		//vector< vector< double > > SingleReactionData; // 1 reaction
 
 
 		SingleReactionData SingleReaction;
@@ -256,12 +252,6 @@ vector< SingleReactionData > Process_Species_Combination_Reactions_v2(
 
 
 
-		//ReactionData.push_back(Average_A);
-		//ReactionData.push_back(Average_n);
-		//ReactionData.push_back(Average_Ea);
-		//ReactionData.push_back(1); // Set reaction to irrvervesible which it shoud be anyway
-		//ReactionData.resize(4);
-
 		SingleReaction.Reactants = ReactantData;
 		SingleReaction.Products = ProductData;
 		SingleReaction.paramA = Average_A;
@@ -274,8 +264,6 @@ vector< SingleReactionData > Process_Species_Combination_Reactions_v2(
 
 		ReactantData.clear();
 		ProductData.clear();
-		//ReactionData.clear();
-		//SingleReactionData.clear();
 
 		// finally, remove the processed stuff:
 		int delete_positions = Reaction_Grouping[i];
