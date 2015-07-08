@@ -50,7 +50,6 @@ void Calculate_Thermodynamics(
 		if (CurrentTemp <= Thermodynamics[i].TChange) {
 			// 3 - 9 -> Nasa Low 1 to 7
 
-
 			//Hf
 			CalculatedThermo[i].Hf = R*CurrentTemp*(
 				Thermodynamics[i].NasaLow1 +
@@ -69,7 +68,7 @@ void Calculate_Thermodynamics(
 				Thermodynamics[i].NasaLow5*CurrentTemp4);
 
 			//Cv = Cp - R;
-			CalculatedThermo[i].Cp = CalculatedThermo[i].Cp - R;//Cv;
+			CalculatedThermo[i].Cv = CalculatedThermo[i].Cp - R;
 
 			//S
 			CalculatedThermo[i].S = R*(

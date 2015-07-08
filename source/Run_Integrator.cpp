@@ -72,6 +72,7 @@ void Integrate_Liquid_Phase(
 		string rates_analysis_stream_filename,
 		vector< double > SpeciesConcentration,
 		vector< string > Species,
+		vector< ThermodynamicData > Thermo,
 		vector< SingleReactionData >& Reactions,
 		InitParam InitialParameters,
 		vector< double >& KeyRates,
@@ -89,6 +90,7 @@ void Integrate_Liquid_Phase(
 	Number_Species = Species.size();
 	Number_Reactions = Reactions.size();
 
+	Thermodynamics = Thermo; // "Hack" - to fix a regression
 
 	ofstream ReactionRatesOutput;
 	ofstream ConcentrationOutput (species_filename.c_str(),ios::app);
@@ -173,7 +175,7 @@ void Integrate_Liquid_Phase(
 	int TimeChanges = (int) InitialParameters.TimeStep.size();
 	int tracker = 0;
 
-	cout << "\nEnd Time: " << time_end << " Time Step: " << time_step1 << "\n";
+	//cout << "\nEnd Time: " << time_end << " Time Step: " << time_step1 << "\n";
 	/* -- Initial values at t = 0 -- */
 
 	Number_Reactions = (int) ReactionParameters.size();
@@ -210,7 +212,10 @@ void Integrate_Liquid_Phase(
 
 	Calculate_Thermodynamics(CalculatedThermo, SpeciesConcentration[Number_Species], Thermodynamics);
 
-
+	for(i=0;i<Number_Species;i++)
+	{
+		cout << CalculatedThermo[i].Hf << " " << CalculatedThermo[i].Cp << " " << CalculatedThermo[i].S <<"\n";
+	}
 
 	Kf.clear();
 	Kr.clear();

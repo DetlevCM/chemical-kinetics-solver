@@ -73,7 +73,9 @@ void ODE_RHS_Liquid_Phase(int*n, double*time_current, double*y, double*f)
 	for (i = 0; i < Number_Species; i++)
 	{
 		ctot = ctot + CalculatedThermo[i].Cv * Concentration[i];
+		//cout << CalculatedThermo[i].Hf << " ";
 	}
+	//cout << "\n";
 	// ctot = ctot / 1000; // working in moles/l so no Na;
 
 	for (i = 0; i < Number_Reactions; i++)
@@ -88,6 +90,7 @@ void ODE_RHS_Liquid_Phase(int*n, double*time_current, double*y, double*f)
 		f[i] = SpeciesConcentrationChange[i]; // Species equations //
 	}
 	f[Number_Species] = qtot; // Temperature equation //
+	//cout << ctot << " " << qint << " " << qtot << "\n";
 
 	//*
 	if(
