@@ -3,6 +3,7 @@
 //*** Define Intel ODE Solver ***//
 #ifndef _INTEL_ODE_H_
 #define _INTEL_ODE_H_
+//*
 extern "C" {
 
 void dodesol_mk52lfa(
@@ -71,7 +72,7 @@ void dodesol_rkm9mkn(
 		int*
 );
 
-}
+}//*/
 #endif /* _INTEL_ODE_H_ */
 
 
@@ -103,7 +104,8 @@ vector< SingleReactionData > Make_Irreversible(
 );
 
 
-void Integrate(
+//*
+void Integrate_Liquid_Phase(
 		string,
 		string,
 		string,
@@ -112,7 +114,15 @@ void Integrate(
 		vector< string > ,
 		vector< SingleReactionData > &,
 		InitParam,
-		vector< double >&
-		);
+		vector< double >&,
+		PetroOxyCalculation,
+		vector< vector < str_RatesAnalysis > > &
+);
+//*/
+
+//*
+void ODE_RHS_Liquid_Phase(int*, double*, double*, double*);
+void Jacobian_Matrix(int*, double*, double*, double*);
+//*/
 
 #endif /* _MY_OTHER_FUNCTIONS_ */

@@ -10,9 +10,6 @@
 
 
 
-// Shoddy implementation of PetroOxy logic
-extern PetroOxyCalculation PetroOxyData;
-extern int OxyGasSpeciesID;
-// end PetroOxy Logic
+
 
 #endif /* SOURCE_GLOBAL_VARIABLES_HPP_ */

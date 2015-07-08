@@ -40,6 +40,7 @@ using std::istringstream;
 
 
 #include <Structs.h>
+#include <Classes.h>
 #include <Namespaces.hpp>
 #include <Global_Variables.hpp>
 

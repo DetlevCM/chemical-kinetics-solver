@@ -1,22 +1,23 @@
 #include <MyHeaders.h>
 
+/*
 namespace GlobalArrays{
 // Key parameters that define the whole reaction scheme - used globally via namespaces
 // Not sure if this is a good place to put it...
 vector< vector < str_RatesAnalysis > > RatesAnalysisData;
 vector< TrackSpecies > ProductsForRatesAnalysis;
-}
+}//*/
 
 
 
-
-// Shoddy implementation of PetroOxy logic
-PetroOxyCalculation PetroOxyData;
-int OxyGasSpeciesID;
-// end PetroOxy Logic
 
 int main(int argc, char* argv[])
 {
+
+	// Shoddy implementation of PetroOxy logic
+	PetroOxyCalculation PetroOxyData;
+	//int OxyGasSpeciesID;
+	// end PetroOxy Logic
 
 
 	// Add a switch to have regular ouput to a log file or debug to command line
@@ -70,7 +71,7 @@ int main(int argc, char* argv[])
 	{
 		cout << "Error occurred while reading in mechanism.\nRun aborted.\n";
 	}
-	else // Mechnsim read in correctly, proceed:
+	else // Mechansim read in correctly, proceed:
 	{
 
 
@@ -83,7 +84,7 @@ int main(int argc, char* argv[])
 			);
 		}
 
-		using namespace GlobalArrays;
+		//using namespace GlobalArrays;
 
 		int i; 	// useful counter
 		int Number_Species = (int) Species.size();
@@ -94,6 +95,9 @@ int main(int argc, char* argv[])
 		// Let us set up the reactions first for the ODE solver
 
 		//cout << "On to the solver. \n";
+
+
+		vector< vector < str_RatesAnalysis > > RatesAnalysisData;
 
 		if(InitialParameters.RatesMaxAnalysis)
 		{
@@ -128,7 +132,7 @@ int main(int argc, char* argv[])
 		if(InitialParameters.PetroOxy)
 		{
 			PetroOxyData = PetroOxyDataInitial;
-			OxyGasSpeciesID = InitialParameters.PetroOxyGasSpecies;
+			//OxyGasSpeciesID = InitialParameters.PetroOxyGasSpecies;
 			PetroOxyOutputHeader("PetroOxy-Log.txt");
 		}
 
@@ -141,7 +145,8 @@ int main(int argc, char* argv[])
 
 		cout << "\nHanding Mechanism to Integrator\n" << std::flush;
 
-		Integrate(
+
+		Integrate_Liquid_Phase(
 				"concentrations.txt",
 				"reaction_rates.txt",
 				"PetroOxy-Log.txt",
@@ -150,7 +155,9 @@ int main(int argc, char* argv[])
 				Species,
 				Reactions,
 				InitialParameters,
-				KeyRates
+				KeyRates,
+				PetroOxyData,
+				RatesAnalysisData
 		);
 
 
@@ -211,14 +218,16 @@ int main(int argc, char* argv[])
 				if(InitialParameters.PetroOxy)
 				{
 					PetroOxyData = PetroOxyDataInitial;
-					OxyGasSpeciesID =  InitialParameters.PetroOxyGasSpecies;
+					//OxyGasSpeciesID =  InitialParameters.PetroOxyGasSpecies;
 					PetroOxyOutputHeader("reduced_PetroOxy-Log.txt");
 				}
 
 
 				cout << "\nHanding Reduced Mechanism to Integrator\n" << std::flush;
 
-				Integrate(
+
+				//*
+				Integrate_Liquid_Phase(
 						"reduced_concentrations.txt",
 						"reduced_reaction_rates.txt",
 						"reduced_PetroOxy-Log.txt",
@@ -227,8 +236,10 @@ int main(int argc, char* argv[])
 						Species,
 						ReducedReactions,
 						InitialParameters,
-						KeyRates
-				);
+						KeyRates,
+						PetroOxyData,
+						RatesAnalysisData
+				);//*/
 
 
 				ReportAccuracy(
