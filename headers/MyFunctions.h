@@ -106,10 +106,11 @@ vector< SingleReactionData > Make_Irreversible(
 
 //*
 void Integrate_Liquid_Phase(
+		/*string,
 		string,
 		string,
-		string,
-		string,
+		string,//*/
+		Filenames,
 		vector< double >,
 		vector< string > ,
 		vector< ThermodynamicData > ,

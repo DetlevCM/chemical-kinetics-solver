@@ -22,41 +22,48 @@ extern vector< TrackSpecies > ProductsForRatesAnalysis;
 // For the integrator
 // Needed to be set once for speed, especially re-initialising vectors is slow
 
-//*
-namespace ODESolverConstant
+
+
+namespace Jacobian_ODE_RHS
 {
-// Below Used in ODE RHS
+//// constant (i.e. set once) ////
 extern int Number_Species;
-extern int Number_Reactions;
 extern vector< double > Delta_N;
 extern vector< ThermodynamicData > Thermodynamics;
 extern vector< ReactionParameter > ReactionParameters; // tidier than reactions vector
-extern vector< TrackSpecies > ReactantsForReactions;
-extern vector< TrackSpecies > ProductsForReactions;
 extern vector< TrackSpecies > SpeciesLossAll; // vector for recording species loss
 
-// No more initial parameters globally
-extern ConstantInitRHSODE InitialDataConstants;
-
-// Calculated Once Only
-extern vector< JacobianData > JacobianMatrix;
-
-extern int OxyGasSpeciesID;
-}//*/
-
-namespace ODESolverVariable
-{
+//// variable (values change during calculation ////
+extern vector< double > Concentration;
 extern vector< CalculatedThermodynamics > CalculatedThermo;
 extern vector< double > Kf;
 extern vector< double > Kr;
+}
+
+
+namespace ODE_RHS
+{
+//// constant (i.e. set once) ////
+extern int Number_Reactions;
+extern ConstantInitRHSODE InitialDataConstants;
+extern vector< TrackSpecies > ReactantsForReactions;
+extern vector< TrackSpecies > ProductsForReactions;
+extern int OxyGasSpeciesID;
+
+//// variable (values change during calculation ////
 extern vector< double > Rates;
-extern vector< double > Concentration;
 extern vector< double > SpeciesConcentrationChange;
 
 extern PetroOxyCalculation PetroOxyData;
 //for limited Oxy
 extern double time_previous;
 }
+
+namespace Jacobian
+{
+extern vector< JacobianData > JacobianMatrix;
+}
+
 
 
 #endif /* SOURCE_NAMESPACES_HPP_ */

@@ -11,8 +11,11 @@
 void ODE_RHS_Liquid_Phase(int*n, double*time_current, double*y, double*f)
 {
 	// A namespace allows global variables without causing a mess, should be quicker than redefining too
-	using namespace ODESolverConstant;
-	using namespace ODESolverVariable;
+	//using namespace ODESolverConstant;
+	//using namespace ODESolverVariable;
+
+	using namespace ODE_RHS;
+	using namespace Jacobian_ODE_RHS;
 
 	int i;
 

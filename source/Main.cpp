@@ -1,26 +1,12 @@
 #include <MyHeaders.h>
 
-/*
-namespace GlobalArrays{
-// Key parameters that define the whole reaction scheme - used globally via namespaces
-// Not sure if this is a good place to put it...
-vector< vector < str_RatesAnalysis > > RatesAnalysisData;
-vector< TrackSpecies > ProductsForRatesAnalysis;
-}//*/
-
 
 
 
 int main(int argc, char* argv[])
 {
 
-	// Shoddy implementation of PetroOxy logic
-	PetroOxyCalculation PetroOxyData;
-	//int OxyGasSpeciesID;
-	// end PetroOxy Logic
-
-
-	// Add a switch to have regular ouput to a log file or debug to command line
+	// Add a switch to have regular output to a log file or debug to command line
 	// http://stackoverflow.com/questions/12774207/fastest-way-to-check-if-a-file-exist-using-standard-c-c11-c
 	ifstream debug_file_exists("debug");
 	// File does not exist, so redirect to log file
@@ -39,18 +25,20 @@ int main(int argc, char* argv[])
 
 
 
+	/* The main variables that store the information from a reaction
+	 * mechanism after it is read in, namely the Species, Thermodynamic
+	 * Data and Reactions.
+	 */
 
-	// Definition of the main variables to store basic information to run the sover
+	vector< string > Species; // Species list
+	vector< ThermodynamicData > Thermodynamics; // Thermodynamic Data
+	vector< SingleReactionData > Reactions; // Reactions
 
-	vector< string > Species; // stores the species list
-	vector< ThermodynamicData > Thermodynamics; // stores the entire Thermodynamic data
-	vector< SingleReactionData > Reactions; // stores the entire mechanism
 
 	InitParam InitialParameters; // Initial Conditions/Parameters
 	vector< double > InitialSpeciesConcentration;
 
-	PetroOxyCalculation PetroOxyDataInitial; // Petro Oxy Specific
-
+	PetroOxyCalculation PetroOxyDataInitial; // PetroOxy Specific Initial Data
 
 
 	// Handle All the Data Input - The Arrays Contain the required information
@@ -71,10 +59,9 @@ int main(int argc, char* argv[])
 	{
 		cout << "Error occurred while reading in mechanism.\nRun aborted.\n";
 	}
-	else // Mechansim read in correctly, proceed:
+	else // Mechanism read in correctly, proceed:
 	{
-
-
+		// for someone else's optimistaion code, optional output
 		if(InitialParameters.StoichimoetryMatrixForOpt)
 		{
 			Write_Stoichiometric_Matrix_For_Opt
@@ -84,7 +71,6 @@ int main(int argc, char* argv[])
 			);
 		}
 
-		//using namespace GlobalArrays;
 
 		int i; 	// useful counter
 		int Number_Species = (int) Species.size();
@@ -93,8 +79,6 @@ int main(int argc, char* argv[])
 
 		// We have now pre-processed all information, time to set up the ODEs and the solver
 		// Let us set up the reactions first for the ODE solver
-
-		//cout << "On to the solver. \n";
 
 
 		vector< vector < str_RatesAnalysis > > RatesAnalysisData;
@@ -117,8 +101,19 @@ int main(int argc, char* argv[])
 		}
 
 
+		// Define output filenames:
+		Filenames OutputFilenames;
+
+		OutputFilenames.Species = "concentrations.txt";
+		OutputFilenames.Rates = "reaction_rates.txt";
+		OutputFilenames.PetroOxy = "PetroOxy-log.txt";
+		// May need to rethink the rates analysis output...
+		//OutputFilenames.RatesAnalysisStream = "";//rates_analysis_stream";
+		OutputFilenames.Prefix = "";
+
+
 		WriteNewLabelsSpecies(
-				"concentrations.txt",
+				OutputFilenames.Species,
 				Number_Species,
 				Species,
 				InitialParameters.GasPhase
@@ -126,15 +121,9 @@ int main(int argc, char* argv[])
 
 		if(InitialParameters.PrintReacRates)
 		{
-			WriteLabelsReactionRates("reaction_rates.txt", Number_Reactions);
+			WriteLabelsReactionRates(OutputFilenames.Rates, Number_Reactions);
 		}
 
-		if(InitialParameters.PetroOxy)
-		{
-			PetroOxyData = PetroOxyDataInitial;
-			//OxyGasSpeciesID = InitialParameters.PetroOxyGasSpecies;
-			PetroOxyOutputHeader("PetroOxy-Log.txt");
-		}
 
 		// only required if the user desires mechanism reduction
 		if(InitialParameters.ReduceReactions != 0)
@@ -147,17 +136,14 @@ int main(int argc, char* argv[])
 
 
 		Integrate_Liquid_Phase(
-				"concentrations.txt",
-				"reaction_rates.txt",
-				"PetroOxy-Log.txt",
-				"",
+				OutputFilenames,
 				InitialSpeciesConcentration,
 				Species,
 				Thermodynamics,
 				Reactions,
 				InitialParameters,
 				KeyRates,
-				PetroOxyData,
+				PetroOxyDataInitial,
 				RatesAnalysisData
 		);
 
@@ -172,6 +158,13 @@ int main(int argc, char* argv[])
 			// to original scheme
 			if(Number_Reactions > 0 && Number_Reactions != (int) ReducedReactions.size()){
 
+
+				OutputFilenames.Species = "reduced_concentrations.txt";
+				OutputFilenames.Rates = "reduced_reaction_rates.txt";
+				OutputFilenames.PetroOxy = "reduced_PetroOxy-log.txt";
+				//OutputFilenames.RatesAnalysisStream = "reduced_";//"reduced_rates_analysis_stream";
+				OutputFilenames.Prefix = "reduced_";
+
 				Number_Reactions = (int) ReducedReactions.size();
 
 				WriteReactions("reduced_scheme.txt", Species, ReducedReactions);
@@ -183,7 +176,6 @@ int main(int argc, char* argv[])
 					Write_Stoichiometric_Matrix_For_Opt
 					(
 							"reduced_stoichiometry_matrix.txt" ,
-							//		Species,
 							ReducedReactions
 					);
 				}
@@ -204,24 +196,24 @@ int main(int argc, char* argv[])
 
 				if(InitialParameters.StreamRatesAnalysis)
 				{
-					PrepareStreamRatesAnalysis(Species,"reduced_");
+					PrepareStreamRatesAnalysis(Species,OutputFilenames.Prefix);
 				}
 
 				WriteNewLabelsSpecies(
-						"reduced_concentrations.txt",
+						OutputFilenames.Species,
 						Number_Species,
 						Species,
 						InitialParameters.GasPhase
 				);
-				WriteLabelsReactionRates("reduced_reaction_rates.txt", Number_Reactions);
+				WriteLabelsReactionRates(OutputFilenames.Rates, Number_Reactions);
 
-
+				/*
 				if(InitialParameters.PetroOxy)
 				{
-					PetroOxyData = PetroOxyDataInitial;
-					//OxyGasSpeciesID =  InitialParameters.PetroOxyGasSpecies;
+					//PetroOxyData = PetroOxyDataInitial;
 					PetroOxyOutputHeader("reduced_PetroOxy-Log.txt");
-				}
+				}//*/
+
 
 
 				cout << "\nHanding Reduced Mechanism to Integrator\n" << std::flush;
@@ -229,21 +221,19 @@ int main(int argc, char* argv[])
 
 				//*
 				Integrate_Liquid_Phase(
-						"reduced_concentrations.txt",
-						"reduced_reaction_rates.txt",
-						"reduced_PetroOxy-Log.txt",
-						"reduced_",
+						OutputFilenames,
 						InitialSpeciesConcentration,
 						Species,
 						Thermodynamics,
 						ReducedReactions,
 						InitialParameters,
 						KeyRates,
-						PetroOxyData,
+						PetroOxyDataInitial,
 						RatesAnalysisData
 				);//*/
 
 
+				// Not ideal, should use variables rather than handwritten filenames
 				ReportAccuracy(
 						Number_Species,
 						Species,

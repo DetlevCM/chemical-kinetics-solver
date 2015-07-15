@@ -12,6 +12,15 @@
 // Seems better to manually code in than to reproduce ReactionParameter may be wrong...
 //*
 
+
+struct Filenames{
+	string Species;
+	string Rates;
+	string PetroOxy;
+	//string RatesAnalysisStream;
+	string Prefix;
+};
+
 struct JacobainSpecies{
 	int SpeciesID;
 	double coefficient;

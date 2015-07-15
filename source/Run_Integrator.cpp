@@ -20,43 +20,45 @@
  * It also allows me to size the array beforehand
  */
 
-
-namespace ODESolverConstant
+namespace Jacobian
 {
-// Below Used in ODE RHS
+vector< JacobianData > JacobianMatrix;
+}
+
+namespace Jacobian_ODE_RHS
+{
+//// constant (i.e. set once) ////
 int Number_Species;
-int Number_Reactions;
 vector< double > Delta_N;
 vector< ThermodynamicData > Thermodynamics;
 vector< ReactionParameter > ReactionParameters; // tidier than reactions vector
-vector< TrackSpecies > ReactantsForReactions;
-vector< TrackSpecies > ProductsForReactions;
 vector< TrackSpecies > SpeciesLossAll; // vector for recording species loss
 
-// No more initial parameters globally
-ConstantInitRHSODE InitialDataConstants;
-
-// Calculated Once Only
-vector< JacobianData > JacobianMatrix;
-
-int OxyGasSpeciesID;
-}
-
-
-namespace ODESolverVariable
-{
+//// variable (values change during calculation ////
+vector< double > Concentration;
 vector< CalculatedThermodynamics > CalculatedThermo;
 vector< double > Kf;
 vector< double > Kr;
+}
+
+
+namespace ODE_RHS
+{
+//// constant (i.e. set once) ////
+int Number_Reactions;
+ConstantInitRHSODE InitialDataConstants;
+vector< TrackSpecies > ReactantsForReactions;
+vector< TrackSpecies > ProductsForReactions;
+int OxyGasSpeciesID;
+
+//// variable (values change during calculation ////
 vector< double > Rates;
-vector< double > Concentration;
 vector< double > SpeciesConcentrationChange;
 
 PetroOxyCalculation PetroOxyData;
 //for limited Oxy
-double time_previous = 0;
+double time_previous;
 }
-
 
 
 
@@ -66,10 +68,7 @@ double time_previous = 0;
 
 // Not a perfect solution, but stick integrator into its own void with global variables via a namespace
 void Integrate_Liquid_Phase(
-		string species_filename,
-		string rates_filename,
-		string petrooxy_filename,
-		string rates_analysis_stream_filename,
+		Filenames OutputFilenames,
 		vector< double > SpeciesConcentration,
 		vector< string > Species,
 		vector< ThermodynamicData > Thermo,
@@ -78,26 +77,34 @@ void Integrate_Liquid_Phase(
 		vector< double >& KeyRates,
 		PetroOxyCalculation PetroOxyDataInput,
 		vector< vector < str_RatesAnalysis > >& RatesAnalysisData
-		)
+)
 {
 
 
 	vector< TrackSpecies > ProductsForRatesAnalysis;
 
-	using namespace ODESolverConstant;
-	using namespace ODESolverVariable;
+	using namespace Jacobian_ODE_RHS;
+	using namespace ODE_RHS;
+	using namespace Jacobian;
 
 	Number_Species = Species.size();
 	Number_Reactions = Reactions.size();
 
 	Thermodynamics = Thermo; // "Hack" - to fix a regression
 
+	string filename_concentrations;
+	string filename_rates;
+	string filename_petrooxy;
+	string filename_rates_analysis_data;
+
+
+
 	ofstream ReactionRatesOutput;
-	ofstream ConcentrationOutput (species_filename.c_str(),ios::app);
+	ofstream ConcentrationOutput (OutputFilenames.Species.c_str(),ios::app);
 
 	if(InitialParameters.PrintReacRates)
 	{
-		ReactionRatesOutput.open(rates_filename.c_str(),ios::app);
+		ReactionRatesOutput.open(OutputFilenames.Rates.c_str(),ios::app);
 	}
 
 
@@ -195,6 +202,7 @@ void Integrate_Liquid_Phase(
 
 	if(InitialParameters.PetroOxy)
 	{
+		PetroOxyOutputHeader(OutputFilenames.PetroOxy);
 		OxyGasSpeciesID = InitialParameters.PetroOxyGasSpecies;
 		PetroOxyData = PetroOxyDataInput;
 	}
@@ -207,15 +215,18 @@ void Integrate_Liquid_Phase(
 			InitialParameters.PetroOxyTemperatureRise != 0) // fix temperature for Oxy, rise desired
 	{
 		SpeciesConcentration[Number_Species] = 298;
+		// for Oxy diffusion limit, gets ignored if not required
+		time_previous = 0;
 	}//*/
 
 
 	Calculate_Thermodynamics(CalculatedThermo, SpeciesConcentration[Number_Species], Thermodynamics);
 
+	/*
 	for(i=0;i<Number_Species;i++)
 	{
 		cout << CalculatedThermo[i].Hf << " " << CalculatedThermo[i].Cp << " " << CalculatedThermo[i].S <<"\n";
-	}
+	}//*/
 
 	Kf.clear();
 	Kr.clear();
@@ -231,7 +242,6 @@ void Integrate_Liquid_Phase(
 
 	// For the Jacobian
 	Prepare_Jacobian_Matrix (
-			//GlobalArrays::JacobianMatrix,
 			JacobianMatrix,
 			Reactions,
 			Species
@@ -261,7 +271,7 @@ void Integrate_Liquid_Phase(
 				PetroOxyData);
 
 		PetroOxyOutputStream(
-				petrooxy_filename,
+				OutputFilenames.PetroOxy,
 				PetroOxyData,
 				time_current);
 	}
@@ -313,7 +323,7 @@ void Integrate_Liquid_Phase(
 					(void*) ODE_RHS_Liquid_Phase,
 					(void*) Jacobian_Matrix,
 					&h, &hm, &ep, &tr, dpar, kd, &ierr
-					);
+			);
 		}
 
 		if(InitialParameters.UseStiffSolver && InitialParameters.Jacobian)
@@ -323,7 +333,7 @@ void Integrate_Liquid_Phase(
 					(void*) ODE_RHS_Liquid_Phase,
 					(void*) Jacobian_Matrix,
 					&h, &hm, &ep, &tr, dpar, kd, &ierr
-					);
+			);
 		}
 
 		if(InitialParameters.UseStiffSolver && !InitialParameters.Jacobian)
@@ -332,7 +342,7 @@ void Integrate_Liquid_Phase(
 			dodesol_mk52lfn(ipar, &n, &time_current, &time_step, y,
 					(void*) ODE_RHS_Liquid_Phase,
 					&h, &hm, &ep, &tr, dpar, kd, &ierr
-					);
+			);
 		}
 
 		if(!InitialParameters.UseStiffSolver && !InitialParameters.Jacobian)
@@ -341,7 +351,7 @@ void Integrate_Liquid_Phase(
 			dodesol_rkm9mkn(ipar, &n, &time_current, &time_step, y,
 					(void*) ODE_RHS_Liquid_Phase,
 					&h, &hm, &ep, &tr, dpar, kd, &ierr
-					);
+			);
 		}
 		if (ierr != 0)
 		{
@@ -378,7 +388,7 @@ void Integrate_Liquid_Phase(
 		if(InitialParameters.StreamRatesAnalysis)
 		{
 			StreamRatesAnalysis(
-					rates_analysis_stream_filename,
+					OutputFilenames.Prefix,
 					ProductsForRatesAnalysis,
 					ReactantsForReactions,
 					Rates,
@@ -419,7 +429,7 @@ void Integrate_Liquid_Phase(
 		if(InitialParameters.PetroOxy)
 		{
 			PetroOxyOutputStream(
-					petrooxy_filename,
+					OutputFilenames.PetroOxy,
 					PetroOxyData,
 					time_current
 			);
@@ -455,7 +465,7 @@ void Integrate_Liquid_Phase(
 
 	if(InitialParameters.RatesMaxAnalysis)
 	{
-		WriteMaxRatesAnalysis(RatesAnalysisData, Species, Reactions,rates_analysis_stream_filename);
+		WriteMaxRatesAnalysis(RatesAnalysisData, Species, Reactions,OutputFilenames.Prefix);
 	}
 
 

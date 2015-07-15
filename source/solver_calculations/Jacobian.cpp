@@ -15,9 +15,11 @@ void Jacobian_Matrix(int*n,double*t,double*y,double*a) {
 	// y concentration
 	// a Jacobian in column wise order
 
-	using namespace ODESolverConstant;
-	using namespace ODESolverVariable;
-	//using namespace GlobalArrays;
+	using namespace Jacobian_ODE_RHS;
+	using namespace Jacobian;
+
+	//using namespace ODESolverConstant;
+	//using namespace ODESolverVariable;
 
 
 	int i,j;
