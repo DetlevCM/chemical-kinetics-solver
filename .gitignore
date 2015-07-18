@@ -3,3 +3,5 @@ libraries/libiode_ia32.lib
 Release/source/*
 Debug/source/*
 Release-Intel/source/*
+*.o
+*.d
