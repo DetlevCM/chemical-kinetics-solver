@@ -282,7 +282,7 @@ bool Handle_Mechanism_Input(
 
 		/* Handle Input In here if it exists */
 		SpeciesMapping = Get_Combine_Species_Mapping("species_mapping.txt");
-		cout << "Species Mapping Information Read in. \n";
+		cout << "Species Mapping Information read in, species will be lumped. \n";
 
 		/*
 		 * By supplying the mapping, the user has to agreed to try and combine the species.
@@ -326,8 +326,12 @@ bool Handle_Mechanism_Input(
 		InitialSpeciesConcentration.clear(); // we overwrite the reactions, so why not the initial concentrations, can be used later for reset
 		InitialSpeciesConcentration = temp;
 
-		cout << "Reduced Reaction matrix consists of " << Reactions.size()
-			 <<	" reactions and " << Reactions[0].Reactants.size() << " species.\n";
+		//cout << "Reduced Reaction matrix consists of " << Reactions.size()
+		//	 <<	" reactions and " << Reactions[0].Reactants.size() << " species.\n";
+
+		cout << "\nAfter species lumping, the scheme contains the following counts:\n" <<
+					"Species: " << Reactions[0].Reactants.size() << "\n" <<
+					"Reactions: " << Reactions.size() << "\n\n";
 
 	}
 	DataInputFromFile.close();

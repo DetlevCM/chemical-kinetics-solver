@@ -90,6 +90,10 @@ void Integrate_Liquid_Phase(
 	Number_Species = Species.size();
 	Number_Reactions = Reactions.size();
 
+	// outputting mechanism size in integration routing so that it is printed every time
+	cout << "The mechanism to be integrated contains " << Number_Species << " species and " << Number_Reactions << " Reactions.\n";
+
+
 	Thermodynamics = Thermo; // "Hack" - to fix a regression
 
 	string filename_concentrations;

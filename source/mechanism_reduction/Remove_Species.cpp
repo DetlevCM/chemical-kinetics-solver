@@ -178,7 +178,7 @@ void Reduce_Species_Thermo_Mechanism(
 	Thermodynamics.clear();
 
 
-	cout << "\nThe Scheme now contains the following counts\n" <<
+	cout << "\nAfter species removal, the scheme contains the following counts:\n" <<
 			"Species: " << NewSpecies.size() << "\n" <<
 			"Thermodynamic Entries: " << NewThermodynamics.size() << "\n" <<
 			"Reactions: " << NewReactions.size() << "\n\n";
