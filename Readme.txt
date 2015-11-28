@@ -1,6 +1,7 @@
 This ia a basic chemical kinetics solver for chemkin style mechanisms, employed in the thesis 
 titled "Autoxidation Behaviour of Hydrocarbons in the Context of Conventional and Alternative 
 Aviation Fuels",submitted at the University of Leeds in 2015.
+http://etheses.whiterose.ac.uk/10407/
 
 This solver draws on the Intel ODE library for solving the appropriate ordinary differential 
 equations. however in theory any other solver may be used to solve the system of ODEs. I have 
