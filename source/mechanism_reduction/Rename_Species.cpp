@@ -10,6 +10,7 @@
 
 vector< string > RenameSpecies(
 		vector< string > Species,
+		vector<ClassNaming> UserDefinedNames,
 		const vector< int > & SpeciesClassMapping
 		)
 {
@@ -42,9 +43,20 @@ vector< string > RenameSpecies(
 		else
 		{
 			stringstream ClassName;
-			ClassName << "Class(" << ClassID+1 << ")";
+			//cout << ClassID << " " << UserDefinedNames[ClassID].IsNamed << " \n";
+			//*
+			if(UserDefinedNames[ClassID].IsNamed) // has user defined name
+			{
+				ClassName << UserDefinedNames[ClassID].Name;
+				temp_species_names[ClassID] = ClassName.str(); // otherwise assign Class Name
+			}
+			else
+			{//*/
+			ClassName << "Class(" << ClassID+1 << ")"; // uses generic name
 			temp_species_names[ClassID] = ClassName.str(); // otherwise assign Class Name
-
+			//*
+			}
+			//*/
 		}
 	}
 

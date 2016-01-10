@@ -21,10 +21,11 @@ struct Filenames{
 	string Prefix;
 };
 
-struct JacobainSpecies{
+/*
+struct JacobianSpecies{
 	int SpeciesID;
 	double coefficient;
-};
+};//*/
 
 struct JacobianSpecies{
 	int SpeciesID;
@@ -179,6 +180,15 @@ struct str_RatesAnalysis
 	double consumptionrate;
 	double prod_time;
 	double cons_time;
+};
+
+
+// For Naming Species Classes in Lumping:
+struct ClassNaming
+{
+	bool IsNamed;
+	int ClassID;
+	string Name;
 };
 
 

@@ -12,6 +12,7 @@ CPP_SRCS += \
 ../source/mechanism_reduction/Remove_Species.cpp \
 ../source/mechanism_reduction/Rename_Species.cpp \
 ../source/mechanism_reduction/Species_Class_Mapping.cpp \
+../source/mechanism_reduction/Species_Class_New_Name.cpp \
 ../source/mechanism_reduction/mechanism_reduction_lumping.cpp 
 
 OBJS += \
@@ -23,6 +24,7 @@ OBJS += \
 ./source/mechanism_reduction/Remove_Species.o \
 ./source/mechanism_reduction/Rename_Species.o \
 ./source/mechanism_reduction/Species_Class_Mapping.o \
+./source/mechanism_reduction/Species_Class_New_Name.o \
 ./source/mechanism_reduction/mechanism_reduction_lumping.o 
 
 CPP_DEPS += \
@@ -34,6 +36,7 @@ CPP_DEPS += \
 ./source/mechanism_reduction/Remove_Species.d \
 ./source/mechanism_reduction/Rename_Species.d \
 ./source/mechanism_reduction/Species_Class_Mapping.d \
+./source/mechanism_reduction/Species_Class_New_Name.d \
 ./source/mechanism_reduction/mechanism_reduction_lumping.d 
 
 

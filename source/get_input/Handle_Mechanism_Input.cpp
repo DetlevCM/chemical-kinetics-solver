@@ -290,7 +290,9 @@ bool Handle_Mechanism_Input(
 		 */
 
 		SpeciesClassMapping = Map_Species_Classes(SpeciesMapping, Species);
-		Species = RenameSpecies(Species, SpeciesClassMapping); // Update Species Names
+		vector<ClassNaming> UserDefinedNames;
+		UserDefinedNames = GetSpeciesClassesNames(SpeciesMapping);
+		Species = RenameSpecies(Species, UserDefinedNames, SpeciesClassMapping); // Update Species Names
 		Number_Species_Classes = Species.size(); // need to resize species count a bit later
 
 		Thermodynamics = Process_Thermodynamics_Species_Classes(SpeciesClassMapping, Thermodynamics); // create new thermodynamics

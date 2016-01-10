@@ -44,8 +44,13 @@ vector< vector< string > > Get_Combine_Species_Mapping(
 		string
 );
 
+vector<ClassNaming> GetSpeciesClassesNames(
+		vector< vector< string > >
+);
+
 vector< string > RenameSpecies(
 		vector< string > ,
+		vector<ClassNaming> ,
 		const vector< int > &
 );
 

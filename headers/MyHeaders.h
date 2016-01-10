@@ -39,22 +39,22 @@ using std::istringstream;
 
 
 
-#include <Structs.h>
-#include <Classes.h>
-#include <Namespaces.hpp>
-#include <Global_Variables.hpp>
+#include "Structs.h"
+#include "Classes.h"
+#include "Namespaces.hpp"
+#include "Global_Variables.hpp"
 
 // Definitions of my functions
-#include <Get_Input.h>
-#include <Pre-Process.h>
-#include <Mechanism_Reduction.h>
-#include <Solver_Calculations.h>
-#include <Rates-Analysis.h>
-#include <Write_Output.h>
+#include "Get_Input.h"
+#include "Pre-Process.h"
+#include "Mechanism_Reduction.h"
+#include "Solver_Calculations.h"
+#include "Rates-Analysis.h"
+#include "Write_Output.h"
 
-#include <MyFunctions.h>
+#include "MyFunctions.h"
 
-#include <PetroOxy.h>
+#include "PetroOxy.h"
 
 
 #endif
