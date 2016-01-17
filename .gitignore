@@ -1,16 +1,18 @@
+### Libraries, MUST be download from Intel
 libraries/libiode_intel64.lib
 libraries/libiode_intel64.a
 libraries/libiode_ia32.lib
 libraries/libiode_ia32.a
-/Release/
-Release/*
-/Debug/
-Debug/*
-/Release-Intel/*
-Release-Intel/*
+### Build Folders...
+Release/
+Debug/
+Release-Intel/
+### Interesting directories for those who build their own
 Release-Makefile-Linux/*.o
 Release-Makefile-Linux/*.exe
 Release-Makefile-MinGW/*.o
+Release-Makefile-MinGW/*.exe
+### Eclipse files & settings & temp files
 .settings/
 .cproject
 .project
