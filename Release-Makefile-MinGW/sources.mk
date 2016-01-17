@@ -26,6 +26,7 @@ SUBDIRS := \
 source \
 source/get_input \
 source/mechanism_reduction \
+source/mechanism_reduction/species_lumping \
 source/petrooxy \
 source/pre-process \
 source/rates_analysis \

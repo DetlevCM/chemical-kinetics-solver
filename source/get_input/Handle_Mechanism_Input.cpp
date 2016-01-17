@@ -77,7 +77,7 @@ bool Handle_Mechanism_Input(
 
 	Thermodynamics = Get_Thermodynamic_Data_New_Format(MechanismData, Species);
 	cout << "The Input File contains " << Thermodynamics.size()
-		 << " Thermodynamic Data Entries.\n";
+						 << " Thermodynamic Data Entries.\n";
 
 	// Get and store the Reaction Mechanism data
 	Reactions = Read_Reaction_Matrix(MechanismData, Species);
@@ -149,7 +149,7 @@ bool Handle_Mechanism_Input(
 
 
 	cout << "Initial concentrations are supplied for " << InitalSpecies.size()
-		 << " species as follow:\n";
+						 << " species as follow:\n";
 
 
 	/*
@@ -297,13 +297,30 @@ bool Handle_Mechanism_Input(
 
 		Thermodynamics = Process_Thermodynamics_Species_Classes(SpeciesClassMapping, Thermodynamics); // create new thermodynamics
 
-		Reactions = Process_Species_Combination_Reactions_v2(
-				Number_Species_Classes,
-				SpeciesClassMapping,
-				Reactions,
-				InitialParameters.temperature
-		); // produce new reactions
-
+		//if(InitialParameters.UseNewLumping)
+			// new mapping with average Ea and fitted n & A
+		//{
+		//	cout << "New parameter estimation method.\n";
+			Reactions = Process_Reactions_For_Species_Lumping(
+					Number_Species_Classes,
+					SpeciesClassMapping,
+					Reactions,
+					InitialParameters.temperature,
+					InitialParameters.UseNewLumping,
+					InitialParameters.UseFastLumping
+			); // produce new reactions
+		/*}
+		else
+			// old mapping with n=0
+		{
+			cout << "Old parameter estimation method.\n";
+			Reactions = Process_Species_Combination_Reactions_v2(
+					Number_Species_Classes,
+					SpeciesClassMapping,
+					Reactions,
+					InitialParameters.temperature
+			); // produce new reactions
+		}//*/
 		Write_Thermodynamic_Data("recombined_thermo.txt", Species, Thermodynamics);
 		WriteReactions("recombined_scheme.txt", Species, Reactions);
 		WriteSpecies("recombined_species.txt", Species);
@@ -320,9 +337,9 @@ bool Handle_Mechanism_Input(
 		temp[Number_Species_Classes] = InitialSpeciesConcentration[Number_Species]; // reassign initial temperature
 
 		if(InitialParameters.PetroOxy)
-			{
-				InitialParameters.PetroOxyGasSpecies = SpeciesClassMapping[InitialParameters.PetroOxyGasSpecies];
-			}
+		{
+			InitialParameters.PetroOxyGasSpecies = SpeciesClassMapping[InitialParameters.PetroOxyGasSpecies];
+		}
 
 		Number_Species = Number_Species_Classes; // Number_Species is accessed later and not re-evaluated
 		InitialSpeciesConcentration.clear(); // we overwrite the reactions, so why not the initial concentrations, can be used later for reset
@@ -332,8 +349,8 @@ bool Handle_Mechanism_Input(
 		//	 <<	" reactions and " << Reactions[0].Reactants.size() << " species.\n";
 
 		cout << "\nAfter species lumping, the scheme contains the following counts:\n" <<
-					"Species: " << Reactions[0].Reactants.size() << "\n" <<
-					"Reactions: " << Reactions.size() << "\n\n";
+				"Species: " << Reactions[0].Reactants.size() << "\n" <<
+				"Reactions: " << Reactions.size() << "\n\n";
 
 	}
 	DataInputFromFile.close();

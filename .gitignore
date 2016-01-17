@@ -2,13 +2,11 @@ libraries/libiode_intel64.lib
 libraries/libiode_intel64.a
 libraries/libiode_ia32.lib
 libraries/libiode_ia32.a
-#Release/source/*
-Release/
-#Debug/source/*
-Debug
-#Release-Intel/source/*
-Release-Intel
+Release/*
+Debug/*
+Release-Intel/*
 Release-Makefile-Linux/*.o
+Release-Makefile-Linux/*.exe
 Release-Makefile-MinGW/*.o
 .settings/
 .cproject

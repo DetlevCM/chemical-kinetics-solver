@@ -35,10 +35,48 @@ void handle_reactions_with_chosen_species(
 
 
 
+/* ******************************************************* */
+/*  various functions associated with mechanism reduction  */
+/* ******************************************************* */
 
-/* *************************************************** */
-/*  mapping Species and removing duplicated reactions  */
-/* *************************************************** */
+
+void ReportAccuracy(
+		int,
+		vector< string > ,
+		string,
+		string,
+		string
+);
+
+vector< bool > Read_Kill_List(
+		string filename,
+		vector< string > Species
+);
+
+void ReactionRateImportance(
+		vector< double>& ,
+		const vector< double >& ,
+		double
+);
+
+vector< SingleReactionData > ReduceReactionsNew(
+		const vector< string >& ,
+		const vector< SingleReactionData >& ,
+		const vector< double >&
+);
+
+vector< double > Compare_Concentrations(
+		const vector< double >& ,
+		const vector< vector< double > >& ,
+		const vector< double >& ,
+		const vector< vector< double > >&
+);
+
+
+
+///* ***************************************** */
+//*  species lumping and reaction redcution   *//
+/* ***************************************** *///
 
 vector< vector< string > > Get_Combine_Species_Mapping(
 		string
@@ -66,59 +104,39 @@ vector< ThermodynamicData > Process_Thermodynamics_Species_Classes(
 		vector< ThermodynamicData >
 );
 
-// Old
-/*
-vector< vector< vector< double > > > Process_Species_Combination_Reactions(
-		int,
-		const vector< int >& ,
-		vector< vector< vector< double > > >
-);
-//*/
-
-// New
-vector< SingleReactionData > Process_Species_Combination_Reactions_v2(
-		int,
+vector< SingleReactionData > Process_Reactions_For_Species_Lumping(
+		int ,
 		const vector< int >& ,
 		vector< SingleReactionData >,
-		double
+		double ,
+		bool,
+		bool
 );
 
-
-void ReportAccuracy(
-		int,
-		vector< string > ,
-		string,
-		string,
-		string
+// Some helpers for the reduction:
+ReactionParameter Average_Ea_CalculateNewParametersFast(
+		vector< SingleReactionData >& ,
+		double ,
+		int
 );
 
-
-vector< bool > Read_Kill_List(
-		string filename,
-		vector< string > Species
+ReactionParameter Average_Ea_CalculateNewParametersSlow(
+		vector< SingleReactionData >& ,
+		double ,
+		int
 );
 
-
-void ReactionRateImportance(
-		vector< double>& ,
-		const vector< double >& ,
-		double
+// Some helpers for the reduction:
+ReactionParameter n_zero_CalculateNewParametersFast(
+		vector< SingleReactionData >& ,
+		double ,
+		int
 );
 
-
-vector< SingleReactionData > ReduceReactionsNew(
-		const vector< string >& ,
-		const vector< SingleReactionData >& ,
-		const vector< double >&
+ReactionParameter n_zero_CalculateNewParametersSlow(
+		vector< SingleReactionData >& ,
+		double ,
+		int
 );
-
-
-vector< double > Compare_Concentrations(
-		const vector< double >& ,
-		const vector< vector< double > >& ,
-		const vector< double >& ,
-		const vector< vector< double > >&
-);
-
 
 #endif /* HEADERS_MECHANISM_REDUCTION_H_ */

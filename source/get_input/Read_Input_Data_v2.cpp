@@ -58,6 +58,10 @@ void Read_Input_Data_v2(
 		SetupParam.UseStiffSolver = true;
 		SetupParam.EnforceStability = false;
 
+		// Mapping setup
+		SetupParam.UseNewLumping = false;
+		SetupParam.UseFastLumping = true; // old method wasn't wrong but inefficient and slow
+
 		/* Code extension for Gas Phase */
 		SetupParam.GasPhase = false; // default not gas phase
 		SetupParam.GasPhaseVolume = 0; // 1 L = 0.001 m^3
@@ -91,7 +95,7 @@ void Read_Input_Data_v2(
 		SetupParam.HenryLawDiffusionLimit = 0;
 
 
-		SetupParam.StoichimoetryMatrixForOpt = false;
+		SetupParam.StoichiometryMatrixForOpt = false;
 
 
 		SetupParam.Jacobian = false;
@@ -177,10 +181,35 @@ void Read_Input_Data_v2(
 					delete[] cstr;
 				}
 
-				found = line1.find("Stoichimoetry Matrix For Opt");
+				found = line1.find("Use New Lumping");
 				if (found!=string::npos)
 				{
-					SetupParam.StoichimoetryMatrixForOpt = true;
+					SetupParam.UseNewLumping = true;
+					line1.clear();
+					delete[] cstr;
+				}
+
+				found = line1.find("Use Slow New Lumping");
+				if (found!=string::npos)
+				{
+					SetupParam.UseNewLumping = true;
+					SetupParam.UseFastLumping = false;
+					line1.clear();
+					delete[] cstr;
+				}
+
+				found = line1.find("Use Slow Lumping");
+				if (found!=string::npos)
+				{
+					SetupParam.UseFastLumping = false;
+					line1.clear();
+					delete[] cstr;
+				}
+
+				found = line1.find("Stoichiometry Matrix For Opt");
+				if (found!=string::npos)
+				{
+					SetupParam.StoichiometryMatrixForOpt = true;
 					line1.clear();
 					delete[] cstr;
 				}

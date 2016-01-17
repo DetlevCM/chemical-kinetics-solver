@@ -96,34 +96,57 @@ struct CalculatedThermodynamics {
 };
 
 struct InitParam {
-	bool irrev; // shoud be bool
+
 	bool PrintReacRates;
 	bool RatesMaxAnalysis;
 	bool RatesSpeciesAllAnalysis;
 	bool StreamRatesAnalysis;
 	bool EnforceStability;
 	int nrspec;
-	double rtol;
-	double atol;
-	double threshold;
 	vector< double > TimeEnd;
 	vector< double > TimeStep;
 	double temperature;
-	double hm;
-	double h;
+
 
 	bool UseStiffSolver;
 	double ReduceReactions;
 
+
+	/* ODE Solver Parameters */
+	double rtol;
+	double atol;
+	double threshold;
+	double hm;
+	double h;
+	// END
+
+
+	/* Extra Functionality */
+	bool StoichiometryMatrixForOpt;
+	// END
+
+
+	/* Pre-Processing of the Mechanism */
+	bool irrev;
+	bool UseFastLumping;
+	bool UseNewLumping;
+	// END
+
+	/* Needed when Solving */
 	bool RatesAnalysisAtTime;
 	vector< double > RatesAnalysisAtTimeData;
 
-	/* Code Extension for Gas Phase */
+	bool Jacobian;
+	// END
+
+	/* Experimetnal Gas Phase Code */
 	bool GasPhase; // i.e. is gas phase, default false
 	double GasPhaseVolume;
 	double GasPhasePressure;
 
-	/* Handling of PetroOxy in Main Input File */
+	// END
+
+	/* PetroOxy modelling functionality */
 	bool PetroOxy;
 	int PetroOxyGasSpecies;
 	double PetroOxySampleSize;
@@ -133,11 +156,7 @@ struct InitParam {
 	double PetroOxyTemperatureRise;
 	bool HenryLawDiffusionLimitSet;
 	double HenryLawDiffusionLimit;
-
-	bool StoichimoetryMatrixForOpt;
-
-	bool Jacobian;
-
+	// END
 };
 
 

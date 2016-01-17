@@ -13,6 +13,7 @@ RM := rm -rf
 -include source/rates_analysis/subdir.mk
 -include source/pre-process/subdir.mk
 -include source/petrooxy/subdir.mk
+-include source/mechanism_reduction/species_lumping/subdir.mk
 -include source/mechanism_reduction/subdir.mk
 -include source/get_input/subdir.mk
 -include source/subdir.mk

@@ -62,7 +62,7 @@ int main(int argc, char* argv[])
 	else // Mechanism read in correctly, proceed:
 	{
 		// for someone else's optimistaion code, optional output
-		if(InitialParameters.StoichimoetryMatrixForOpt)
+		if(InitialParameters.StoichiometryMatrixForOpt)
 		{
 			Write_Stoichiometric_Matrix_For_Opt
 			(
@@ -171,7 +171,7 @@ int main(int argc, char* argv[])
 
 				InitialParameters.ReduceReactions = 0; // switch off reduction...
 
-				if(InitialParameters.StoichimoetryMatrixForOpt)
+				if(InitialParameters.StoichiometryMatrixForOpt)
 				{
 					Write_Stoichiometric_Matrix_For_Opt
 					(
