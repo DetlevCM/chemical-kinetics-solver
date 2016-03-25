@@ -56,11 +56,22 @@ bool Handle_Mechanism_Input(
 	DataInputFromFile.close();
 
 
+	bool InputType2 = false;
+
 	// check the existence of the 2nd input file - the input data
 	DataInputFromFile.open(InputData.c_str());
 	if (!DataInputFromFile.is_open()) {
 		cout << "Error opening initial.inp \n";
-		return false;
+		InputData = "initial2.inp";
+		DataInputFromFile.open(InputData.c_str());
+		if (!DataInputFromFile.is_open()) {
+			cout << "Error opening initial2.inp \n";
+			return false;
+		}
+		else
+		{
+			InputType2 = true;
+		}
 	}
 	DataInputFromFile.close();
 
@@ -77,7 +88,7 @@ bool Handle_Mechanism_Input(
 
 	Thermodynamics = Get_Thermodynamic_Data_New_Format(MechanismData, Species);
 	cout << "The Input File contains " << Thermodynamics.size()
-						 << " Thermodynamic Data Entries.\n";
+								 << " Thermodynamic Data Entries.\n";
 
 	// Get and store the Reaction Mechanism data
 	Reactions = Read_Reaction_Matrix(MechanismData, Species);
@@ -140,16 +151,27 @@ bool Handle_Mechanism_Input(
 	//InitParam InitialParameters;
 	vector < InitSpecies > InitalSpecies;
 
+	if(InputType2)
+	{
+		Read_Input_Data_v3(
+				"initial2.inp",
+				Species,
+				InitialParameters,
+				InitalSpecies
+		); // new function for improved input reading
+	}
+	else
+	{
 	Read_Input_Data_v2(
 			"initial.inp",
 			Species,
 			InitialParameters,
 			InitalSpecies
 	); // new function for improved input reading
-
+	}
 
 	cout << "Initial concentrations are supplied for " << InitalSpecies.size()
-						 << " species as follow:\n";
+								 << " species as follow:\n";
 
 
 	/*
@@ -247,6 +269,7 @@ bool Handle_Mechanism_Input(
 	// Did the user request an irreversible scheme?
 	if (InitialParameters.irrev) // contains true of false
 	{
+		//cout << "Initial Parameters " << InitialParameters.irrev << "\n";
 		cout << "Transformation to irreversible scheme requested!\n";
 		Reactions = Make_Irreversible(Reactions, Thermodynamics);
 		WriteReactions("irreversible_scheme.txt", Species, Reactions);
@@ -298,17 +321,17 @@ bool Handle_Mechanism_Input(
 		Thermodynamics = Process_Thermodynamics_Species_Classes(SpeciesClassMapping, Thermodynamics); // create new thermodynamics
 
 		//if(InitialParameters.UseNewLumping)
-			// new mapping with average Ea and fitted n & A
+		// new mapping with average Ea and fitted n & A
 		//{
 		//	cout << "New parameter estimation method.\n";
-			Reactions = Process_Reactions_For_Species_Lumping(
-					Number_Species_Classes,
-					SpeciesClassMapping,
-					Reactions,
-					InitialParameters.temperature,
-					InitialParameters.UseNewLumping,
-					InitialParameters.UseFastLumping
-			); // produce new reactions
+		Reactions = Process_Reactions_For_Species_Lumping(
+				Number_Species_Classes,
+				SpeciesClassMapping,
+				Reactions,
+				InitialParameters.temperature,
+				InitialParameters.UseNewLumping,
+				InitialParameters.UseFastLumping
+		); // produce new reactions
 		/*}
 		else
 			// old mapping with n=0

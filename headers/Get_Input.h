@@ -55,6 +55,13 @@ void Read_Input_Data_v2(
 		vector< InitSpecies >&
 ); // new function for improved input reading
 
+void Read_Input_Data_v3(
+		string,
+		const vector< string >& ,
+		InitParam& ,
+		vector< InitSpecies >&
+); // new function for improved input reading
+
 
 #endif /* INPUT_FUNCTIONS_ */
 

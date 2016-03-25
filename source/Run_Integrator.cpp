@@ -204,6 +204,44 @@ void Integrate_Liquid_Phase(
 	InitialDataConstants.PetroOxyTemperatureRise = InitialParameters.PetroOxyTemperatureRise;
 	InitialDataConstants.temperature = InitialParameters.temperature;
 
+	// Set Constant Concentration if it Exists
+	//
+
+	InitialDataConstants.ConstantConcentration = InitialParameters.ConstantConcentration;
+	if(InitialParameters.ConstantConcentration)
+	{
+
+		cout << "Constant Species desired\n";
+
+		InitialDataConstants.ConstantSpecies.clear();
+		InitialDataConstants.ConstantSpecies.resize(Number_Species);
+
+		// zero just to make sure
+		for(i=0;i<Number_Species;i++)
+		{
+			InitialDataConstants.ConstantSpecies[i] = 0;
+		}
+
+		//cout << "checkpoint - array size " << (int)InitialParameters.ConstantSpecies.size() << "\n";
+		for(i=0;i<(int)InitialParameters.ConstantSpecies.size();i++)
+		{
+			// fix initial concentrations
+			InitialDataConstants.ConstantSpecies[
+												 InitialParameters.ConstantSpecies[i]] =
+														 SpeciesConcentration[
+																			  InitialParameters.ConstantSpecies[i]];
+			//cout << "check " << InitialParameters.ConstantSpecies[i] << "\n";
+		}
+
+		/*
+		for(i=0;i<Number_Species;i++)
+				{
+					cout << InitialDataConstants.ConstantSpecies[i] << "\n";
+				}
+		//*/
+	}
+
+
 	if(InitialParameters.PetroOxy)
 	{
 		PetroOxyOutputHeader(OutputFilenames.PetroOxy);

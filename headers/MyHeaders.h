@@ -46,6 +46,9 @@ using std::istringstream;
 
 // Definitions of my functions
 #include "Get_Input.h"
+
+#include "initial_data_handling.h" // new input handling
+
 #include "Pre-Process.h"
 #include "Mechanism_Reduction.h"
 #include "Solver_Calculations.h"

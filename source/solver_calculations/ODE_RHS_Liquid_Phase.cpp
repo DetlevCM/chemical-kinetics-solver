@@ -61,6 +61,23 @@ void ODE_RHS_Liquid_Phase(int*n, double*time_current, double*y, double*f)
 				PetroOxyData);
 	}
 
+
+
+	//*
+	// Settings Constant Concentrations - easiest to let it do the rates and just reset the concentration
+	if(InitialDataConstants.ConstantConcentration)
+	{
+		//cout << "preparing constant species \n";
+		for(i=0;i<Number_Species;i++)
+		{
+			if(InitialDataConstants.ConstantSpecies[i] != 0){
+				y[i] = InitialDataConstants.ConstantSpecies[i] ; // concentration reset
+			}
+		}
+	}
+	//*/
+
+
 	// Thermodynamic data, Rate Constant, Rates, new Concentrations
 	Calculate_Thermodynamics(CalculatedThermo, Concentration[Number_Species], Thermodynamics);
 	Calculate_Rate_Constant(Kf, Kr, Concentration[Number_Species],ReactionParameters, CalculatedThermo, SpeciesLossAll, Delta_N);
@@ -95,16 +112,17 @@ void ODE_RHS_Liquid_Phase(int*n, double*time_current, double*y, double*f)
 	f[Number_Species] = qtot; // Temperature equation //
 	//cout << ctot << " " << qint << " " << qtot << "\n";
 
+
 	//*
 	if(
 			Concentration[Number_Species] >= InitialDataConstants.temperature
 			&&
 			InitialDataConstants.PetroOxy) // fix temperature for Oxy
-			{
-			y[Number_Species] = InitialDataConstants.temperature; // ensure temperature is not exceeded
-			InitialDataConstants.PetroOxyTemperatureRise = 0;
+	{
+		y[Number_Species] = InitialDataConstants.temperature; // ensure temperature is not exceeded
+		InitialDataConstants.PetroOxyTemperatureRise = 0;
 
-			f[Number_Species] = 0;
+		f[Number_Species] = 0;
 	}//*/
 
 	if(
@@ -121,6 +139,23 @@ void ODE_RHS_Liquid_Phase(int*n, double*time_current, double*y, double*f)
 
 		//std::cout << f[Number_Species] << "\n";
 	}//*/
+
+
+
+	//*
+	// Settings relevant rates to zero
+	if(InitialDataConstants.ConstantConcentration)
+	{
+		//cout << "preparing constant species \n";
+		for(i=0;i<Number_Species;i++)
+		{
+			if(InitialDataConstants.ConstantSpecies[i] != 0){
+				f[i] = 0 ; // concentration reset
+				//cout << "f[" << i << "] = " << f[i];
+			}
+		}
+	}
+	//*/
 
 	// IEEE standard hack to check for NaN
 	// if temperature blows up, freeze it

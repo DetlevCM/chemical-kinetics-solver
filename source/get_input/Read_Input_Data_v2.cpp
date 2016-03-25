@@ -100,6 +100,8 @@ void Read_Input_Data_v2(
 
 		SetupParam.Jacobian = false;
 
+		SetupParam.ConstantConcentration = false;
+
 		int i;
 		char * cstr, *p;
 		string str;
@@ -181,6 +183,7 @@ void Read_Input_Data_v2(
 					delete[] cstr;
 				}
 
+
 				found = line1.find("Use New Lumping");
 				if (found!=string::npos)
 				{
@@ -213,7 +216,6 @@ void Read_Input_Data_v2(
 					line1.clear();
 					delete[] cstr;
 				}
-
 
 				found = line1.find("RatesMaxAnalysis");
 				if (found!=string::npos)
@@ -422,6 +424,30 @@ void Read_Input_Data_v2(
 					SetupParam.TimeEnd.push_back(LineIn[0]);
 					SetupParam.TimeStep.push_back(LineIn[1]);
 				}
+
+
+				//*
+				// This will work, but I don't think it is the best implementation
+				found = line1.find("ConstantConcentration");
+				if (found!=string::npos)
+				{
+					p=strtok (cstr," \t"); // break at space or tab
+					p=strtok(NULL," \t"); // break again as first is the keyword
+
+					//cout << "does this work?\n";
+					for(i=0;i<Number_Species;i++){
+						if(strcmp(p,Species[i].c_str()) == 0)
+						{
+							// allows users to provide multiple time points
+							SetupParam.ConstantSpecies.push_back(i);
+							//cout << "Just checking " << i << "\n";
+						}
+					}
+					SetupParam.ConstantConcentration = true;
+					line1.clear();
+					delete[] cstr;
+				}
+				//*/
 
 
 				/*
@@ -680,8 +706,8 @@ void Read_Input_Data_v2(
 
 				// check the string still contains data
 				if(!line1.empty()){
-					LineIn.clear();
-					LineIn.resize(2);
+					//LineIn.clear();
+					//LineIn.resize(2);
 					p=strtok (cstr," \t"); // p contains the species name
 
 					for(i=0;i<Number_Species;i++){

@@ -64,6 +64,7 @@ int main(int argc, char* argv[])
 		// for someone else's optimistaion code, optional output
 		if(InitialParameters.StoichiometryMatrixForOpt)
 		{
+			//cout << "\n" << InitialParameters.StoichiometryMatrixForOpt << "\n\n";
 			Write_Stoichiometric_Matrix_For_Opt
 			(
 					"stoichiometry_matrix.txt" ,

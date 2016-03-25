@@ -86,6 +86,11 @@ struct ConstantInitRHSODE {
 	bool PetroOxy;
 	double temperature;
 	double PetroOxyTemperatureRise;
+
+	// for constant concentration
+	//
+	bool ConstantConcentration;
+	vector< double > ConstantSpecies;
 };
 
 struct CalculatedThermodynamics {
@@ -120,6 +125,12 @@ struct InitParam {
 	double h;
 	// END
 
+	/* Constant concentration option */
+	/* Single vector, to switch rates of specified species to zero */
+	//
+	bool ConstantConcentration;
+	vector< int > ConstantSpecies;
+	// END
 
 	/* Extra Functionality */
 	bool StoichiometryMatrixForOpt;
