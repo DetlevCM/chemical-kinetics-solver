@@ -49,17 +49,20 @@ int Number_Reactions;
 ConstantInitRHSODE InitialDataConstants;
 vector< TrackSpecies > ReactantsForReactions;
 vector< TrackSpecies > ProductsForReactions;
-int OxyGasSpeciesID;
 
 //// variable (values change during calculation ////
 vector< double > Rates;
 vector< double > SpeciesConcentrationChange;
+}
 
-PetroOxyCalculation PetroOxyData;
+// Split into own namespace for efficiency
+namespace ODE_RHS_Pressure_Vessel_Variables
+{
+int OxyGasSpeciesID;
+PressureVesselCalc PetroOxyData;
 //for limited Oxy
 double time_previous;
 }
-
 
 
 
@@ -75,7 +78,7 @@ void Integrate_Liquid_Phase(
 		vector< SingleReactionData >& Reactions,
 		InitParam InitialParameters,
 		vector< double >& KeyRates,
-		PetroOxyCalculation PetroOxyDataInput,
+		PressureVesselCalc PetroOxyDataInput,
 		vector< vector < str_RatesAnalysis > >& RatesAnalysisData
 )
 {
@@ -85,6 +88,7 @@ void Integrate_Liquid_Phase(
 
 	using namespace Jacobian_ODE_RHS;
 	using namespace ODE_RHS;
+	using namespace ODE_RHS_Pressure_Vessel_Variables;
 	using namespace Jacobian;
 
 	Number_Species = Species.size();
@@ -200,8 +204,8 @@ void Integrate_Liquid_Phase(
 
 
 	InitialDataConstants.EnforceStability = InitialParameters.EnforceStability;
-	InitialDataConstants.PetroOxy = InitialParameters.PetroOxy;
-	InitialDataConstants.PetroOxyTemperatureRise = InitialParameters.PetroOxyTemperatureRise;
+	InitialDataConstants.PetroOxy = InitialParameters.PressureVessel.IsSet;
+	InitialDataConstants.PetroOxyTemperatureRise = InitialParameters.PressureVessel.TemperatureRise;
 	InitialDataConstants.temperature = InitialParameters.temperature;
 
 	// Set Constant Concentration if it Exists
@@ -242,19 +246,19 @@ void Integrate_Liquid_Phase(
 	}
 
 
-	if(InitialParameters.PetroOxy)
+	if(InitialParameters.PressureVessel.IsSet)
 	{
 		PetroOxyOutputHeader(OutputFilenames.PetroOxy);
-		OxyGasSpeciesID = InitialParameters.PetroOxyGasSpecies;
+		OxyGasSpeciesID = InitialParameters.PressureVessel.GasSpecies;
 		PetroOxyData = PetroOxyDataInput;
 	}
 	// Oxy with temperature Rise
 	if(
 			//GlobalArrays::
-			InitialParameters.PetroOxy
+			InitialParameters.PressureVessel.IsSet
 			&&
 			//GlobalArrays::
-			InitialParameters.PetroOxyTemperatureRise != 0) // fix temperature for Oxy, rise desired
+			InitialParameters.PressureVessel.TemperatureRise != 0) // fix temperature for Oxy, rise desired
 	{
 		SpeciesConcentration[Number_Species] = 298;
 		// for Oxy diffusion limit, gets ignored if not required
@@ -302,7 +306,7 @@ void Integrate_Liquid_Phase(
 		ReactionRateImportance(KeyRates, Rates, InitialParameters.ReduceReactions);
 	}
 
-	if(InitialParameters.PetroOxy)
+	if(InitialParameters.PressureVessel.IsSet)
 	{
 
 		//  the PetroOxy will saturate the hydrocarbon with oxygen
@@ -361,39 +365,82 @@ void Integrate_Liquid_Phase(
 
 		if(!InitialParameters.UseStiffSolver && InitialParameters.Jacobian)
 		{
-			dodesol_rkm9mka(ipar, &n, &time_current, &time_step, y,
-					(void*) ODE_RHS_Liquid_Phase,
-					(void*) Jacobian_Matrix,
-					&h, &hm, &ep, &tr, dpar, kd, &ierr
-			);
+			if(!InitialDataConstants.PetroOxy) // not a pressurised vessel
+			{
+				dodesol_rkm9mka(ipar, &n, &time_current, &time_step, y,
+						(void*) ODE_RHS_Liquid_Phase,
+						(void*) Jacobian_Matrix,
+						&h, &hm, &ep, &tr, dpar, kd, &ierr
+				);
+			}
+			else
+			{
+				dodesol_rkm9mka(ipar, &n, &time_current, &time_step, y,
+						(void*) ODE_RHS_Pressure_Vessel,
+						(void*) Jacobian_Matrix,
+						&h, &hm, &ep, &tr, dpar, kd, &ierr
+				);
+			}
 		}
 
 		if(InitialParameters.UseStiffSolver && InitialParameters.Jacobian)
 		{
-			// stiff solver with automatics numerical Jacobi matric computations
-			dodesol_mk52lfa(ipar, &n, &time_current, &time_step, y,
-					(void*) ODE_RHS_Liquid_Phase,
-					(void*) Jacobian_Matrix,
-					&h, &hm, &ep, &tr, dpar, kd, &ierr
-			);
+			if(!InitialDataConstants.PetroOxy) // not a pressurised vessel
+			{
+				// stiff solver with automatics numerical Jacobi matric computations
+				dodesol_mk52lfa(ipar, &n, &time_current, &time_step, y,
+						(void*) ODE_RHS_Liquid_Phase,
+						(void*) Jacobian_Matrix,
+						&h, &hm, &ep, &tr, dpar, kd, &ierr
+				);
+			}
+			else
+			{
+				dodesol_mk52lfa(ipar, &n, &time_current, &time_step, y,
+						(void*) ODE_RHS_Pressure_Vessel,
+						(void*) Jacobian_Matrix,
+						&h, &hm, &ep, &tr, dpar, kd, &ierr
+				);
+			}
 		}
 
 		if(InitialParameters.UseStiffSolver && !InitialParameters.Jacobian)
 		{
-			// stiff solver with automatics numerical Jacobi matric computations
-			dodesol_mk52lfn(ipar, &n, &time_current, &time_step, y,
-					(void*) ODE_RHS_Liquid_Phase,
-					&h, &hm, &ep, &tr, dpar, kd, &ierr
-			);
+			if(!InitialDataConstants.PetroOxy) // not a pressurised vessel
+			{
+				// stiff solver with automatics numerical Jacobi matric computations
+				dodesol_mk52lfn(ipar, &n, &time_current, &time_step, y,
+						(void*) ODE_RHS_Liquid_Phase,
+						&h, &hm, &ep, &tr, dpar, kd, &ierr
+				);
+			}
+			else
+			{
+				dodesol_mk52lfn(ipar, &n, &time_current, &time_step, y,
+						(void*) ODE_RHS_Pressure_Vessel,
+						&h, &hm, &ep, &tr, dpar, kd, &ierr
+				);
+			}
+
 		}
 
 		if(!InitialParameters.UseStiffSolver && !InitialParameters.Jacobian)
 		{
-			// hybrid solver with automatic numerical Jacobi matrix computations
-			dodesol_rkm9mkn(ipar, &n, &time_current, &time_step, y,
-					(void*) ODE_RHS_Liquid_Phase,
-					&h, &hm, &ep, &tr, dpar, kd, &ierr
-			);
+			if(!InitialDataConstants.PetroOxy) // not a pressurised vessel
+			{
+				// hybrid solver with automatic numerical Jacobi matrix computations
+				dodesol_rkm9mkn(ipar, &n, &time_current, &time_step, y,
+						(void*) ODE_RHS_Liquid_Phase,
+						&h, &hm, &ep, &tr, dpar, kd, &ierr
+				);
+			}
+			else
+			{
+				dodesol_rkm9mkn(ipar, &n, &time_current, &time_step, y,
+						(void*) ODE_RHS_Pressure_Vessel,
+						&h, &hm, &ep, &tr, dpar, kd, &ierr
+				);
+			}
 		}
 		if (ierr != 0)
 		{
@@ -468,7 +515,7 @@ void Integrate_Liquid_Phase(
 		}
 
 
-		if(InitialParameters.PetroOxy)
+		if(InitialParameters.PressureVessel.IsSet)
 		{
 			PetroOxyOutputStream(
 					OutputFilenames.PetroOxy,

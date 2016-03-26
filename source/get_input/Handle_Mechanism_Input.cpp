@@ -25,7 +25,7 @@ bool Handle_Mechanism_Input(
 		vector< SingleReactionData >& Reactions,
 		InitParam& InitialParameters,
 		vector< double >& InitialSpeciesConcentration,
-		PetroOxyCalculation & PetroOxyData
+		PressureVesselCalc & PetroOxyData
 )
 {
 
@@ -359,9 +359,9 @@ bool Handle_Mechanism_Input(
 		}
 		temp[Number_Species_Classes] = InitialSpeciesConcentration[Number_Species]; // reassign initial temperature
 
-		if(InitialParameters.PetroOxy)
+		if(InitialParameters.PressureVessel.IsSet)
 		{
-			InitialParameters.PetroOxyGasSpecies = SpeciesClassMapping[InitialParameters.PetroOxyGasSpecies];
+			InitialParameters.PressureVessel.GasSpecies = SpeciesClassMapping[InitialParameters.PressureVessel.GasSpecies];
 		}
 
 		Number_Species = Number_Species_Classes; // Number_Species is accessed later and not re-evaluated
@@ -383,7 +383,7 @@ bool Handle_Mechanism_Input(
 
 	// did the user request a PetroOxy modification?
 
-	if(InitialParameters.PetroOxy)
+	if(InitialParameters.PressureVessel.IsSet)
 	{
 		// adjust old array
 		/* 2002 CODATA values */
@@ -391,7 +391,7 @@ bool Handle_Mechanism_Input(
 		//double Na = 6.0221415e23;
 
 
-		PetroOxyData.SampleSize = InitialParameters.PetroOxySampleSize;
+		PetroOxyData.SampleSize = InitialParameters.PressureVessel.SampleSize;
 
 		// Gas Phase Volume
 		PetroOxyData.HeadSpaceGas = 22.5*1e-6 - PetroOxyData.SampleSize;
@@ -399,24 +399,24 @@ bool Handle_Mechanism_Input(
 		// Initial pressure is at 25 degrees celsius
 		// n = pV/R/T
 		PetroOxyData.HeadSpaceGasMol =
-				InitialParameters.PetroOxyInitPressure*PetroOxyData.HeadSpaceGas/R/298;
+				InitialParameters.PressureVessel.InitPressure*PetroOxyData.HeadSpaceGas/R/298;
 		// p = nRT/V
 		PetroOxyData.HeadSpaceGasPressure = PetroOxyData.HeadSpaceGasMol*R*InitialParameters.temperature/PetroOxyData.HeadSpaceGas;
 
 		// Solvent Component of Pressure
-		PetroOxyData.HeadSpaceSolventComponentPressure = InitialParameters.PetroOxyMaxPressure-PetroOxyData.HeadSpaceGasPressure;
+		PetroOxyData.HeadSpaceSolventComponentPressure = InitialParameters.PressureVessel.MaxPressure-PetroOxyData.HeadSpaceGasPressure;
 
 
 		// the user is asked to input mol / L at 1atm
 		// 100% oxygen assumed - mol/L to mol/m^3 * 1000 - not Done
 		// atm to Pa - *101325
-		PetroOxyData.HenryConstantk = 101325/InitialParameters.PetroOxyGasSolubility;
+		PetroOxyData.HenryConstantk = 101325/InitialParameters.PressureVessel.GasSolubility;
 		// k is now Pa mol / L
 
 
 		// Mod for limitied diffusion
-		PetroOxyData.HenryLawDiffusionLimitSet = InitialParameters.HenryLawDiffusionLimitSet;
-		PetroOxyData.HenryLawDiffusionLimit = InitialParameters.HenryLawDiffusionLimit;
+		PetroOxyData.HenryLawDiffusionLimitSet = InitialParameters.PressureVessel.HenryLawDiffusionLimitSet;
+		PetroOxyData.HenryLawDiffusionLimit = InitialParameters.PressureVessel.HenryLawDiffusionLimit;
 	}
 
 

@@ -13,13 +13,13 @@ void AdjustGasConcentration(
 		double & ,
 		double ,
 		double ,
-		PetroOxyCalculation &
+		PressureVesselCalc &
 );
 
 void Adjust_Gas_Concentration_Initial(
 		double & ,
 		double ,
-		PetroOxyCalculation &
+		PressureVesselCalc &
 );
 
 

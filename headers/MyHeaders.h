@@ -41,7 +41,7 @@ using std::istringstream;
 
 #include "Structs.h"
 #include "Classes.h"
-#include "Namespaces.hpp"
+#include "Namespaces.h"
 #include "Global_Variables.hpp"
 
 // Definitions of my functions

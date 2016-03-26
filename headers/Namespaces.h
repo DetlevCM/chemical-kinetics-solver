@@ -48,13 +48,20 @@ extern int Number_Reactions;
 extern ConstantInitRHSODE InitialDataConstants;
 extern vector< TrackSpecies > ReactantsForReactions;
 extern vector< TrackSpecies > ProductsForReactions;
-extern int OxyGasSpeciesID;
 
 //// variable (values change during calculation ////
 extern vector< double > Rates;
 extern vector< double > SpeciesConcentrationChange;
 
-extern PetroOxyCalculation PetroOxyData;
+//extern PressureVesselCalc PetroOxyData;
+//for limited Oxy
+//extern double time_previous;
+}
+
+namespace ODE_RHS_Pressure_Vessel_Variables
+{
+extern int OxyGasSpeciesID;
+extern PressureVesselCalc PetroOxyData;
 //for limited Oxy
 extern double time_previous;
 }

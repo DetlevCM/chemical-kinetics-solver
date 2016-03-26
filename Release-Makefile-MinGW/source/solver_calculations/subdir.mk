@@ -10,6 +10,7 @@ CPP_SRCS += \
 ../source/solver_calculations/IntegrateRoutine.cpp \
 ../source/solver_calculations/Jacobian.cpp \
 ../source/solver_calculations/ODE_RHS_Liquid_Phase.cpp \
+../source/solver_calculations/ODE_RHS_Pressure_Vessel.cpp \
 ../source/solver_calculations/SpeciesLossRate.cpp 
 
 OBJS += \
@@ -19,6 +20,7 @@ OBJS += \
 ./source/solver_calculations/IntegrateRoutine.o \
 ./source/solver_calculations/Jacobian.o \
 ./source/solver_calculations/ODE_RHS_Liquid_Phase.o \
+./source/solver_calculations/ODE_RHS_Pressure_Vessel.o \
 ./source/solver_calculations/SpeciesLossRate.o 
 
 CPP_DEPS += \
@@ -28,6 +30,7 @@ CPP_DEPS += \
 ./source/solver_calculations/IntegrateRoutine.d \
 ./source/solver_calculations/Jacobian.d \
 ./source/solver_calculations/ODE_RHS_Liquid_Phase.d \
+./source/solver_calculations/ODE_RHS_Pressure_Vessel.d \
 ./source/solver_calculations/SpeciesLossRate.d 
 
 
@@ -35,7 +38,7 @@ CPP_DEPS += \
 source/solver_calculations/%.o: ../source/solver_calculations/%.cpp
 	@echo 'Building file: $<'
 	@echo 'Invoking: GCC C++ Compiler'
-	g++ -I"X:\workspace\CKS branches\headers" -O3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"
+	g++ -I"C:\Dev\workspace\CKS branches\headers" -O3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 

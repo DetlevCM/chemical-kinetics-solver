@@ -100,6 +100,33 @@ struct CalculatedThermodynamics {
 	double S;
 };
 
+// Planing to split this into its own struct
+struct PressureVesselConfig {
+	bool IsSet;
+	int GasSpecies;
+	double SampleSize;
+	double InitPressure;
+	double MaxPressure;
+	double GasSolubility;
+	double TemperatureRise;
+	bool HenryLawDiffusionLimitSet;
+	double HenryLawDiffusionLimit;
+	// new addition to allow different vessel sizes
+	double VesselSize;
+};
+
+
+struct PressureVesselCalc {
+	bool HenryLawDiffusionLimitSet;
+	double SampleSize ; // Old 0
+	double HeadSpaceGas ; // Old 4
+	double HeadSpaceGasMol; // Old 6
+	double HenryConstantk; // Old 10
+	double HeadSpaceGasPressure; // Old 7
+	double HeadSpaceSolventComponentPressure; // Old 8
+	double HenryLawDiffusionLimit;
+};
+
 struct InitParam {
 
 	bool PrintReacRates;
@@ -157,7 +184,9 @@ struct InitParam {
 
 	// END
 
+
 	/* PetroOxy modelling functionality */
+	/*
 	bool PetroOxy;
 	int PetroOxyGasSpecies;
 	double PetroOxySampleSize;
@@ -167,20 +196,15 @@ struct InitParam {
 	double PetroOxyTemperatureRise;
 	bool HenryLawDiffusionLimitSet;
 	double HenryLawDiffusionLimit;
-	// END
+	double VesselSize;
+	// END */
+
+	// New option for storing the pressure vessel
+	PressureVesselConfig PressureVessel;
 };
 
 
-struct PetroOxyCalculation {
-	bool HenryLawDiffusionLimitSet;
-	double SampleSize ; // Old 0
-	double HeadSpaceGas ; // Old 4
-	double HeadSpaceGasMol; // Old 6
-	double HenryConstantk; // Old 10
-	double HeadSpaceGasPressure; // Old 7
-	double HeadSpaceSolventComponentPressure; // Old 8
-	double HenryLawDiffusionLimit;
-};
+
 
 
 struct ThermodynamicData {

@@ -83,16 +83,16 @@ void Read_Input_Data_v2(
 		 * 10) "k" as Henry's Law Constant, k = P_gas/C //  Pa mol / L
 		 */
 
-		SetupParam.PetroOxy = false;
-		SetupParam.PetroOxySampleSize = 0;
-		SetupParam.PetroOxyInitPressure = 0;
-		SetupParam.PetroOxyMaxPressure = 0;
-		SetupParam.PetroOxyGasSpecies = 0;
-		SetupParam.PetroOxyGasSolubility = 0;
-		SetupParam.PetroOxyTemperatureRise = 0;
+		SetupParam.PressureVessel.IsSet = false;
+		SetupParam.PressureVessel.SampleSize = 0;
+		SetupParam.PressureVessel.InitPressure = 0;
+		SetupParam.PressureVessel.MaxPressure = 0;
+		SetupParam.PressureVessel.GasSpecies = 0;
+		SetupParam.PressureVessel.GasSolubility = 0;
+		SetupParam.PressureVessel.TemperatureRise = 0;
 
-		SetupParam.HenryLawDiffusionLimitSet = false;
-		SetupParam.HenryLawDiffusionLimit = 0;
+		SetupParam.PressureVessel.HenryLawDiffusionLimitSet = false;
+		SetupParam.PressureVessel.HenryLawDiffusionLimit = 0;
 
 
 		SetupParam.StoichiometryMatrixForOpt = false;
@@ -525,7 +525,7 @@ void Read_Input_Data_v2(
 					delete[] p;
 
 					// it is mL -> make into m^3
-					SetupParam.PetroOxySampleSize = strtod(Readout[1].c_str(),NULL)*1e-6;
+					SetupParam.PressureVessel.SampleSize = strtod(Readout[1].c_str(),NULL)*1e-6;
 					//PetroOxyData[0] = strtod(Readout[1].c_str(),NULL)*1e-6;
 					Readout.clear();
 
@@ -551,7 +551,7 @@ void Read_Input_Data_v2(
 					delete[] p;
 
 					// kPa to Pa
-					SetupParam.PetroOxyInitPressure = strtod(Readout[1].c_str(),NULL) * 1000;
+					SetupParam.PressureVessel.InitPressure = strtod(Readout[1].c_str(),NULL) * 1000;
 					//PetroOxyData[1] = strtod(Readout[1].c_str(),NULL) * 1000;
 					Readout.clear();
 				}
@@ -573,7 +573,7 @@ void Read_Input_Data_v2(
 					delete[] p;
 
 					// kPa to Pa
-					SetupParam.PetroOxyMaxPressure = strtod(Readout[1].c_str(),NULL) * 1000;
+					SetupParam.PressureVessel.MaxPressure = strtod(Readout[1].c_str(),NULL) * 1000;
 					//PetroOxyData[3] = strtod(Readout[1].c_str(),NULL) * 1000;
 					Readout.clear();
 				}
@@ -595,7 +595,7 @@ void Read_Input_Data_v2(
 					delete[] p;
 
 					// kPa to Pa
-					SetupParam.PetroOxyGasSolubility = strtod(Readout[1].c_str(),NULL);// * 1000;
+					SetupParam.PressureVessel.GasSolubility = strtod(Readout[1].c_str(),NULL);// * 1000;
 					//PetroOxyData[9] = strtod(Readout[1].c_str(),NULL);// * 1000;
 					Readout.clear();
 				}
@@ -620,7 +620,7 @@ void Read_Input_Data_v2(
 					for(int i = 0;i<(int)Species.size();i++)
 					{
 						if(strcmp(Readout[1].c_str(),Species[i].c_str()) == 0){
-							SetupParam.PetroOxyGasSpecies = i;
+							SetupParam.PressureVessel.GasSpecies = i;
 							OxyGasSpeciesDefined = true;
 						}
 
@@ -646,7 +646,7 @@ void Read_Input_Data_v2(
 					delete[] p;
 
 					// kPa to Pa
-					SetupParam.PetroOxyTemperatureRise = strtod(Readout[1].c_str(),NULL) * 1000;
+					SetupParam.PressureVessel.TemperatureRise = strtod(Readout[1].c_str(),NULL) * 1000;
 					//PetroOxyData[3] = strtod(Readout[1].c_str(),NULL) * 1000;
 					Readout.clear();
 				}
@@ -656,13 +656,13 @@ void Read_Input_Data_v2(
 				// Need the Gas Species ID... - but gas species could be scpecies 0....
 
 
-				if(SetupParam.PetroOxySampleSize != 0 &&
-						SetupParam.PetroOxyInitPressure != 0 &&
-						SetupParam.PetroOxyMaxPressure != 0 &&
+				if(SetupParam.PressureVessel.SampleSize != 0 &&
+						SetupParam.PressureVessel.InitPressure != 0 &&
+						SetupParam.PressureVessel.MaxPressure != 0 &&
 						OxyGasSpeciesDefined == true &&
-						SetupParam.PetroOxyGasSolubility != 0
+						SetupParam.PressureVessel.GasSolubility != 0
 				){
-					SetupParam.PetroOxy = true;
+					SetupParam.PressureVessel.IsSet = true;
 				}
 
 
@@ -684,8 +684,8 @@ void Read_Input_Data_v2(
 					delete[] cstr;
 					delete[] p;
 
-					SetupParam.HenryLawDiffusionLimit = strtod(Readout[1].c_str(),NULL);
-					SetupParam.HenryLawDiffusionLimitSet = true;
+					SetupParam.PressureVessel.HenryLawDiffusionLimit = strtod(Readout[1].c_str(),NULL);
+					SetupParam.PressureVessel.HenryLawDiffusionLimitSet = true;
 					Readout.clear();
 
 				}

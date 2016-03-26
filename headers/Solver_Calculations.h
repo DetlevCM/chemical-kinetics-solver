@@ -8,10 +8,23 @@
 #ifndef CALCULATION_FUNCTIONS_
 #define CALCULATION_FUNCTIONS_
 
+
+
+// The ODE RHS functions are split - regular initial value & pressure vessel (reservoir)
+void ODE_RHS_Liquid_Phase(int*, double*, double*, double*);
+void ODE_RHS_Pressure_Vessel(int*, double*, double*, double*);
+
+
+// Jacobian Matrix for plain Arrhenius expressions only
+void Jacobian_Matrix(int*, double*, double*, double*);
+
+
+
+
+
 /*
  * Calculating Rate Constants
  */
-
 
 void Calculate_Rate_Constant(
 		vector< double >& ,

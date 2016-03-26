@@ -42,6 +42,7 @@ void Handle_SolverParameters(InitParam& InitialParameters, vector<string> Input)
 				InitialParameters.hm = strtod(p,NULL);
 				p=strtok(NULL," \t");
 			}
+			cout << "minimum stepsize (h): " << InitialParameters.hm << "\n";
 		}
 
 		if(Input[i].find("initialh")!=string::npos)
@@ -53,6 +54,7 @@ void Handle_SolverParameters(InitParam& InitialParameters, vector<string> Input)
 				InitialParameters.h = strtod(p,NULL);
 				p=strtok(NULL," \t");
 			}
+			cout << "initial stepsize (h): " << InitialParameters.h << "\n";
 		}
 
 
@@ -68,9 +70,12 @@ void Handle_SolverParameters(InitParam& InitialParameters, vector<string> Input)
 			}
 			InitialParameters.rtol = inputs[0];
 			InitialParameters.threshold = inputs[1];
+
+			cout << "relative tolerance: " << InitialParameters.rtol << "\n";
+			cout << "threshold: " << InitialParameters.threshold << "\n";
 		}
 
-		if(Input[i].find("Threshold")!=string::npos)
+		if(Input[i].find("Threshold")!=string::npos || Input[i].find("threshold")!=string::npos)
 		{
 			p=strtok (cstr," \t"); // break at space or tab
 			p=strtok(NULL," \t"); // break again as first is the keyword
@@ -79,9 +84,11 @@ void Handle_SolverParameters(InitParam& InitialParameters, vector<string> Input)
 				InitialParameters.threshold = strtod(p,NULL);
 				p=strtok(NULL," \t");
 			}
+
+			cout << "threshold: " << InitialParameters.threshold << "\n";
 		}
 
-		if(Input[i].find("RTOL")!=string::npos)
+		if(Input[i].find("RTOL")!=string::npos || Input[i].find("rtol")!=string::npos)
 		{
 			p=strtok (cstr," \t"); // break at space or tab
 			p=strtok(NULL," \t"); // break again as first is the keyword
@@ -90,6 +97,8 @@ void Handle_SolverParameters(InitParam& InitialParameters, vector<string> Input)
 				InitialParameters.rtol = strtod(p,NULL);
 				p=strtok(NULL," \t");
 			}
+
+			cout << "relative tolerance: " << InitialParameters.rtol << "\n";
 		}
 
 		if(Input[i].find("IRREV")!=string::npos)

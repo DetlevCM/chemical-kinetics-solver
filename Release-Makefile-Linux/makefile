@@ -15,6 +15,7 @@ RM := rm -rf
 -include source/petrooxy/subdir.mk
 -include source/mechanism_reduction/species_lumping/subdir.mk
 -include source/mechanism_reduction/subdir.mk
+-include source/get_input/initial_data_handling/subdir.mk
 -include source/get_input/subdir.mk
 -include source/subdir.mk
 -include subdir.mk
@@ -52,7 +53,7 @@ all: CKS\ branches.exe
 CKS\ branches.exe: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: GCC C++ Linker'
-	g++ -L"X:\workspace\CKS branches\libraries" -o "CKS branches.exe" $(OBJS) $(USER_OBJS) $(LIBS)
+	g++ -L"C:\Dev\workspace\CKS branches\libraries" -o "CKS branches.exe" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 

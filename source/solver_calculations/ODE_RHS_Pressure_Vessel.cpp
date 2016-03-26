@@ -8,13 +8,21 @@
 #include <MyHeaders.h>
 
 
-void ODE_RHS_Liquid_Phase(int*n, double*time_current, double*y, double*f)
+/*
+ * Customized ODE function for the pressure Vessel case
+ * should make long term maintenance better AND will
+ * improve performance through fewer if statements
+ * (fewer ifs = good)
+ */
+
+void ODE_RHS_Pressure_Vessel(int*n, double*time_current, double*y, double*f)
 {
 	// A namespace allows global variables without causing a mess, should be quicker than redefining too
 	//using namespace ODESolverConstant;
 	//using namespace ODESolverVariable;
 
 	using namespace ODE_RHS;
+	using namespace ODE_RHS_Pressure_Vessel_Variables;
 	using namespace Jacobian_ODE_RHS;
 
 	int i;
@@ -25,7 +33,6 @@ void ODE_RHS_Liquid_Phase(int*n, double*time_current, double*y, double*f)
 	//double Na = 6.0221415e23;
 
 	// stability hack
-	//if(GlobalArrays::InitialParameters.EnforceStability)
 	if(InitialDataConstants.EnforceStability)
 	{
 		for (i = 0; i <= Number_Species; i++)
@@ -47,9 +54,19 @@ void ODE_RHS_Liquid_Phase(int*n, double*time_current, double*y, double*f)
 		}
 	}
 
-	//double time_difference;
+	double time_difference;
 
 
+	time_difference = fabs(*time_current - time_previous);
+	AdjustGasConcentration(
+			y[OxyGasSpeciesID],
+			Concentration[Number_Species],
+			time_difference,
+			PetroOxyData);
+
+
+
+	// Constant Concentration with a pressure vessel makes no sense
 	/*
 	// Settings Constant Concentrations - easiest to let it do the rates and just reset the concentration
 	if(InitialDataConstants.ConstantConcentration)
@@ -101,6 +118,30 @@ void ODE_RHS_Liquid_Phase(int*n, double*time_current, double*y, double*f)
 
 
 
+	if(Concentration[Number_Species] >= InitialDataConstants.temperature)
+	{
+		y[Number_Species] = InitialDataConstants.temperature; // ensure temperature is not exceeded
+		InitialDataConstants.PetroOxyTemperatureRise = 0;
+
+		f[Number_Species] = 0;
+	}//*/
+
+
+
+	if(	InitialDataConstants.PetroOxyTemperatureRise != 0) // fix temperature for Oxy, rise desired
+	{
+		// 298K starting temp, GlobalArrays::InitialParameters.temperature is target
+		// rise time given in minutes
+		f[Number_Species] =
+				(InitialDataConstants.temperature - 298)
+				/
+				(InitialDataConstants.PetroOxyTemperatureRise);
+
+		//std::cout << f[Number_Species] << "\n";
+	}//*/
+
+
+
 	//*
 	// Settings relevant rates to zero
 	if(InitialDataConstants.ConstantConcentration)
@@ -125,7 +166,7 @@ void ODE_RHS_Liquid_Phase(int*n, double*time_current, double*y, double*f)
 
 
 	// For Oxy limiting
-	//time_previous = *time_current;
+	time_previous = *time_current;
 }
 
 

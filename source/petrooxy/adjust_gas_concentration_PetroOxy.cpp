@@ -35,7 +35,7 @@ void AdjustGasConcentration(
 		double & GasSpeciesInLiquidConcentration,
 		double temperature,
 		double time_difference,
-		PetroOxyCalculation & PetroOxyData
+		PressureVesselCalc & PetroOxyData
 )
 {
 	/* 2002 CODATA values */
@@ -128,7 +128,7 @@ void AdjustGasConcentration(
 void Adjust_Gas_Concentration_Initial(
 		double & GasSpeciesInLiquidConcentration,
 		double temperature,
-		PetroOxyCalculation & PetroOxyData
+		PressureVesselCalc & PetroOxyData
 )
 {
 	/* 2002 CODATA values */

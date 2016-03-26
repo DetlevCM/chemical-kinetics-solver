@@ -91,7 +91,7 @@ void PetroOxyOutputHeader(
 
 void PetroOxyOutputStream(
 		string,
-		const PetroOxyCalculation &,
+		const PressureVesselCalc &,
 		double
 		);
 

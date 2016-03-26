@@ -8,6 +8,10 @@
 #include <MyHeaders.h>
 
 
+/*
+ * Input for the case of a pressure vessel
+ */
+
 
 void Handle_PressureVessel(InitParam& InitialParameters, vector<string> Input, vector< string > Species)
 {
@@ -17,14 +21,9 @@ void Handle_PressureVessel(InitParam& InitialParameters, vector<string> Input, v
 	for(i=0;i<(int)Input.size();i++)
 	{
 
-
-		/*
-		 * PetroOxy Data Input
-		 */
-
 		vector<string> Readout;
 
-		if(string::npos!=Input[i].find("PetroOxy Solvent Sample="))
+		if(string::npos!=Input[i].find("Sample Size="))
 		{
 			char * cstr, *p;
 			string str = Input[i];
@@ -41,16 +40,35 @@ void Handle_PressureVessel(InitParam& InitialParameters, vector<string> Input, v
 			delete[] p;
 
 			// it is mL -> make into m^3
-			InitialParameters.PetroOxySampleSize = strtod(Readout[1].c_str(),NULL)*1e-6;
-			//PetroOxyData[0] = strtod(Readout[1].c_str(),NULL)*1e-6;
+			InitialParameters.PressureVessel.SampleSize = strtod(Readout[1].c_str(),NULL)*1e-6;
+			cout << "Sample Size: " << InitialParameters.PressureVessel.SampleSize << "\n";
 			Readout.clear();
+		}
 
+		if(string::npos!=Input[i].find("Vessel Size="))
+		{
+			char * cstr, *p;
+			string str = Input[i];
+			cstr = new char [str.size()+1];
+			strcpy (cstr, str.c_str());
+
+			p=strtok (cstr,"=");
+			while (p!=NULL)
+			{
+				Readout.push_back(p);
+				p=strtok(NULL,"<>");
+			}
+			delete[] cstr;
+			delete[] p;
+
+			// it is mL -> make into m^3
+			InitialParameters.PressureVessel.VesselSize = strtod(Readout[1].c_str(),NULL)*1e-6;
+			cout << "Vessel Size: " << InitialParameters.PressureVessel.VesselSize << "\n";
+			Readout.clear();
 			// Calculated volume from estimate is 22.41mL - so let us assume 22.5mL, value is in m^3
-			//PetroOxyData[4] = 22.5*1e-6 - PetroOxyData[0];
 		}
 
-
-		if(string::npos!=Input[i].find("PetroOxy Initial Pressure="))
+		if(string::npos!=Input[i].find("Initial Pressure="))
 		{
 			char * cstr, *p;
 			string str = Input[i];
@@ -67,12 +85,12 @@ void Handle_PressureVessel(InitParam& InitialParameters, vector<string> Input, v
 			delete[] p;
 
 			// kPa to Pa
-			InitialParameters.PetroOxyInitPressure = strtod(Readout[1].c_str(),NULL) * 1000;
-			//PetroOxyData[1] = strtod(Readout[1].c_str(),NULL) * 1000;
+			InitialParameters.PressureVessel.InitPressure = strtod(Readout[1].c_str(),NULL) * 1000;
+			cout << "Initial Pressure: " << InitialParameters.PressureVessel.InitPressure << "\n";
 			Readout.clear();
 		}
 
-		if(string::npos!=Input[i].find("PetroOxy Maximum Pressure="))
+		if(string::npos!=Input[i].find("Maximum Pressure="))
 		{
 			char * cstr, *p;
 			string str = Input[i];
@@ -89,12 +107,12 @@ void Handle_PressureVessel(InitParam& InitialParameters, vector<string> Input, v
 			delete[] p;
 
 			// kPa to Pa
-			InitialParameters.PetroOxyMaxPressure = strtod(Readout[1].c_str(),NULL) * 1000;
-			//PetroOxyData[3] = strtod(Readout[1].c_str(),NULL) * 1000;
+			InitialParameters.PressureVessel.MaxPressure = strtod(Readout[1].c_str(),NULL) * 1000;
+			cout << "Maximum Pressure: " << InitialParameters.PressureVessel.MaxPressure << "\n";
 			Readout.clear();
 		}
 
-		if(string::npos!=Input[i].find("PetroOxy Gas Solubility="))
+		if(string::npos!=Input[i].find("Gas Solubility="))
 		{
 			char * cstr, *p;
 			string str = Input[i];
@@ -111,13 +129,13 @@ void Handle_PressureVessel(InitParam& InitialParameters, vector<string> Input, v
 			delete[] p;
 
 			// kPa to Pa
-			InitialParameters.PetroOxyGasSolubility = strtod(Readout[1].c_str(),NULL);// * 1000;
-			//PetroOxyData[9] = strtod(Readout[1].c_str(),NULL);// * 1000;
+			InitialParameters.PressureVessel.GasSolubility = strtod(Readout[1].c_str(),NULL);// * 1000;
+			cout << "Gas Solubility: " << InitialParameters.PressureVessel.GasSolubility << "\n";
 			Readout.clear();
 		}
 
 
-		if(string::npos!=Input[i].find("PetroOxy Gas Species="))
+		if(string::npos!=Input[i].find("Gas Species="))
 		{
 			char * cstr, *p;
 			string str = Input[i];
@@ -136,12 +154,13 @@ void Handle_PressureVessel(InitParam& InitialParameters, vector<string> Input, v
 			for(int i = 0;i<(int)Species.size();i++)
 			{
 				if(strcmp(Readout[1].c_str(),Species[i].c_str()) == 0){
-					InitialParameters.PetroOxyGasSpecies = i;
+					InitialParameters.PressureVessel.GasSpecies = i;
 					OxyGasSpeciesDefined = true;
 				}
 
 			}
 
+			cout << "Gas Species: " << Species[InitialParameters.PressureVessel.GasSpecies] << "\n";
 			Readout.clear();
 		}
 
@@ -162,8 +181,8 @@ void Handle_PressureVessel(InitParam& InitialParameters, vector<string> Input, v
 			delete[] p;
 
 			// kPa to Pa
-			InitialParameters.PetroOxyTemperatureRise = strtod(Readout[1].c_str(),NULL) * 1000;
-			//PetroOxyData[3] = strtod(Readout[1].c_str(),NULL) * 1000;
+			InitialParameters.PressureVessel.TemperatureRise = strtod(Readout[1].c_str(),NULL) * 1000;
+			cout << "Temperature Rise: " << InitialParameters.PressureVessel.TemperatureRise << "\n";
 			Readout.clear();
 		}
 
@@ -172,13 +191,13 @@ void Handle_PressureVessel(InitParam& InitialParameters, vector<string> Input, v
 		// Need the Gas Species ID... - but gas species could be scpecies 0....
 
 
-		if(InitialParameters.PetroOxySampleSize != 0 &&
-				InitialParameters.PetroOxyInitPressure != 0 &&
-				InitialParameters.PetroOxyMaxPressure != 0 &&
+		if(InitialParameters.PressureVessel.SampleSize != 0 &&
+				InitialParameters.PressureVessel.InitPressure != 0 &&
+				InitialParameters.PressureVessel.MaxPressure != 0 &&
 				OxyGasSpeciesDefined == true &&
-				InitialParameters.PetroOxyGasSolubility != 0
+				InitialParameters.PressureVessel.GasSolubility != 0
 		){
-			InitialParameters.PetroOxy = true;
+			InitialParameters.PressureVessel.IsSet = true;
 		}
 
 
@@ -200,17 +219,11 @@ void Handle_PressureVessel(InitParam& InitialParameters, vector<string> Input, v
 			delete[] cstr;
 			delete[] p;
 
-			InitialParameters.HenryLawDiffusionLimit = strtod(Readout[1].c_str(),NULL);
-			InitialParameters.HenryLawDiffusionLimitSet = true;
+			InitialParameters.PressureVessel.HenryLawDiffusionLimit = strtod(Readout[1].c_str(),NULL);
+			InitialParameters.PressureVessel.HenryLawDiffusionLimitSet = true;
 			Readout.clear();
 
 		}
-
-
-
-		/*
-		 * End PetroOxy Data Input
-		 */
-
 	}
+
 }

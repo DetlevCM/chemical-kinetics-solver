@@ -103,8 +103,6 @@ vector< SingleReactionData > Make_Irreversible(
 		vector< ThermodynamicData >
 );
 
-
-//*
 void Integrate_Liquid_Phase(
 		/*string,
 		string,
@@ -117,14 +115,8 @@ void Integrate_Liquid_Phase(
 		vector< SingleReactionData > &,
 		InitParam,
 		vector< double >&,
-		PetroOxyCalculation,
+		PressureVesselCalc,
 		vector< vector < str_RatesAnalysis > > &
 );
-//*/
-
-//*
-void ODE_RHS_Liquid_Phase(int*, double*, double*, double*);
-void Jacobian_Matrix(int*, double*, double*, double*);
-//*/
 
 #endif /* _MY_OTHER_FUNCTIONS_ */

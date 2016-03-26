@@ -123,16 +123,16 @@ void Read_Input_Data_v3(
 		 * 10) "k" as Henry's Law Constant, k = P_gas/C //  Pa mol / L
 		 */
 
-		InitialParameters.PetroOxy = false;
-		InitialParameters.PetroOxySampleSize = 0;
-		InitialParameters.PetroOxyInitPressure = 0;
-		InitialParameters.PetroOxyMaxPressure = 0;
-		InitialParameters.PetroOxyGasSpecies = 0;
-		InitialParameters.PetroOxyGasSolubility = 0;
-		InitialParameters.PetroOxyTemperatureRise = 0;
+		InitialParameters.PressureVessel.IsSet = false;
+		InitialParameters.PressureVessel.SampleSize = 0;
+		InitialParameters.PressureVessel.InitPressure = 0;
+		InitialParameters.PressureVessel.MaxPressure = 0;
+		InitialParameters.PressureVessel.GasSpecies = 0;
+		InitialParameters.PressureVessel.GasSolubility = 0;
+		InitialParameters.PressureVessel.TemperatureRise = 0;
 
-		InitialParameters.HenryLawDiffusionLimitSet = false;
-		InitialParameters.HenryLawDiffusionLimit = 0;
+		InitialParameters.PressureVessel.HenryLawDiffusionLimitSet = false;
+		InitialParameters.PressureVessel.HenryLawDiffusionLimit = 0;
 
 
 		InitialParameters.StoichiometryMatrixForOpt = false;
@@ -145,6 +145,12 @@ void Read_Input_Data_v3(
 
 		// So, I need to check for an opening tag and read until a closing tag
 
+
+
+		/*
+		 * Every section is handled by its own function to avoid the potential
+		 * for collisions, also it allows similar keywords in different blocks
+		 */
 
 
 		while (Input_Data.good())
@@ -236,6 +242,7 @@ void Read_Input_Data_v3(
 
 				if (line.find("<PressureVessel>") != string::npos)
 				{
+					//cout << "Pressure vessel input detected.\n"; // tested
 					do{
 						getline(Input_Data,line);
 						if(LineNotCommentOrEmpty(line))
@@ -325,29 +332,6 @@ bool LineNotCommentOrEmpty( string InputLine)
 		return false;
 	}
 }
-
-/*
- * Every section is handled by its own function to avoid the potential
- * for collisions, also it allows similar keywords in different blocks
- */
-
-
-
-
-
-
-//   if (Input[i].find(
-/*
-void Handle_PressureVessel(InitParam& InitialParameters, vector<string> Input)
-{
-	int i;
-	for(i=0;i<(int)Input.size();i++)
-	{
-
-	}
-}
-
- */
 
 
 

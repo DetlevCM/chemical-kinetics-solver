@@ -25,6 +25,7 @@ C_DEPS :=
 SUBDIRS := \
 source \
 source/get_input \
+source/get_input/initial_data_handling \
 source/mechanism_reduction \
 source/mechanism_reduction/species_lumping \
 source/petrooxy \

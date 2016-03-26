@@ -50,7 +50,7 @@ void PetroOxyOutputHeader(string filename)
 
 void PetroOxyOutputStream(
 		string filename,
-		const PetroOxyCalculation & PetroOxyData,
+		const PressureVesselCalc & PetroOxyData,
 		double CurrentTime
 		)
 {

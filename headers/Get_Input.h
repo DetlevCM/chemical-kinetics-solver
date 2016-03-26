@@ -21,7 +21,7 @@ bool Handle_Mechanism_Input(
 		vector< SingleReactionData >& ,
 		InitParam& ,
 		vector< double >&,
-		PetroOxyCalculation &
+		PressureVesselCalc &
 );
 
 
