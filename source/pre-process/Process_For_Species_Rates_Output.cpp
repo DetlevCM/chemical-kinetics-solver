@@ -40,7 +40,7 @@ void Prepare_Print_Rates_Per_Species(
 
 	int i;
 	//int Number_Species = (int) Species.size();
-	int Number_Reactions = (int) Rates.size();
+	//int Number_Reactions = (int) Rates.size();
 
 	ofstream OutfileProd;
 	ofstream OutfileCons;
@@ -64,7 +64,7 @@ void Prepare_Print_Rates_Per_Species(
 
 		if(OutfileProd.is_open())
 		{
-			OutfileProd << "Time 	";
+			OutfileProd << "Time 	Total 	";
 
 			// sort first, then print out sorted output
 			/*
@@ -86,7 +86,7 @@ void Prepare_Print_Rates_Per_Species(
 
 		if(OutfileCons.is_open())
 		{
-			OutfileCons << "Time 	";
+			OutfileCons << "Time 	Total 	";
 
 			// sort first, then print out sorted output
 			/*
@@ -185,7 +185,10 @@ void Print_Rates_Per_Species(
 
 		if(OutfileProd.is_open())
 		{
-			OutfileProd << current_time << " 	";
+			OutfileProd << current_time <<
+					" 	" <<
+					RatesAnalysisDataTimeStepTotal[SelectedSpeciesID[i]].productionrate <<
+					" 	";
 
 			// sort first, then print out sorted output
 			//for(j=0;j<Number_Reactions;j++)
@@ -202,7 +205,10 @@ void Print_Rates_Per_Species(
 
 		if(OutfileCons.is_open())
 		{
-			OutfileCons << current_time << " 	";
+			OutfileCons << current_time <<
+					" 	" <<
+					RatesAnalysisDataTimeStepTotal[SelectedSpeciesID[i]].consumptionrate <<
+					" 	";
 
 			// sort first, then print out sorted output
 			//for(j=0;j<Number_Reactions;j++)
