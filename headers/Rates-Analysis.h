@@ -48,5 +48,30 @@ void StreamRatesAnalysis(
 		const int
 );
 
+// New function for rates of production
+
+void Prepare_Print_Rates_Per_Species(
+		vector< TrackSpecies > & ,
+		vector< TrackSpecies > & ,
+		vector< double > & ,
+		vector< string > ,
+		vector< int > ,
+		vector< vector< int > >,
+		vector< SingleReactionData >&
+);
+
+
+void Print_Rates_Per_Species(
+		vector< TrackSpecies > & ,
+		vector< TrackSpecies > & ,
+		vector< double > & ,
+		double ,
+		vector< string > ,
+		vector< int > ,
+		vector< vector< int > > ,
+		vector< SingleReactionData >&
+);
+
+
 
 #endif /* HEADERS_RATES_ANALYSIS_H_ */

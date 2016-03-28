@@ -7,11 +7,12 @@
 
 #include "MyHeaders.h"
 
-struct RatesPerSpeciesOut {
-	vector< int > Consumption;
-	vector< int > Production;
-};
+//struct RatesPerSpeciesOut {
+///	vector< int > Consumption;
+//	vector< int > Production;
+//};
 
+/*
 void Process_For_Species_Rates_Output(vector< int > SelectedSpecies, vector< SingleReactionData > Reactions)
 {
 	// this will need desired species
@@ -23,48 +24,61 @@ void Process_For_Species_Rates_Output(vector< int > SelectedSpecies, vector< Sin
 	int Number_SelectedSpecies = (int) SelectedSpecies.size();
 	int i;
 
-}
+}//*/
 
 
 void Prepare_Print_Rates_Per_Species(
-		const vector< TrackSpecies > & ProductsForRates,
-		const vector< TrackSpecies > & ReactantsForRates,
-		const vector< double > & Rates,
-		const double current_time,
-		const vector< string > Species,
-		const vector< SingleReactionData >& Reactions
+		vector< TrackSpecies > & ProductsForRates,
+		vector< TrackSpecies > & ReactantsForRates,
+		vector< double > & Rates,
+		vector< string > Species,
+		vector< int > SelectedSpeciesID,
+		vector< vector< int > > ReactionsForSpeciesSelectedForRates,
+		vector< SingleReactionData >& Reactions
 )
 {
 
 	int i;
-	int Number_Species = (int) Species.size();
+	//int Number_Species = (int) Species.size();
 	int Number_Reactions = (int) Rates.size();
 
 	ofstream OutfileProd;
 	ofstream OutfileCons;
 
-	for(i=0;i<Number_Species;i++)
+	int Number_Selected_Species = (int) SelectedSpeciesID.size();
+
+	//for(i=0;i<Number_Species;i++)
+	for(i=0;i<Number_Selected_Species;i++)
 	{
 		string OutFilenameProd, OutFilenameCons;
 
-		OutFilenameProd = Species[i] + "-Prod.txt";
-		OutFilenameCons = Species[i] + "-Cons.txt";
+		OutFilenameProd = Species[SelectedSpeciesID[i]] + "-Prod.txt";
+		OutFilenameCons = Species[SelectedSpeciesID[i]] + "-Cons.txt";
 
 		OutfileProd.open(OutFilenameProd.c_str(),ios::out);
 		OutfileCons.open(OutFilenameCons.c_str(),ios::out);
 
 		int j;
 
+		int Number_Of_Selected_Reactions = ReactionsForSpeciesSelectedForRates[i].size();
 
 		if(OutfileProd.is_open())
 		{
-			OutfileProd << current_time << " 	";
+			OutfileProd << "Time 	";
 
 			// sort first, then print out sorted output
+			/*
 			for(j=0;j<Number_Reactions;j++)
 			{
 
 				OutfileProd << "Reaction." << j <<". 	";
+			};//*/
+			for(j=0;j<Number_Of_Selected_Reactions;j++)
+			{
+				//OutfileProd << RatesAnalysisData[SelectedSpeciesID[i]][j].productionrate <<" 	";
+				OutfileProd << "Reaction." <<
+						ReactionsForSpeciesSelectedForRates[i][j] <<
+						". 	";
 			};
 			OutfileProd << "\n";
 		};
@@ -72,13 +86,21 @@ void Prepare_Print_Rates_Per_Species(
 
 		if(OutfileCons.is_open())
 		{
-			OutfileCons << current_time << " 	";
+			OutfileCons << "Time 	";
 
 			// sort first, then print out sorted output
+			/*
 			for(j=0;j<Number_Reactions;j++)
 			{
 
 				OutfileCons << "Reaction." << j <<". 	";
+			};//*/
+			for(j=0;j<Number_Of_Selected_Reactions;j++)
+			{
+				//OutfileProd << RatesAnalysisData[SelectedSpeciesID[i]][j].productionrate <<" 	";
+				OutfileCons << "Reaction." <<
+						ReactionsForSpeciesSelectedForRates[i][j] <<
+						". 	";
 			};
 			OutfileCons << "\n";
 		};
@@ -88,12 +110,14 @@ void Prepare_Print_Rates_Per_Species(
 
 
 void Print_Rates_Per_Species(
-		const vector< TrackSpecies > & ProductsForRates,
-		const vector< TrackSpecies > & ReactantsForRates,
-		const vector< double > & Rates,
-		const double current_time,
-		const vector< string > Species,
-		const vector< SingleReactionData >& Reactions
+		vector< TrackSpecies > & ProductsForRates,
+		vector< TrackSpecies > & ReactantsForRates,
+		vector< double > & Rates,
+		double current_time,
+		vector< string > Species,
+		vector< int > SelectedSpeciesID,
+		vector< vector< int > > ReactionsForSpeciesSelectedForRates,
+		vector< SingleReactionData >& Reactions
 )
 {
 
@@ -141,28 +165,36 @@ void Print_Rates_Per_Species(
 	ofstream OutfileProd;
 	ofstream OutfileCons;
 
-	for(i=0;i<Number_Species;i++)
+	int Number_Selected_Species = (int) SelectedSpeciesID.size();
+
+	//for(i=0;i<Number_Species;i++)
+	for(i=0;i<Number_Selected_Species;i++)
 	{
 		string OutFilenameProd, OutFilenameCons;
 
-		OutFilenameProd = Species[i] + "-Prod.txt";
-		OutFilenameCons = Species[i] + "-Cons.txt";
+		OutFilenameProd = Species[SelectedSpeciesID[i]] + "-Prod.txt";
+		OutFilenameCons = Species[SelectedSpeciesID[i]] + "-Cons.txt";
+
 
 		OutfileProd.open(OutFilenameProd.c_str(),ios::app);
 		OutfileCons.open(OutFilenameCons.c_str(),ios::app);
 
 		int j;
 
+		int Number_Of_Selected_Reactions = ReactionsForSpeciesSelectedForRates[i].size();
 
 		if(OutfileProd.is_open())
 		{
 			OutfileProd << current_time << " 	";
 
 			// sort first, then print out sorted output
-			for(j=0;j<Number_Reactions;j++)
+			//for(j=0;j<Number_Reactions;j++)
+			for(j=0;j<Number_Of_Selected_Reactions;j++)
 			{
-
-				OutfileProd << RatesAnalysisData[i][j].productionrate <<" 	";
+				//OutfileProd << RatesAnalysisData[SelectedSpeciesID[i]][j].productionrate <<" 	";
+				OutfileProd <<
+						RatesAnalysisData[SelectedSpeciesID[i]][ReactionsForSpeciesSelectedForRates[i][j]].productionrate <<
+						" 	";
 			};
 			OutfileProd << "\n";
 		};
@@ -173,10 +205,13 @@ void Print_Rates_Per_Species(
 			OutfileCons << current_time << " 	";
 
 			// sort first, then print out sorted output
-			for(j=0;j<Number_Reactions;j++)
+			//for(j=0;j<Number_Reactions;j++)
+			for(j=0;j<Number_Of_Selected_Reactions;j++)
 			{
-
-				OutfileCons << RatesAnalysisData[i][j].productionrate <<" 	";
+				//OutfileCons << RatesAnalysisData[SelectedSpeciesID[i]][j].consumptionrate <<" 	";
+				OutfileCons <<
+						RatesAnalysisData[SelectedSpeciesID[i]][ReactionsForSpeciesSelectedForRates[i][j]].consumptionrate <<
+						" 	";
 			};
 			OutfileCons << "\n";
 		};

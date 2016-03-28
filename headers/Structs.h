@@ -116,6 +116,8 @@ struct PressureVesselConfig {
 };
 
 
+
+
 struct PressureVesselCalc {
 	bool HenryLawDiffusionLimitSet;
 	double SampleSize ; // Old 0
@@ -127,12 +129,37 @@ struct PressureVesselCalc {
 	double HenryLawDiffusionLimit;
 };
 
-struct InitParam {
+/*
+struct ProdConsAnalysis {
+	int Consumption;
+	int Production;
+};//*/
 
-	bool PrintReacRates;
-	bool RatesMaxAnalysis;
+struct MechanismAnalysisConfig {
+	bool MaximumRates;
 	bool RatesSpeciesAllAnalysis;
 	bool StreamRatesAnalysis;
+	bool RatesAnalysisAtTime;
+	vector< double > RatesAnalysisAtTimeData;
+
+	// integer array to identify the species or which we want rate of production analysis
+	bool RatesOfSpecies;
+	vector< int > SpeciesSelectedForRates;
+	vector< vector< int > > ReactionsForSpeciesConsAnalysis;
+	vector< vector< int > > ReactionsForSpeciesProdAnalysis;
+
+};
+
+struct InitParam {
+
+
+	MechanismAnalysisConfig MechanismAnalysis;
+
+	/* Needed when Solving */
+
+
+	bool PrintReacRates;
+
 	bool EnforceStability;
 	int nrspec;
 	vector< double > TimeEnd;
@@ -170,9 +197,7 @@ struct InitParam {
 	bool UseNewLumping;
 	// END
 
-	/* Needed when Solving */
-	bool RatesAnalysisAtTime;
-	vector< double > RatesAnalysisAtTimeData;
+
 
 	bool Jacobian;
 	// END
@@ -183,21 +208,6 @@ struct InitParam {
 	double GasPhasePressure;
 
 	// END
-
-
-	/* PetroOxy modelling functionality */
-	/*
-	bool PetroOxy;
-	int PetroOxyGasSpecies;
-	double PetroOxySampleSize;
-	double PetroOxyInitPressure;
-	double PetroOxyMaxPressure;
-	double PetroOxyGasSolubility;
-	double PetroOxyTemperatureRise;
-	bool HenryLawDiffusionLimitSet;
-	double HenryLawDiffusionLimit;
-	double VesselSize;
-	// END */
 
 	// New option for storing the pressure vessel
 	PressureVesselConfig PressureVessel;

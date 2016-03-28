@@ -343,18 +343,94 @@ void Integrate_Liquid_Phase(
 		StreamReactionRates(ReactionRatesOutput, time_current, Rates);
 	}
 
-
+	// not happy with this more widely available, needs a cleanup...
+	vector< vector< int > > ReactionsForSpeciesSelectedForRates;
 	// Not the betst place to put it, but OK for now:
 	if(InitialParameters.MechanismAnalysis.RatesOfSpecies)
 	{
+		// optimise the reaction rates list
+		// vector< vector< int > > ReactionsForSpeciesSelectedForRates;
+
+		//ReactantsForReactions = Reactants_ForReactionRate(Reactions);
+		//ProductsForReactions = Products_ForReactionRate(Reactions,false);
+		//vector< vector< int > > ReactionsForSpeciesConsAnalysis;
+		//vector< vector< int > > ReactionsForSpeciesProdAnalysis;
+
+		int tempi, tempj;
+
+		// ProductsForRatesAnalysis
+		// ReactantsForReactions
+		vector< vector< int > > TempMatrix;
+		vector< int > TempRow;//((int)Species.size());
+		int Temp_Number_Species = (int) Species.size();
+
+		for(tempi=0;tempi<(int)Reactions.size();tempi++){
+			TempRow.resize((int)Species.size());
+			for(tempj=0;tempj<Temp_Number_Species;tempj++)
+			{
+				if(Reactions[tempi].Reactants[tempj] != 0)
+				{
+					TempRow[tempj] = 1;
+				}
+				if(Reactions[tempi].Products[tempj] != 0)
+				{
+					TempRow[tempj] = 1;
+				}
+			}
+			TempMatrix.push_back(TempRow);
+			TempRow.clear();
+		}
+
+		//vector< vector< int > > ReactionsForSpeciesSelectedForRates;
+
+		int Number_Of_Selected_Species_Temp = (int) InitialParameters.MechanismAnalysis.SpeciesSelectedForRates.size();
+
+		/*
+		cout << "-----------------------------\n";
+		//*/
+
+		for(tempj=0;tempj<Number_Of_Selected_Species_Temp;tempj++)
+		{
+			int SpeciesID = InitialParameters.MechanismAnalysis.SpeciesSelectedForRates[tempj];
+			vector< int > temp;
+
+			for(tempi=0;tempi<(int)Reactions.size();tempi++)
+			{
+				if(TempMatrix[tempi][SpeciesID] !=0 )
+				{
+					//cout << "1 ";
+					temp.push_back(tempi);
+				}
+				//cout << "\n";
+			}
+			cout << (int) temp.size() << "\n";
+			ReactionsForSpeciesSelectedForRates.push_back(temp);
+			temp.clear();
+		}
+
+		/*
+		for(tempi=0;tempi < ReactionsForSpeciesSelectedForRates[0].size();tempi++)
+		{
+			cout << ReactionsForSpeciesSelectedForRates[0][tempi] << "\n";
+		}
+		cout << "\n";//*/
+
+		/*
+		cout << "-----------------------------\n";
+		cout << (int) ReactionsForSpeciesSelectedForRates.size() << "\n";
+		cout << "-----------------------------\n";
+		//*/
+
+		//*
 		Prepare_Print_Rates_Per_Species(
 				ProductsForRatesAnalysis,
 				ReactantsForReactions,
 				Rates,
-				0,
 				Species,
+				InitialParameters.MechanismAnalysis.SpeciesSelectedForRates,
+				ReactionsForSpeciesSelectedForRates,
 				Reactions
-		);
+		);//*/
 	}
 
 
@@ -503,6 +579,8 @@ void Integrate_Liquid_Phase(
 					Rates,
 					time_current,
 					Species,
+					InitialParameters.MechanismAnalysis.SpeciesSelectedForRates,
+					ReactionsForSpeciesSelectedForRates,
 					Reactions
 			);
 		}

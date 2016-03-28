@@ -15,7 +15,7 @@ void Handle_Species(InitParam&  , vector< InitSpecies >& , vector<string> , vect
 
 void Handle_SolverParameters(InitParam& , vector<string> );
 
-void Handle_Analysis(InitParam& , vector<string> );
+void Handle_Analysis(InitParam& , vector< string > , vector< string > );
 
 void Handle_PressureVessel(InitParam& , vector<string> , vector< string >);
 

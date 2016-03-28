@@ -72,16 +72,15 @@ void Handle_Analysis(InitParam& InitialParameters, vector<string> Input, vector<
 					string Comparator = Species[j];
 					if(strcmp(p,Comparator.c_str()) == 0)
 					{
-						InitialParameters.MechanismAnalysis.RatesOfSpeciesSelected.push_back(j);
+						InitialParameters.MechanismAnalysis.SpeciesSelectedForRates.push_back(j);
 						//cout << "found " << Species[j] << "\n";
 					}
 				}
 				p=strtok(NULL," \t");
 			}
 
-
 			// catch empty array
-			if((int)InitialParameters.MechanismAnalysis.RatesOfSpeciesSelected.size()==0)
+			if((int)InitialParameters.MechanismAnalysis.SpeciesSelectedForRates.size()==0)
 			{
 				cout << "error, no species for rates analysis specified, switched off\n";
 				InitialParameters.MechanismAnalysis.RatesOfSpecies = false;
