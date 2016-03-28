@@ -49,11 +49,11 @@ void Read_Input_Data_v2(
 		SetupParam.temperature = 500;
 		SetupParam.hm = 1.e-12;
 		SetupParam.h = 1.e-7;
-		SetupParam.RatesMaxAnalysis = false;
-		SetupParam.StreamRatesAnalysis = false;
-		SetupParam.RatesSpeciesAllAnalysis = false;
-		SetupParam.RatesAnalysisAtTime = false;
-		SetupParam.RatesAnalysisAtTimeData.resize(0);
+		SetupParam.MechanismAnalysis.MaximumRates = false;
+		SetupParam.MechanismAnalysis.StreamRatesAnalysis = false;
+		SetupParam.MechanismAnalysis.RatesSpeciesAllAnalysis = false;
+		SetupParam.MechanismAnalysis.RatesAnalysisAtTime = false;
+		SetupParam.MechanismAnalysis.RatesAnalysisAtTimeData.resize(0);
 		SetupParam.ReduceReactions = 0;
 		SetupParam.UseStiffSolver = true;
 		SetupParam.EnforceStability = false;
@@ -220,7 +220,7 @@ void Read_Input_Data_v2(
 				found = line1.find("RatesMaxAnalysis");
 				if (found!=string::npos)
 				{
-					SetupParam.RatesMaxAnalysis = true;
+					SetupParam.MechanismAnalysis.MaximumRates = true;
 					line1.clear();
 					delete[] cstr;
 				}
@@ -228,7 +228,7 @@ void Read_Input_Data_v2(
 				found = line1.find("StreamRatesAnalysis");
 				if (found!=string::npos)
 				{
-					SetupParam.StreamRatesAnalysis = true;
+					SetupParam.MechanismAnalysis.StreamRatesAnalysis = true;
 					line1.clear();
 					delete[] cstr;
 				}
@@ -236,7 +236,7 @@ void Read_Input_Data_v2(
 				found = line1.find("RatesSpeciesAllAnalysis");
 				if (found!=string::npos)
 				{
-					SetupParam.RatesSpeciesAllAnalysis = true;
+					SetupParam.MechanismAnalysis.RatesSpeciesAllAnalysis = true;
 					line1.clear();
 					delete[] cstr;
 				}
@@ -296,7 +296,7 @@ void Read_Input_Data_v2(
 				found = line1.find("RatesAnalysisAtTime");
 				if (found!=string::npos)
 				{
-					SetupParam.RatesAnalysisAtTime = true; // user wants rates at specified times
+					SetupParam.MechanismAnalysis.RatesAnalysisAtTime = true; // user wants rates at specified times
 
 					LineIn.clear(); // make sure storage array is empty
 					LineIn.push_back(1); // default value, 1K
@@ -305,7 +305,7 @@ void Read_Input_Data_v2(
 					p=strtok(NULL," \t"); // break again as first is the keyword
 
 					while(p!=NULL){ // only read remainder is something is left
-						SetupParam.RatesAnalysisAtTimeData.push_back(strtod(p,NULL));
+						SetupParam.MechanismAnalysis.RatesAnalysisAtTimeData.push_back(strtod(p,NULL));
 						p=strtok(NULL," \t");
 					}
 					line1.clear();
@@ -734,25 +734,25 @@ void Read_Input_Data_v2(
 
 
 	// Check that special requirements are met
-	if(SetupParam.RatesMaxAnalysis && !SetupParam.irrev)
+	if(SetupParam.MechanismAnalysis.MaximumRates && !SetupParam.irrev)
 	{
 		SetupParam.irrev = true;
 		cout << "Rates Analysis requires an irreversible scheme - method set. \n";
 	}
 
-	if(SetupParam.RatesSpeciesAllAnalysis)
+	if(SetupParam.MechanismAnalysis.RatesSpeciesAllAnalysis)
 	{
 		SetupParam.irrev = true;
 		cout << "Rates Analysis requires an irreversible scheme - method set. \n";
 	}
 
-	if(SetupParam.StreamRatesAnalysis && !SetupParam.irrev)
+	if(SetupParam.MechanismAnalysis.StreamRatesAnalysis && !SetupParam.irrev)
 	{
 		SetupParam.irrev = true;
 		cout << "Rates Analysis requires an irreversible scheme - method set. \n";
 	}
 
-	if(SetupParam.RatesAnalysisAtTime && !SetupParam.irrev)
+	if(SetupParam.MechanismAnalysis.RatesAnalysisAtTime && !SetupParam.irrev)
 	{
 		SetupParam.irrev = true;
 		cout << "Rates Analysis At Times requires an irreversible scheme - method set. \n";

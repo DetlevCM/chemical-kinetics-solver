@@ -115,7 +115,8 @@ void Integrate_Liquid_Phase(
 		ReactionRatesOutput.open(OutputFilenames.Rates.c_str(),ios::app);
 	}
 
-
+	// This works :) good - well, need it soon...
+	//vector< ofstream > RatesOfSpecies;
 
 	int n, ierr, ipar[128], dpar_size;
 	double h, hm, ep, tr;
@@ -166,7 +167,10 @@ void Integrate_Liquid_Phase(
 
 
 
-	if(InitialParameters.RatesMaxAnalysis || InitialParameters.StreamRatesAnalysis || InitialParameters.RatesAnalysisAtTime)
+	if(InitialParameters.MechanismAnalysis.MaximumRates ||
+			InitialParameters.MechanismAnalysis.StreamRatesAnalysis ||
+			InitialParameters.MechanismAnalysis.RatesAnalysisAtTime ||
+			InitialParameters.MechanismAnalysis.RatesOfSpecies)
 	{
 		ProductsForRatesAnalysis = Products_ForReactionRate(Reactions,true);
 	}
@@ -339,6 +343,21 @@ void Integrate_Liquid_Phase(
 		StreamReactionRates(ReactionRatesOutput, time_current, Rates);
 	}
 
+
+	// Not the betst place to put it, but OK for now:
+	if(InitialParameters.MechanismAnalysis.RatesOfSpecies)
+	{
+		Prepare_Print_Rates_Per_Species(
+				ProductsForRatesAnalysis,
+				ReactantsForReactions,
+				Rates,
+				0,
+				Species,
+				Reactions
+		);
+	}
+
+
 	vector< double > SpeciesConcentrationChange = SpeciesLossRate(SpeciesLossAll,Number_Species, Rates);
 
 
@@ -451,14 +470,14 @@ void Integrate_Liquid_Phase(
 		}
 
 
-		if(InitialParameters.RatesMaxAnalysis)
+		if(InitialParameters.MechanismAnalysis.MaximumRates)
 		{
 			MaxRatesAnalysis(RatesAnalysisData,ProductsForRatesAnalysis,ReactantsForReactions,Rates,time_current);
 		}
 
 
-		if(InitialParameters.RatesAnalysisAtTime &&
-				InitialParameters.RatesAnalysisAtTimeData[RatesAnalysisTimepoint] == time_current)
+		if(InitialParameters.MechanismAnalysis.RatesAnalysisAtTime &&
+				InitialParameters.MechanismAnalysis.RatesAnalysisAtTimeData[RatesAnalysisTimepoint] == time_current)
 		{
 			//using namespace GlobalArrays;
 			RatesAnalysisAtTimes(
@@ -474,7 +493,22 @@ void Integrate_Liquid_Phase(
 		}
 
 
-		if(InitialParameters.StreamRatesAnalysis)
+		// Function for new per species output
+		//*
+		if(InitialParameters.MechanismAnalysis.RatesOfSpecies)
+		{
+			Print_Rates_Per_Species(
+					ProductsForRatesAnalysis,
+					ReactantsForReactions,
+					Rates,
+					time_current,
+					Species,
+					Reactions
+			);
+		}
+		//*/
+
+		if(InitialParameters.MechanismAnalysis.StreamRatesAnalysis)
 		{
 			StreamRatesAnalysis(
 					OutputFilenames.Prefix,
@@ -485,6 +519,8 @@ void Integrate_Liquid_Phase(
 					Number_Species
 			);
 		}
+
+
 
 		double pressure = 0;
 		if(InitialParameters.GasPhase)
@@ -552,7 +588,7 @@ void Integrate_Liquid_Phase(
 	ConcentrationOutput.close();
 	ReactionRatesOutput.close();
 
-	if(InitialParameters.RatesMaxAnalysis)
+	if(InitialParameters.MechanismAnalysis.MaximumRates)
 	{
 		WriteMaxRatesAnalysis(RatesAnalysisData, Species, Reactions,OutputFilenames.Prefix);
 	}

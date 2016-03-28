@@ -84,7 +84,7 @@ int main(int argc, char* argv[])
 
 		vector< vector < str_RatesAnalysis > > RatesAnalysisData;
 
-		if(InitialParameters.RatesMaxAnalysis)
+		if(InitialParameters.MechanismAnalysis.MaximumRates)
 		{
 			// Initialise array
 			vector < str_RatesAnalysis > temp((int) Reactions.size());
@@ -96,7 +96,7 @@ int main(int argc, char* argv[])
 		}
 
 
-		if(InitialParameters.StreamRatesAnalysis)
+		if(InitialParameters.MechanismAnalysis.StreamRatesAnalysis)
 		{
 			PrepareStreamRatesAnalysis(Species,"");
 		}
@@ -183,7 +183,7 @@ int main(int argc, char* argv[])
 
 
 				// Option considered experimental, cannot see why it won't work...
-				if(InitialParameters.RatesMaxAnalysis)
+				if(InitialParameters.MechanismAnalysis.MaximumRates)
 				{
 					// Initialise array
 					RatesAnalysisData.clear(); // empty for new run
@@ -195,7 +195,7 @@ int main(int argc, char* argv[])
 					// array prepared
 				}
 
-				if(InitialParameters.StreamRatesAnalysis)
+				if(InitialParameters.MechanismAnalysis.StreamRatesAnalysis)
 				{
 					PrepareStreamRatesAnalysis(Species,OutputFilenames.Prefix);
 				}

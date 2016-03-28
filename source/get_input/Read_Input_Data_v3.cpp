@@ -77,11 +77,11 @@ void Read_Input_Data_v3(
 
 
 		/* Analysis functions */
-		InitialParameters.RatesMaxAnalysis = false;
-		InitialParameters.StreamRatesAnalysis = false;
-		InitialParameters.RatesSpeciesAllAnalysis = false;
-		InitialParameters.RatesAnalysisAtTime = false;
-		InitialParameters.RatesAnalysisAtTimeData.resize(0);
+		InitialParameters.MechanismAnalysis.MaximumRates = false;
+		InitialParameters.MechanismAnalysis.StreamRatesAnalysis = false;
+		InitialParameters.MechanismAnalysis.RatesSpeciesAllAnalysis = false;
+		InitialParameters.MechanismAnalysis.RatesAnalysisAtTime = false;
+		InitialParameters.MechanismAnalysis.RatesAnalysisAtTimeData.resize(0);
 		/* End of Analysis functions */
 
 		/* Initial Values */
@@ -234,7 +234,7 @@ void Read_Input_Data_v3(
 					}while (line.find("</Analysis>") == string::npos);
 					// Read in data until the closing tag is found
 
-					Handle_Analysis(InitialParameters, Input);
+					Handle_Analysis(InitialParameters, Input, Species);
 				}
 				Input.clear();
 
@@ -283,25 +283,25 @@ void Read_Input_Data_v3(
 
 
 	// Check that special requirements are met
-	if(InitialParameters.RatesMaxAnalysis && !InitialParameters.irrev)
+	if(InitialParameters.MechanismAnalysis.MaximumRates && !InitialParameters.irrev)
 	{
 		InitialParameters.irrev = true;
 		cout << "Rates Analysis requires an irreversible scheme - method set. \n";
 	}
 
-	if(InitialParameters.RatesSpeciesAllAnalysis)
+	if(InitialParameters.MechanismAnalysis.RatesSpeciesAllAnalysis)
 	{
 		InitialParameters.irrev = true;
 		cout << "Rates Analysis requires an irreversible scheme - method set. \n";
 	}
 
-	if(InitialParameters.StreamRatesAnalysis && !InitialParameters.irrev)
+	if(InitialParameters.MechanismAnalysis.StreamRatesAnalysis && !InitialParameters.irrev)
 	{
 		InitialParameters.irrev = true;
 		cout << "Rates Analysis requires an irreversible scheme - method set. \n";
 	}
 
-	if(InitialParameters.RatesAnalysisAtTime && !InitialParameters.irrev)
+	if(InitialParameters.MechanismAnalysis.RatesAnalysisAtTime && !InitialParameters.irrev)
 	{
 		InitialParameters.irrev = true;
 		cout << "Rates Analysis At Times requires an irreversible scheme - method set. \n";
