@@ -85,6 +85,7 @@ void Read_Input_Data_v2(
 
 		SetupParam.PressureVessel.IsSet = false;
 		SetupParam.PressureVessel.SampleSize = 0;
+		SetupParam.PressureVessel.VesselSize = 22.5; // my estimate of PetroOxy volume
 		SetupParam.PressureVessel.InitPressure = 0;
 		SetupParam.PressureVessel.MaxPressure = 0;
 		SetupParam.PressureVessel.GasSpecies = 0;

@@ -7,25 +7,6 @@
 
 #include "MyHeaders.h"
 
-//struct RatesPerSpeciesOut {
-///	vector< int > Consumption;
-//	vector< int > Production;
-//};
-
-/*
-void Process_For_Species_Rates_Output(vector< int > SelectedSpecies, vector< SingleReactionData > Reactions)
-{
-	// this will need desired species
-	// and reactions
-
-	// Species by Reaction
-	vector< RatesPerSpeciesOut > OutputMatrix;
-
-	int Number_SelectedSpecies = (int) SelectedSpecies.size();
-	int i;
-
-}//*/
-
 
 void Prepare_Print_Rates_Per_Species(
 		vector< TrackSpecies > & ProductsForRates,

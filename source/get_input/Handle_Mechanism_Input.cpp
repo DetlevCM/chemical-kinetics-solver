@@ -390,11 +390,21 @@ bool Handle_Mechanism_Input(
 		double R = 8.314472e0;
 		//double Na = 6.0221415e23;
 
+		// not ideal, but avoids the potentia for any issues
+		if(InitialParameters.PressureVessel.SampleSize >= InitialParameters.PressureVessel.VesselSize){
+			cout << "Pressure vessel is to small, smaller than or equal to the sample size. \n"
+					"Vessel Size is set to 110% of sample size.\n";
+			InitialParameters.PressureVessel.VesselSize = 1.1 * InitialParameters.PressureVessel.SampleSize;
+			cout << "Adjusted Pressure Vessel Size: " << InitialParameters.PressureVessel.VesselSize << "\n";
+		}
 
 		PetroOxyData.SampleSize = InitialParameters.PressureVessel.SampleSize;
 
 		// Gas Phase Volume
-		PetroOxyData.HeadSpaceGas = 22.5*1e-6 - PetroOxyData.SampleSize;
+		//PetroOxyData.HeadSpaceGas = 22.5*1e-6 - PetroOxyData.SampleSize;
+		//cout << InitialParameters.PressureVessel.VesselSize << "\n";
+		//PetroOxyData.HeadSpaceGas = InitialParameters.PressureVessel.VesselSize*1e-6 - PetroOxyData.SampleSize;
+		PetroOxyData.HeadSpaceGas = InitialParameters.PressureVessel.VesselSize - PetroOxyData.SampleSize;
 
 		// Initial pressure is at 25 degrees celsius
 		// n = pV/R/T
