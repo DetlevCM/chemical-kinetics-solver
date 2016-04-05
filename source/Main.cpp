@@ -115,6 +115,7 @@ int main(int argc, char* argv[])
 
 		WriteNewLabelsSpecies(
 				OutputFilenames.Species,
+				InitialParameters.separator,
 				Number_Species,
 				Species,
 				InitialParameters.GasPhase
@@ -122,7 +123,11 @@ int main(int argc, char* argv[])
 
 		if(InitialParameters.PrintReacRates)
 		{
-			WriteLabelsReactionRates(OutputFilenames.Rates, Number_Reactions);
+			WriteLabelsReactionRates(
+					OutputFilenames.Rates,
+					InitialParameters.separator,
+					Number_Reactions
+					);
 		}
 
 
@@ -202,11 +207,16 @@ int main(int argc, char* argv[])
 
 				WriteNewLabelsSpecies(
 						OutputFilenames.Species,
+						InitialParameters.separator,
 						Number_Species,
 						Species,
 						InitialParameters.GasPhase
 				);
-				WriteLabelsReactionRates(OutputFilenames.Rates, Number_Reactions);
+				WriteLabelsReactionRates(
+						OutputFilenames.Rates,
+						InitialParameters.separator,
+						Number_Reactions
+						);
 
 				/*
 				if(InitialParameters.PetroOxy)

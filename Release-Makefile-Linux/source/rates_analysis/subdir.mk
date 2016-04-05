@@ -4,14 +4,17 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 CPP_SRCS += \
+../source/rates_analysis/Process_For_Species_Rates_Output.cpp \
 ../source/rates_analysis/Rates_Analysis.cpp \
 ../source/rates_analysis/ReportAccuracy.cpp 
 
 OBJS += \
+./source/rates_analysis/Process_For_Species_Rates_Output.o \
 ./source/rates_analysis/Rates_Analysis.o \
 ./source/rates_analysis/ReportAccuracy.o 
 
 CPP_DEPS += \
+./source/rates_analysis/Process_For_Species_Rates_Output.d \
 ./source/rates_analysis/Rates_Analysis.d \
 ./source/rates_analysis/ReportAccuracy.d 
 

@@ -53,6 +53,7 @@ void StreamRatesAnalysis(
 void Prepare_Print_Rates_Per_Species(
 		vector< TrackSpecies > & ,
 		vector< TrackSpecies > & ,
+		string,
 		vector< double > & ,
 		vector< string > ,
 		vector< int > ,
@@ -64,6 +65,7 @@ void Prepare_Print_Rates_Per_Species(
 void Print_Rates_Per_Species(
 		vector< TrackSpecies > & ,
 		vector< TrackSpecies > & ,
+		const string,
 		vector< double > & ,
 		double ,
 		vector< string > ,

@@ -12,6 +12,7 @@
 // output function for species labels, temperature at back
 void WriteNewLabelsSpecies(
 		string filename,
+		string separator,
 		int Number_Species,
 		vector< string > Names,
 		bool GasPhasePressure
@@ -26,12 +27,15 @@ void WriteNewLabelsSpecies(
 		ConcentrationOutput << "Time";
 		for(i=0;i<Number_Species;i++)
 		{
-			ConcentrationOutput << "\t" << Names[i]; // concentration
+			//ConcentrationOutput << "\t" << Names[i];
+			ConcentrationOutput << separator << Names[i];
 		}
-		ConcentrationOutput << "\t" << "Temperature";
+		//?ConcentrationOutput << "\t" << "Temperature";
+		ConcentrationOutput << separator << Names[i];
 		if(GasPhasePressure)
 		{
-			ConcentrationOutput << "\t" << "Pressure";
+			//ConcentrationOutput << "\t" << "Pressure";
+			ConcentrationOutput << separator << "Pressure";
 		}
 		ConcentrationOutput << "\n"; // new line
 
@@ -46,6 +50,7 @@ void WriteNewLabelsSpecies(
 // Function to stream the concentrations
 void StreamConcentrations(
 		ofstream& ConcentrationOutput,
+		const string separator,
 		bool GasPhasePressure,
 		int Number_Species,
 		double CurrentTime,
@@ -59,27 +64,38 @@ void StreamConcentrations(
 
 		for(i=0;i<=Number_Species;i++)
 		{
-			ConcentrationOutput << "\t" << Concentration[i] ; // concentration
+			//ConcentrationOutput << "\t" << Concentration[i] ;
+			ConcentrationOutput << separator << Concentration[i] ;
 		}
 		if(GasPhasePressure)
 		{
-			ConcentrationOutput << "\t" << Pressure;
+			//ConcentrationOutput << "\t" << Pressure;
+			ConcentrationOutput << separator << Pressure;
 		}
 		ConcentrationOutput << "\n"; // new line
 		//ConcentrationOutput.flush(); // To get the whole line
 }
 
 
-void StreamConcentrationsV2(ofstream& ConcentrationOutput, double CurrentTime, int Number_Species, double* Concentration)
+void StreamConcentrationsV2(
+		ofstream& ConcentrationOutput,
+		const string separator,
+		double CurrentTime,
+		int Number_Species,
+		double* Concentration
+		)
 {
 	int i;
-	ConcentrationOutput << CurrentTime << " 	" ; // time
+	//ConcentrationOutput << CurrentTime << " 	" ; // time
+	ConcentrationOutput << CurrentTime << separator ; // time
 
 	for(i=0;i<Number_Species;i++)
 	{
-		ConcentrationOutput << Concentration[i] << " 	" ; // concentration
+		//ConcentrationOutput << Concentration[i] << " 	" ;
+		ConcentrationOutput << Concentration[i] << separator ;
 	}
-	ConcentrationOutput << Concentration[Number_Species] << " 	"; // temp
+	//ConcentrationOutput << Concentration[Number_Species] << " 	";
+	ConcentrationOutput << Concentration[Number_Species] << separator;
 	ConcentrationOutput << "\n"; // new line
 
 	ConcentrationOutput.flush(); // To get the whole line

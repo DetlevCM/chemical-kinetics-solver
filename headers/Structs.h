@@ -177,6 +177,7 @@ struct InitParam {
 	double threshold;
 	double hm;
 	double h;
+	string separator;
 	// END
 
 	/* Constant concentration option */

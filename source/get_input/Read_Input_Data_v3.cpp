@@ -67,6 +67,7 @@ void Read_Input_Data_v3(
 		InitialParameters.threshold = 1.e-10;
 		InitialParameters.hm = 1.e-12;
 		InitialParameters.h = 1.e-7;
+		InitialParameters.separator = ","; // more modern, comma delimited
 		/* End the solver parameters */
 
 

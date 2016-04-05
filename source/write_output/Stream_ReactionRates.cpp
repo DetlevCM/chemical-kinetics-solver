@@ -7,7 +7,11 @@
 
 
 // output function for species labels, temperature at back
-void WriteLabelsReactionRates(string filename, int Number_Reactons)//, vector< string > Names)
+void WriteLabelsReactionRates(
+		string filename,
+		string separator,
+		int Number_Reactons
+		)
 {
 	int i;
 	// Stream to output file, output mode (Should clear old content)
@@ -18,8 +22,8 @@ void WriteLabelsReactionRates(string filename, int Number_Reactons)//, vector< s
 		OutputFile << "Time";
 		for(i=0;i<Number_Reactons;i++)
 			{
-			//OutputFile << Names[i] << " 	"; // concentration
-			OutputFile << "	Reaction(" << i << ")";
+			//OutputFile << "	Reaction(" << i << ")";
+			OutputFile << separator << "Reaction(" << i << ")";
 			}
 		//OutputFile << "Temperature 	"; // only needed for species concentrations
 		OutputFile << "\n"; // new line
@@ -31,6 +35,7 @@ void WriteLabelsReactionRates(string filename, int Number_Reactons)//, vector< s
 
 void StreamReactionRates(
 		ofstream& OutputFile,
+		const string separator,
 		double CurrentTime,
 		vector<double >& ReactionRates
 		)
@@ -40,7 +45,8 @@ void StreamReactionRates(
 
 		for(i=0;i< (int) ReactionRates.size();i++)
 		{
-			OutputFile << "	" << ReactionRates[i] ; // concentration
+			//OutputFile << "	" << ReactionRates[i] ;
+			OutputFile << separator << ReactionRates[i] ;
 		}
 		OutputFile << "\n"; // new line
 		//OutputFile.flush(); // To get the whole line

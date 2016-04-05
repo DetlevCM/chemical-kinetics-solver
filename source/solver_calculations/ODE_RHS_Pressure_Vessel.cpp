@@ -18,9 +18,6 @@
 void ODE_RHS_Pressure_Vessel(int*n, double*time_current, double*y, double*f)
 {
 	// A namespace allows global variables without causing a mess, should be quicker than redefining too
-	//using namespace ODESolverConstant;
-	//using namespace ODESolverVariable;
-
 	using namespace ODE_RHS;
 	using namespace ODE_RHS_Pressure_Vessel_Variables;
 	using namespace Jacobian_ODE_RHS;
@@ -65,23 +62,6 @@ void ODE_RHS_Pressure_Vessel(int*n, double*time_current, double*y, double*f)
 			PetroOxyData);
 
 
-
-	// Constant Concentration with a pressure vessel makes no sense
-	/*
-	// Settings Constant Concentrations - easiest to let it do the rates and just reset the concentration
-	if(InitialDataConstants.ConstantConcentration)
-	{
-		//cout << "preparing constant species \n";
-		for(i=0;i<Number_Species;i++)
-		{
-			if(InitialDataConstants.ConstantSpecies[i] != 0){
-				y[i] = InitialDataConstants.ConstantSpecies[i] ; // concentration reset
-			}
-		}
-	}
-	//*/
-
-
 	// Thermodynamic data, Rate Constant, Rates, new Concentrations
 	Calculate_Thermodynamics(CalculatedThermo, Concentration[Number_Species], Thermodynamics);
 	Calculate_Rate_Constant(Kf, Kr, Concentration[Number_Species],ReactionParameters, CalculatedThermo, SpeciesLossAll, Delta_N);
@@ -124,8 +104,7 @@ void ODE_RHS_Pressure_Vessel(int*n, double*time_current, double*y, double*f)
 		InitialDataConstants.PetroOxyTemperatureRise = 0;
 
 		f[Number_Species] = 0;
-	}//*/
-
+	}
 
 
 	if(	InitialDataConstants.PetroOxyTemperatureRise != 0) // fix temperature for Oxy, rise desired
@@ -142,7 +121,6 @@ void ODE_RHS_Pressure_Vessel(int*n, double*time_current, double*y, double*f)
 
 
 
-	//*
 	// Settings relevant rates to zero
 	if(InitialDataConstants.ConstantConcentration)
 	{
@@ -155,7 +133,7 @@ void ODE_RHS_Pressure_Vessel(int*n, double*time_current, double*y, double*f)
 			}
 		}
 	}
-	//*/
+
 
 	// IEEE standard hack to check for NaN
 	// if temperature blows up, freeze it

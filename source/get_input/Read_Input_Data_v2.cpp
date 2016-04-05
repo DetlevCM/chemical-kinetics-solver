@@ -9,6 +9,7 @@ void Read_Input_Data_v2(
 		vector< InitSpecies >& SetupSpecies
 )
 {
+	cout << "Reading Old Style Input Data - Please consider upgrading to the new format.\n";
 
 	// Now we need to deal with the structure of the input file provided by the user
 	// It is safe to assume that all entries will be separated by a space or tab
@@ -49,6 +50,7 @@ void Read_Input_Data_v2(
 		SetupParam.temperature = 500;
 		SetupParam.hm = 1.e-12;
 		SetupParam.h = 1.e-7;
+		SetupParam.separator = " \t"; // legacy option
 		SetupParam.MechanismAnalysis.MaximumRates = false;
 		SetupParam.MechanismAnalysis.StreamRatesAnalysis = false;
 		SetupParam.MechanismAnalysis.RatesSpeciesAllAnalysis = false;
@@ -250,6 +252,8 @@ void Read_Input_Data_v2(
 					delete[] cstr;
 				}
 
+				////cout << "checkpoint 1\n";
+
 				found = line1.find("ReduceReactions");
 				if (found!=string::npos)
 				{
@@ -268,6 +272,8 @@ void Read_Input_Data_v2(
 					SetupParam.ReduceReactions = LineIn[0];
 				}
 
+
+				////cout << "checkpoint 2\n";
 
 				found = line1.find("Temperature");
 				if (found!=string::npos)
@@ -294,6 +300,7 @@ void Read_Input_Data_v2(
 				}
 
 
+				//cout << "checkpoint 3\n";
 				found = line1.find("RatesAnalysisAtTime");
 				if (found!=string::npos)
 				{
@@ -315,6 +322,7 @@ void Read_Input_Data_v2(
 				}
 
 
+				//cout << "checkpoint 4\n";
 				found = line1.find("hm");
 				if (found!=string::npos)
 				{
@@ -352,6 +360,7 @@ void Read_Input_Data_v2(
 				}
 
 
+				//cout << "checkpoint 5\n";
 
 				found = line1.find("Tolerance");
 				if (found!=string::npos)
@@ -371,6 +380,7 @@ void Read_Input_Data_v2(
 					SetupParam.threshold = LineIn[1];
 				}
 
+				//cout << "checkpoint 6\n";
 				found = line1.find("Threshold");
 				if (found!=string::npos)
 				{
@@ -388,6 +398,7 @@ void Read_Input_Data_v2(
 					SetupParam.threshold = LineIn[0];
 				}
 
+				//cout << "checkpoint 7\n";
 				found = line1.find("RTOL");
 				if (found!=string::npos)
 				{
@@ -405,7 +416,7 @@ void Read_Input_Data_v2(
 					SetupParam.rtol = LineIn[0];
 				}
 
-
+				//cout << "checkpoint 8\n";
 				found = line1.find("EndTime");
 				if (found!=string::npos)
 				{
@@ -427,6 +438,7 @@ void Read_Input_Data_v2(
 				}
 
 
+				//cout << "checkpoint 9\n";
 				//*
 				// This will work, but I don't think it is the best implementation
 				found = line1.find("ConstantConcentration");
@@ -455,6 +467,7 @@ void Read_Input_Data_v2(
 				 * Gas Phase Code Extension
 				 */
 
+				//cout << "checkpoint 10\n";
 				found = line1.find("GasPhasePressure"); // We Assume kPa
 				if (found!=string::npos)
 				{
@@ -473,6 +486,7 @@ void Read_Input_Data_v2(
 					//SetupParam.GasPhase = true; // activate Gas Phase Correction for User
 				}
 
+				//cout << "checkpoint 11\n";
 				found = line1.find("GasPhaseVolume"); // We Assume Litres
 				if (found!=string::npos)
 				{
@@ -491,7 +505,7 @@ void Read_Input_Data_v2(
 					//SetupParam.GasPhase = true; // activate Gas Phase Correction for User
 				}
 
-
+				//cout << "checkpoint 12\n";
 				// if not in use, value will be zero - if the user has entered both, activate
 				if(SetupParam.GasPhasePressure != 0 && SetupParam.GasPhaseVolume != 0){
 					SetupParam.GasPhase = true; // activate Gas Phase Correction for User
@@ -503,10 +517,12 @@ void Read_Input_Data_v2(
 
 
 
+
+
 				/*
 				 * PetroOxy Data Input
 				 */
-
+				//cout << "checkpoint 12\n";
 				vector<string> Readout;
 
 				if(string::npos!=line1.find("PetroOxy Solvent Sample="))
@@ -534,7 +550,7 @@ void Read_Input_Data_v2(
 					//PetroOxyData[4] = 22.5*1e-6 - PetroOxyData[0];
 				}
 
-
+				//cout << "checkpoint 13\n";
 				if(string::npos!=line1.find("PetroOxy Initial Pressure="))
 				{
 					char * cstr, *p;
@@ -557,6 +573,7 @@ void Read_Input_Data_v2(
 					Readout.clear();
 				}
 
+				//cout << "checkpoint 14\n";
 				if(string::npos!=line1.find("PetroOxy Maximum Pressure="))
 				{
 					char * cstr, *p;
@@ -579,6 +596,7 @@ void Read_Input_Data_v2(
 					Readout.clear();
 				}
 
+				//cout << "checkpoint 15\n";
 				if(string::npos!=line1.find("PetroOxy Gas Solubility="))
 				{
 					char * cstr, *p;
@@ -602,6 +620,7 @@ void Read_Input_Data_v2(
 				}
 
 
+				//cout << "checkpoint 16\n";
 				if(string::npos!=line1.find("PetroOxy Gas Species="))
 				{
 					char * cstr, *p;
@@ -630,6 +649,7 @@ void Read_Input_Data_v2(
 					Readout.clear();
 				}
 
+				//cout << "checkpoint 17\n";
 				if(string::npos!=line1.find("PetroOxy Temperature Rise="))
 				{
 					char * cstr, *p;
@@ -656,7 +676,7 @@ void Read_Input_Data_v2(
 				// if all required data has been input, switch PetroOxy on
 				// Need the Gas Species ID... - but gas species could be scpecies 0....
 
-
+				//cout << "checkpoint 18\n";
 				if(SetupParam.PressureVessel.SampleSize != 0 &&
 						SetupParam.PressureVessel.InitPressure != 0 &&
 						SetupParam.PressureVessel.MaxPressure != 0 &&
@@ -668,7 +688,7 @@ void Read_Input_Data_v2(
 
 
 
-
+				//cout << "checkpoint 19\n";
 				if(string::npos!=line1.find("Henry Law Diffusion Limit="))
 				{
 					char * cstr, *p;
@@ -699,7 +719,7 @@ void Read_Input_Data_v2(
 
 
 
-
+				//cout << "checkpoint 20\n";
 
 				InitSpecies SingleSpeciesInput;
 
@@ -730,6 +750,7 @@ void Read_Input_Data_v2(
 		}
 	}
 
+	//cout << "Finished reading old style input data\n";
 	Input_Data.close();
 
 

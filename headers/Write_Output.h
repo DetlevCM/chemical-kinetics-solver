@@ -18,6 +18,7 @@
 // Write labels for concentrations, then stream output
 void WriteNewLabelsSpecies(
 		string,
+		string,
 		int ,
 		vector< string >,
 		bool
@@ -25,6 +26,7 @@ void WriteNewLabelsSpecies(
 
 void StreamConcentrations(
 		ofstream&,
+		const string,
 		bool,
 		int,
 		double,
@@ -34,6 +36,7 @@ void StreamConcentrations(
 
 void StreamConcentrationsV2(
 		ofstream&,
+		const string,
 		double,
 		int,
 		double*
@@ -42,16 +45,21 @@ void StreamConcentrationsV2(
 // write labels for reactions then stream output
 void WriteLabelsReactionRates(
 		string ,
+		string ,
 		int
 );
 
 
 void StreamReactionRates(
 		ofstream&,
+		const string,
 		double,
 		vector< double> &
 );
 
+
+
+// output of input files
 void Write_Thermodynamic_Data(
 		string ,
 		const vector< string >& ,

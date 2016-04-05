@@ -11,9 +11,6 @@
 void ODE_RHS_Liquid_Phase(int*n, double*time_current, double*y, double*f)
 {
 	// A namespace allows global variables without causing a mess, should be quicker than redefining too
-	//using namespace ODESolverConstant;
-	//using namespace ODESolverVariable;
-
 	using namespace ODE_RHS;
 	using namespace Jacobian_ODE_RHS;
 
@@ -25,7 +22,6 @@ void ODE_RHS_Liquid_Phase(int*n, double*time_current, double*y, double*f)
 	//double Na = 6.0221415e23;
 
 	// stability hack
-	//if(GlobalArrays::InitialParameters.EnforceStability)
 	if(InitialDataConstants.EnforceStability)
 	{
 		for (i = 0; i <= Number_Species; i++)
@@ -47,22 +43,6 @@ void ODE_RHS_Liquid_Phase(int*n, double*time_current, double*y, double*f)
 		}
 	}
 
-	//double time_difference;
-
-
-	/*
-	// Settings Constant Concentrations - easiest to let it do the rates and just reset the concentration
-	if(InitialDataConstants.ConstantConcentration)
-	{
-		//cout << "preparing constant species \n";
-		for(i=0;i<Number_Species;i++)
-		{
-			if(InitialDataConstants.ConstantSpecies[i] != 0){
-				y[i] = InitialDataConstants.ConstantSpecies[i] ; // concentration reset
-			}
-		}
-	}
-	//*/
 
 
 	// Thermodynamic data, Rate Constant, Rates, new Concentrations
@@ -100,8 +80,6 @@ void ODE_RHS_Liquid_Phase(int*n, double*time_current, double*y, double*f)
 	//cout << ctot << " " << qint << " " << qtot << "\n";
 
 
-
-	//*
 	// Settings relevant rates to zero
 	if(InitialDataConstants.ConstantConcentration)
 	{
@@ -114,7 +92,6 @@ void ODE_RHS_Liquid_Phase(int*n, double*time_current, double*y, double*f)
 			}
 		}
 	}
-	//*/
 
 	// IEEE standard hack to check for NaN
 	// if temperature blows up, freeze it
@@ -122,10 +99,6 @@ void ODE_RHS_Liquid_Phase(int*n, double*time_current, double*y, double*f)
 	{
 		f[Number_Species] = 0;
 	}
-
-
-	// For Oxy limiting
-	//time_previous = *time_current;
 }
 
 

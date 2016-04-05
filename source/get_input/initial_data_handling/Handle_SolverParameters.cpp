@@ -111,6 +111,27 @@ void Handle_SolverParameters(InitParam& InitialParameters, vector<string> Input)
 			InitialParameters.PrintReacRates = true;
 		}
 
+		if(Input[i].find("Comma Separator")!=string::npos)
+				{
+					InitialParameters.separator = ",";
+				}
+
+		if(Input[i].find("Tab Separator")!=string::npos)
+				{
+					InitialParameters.separator = "\t";
+				}
+
+		if(Input[i].find("Separator:")!=string::npos)
+				{
+					p=strtok (cstr,"=: \t"); // break at space or tab
+					p=strtok(NULL,"=: \t"); // break again as first is the keyword
+
+					if(p!=NULL){ // only read remainder is something is left
+						InitialParameters.separator = p;
+						p=strtok(NULL," \t");
+					}
+				}
+
 
 		if(Input[i].find("Stoichiometry Matrix For Opt")!=string::npos)
 		{

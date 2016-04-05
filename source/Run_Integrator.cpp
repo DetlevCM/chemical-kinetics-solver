@@ -330,6 +330,7 @@ void Integrate_Liquid_Phase(
 	// do not forget output at time = 0
 	StreamConcentrations(
 			ConcentrationOutput,
+			InitialParameters.separator,
 			InitialParameters.GasPhase,
 			Number_Species,
 			time_current,
@@ -340,7 +341,12 @@ void Integrate_Liquid_Phase(
 	// Only stream if the user desires it, still doesn't prevent file creation...
 	if(InitialParameters.PrintReacRates)
 	{
-		StreamReactionRates(ReactionRatesOutput, time_current, Rates);
+		StreamReactionRates(
+				ReactionRatesOutput,
+				InitialParameters.separator,
+				time_current,
+				Rates
+		);
 	}
 
 	// not happy with this more widely available, needs a cleanup...
@@ -403,7 +409,7 @@ void Integrate_Liquid_Phase(
 				}
 				//cout << "\n";
 			}
-			cout << (int) temp.size() << "\n";
+			//cout << (int) temp.size() << "\n";
 			ReactionsForSpeciesSelectedForRates.push_back(temp);
 			temp.clear();
 		}
@@ -425,6 +431,7 @@ void Integrate_Liquid_Phase(
 		Prepare_Print_Rates_Per_Species(
 				ProductsForRatesAnalysis,
 				ReactantsForReactions,
+				InitialParameters.separator,
 				Rates,
 				Species,
 				InitialParameters.MechanismAnalysis.SpeciesSelectedForRates,
@@ -576,6 +583,7 @@ void Integrate_Liquid_Phase(
 			Print_Rates_Per_Species(
 					ProductsForRatesAnalysis,
 					ReactantsForReactions,
+					InitialParameters.separator,
 					Rates,
 					time_current,
 					Species,
@@ -616,6 +624,7 @@ void Integrate_Liquid_Phase(
 
 		StreamConcentrations(
 				ConcentrationOutput,
+				InitialParameters.separator,
 				InitialParameters.GasPhase,
 				Number_Species,
 				time_current,
@@ -625,7 +634,12 @@ void Integrate_Liquid_Phase(
 
 		if(InitialParameters.PrintReacRates)
 		{
-			StreamReactionRates(ReactionRatesOutput, time_current, Rates);
+			StreamReactionRates(
+					ReactionRatesOutput,
+					InitialParameters.separator,
+					time_current,
+					Rates
+			);
 		}
 
 
