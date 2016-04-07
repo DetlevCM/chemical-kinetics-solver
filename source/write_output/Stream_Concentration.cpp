@@ -31,7 +31,7 @@ void WriteNewLabelsSpecies(
 			ConcentrationOutput << separator << Names[i];
 		}
 		//?ConcentrationOutput << "\t" << "Temperature";
-		ConcentrationOutput << separator << Names[i];
+		ConcentrationOutput << separator << "Temperature";
 		if(GasPhasePressure)
 		{
 			//ConcentrationOutput << "\t" << "Pressure";
