@@ -71,7 +71,7 @@ void Prepare_Print_Rates_Per_Species(
 		if(OutfileCons.is_open())
 		{
 			//OutfileProd << "Time 	Total 	";
-			OutfileProd << "Time" << separator << "Total" << separator;
+			OutfileCons << "Time" << separator << "Total" << separator;
 
 			// sort first, then print out sorted output
 			/*

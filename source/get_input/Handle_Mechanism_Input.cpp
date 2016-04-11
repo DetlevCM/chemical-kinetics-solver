@@ -112,6 +112,8 @@ bool Handle_Mechanism_Input(
 		// Update
 		Number_Species = (int) Species.size();
 		Number_Reactions = (int) Reactions.size();
+
+		WriteReactions("Reactions_After_Species_Removal.txt", Species, Reactions);
 	}
 
 	/*
