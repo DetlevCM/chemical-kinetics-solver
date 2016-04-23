@@ -24,14 +24,18 @@ struct SpeciesWithCoefficient
 {
 	int SpeciesID;
 	double coefficient;
-	bool ismatched = false;
+	bool ismatched;// = false;
 };
 
 SpeciesWithCoefficient Return_Species_With_Coefficient(string  , const vector< string > );
 
 
 
-vector< SingleReactionData > Read_Reaction_Matrix(string filename, const vector< string >& Species){
+//vector< SingleReactionData > Read_Reaction_Matrix(string filename, const vector< string >& Species){
+vector< SingleReactionData > Get_Reactions(
+		string filename,
+		const vector< string >& Species
+){
 
 
 
@@ -373,7 +377,7 @@ vector< SingleReactionData > Read_Reaction_Matrix(string filename, const vector<
 
 
 	return Reaction_Matrix;
-}
+										}
 
 
 
@@ -389,6 +393,7 @@ SpeciesWithCoefficient Return_Species_With_Coefficient(
 	int i,j;
 	int Number_Species = Species.size();
 	SpeciesWithCoefficient SpeciesAndCoefficient;
+	SpeciesAndCoefficient.ismatched = false; // default, defined here not globally
 
 	// isalpha returns true if entry is upper or lower case letter
 	i = 0;

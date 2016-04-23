@@ -24,6 +24,33 @@ int main(int argc, char* argv[])
 	debug_file_exists.close();
 
 
+	string mechanism_filename = "";
+	string initial_data_filename = "";
+
+	// http://stackoverflow.com/questions/13600204/checking-if-argvi-exists-c
+	// arcg = number of arguments
+	// argv[] arguments
+
+	// Case 1: We have the mechanism provided (makes most sense)
+	if(argc >= 2)
+	{
+		mechanism_filename = argv[1];
+	}
+	else
+	{
+		mechanism_filename = "chem.inp"; // standard
+	}
+
+	// Case 2: The user supplied the initial conditions (more likely to change)
+	if(argc == 3)
+	{
+		initial_data_filename = argv[2];
+	}
+	else
+	{
+		initial_data_filename = "initial.inp"; // old format officially depreciated
+	}
+
 
 	/* The main variables that store the information from a reaction
 	 * mechanism after it is read in, namely the Species, Thermodynamic
@@ -42,9 +69,10 @@ int main(int argc, char* argv[])
 
 
 	// Handle All the Data Input - The Arrays Contain the required information
-
+//			"chem.inp",
 	bool Mechanism_Read_In = Handle_Mechanism_Input(
-			"chem.inp",
+			mechanism_filename,
+			initial_data_filename,
 			Species,
 			Thermodynamics,
 			Reactions,

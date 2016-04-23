@@ -19,7 +19,8 @@
 
 //void Handle_Mechanism_Input(
 bool Handle_Mechanism_Input(
-		string Filename_Mechanism,
+		string mechanism_filename,
+		string initial_conditions_fileaname,
 		vector< string >& Species,
 		vector< ThermodynamicData >& Thermodynamics,
 		vector< SingleReactionData >& Reactions,
@@ -37,41 +38,28 @@ bool Handle_Mechanism_Input(
 	ifstream DataInputFromFile;
 
 	// Two files I want to open, mechanism data & input data
-	string MechanismData = Filename_Mechanism;
-	string InputData = "initial.inp";
+	//string MechanismData = Filename_Mechanism;
+	//string InputData = Initial_Conditions; //"initial.inp";
 
+
+	// Initial data files are either default or user given:
 
 	// check the existence of the 1st input file - the mechanism
-	DataInputFromFile.open(MechanismData.c_str());
+	DataInputFromFile.open(mechanism_filename.c_str());
 	if (!DataInputFromFile.is_open()) {
-		cout << "Error opening chem.inp - testing mechanism_data \n";
-		// for the chemkin users, let the input file be named chem.inp
-		MechanismData = "mechanism_data";
-		DataInputFromFile.open(MechanismData.c_str());
-		if (!DataInputFromFile.is_open()) {
-			cout << "Error opening either chem.inp or mechanism_data \n";
-			return false;
-		}
+		cout << "Error opening " << mechanism_filename << "\n";
+		return false;
 	}
 	DataInputFromFile.close();
 
 
-	bool InputType2 = false;
+	//bool InputType2 = false;
 
 	// check the existence of the 2nd input file - the input data
-	DataInputFromFile.open(InputData.c_str());
+	DataInputFromFile.open(initial_conditions_fileaname.c_str());
 	if (!DataInputFromFile.is_open()) {
-		cout << "Error opening initial.inp \n";
-		InputData = "initial2.inp";
-		DataInputFromFile.open(InputData.c_str());
-		if (!DataInputFromFile.is_open()) {
-			cout << "Error opening initial2.inp \n";
-			return false;
-		}
-		else
-		{
-			InputType2 = true;
-		}
+		cout << "Error opening " << initial_conditions_fileaname << "\n";
+		return false;
 	}
 	DataInputFromFile.close();
 
@@ -82,19 +70,19 @@ bool Handle_Mechanism_Input(
 
 
 	// Get and store Species Information
-	Species = Get_Species(MechanismData);
+	Species = Get_Species(mechanism_filename);
 	Number_Species = Species.size();
-	cout << "The Input File contains " << Number_Species <<" Species.\n";
+	cout << "The Mechanism contains " << Number_Species <<" Species.\n";
 
-	Thermodynamics = Get_Thermodynamic_Data_New_Format(MechanismData, Species);
-	cout << "The Input File contains " << Thermodynamics.size()
-								 << " Thermodynamic Data Entries.\n";
+	Thermodynamics = Get_Thermodynamic_Data_New_Format(mechanism_filename, Species);
+	cout << "The Mechanism contains " << Thermodynamics.size() << " Thermodynamic Data Entries.\n";
 
 	// Get and store the Reaction Mechanism data
-	Reactions = Read_Reaction_Matrix(MechanismData, Species);
+	//Reactions = Read_Reaction_Matrix(mechanism_filename, Species);
+	Reactions = Get_Reactions(mechanism_filename, Species);
 
 	Number_Reactions = Reactions.size();
-	cout << "The Input File contains " << Number_Reactions << " Reactions.\n";
+	cout << "The Mechanism contains " << Number_Reactions << " Reactions.\n";
 
 
 
@@ -153,14 +141,17 @@ bool Handle_Mechanism_Input(
 	//InitParam InitialParameters;
 	vector < InitSpecies > InitalSpecies;
 
+	/*
 	if(InputType2)
 	{
+	//*/
 		Read_Input_Data_v3(
-				"initial2.inp",
+				initial_conditions_fileaname,
 				Species,
 				InitialParameters,
 				InitalSpecies
 		); // new function for improved input reading
+	/*
 	}
 	else
 	{
@@ -170,7 +161,7 @@ bool Handle_Mechanism_Input(
 			InitialParameters,
 			InitalSpecies
 	); // new function for improved input reading
-	}
+	}//*/
 
 	cout << "Initial concentrations are supplied for " << InitalSpecies.size()
 								 << " species as follow:\n";

@@ -16,6 +16,7 @@
 //void Handle_Mechanism_Input(
 bool Handle_Mechanism_Input(
 		string ,
+		string ,
 		vector< string >& ,
 		vector< ThermodynamicData >& ,
 		vector< SingleReactionData >& ,
@@ -36,7 +37,12 @@ vector< ThermodynamicData > Get_Thermodynamic_Data_New_Format(
 );
 
 
+/*
 vector< SingleReactionData > Read_Reaction_Matrix(
+		string ,
+		const vector< string >&
+);//*/
+vector< SingleReactionData > Get_Reactions(
 		string ,
 		const vector< string >&
 );
