@@ -44,6 +44,8 @@ using std::istringstream;
 #include "Namespaces.h"
 #include "Global_Variables.hpp"
 
+#include "Helpers.h"
+
 // Definitions of my functions
 #include "Get_Input.h"
 

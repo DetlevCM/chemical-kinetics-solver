@@ -37,20 +37,16 @@ vector< SingleReactionData > Get_Reactions(
 		const vector< string >& Species
 ){
 
-
-
 	/* Struct Reaction Matrix
 	 * 1) Vector Ractants
 	 * 2) Vectro Reactants
 	 * 3) boolean reversible, doubles for A, n, Ea
 	 */
 
-
 	vector< SingleReactionData > Reaction_Matrix;
 
 	ifstream Mechanism_Data;
 	Mechanism_Data.open (filename.c_str());
-
 
 	vector< int > SchemeUnits;
 	SchemeUnits.resize(2); // 2 identifiers to contain IDs for units to A and Ea
@@ -105,73 +101,24 @@ vector< SingleReactionData > Get_Reactions(
 					// Do I still need the comment check in here?
 					if(line1.compare(0,1,"!") != 0  && line1.compare(0,1,"/") != 0 && line1.compare(0,3,"DUP") != 0)
 					{
-
 						// Split by = or => sign
 						vector< string > SplitLineIn;
-
-						// from: http://www.daniweb.com/software-development/cpp/threads/235389/splitting-a-string-into-tokens-using-strtok-and-string-as-parameter
-						char * cstr, *p;
-
-						string str = line1;
-
-						cstr = new char [str.size()+1];
-						strcpy (cstr, str.c_str());
-
 						vector< string > RemoveComments;
 
-						found = line1.find("!");
-						if (found!=string::npos && !end_flag)
-						{
-							p=strtok (cstr,"!");
-							RemoveComments.push_back(p);
-							str = RemoveComments[0];
-							line1 = RemoveComments[0];
-							delete[] cstr;
-							RemoveComments.clear();
-						}
-
+						RemoveComments = Tokenise_String_To_String(line1 , "!" );
+						line1 = RemoveComments[0];
+						RemoveComments.clear();
 
 						// only continue if the string is not empty or only whitespace or only tab
 						if(!line1.empty() && line1.find_first_not_of("	") != string::npos)
 						{
-							cstr = new char [str.size()+1];
-							strcpy (cstr, str.c_str());
-
-							p=strtok (cstr,"=>");
-							while (p!=NULL)
-							{
-								SplitLineIn.push_back(p);
-								p=strtok(NULL,"=>");
-							}
-							delete[] cstr;
-
+							SplitLineIn = Tokenise_String_To_String(line1, "=>");
 
 							vector< string > SplitLineLeft;
 							vector< string > SplitLineRight;
 
-							str = SplitLineIn[0];
-							cstr = new char [str.size()+1];
-							strcpy (cstr, str.c_str());
-
-							p=strtok (cstr," 	+");
-							while (p!=NULL)
-							{
-								SplitLineLeft.push_back(p);
-								p=strtok(NULL," 	+");
-							}
-							delete[] cstr;
-
-							str = SplitLineIn[1];//aString;
-							cstr = new char [str.size()+1];
-							strcpy (cstr, str.c_str());
-
-							p=strtok (cstr," 	+");
-							while (p!=NULL)
-							{
-								SplitLineRight.push_back(p);
-								p=strtok(NULL," 	+");
-							}
-							delete[] cstr;
+							SplitLineLeft = Tokenise_String_To_String(SplitLineIn[0]," 	+");
+							SplitLineRight = Tokenise_String_To_String(SplitLineIn[1]," 	+");
 
 							// SplitLineLeft Contains all inputs on the left hand side
 							// SplitLineRight Contains all inputs on the right hand side -> last 3 are parameters
@@ -181,11 +128,8 @@ vector< SingleReactionData > Get_Reactions(
 							SplitLineLeftSize = SplitLineLeft.size();
 							SplitLineRightSize = SplitLineRight.size() - 3; //(last 3 entries are Arrhenius Parameters
 
-
-
 							for(i = 0;i<SplitLineLeftSize;i++) // process all entries on left hand side
 							{
-
 								SpeciesWithCoefficient SpeciesAndCoefficient;
 								SpeciesAndCoefficient = Return_Species_With_Coefficient(SplitLineLeft[i], Species);
 
@@ -218,21 +162,12 @@ vector< SingleReactionData > Get_Reactions(
 						i.e as columns Species +1,+2,+3
 							 */
 
+
 							// Tokenize line, then take last 3 positions - easiest to work on whole line
 							vector< string > SplitLine;
 
-							str = line1;
-							cstr = new char [str.size()+1];
-							strcpy (cstr, str.c_str());
-
-							p=strtok (cstr," 	");
-							while (p!=NULL)
-							{
-								SplitLine.push_back(p);
-								p=strtok(NULL," 	");
-							}
+							SplitLine = Tokenise_String_To_String(line1," 	");
 							int SplitLineSize = SplitLine.size();
-							delete[] cstr;
 
 							if(SchemeUnits[0] == 0) // A is molecules / cm^3
 							{
@@ -377,7 +312,7 @@ vector< SingleReactionData > Get_Reactions(
 
 
 	return Reaction_Matrix;
-										}
+}
 
 
 

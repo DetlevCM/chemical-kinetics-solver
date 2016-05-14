@@ -8,21 +8,24 @@ CPP_SRCS += \
 ../source/Main.cpp \
 ../source/Make_Irreversible_v2.cpp \
 ../source/Prepare_Jacobian_Matrix.cpp \
-../source/Run_Integrator.cpp 
+../source/Run_Integrator.cpp \
+../source/tokenise_string.cpp 
 
 OBJS += \
 ./source/C_delta_n.o \
 ./source/Main.o \
 ./source/Make_Irreversible_v2.o \
 ./source/Prepare_Jacobian_Matrix.o \
-./source/Run_Integrator.o 
+./source/Run_Integrator.o \
+./source/tokenise_string.o 
 
 CPP_DEPS += \
 ./source/C_delta_n.d \
 ./source/Main.d \
 ./source/Make_Irreversible_v2.d \
 ./source/Prepare_Jacobian_Matrix.d \
-./source/Run_Integrator.d 
+./source/Run_Integrator.d \
+./source/tokenise_string.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes

@@ -71,21 +71,11 @@ vector< ThermodynamicData > Get_Thermodynamic_Data_New_Format(
 					ThermodynamicData temp_read_in_single_species;
 
 					// split the line by white spaces or tabs
-					char *cstr, *p;
+
 					vector< string > temp_split_line;
+					vector< double > temp_split_line_double;
 
-					string str = line1;
-
-					cstr = new char [str.size()+1];
-					strcpy (cstr, str.c_str());
-					p=strtok (cstr," 	"); // split by space and tab
-
-					while (p!=NULL)
-					{
-						temp_split_line.push_back(p);
-						p=strtok(NULL," 	");
-					}
-					delete[] cstr;
+					temp_split_line = Tokenise_String_To_String(line1 , " 	" );
 
 					// for now we just want the species name, that is the initial input
 					// Species Name is now temp_split_line[0]
@@ -107,86 +97,46 @@ vector< ThermodynamicData > Get_Thermodynamic_Data_New_Format(
 					// now the 3 temperature readings
 					getline (Mechanism_Data,line1);
 
-					str = line1;
-					cstr = new char [str.size()+1];
-					strcpy (cstr, str.c_str());
-					p=strtok (cstr," 	"); // split by space and tab
 
-					while (p!=NULL)
-					{
-						temp_split_line.push_back(p);
-						p=strtok(NULL," 	");
-					}
-
-					delete[] cstr;
-
-					temp_read_in_single_species.TLow = strtod(temp_split_line[0].c_str(),NULL);
-					temp_read_in_single_species.THigh = strtod(temp_split_line[1].c_str(),NULL);
-					temp_read_in_single_species.TChange = strtod(temp_split_line[2].c_str(),NULL);
-					temp_split_line.clear();
+					temp_split_line_double = Tokenise_String_To_Double(line1 , " 	");
+					temp_read_in_single_species.TLow = temp_split_line_double[0];
+					temp_read_in_single_species.THigh = temp_split_line_double[1];
+					temp_read_in_single_species.TChange = temp_split_line_double[2];
+					temp_split_line_double.clear();
 
 
 					// now the low thermodynamics
 					getline (Mechanism_Data,line1);
 
-					str = line1;
-					cstr = new char [str.size()+1];
-					strcpy (cstr, str.c_str());
-					p=strtok (cstr," 	"); // split by space and tab
-
-					while (p!=NULL)
-					{
-						temp_split_line.push_back(p);
-						p=strtok(NULL," 	");
-					}
-
-					delete[] cstr;
-
-					temp_read_in_single_species.NasaLow1 = strtod(temp_split_line[0].c_str(),NULL);
-					temp_read_in_single_species.NasaLow2 = strtod(temp_split_line[1].c_str(),NULL);
-					temp_read_in_single_species.NasaLow3 = strtod(temp_split_line[2].c_str(),NULL);
-					temp_read_in_single_species.NasaLow4 = strtod(temp_split_line[3].c_str(),NULL);
-					temp_read_in_single_species.NasaLow5 = strtod(temp_split_line[4].c_str(),NULL);
-					temp_read_in_single_species.NasaLow6 = strtod(temp_split_line[5].c_str(),NULL);
-					temp_read_in_single_species.NasaLow7 = strtod(temp_split_line[6].c_str(),NULL);
-					temp_split_line.clear();
+					temp_split_line_double = Tokenise_String_To_Double(line1 , " 	");
+					temp_read_in_single_species.NasaLow1 = temp_split_line_double[0];
+					temp_read_in_single_species.NasaLow2 = temp_split_line_double[1];
+					temp_read_in_single_species.NasaLow3 = temp_split_line_double[2];
+					temp_read_in_single_species.NasaLow4 = temp_split_line_double[3];
+					temp_read_in_single_species.NasaLow5 = temp_split_line_double[4];
+					temp_read_in_single_species.NasaLow6 = temp_split_line_double[5];
+					temp_read_in_single_species.NasaLow7 = temp_split_line_double[6];
+					temp_split_line_double.clear();
 
 
 					// now the high thermodynamics
 					getline (Mechanism_Data,line1);
 
-					str = line1;
-					cstr = new char [str.size()+1];
-					strcpy (cstr, str.c_str());
-					p=strtok (cstr," 	"); // split by space and tab
-
-					while (p!=NULL)
-					{
-						temp_split_line.push_back(p);
-						p=strtok(NULL," 	");
-					}
-
-					delete[] cstr;
-					delete[] p;
-
-					temp_read_in_single_species.NasaHigh1 = strtod(temp_split_line[0].c_str(),NULL);
-					temp_read_in_single_species.NasaHigh2 = strtod(temp_split_line[1].c_str(),NULL);
-					temp_read_in_single_species.NasaHigh3 = strtod(temp_split_line[2].c_str(),NULL);
-					temp_read_in_single_species.NasaHigh4 = strtod(temp_split_line[3].c_str(),NULL);
-					temp_read_in_single_species.NasaHigh5 = strtod(temp_split_line[4].c_str(),NULL);
-					temp_read_in_single_species.NasaHigh6 = strtod(temp_split_line[5].c_str(),NULL);
-					temp_read_in_single_species.NasaHigh7 = strtod(temp_split_line[6].c_str(),NULL);
-					temp_split_line.clear();
+					temp_split_line_double = Tokenise_String_To_Double(line1 , " 	");
+					temp_read_in_single_species.NasaHigh1 = temp_split_line_double[0];
+					temp_read_in_single_species.NasaHigh2 = temp_split_line_double[1];
+					temp_read_in_single_species.NasaHigh3 = temp_split_line_double[2];
+					temp_read_in_single_species.NasaHigh4 = temp_split_line_double[3];
+					temp_read_in_single_species.NasaHigh5 = temp_split_line_double[4];
+					temp_read_in_single_species.NasaHigh6 = temp_split_line_double[5];
+					temp_read_in_single_species.NasaHigh7 = temp_split_line_double[6];
+					temp_split_line_double.clear();
 
 
 					// retain the input for one species mapped into the right location
 					read_in_thermodynamics[temp_species_id] = temp_read_in_single_species;
-					//cout << read_in_thermodynamics.size() << "\n";
-					//cout << temp_species_id << "\n";
-
 				}
 			}
-
 
 
 			// Check if the Thermodynamics Data Begins, if yes set a start flag
@@ -195,12 +145,8 @@ vector< ThermodynamicData > Get_Thermodynamic_Data_New_Format(
 			{
 				begin_flag=true;
 			}
-
-
 		}
-
 		Mechanism_Data.close();
-
 	}
 
 
