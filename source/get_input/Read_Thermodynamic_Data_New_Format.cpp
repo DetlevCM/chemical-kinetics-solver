@@ -25,7 +25,8 @@ vector< ThermodynamicData > Get_Thermodynamic_Data_New_Format(
 	int i;
 
 	// Vector to store all data as a struct (more efficient than vector< vector> >
-	vector< ThermodynamicData > read_in_thermodynamics(Number_Species);
+	vector< ThermodynamicData > read_in_thermodynamics;
+	read_in_thermodynamics.resize(Number_Species);
 
 
 
@@ -241,7 +242,7 @@ vector< ThermodynamicData > Get_Thermodynamic_Data_New_Format(
 					temp_read_in_single_species.THigh = SingleSpeciesData[1];
 					temp_read_in_single_species.TChange = SingleSpeciesData[2];
 
-
+/*/
 					temp_read_in_single_species.NasaLow1 =
 							strtod(line2.substr( 0,15).c_str(),NULL);
 					temp_read_in_single_species.NasaLow2 =
@@ -272,8 +273,41 @@ vector< ThermodynamicData > Get_Thermodynamic_Data_New_Format(
 							strtod(line4.substr(30,15).c_str(),NULL);
 					temp_read_in_single_species.NasaHigh7 =
 							strtod(line4.substr(45,15).c_str(),NULL);
+//*/
 
+					// regression fix, these were switched round at some points somehow...
+					// not a problem for low temperature schemes (small impact)
+					// but bad for high temperature schemes
+					temp_read_in_single_species.NasaHigh1 =
+							strtod(line2.substr( 0,15).c_str(),NULL);
+					temp_read_in_single_species.NasaHigh2 =
+							strtod(line2.substr(15,15).c_str(),NULL);
+					temp_read_in_single_species.NasaHigh3 =
+							strtod(line2.substr(30,15).c_str(),NULL);
+					temp_read_in_single_species.NasaHigh4 =
+							strtod(line2.substr(45,15).c_str(),NULL);
+					temp_read_in_single_species.NasaHigh5 =
+							strtod(line2.substr(60,15).c_str(),NULL);
 
+					temp_read_in_single_species.NasaHigh6 =
+							strtod(line3.substr( 0,15).c_str(),NULL);
+					temp_read_in_single_species.NasaHigh7 =
+							strtod(line3.substr(15,15).c_str(),NULL);
+					temp_read_in_single_species.NasaLow1 =
+							strtod(line3.substr(30,15).c_str(),NULL);
+					temp_read_in_single_species.NasaLow2 =
+							strtod(line3.substr(45,15).c_str(),NULL);
+					temp_read_in_single_species.NasaLow3 =
+							strtod(line3.substr(60,15).c_str(),NULL);
+
+					temp_read_in_single_species.NasaLow4 =
+							strtod(line4.substr( 0,15).c_str(),NULL);
+					temp_read_in_single_species.NasaLow5 =
+							strtod(line4.substr(15,15).c_str(),NULL);
+					temp_read_in_single_species.NasaLow6 =
+							strtod(line4.substr(30,15).c_str(),NULL);
+					temp_read_in_single_species.NasaLow7 =
+							strtod(line4.substr(45,15).c_str(),NULL);
 					read_in_thermodynamics[temp_species_id] = temp_read_in_single_species;
 
 				}
