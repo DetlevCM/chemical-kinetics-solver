@@ -8,6 +8,7 @@
 #include <MyHeaders.h>
 
 void ReportAccuracy(
+		string separator,
 		int Number_Species,
 		vector< string > Species,
 		string output_filename,
@@ -69,24 +70,24 @@ void ReportAccuracy(
 			DataReduced.clear();
 
 
-			p=strtok (cstr1,"\t"); // break at space or tab
-			p=strtok(NULL,"\t"); // break again as first is the keyword
+			p=strtok (cstr1,separator.c_str()); // break at space or tab
+			p=strtok(NULL,separator.c_str()); // break again as first is the keyword
 
 			while(p!=NULL){ // only read remainder is something is left
 				DataFull.push_back(strtod(p,NULL));
-				p=strtok(NULL,"\t");
+				p=strtok(NULL,separator.c_str());
 			}
 			delete[] cstr1;
 			Line1.clear();
 
 
-			p=strtok (cstr2,"\t"); // break at space or tab
-			p=strtok(NULL,"\t"); // break again as first is the keyword
+			p=strtok (cstr2,separator.c_str()); // break at space or tab
+			p=strtok(NULL,separator.c_str()); // break again as first is the keyword
 
 			while(p!=NULL){ // only read remainder is something is left
 				DataReduced.push_back(strtod(p,NULL));
 				//cout << p << " ";
-				p=strtok(NULL,"\t");
+				p=strtok(NULL,separator.c_str());
 			}
 			delete[] cstr2;
 			Line2.clear();

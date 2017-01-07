@@ -41,6 +41,7 @@ void handle_reactions_with_chosen_species(
 
 
 void ReportAccuracy(
+		string,
 		int,
 		vector< string > ,
 		string,

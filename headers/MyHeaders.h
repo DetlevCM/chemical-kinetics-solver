@@ -36,8 +36,11 @@ using std::ostringstream;
 using std::stringstream;
 using std::istringstream;
 
+// Looking into ODEint - as an open ODE solver
+//#include <boost/numeric/odeint.hpp>
+//using namespace boost::numeric::odeint;
 
-
+//#include <iterator>
 
 #include "Structs.h"
 #include "Classes.h"

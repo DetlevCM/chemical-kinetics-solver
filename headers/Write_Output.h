@@ -81,10 +81,13 @@ void WriteReactions(
 
 void Write_Stoichiometric_Matrix_For_Opt(
 		string ,
-//		const vector< string >& ,
+		//		const vector< string >& ,
 		const vector< SingleReactionData >&
 );
-
+void Input_File_For_Ehsan_Opt(
+		string ,
+		const vector< SingleReactionData >&
+);
 
 string Prepare_Single_Reaction_Output(
 		int ,
@@ -94,13 +97,13 @@ string Prepare_Single_Reaction_Output(
 
 void PetroOxyOutputHeader(
 		string
-		);
+);
 
 
 void PetroOxyOutputStream(
 		string,
 		const PressureVesselCalc &,
 		double
-		);
+);
 
 #endif /* WRITE_OUTPUT_FUNCTIONS_H_ */

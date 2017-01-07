@@ -183,9 +183,18 @@ void Integrate_Liquid_Phase(
 		ipar[i] = 0;
 	}
 
-
-
+	// original old code
 	double* y = &SpeciesConcentration[0];
+	Concentration.clear();
+	Concentration.resize(Number_Species + 1);
+
+	// Should be faster, but is 10 times slower???
+	/*
+	Concentration.clear();
+	Concentration = SpeciesConcentration;
+	//cout << Concentration.size() << "\n";
+	double* y = &Concentration[0];
+	//*/
 	double time_current, time_step, time_step1, time_end;
 
 	time_current = 0;// -> Solver is designed for t_0 = 0
@@ -195,17 +204,12 @@ void Integrate_Liquid_Phase(
 	int tracker = 0;
 
 	//cout << "\nEnd Time: " << time_end << " Time Step: " << time_step1 << "\n";
+
 	/* -- Initial values at t = 0 -- */
 
 	Number_Reactions = (int) ReactionParameters.size();
 
 	CalculatedThermo.resize(Number_Species);
-	/*
-	for(i=0;i<Number_Species;i++)
-	{
-		CalculatedThermo[i].resize(4);
-	}//*/
-
 
 	InitialDataConstants.EnforceStability = InitialParameters.EnforceStability;
 	InitialDataConstants.PetroOxy = InitialParameters.PressureVessel.IsSet;
@@ -447,8 +451,8 @@ void Integrate_Liquid_Phase(
 	/* -- Got values at t = 0 -- */
 
 	// Resize the vector for the concentrations in the ODE void
-	Concentration.clear(); // don't think it makes a difference if I clear or not
-	Concentration.resize(Number_Species + 1);
+	//Concentration.clear(); // don't think it makes a difference if I clear or not
+	//Concentration.resize(Number_Species + 1);
 
 	// enables reset of Rates Analysis
 	int RatesAnalysisTimepoint = 0;

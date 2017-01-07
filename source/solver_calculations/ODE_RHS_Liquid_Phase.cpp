@@ -21,6 +21,7 @@ void ODE_RHS_Liquid_Phase(int*n, double*time_current, double*y, double*f)
 	//double R = 8.314472e0;
 	//double Na = 6.0221415e23;
 
+
 	// stability hack
 	if(InitialDataConstants.EnforceStability)
 	{
@@ -43,11 +44,13 @@ void ODE_RHS_Liquid_Phase(int*n, double*time_current, double*y, double*f)
 		}
 	}
 
-
-
-	// Thermodynamic data, Rate Constant, Rates, new Concentrations
-	Calculate_Thermodynamics(CalculatedThermo, Concentration[Number_Species], Thermodynamics);
-	Calculate_Rate_Constant(Kf, Kr, Concentration[Number_Species],ReactionParameters, CalculatedThermo, SpeciesLossAll, Delta_N);
+	// retain previous thermo if temperature change is effectively zero
+	if(f[Number_Species] < 1e-6)
+	{
+		// Thermodynamic data, Rate Constant, Rates, new Concentrations
+		Calculate_Thermodynamics(CalculatedThermo, Concentration[Number_Species], Thermodynamics);
+		Calculate_Rate_Constant(Kf, Kr, Concentration[Number_Species],ReactionParameters, CalculatedThermo, SpeciesLossAll, Delta_N);
+	}
 	CalculateReactionRates(Rates, Concentration, Kf, Kr, ReactantsForReactions, ProductsForReactions);
 	SpeciesConcentrationChange = SpeciesLossRate(SpeciesLossAll,Number_Species, Rates);
 
@@ -57,10 +60,19 @@ void ODE_RHS_Liquid_Phase(int*n, double*time_current, double*y, double*f)
 	double qtot=0;
 
 
+
+
+
+
+
+
 	for (i = 0; i < Number_Species; i++)
 	{
 		ctot = ctot + CalculatedThermo[i].Cv * Concentration[i];
 		//cout << CalculatedThermo[i].Hf << " ";
+
+		// reduce number of loops
+		f[i] = SpeciesConcentrationChange[i];
 	}
 	//cout << "\n";
 	// ctot = ctot / 1000; // working in moles/l so no Na;
@@ -72,10 +84,11 @@ void ODE_RHS_Liquid_Phase(int*n, double*time_current, double*y, double*f)
 	qtot = -qint / (ctot);//*1000); // scale l to ml and Na not needed for moles/l * Na); //*/
 
 	// Checked f[i] -> no unexpected rates of change for "inert gases", all 0.
+	/*
 	for (i = 0; i < Number_Species; i++)
 	{
 		f[i] = SpeciesConcentrationChange[i]; // Species equations //
-	}
+	}//*/
 	f[Number_Species] = qtot; // Temperature equation //
 	//cout << ctot << " " << qint << " " << qtot << "\n";
 
@@ -95,10 +108,13 @@ void ODE_RHS_Liquid_Phase(int*n, double*time_current, double*y, double*f)
 
 	// IEEE standard hack to check for NaN
 	// if temperature blows up, freeze it
+	//*
 	if(qtot != qtot)
 	{
 		f[Number_Species] = 0;
 	}
+	//*/
+
 }
 
 

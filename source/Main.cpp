@@ -69,7 +69,7 @@ int main(int argc, char* argv[])
 
 
 	// Handle All the Data Input - The Arrays Contain the required information
-//			"chem.inp",
+	//			"chem.inp",
 	bool Mechanism_Read_In = Handle_Mechanism_Input(
 			mechanism_filename,
 			initial_data_filename,
@@ -96,6 +96,11 @@ int main(int argc, char* argv[])
 			Write_Stoichiometric_Matrix_For_Opt
 			(
 					"stoichiometry_matrix.txt" ,
+					Reactions
+			);
+			Input_File_For_Ehsan_Opt
+			(
+					"mechanism.txt" ,
 					Reactions
 			);
 		}
@@ -155,7 +160,7 @@ int main(int argc, char* argv[])
 					OutputFilenames.Rates,
 					InitialParameters.separator,
 					Number_Reactions
-					);
+			);
 		}
 
 
@@ -244,7 +249,7 @@ int main(int argc, char* argv[])
 						OutputFilenames.Rates,
 						InitialParameters.separator,
 						Number_Reactions
-						);
+				);
 
 				/*
 				if(InitialParameters.PetroOxy)
@@ -274,6 +279,7 @@ int main(int argc, char* argv[])
 
 				// Not ideal, should use variables rather than handwritten filenames
 				ReportAccuracy(
+						InitialParameters.separator,
 						Number_Species,
 						Species,
 						"reduction_accuracy_report.txt",
