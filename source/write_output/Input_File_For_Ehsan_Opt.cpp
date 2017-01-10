@@ -46,7 +46,7 @@ void Input_File_For_Ehsan_Opt
 				//Output << Reactions[i].Products[j] - Reactions[i].Reactants[j] << "  ";
 				if(Reactions[i].Reactants[j] != 0)
 				{
-					Output << -j << "\t";
+					Output << -(j+1) << "\t";
 					counter = counter + 1;
 				}
 			}
@@ -68,7 +68,7 @@ void Input_File_For_Ehsan_Opt
 				{
 					if(Reactions[i].Products[j] != 0)
 					{
-						Output << j << "\t";
+						Output << (j+1) << "\t";
 						counter = counter + 1;
 					}
 				}
