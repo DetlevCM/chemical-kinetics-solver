@@ -4,6 +4,7 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 CPP_SRCS += \
+../source/write_output/Input_File_For_Ehsan_Opt.cpp \
 ../source/write_output/Stream_Concentration.cpp \
 ../source/write_output/Stream_ReactionRates.cpp \
 ../source/write_output/WriteSpecies.cpp \
@@ -13,6 +14,7 @@ CPP_SRCS += \
 ../source/write_output/Write_Thermodynamics.cpp 
 
 OBJS += \
+./source/write_output/Input_File_For_Ehsan_Opt.o \
 ./source/write_output/Stream_Concentration.o \
 ./source/write_output/Stream_ReactionRates.o \
 ./source/write_output/WriteSpecies.o \
@@ -22,6 +24,7 @@ OBJS += \
 ./source/write_output/Write_Thermodynamics.o 
 
 CPP_DEPS += \
+./source/write_output/Input_File_For_Ehsan_Opt.d \
 ./source/write_output/Stream_Concentration.d \
 ./source/write_output/Stream_ReactionRates.d \
 ./source/write_output/WriteSpecies.d \

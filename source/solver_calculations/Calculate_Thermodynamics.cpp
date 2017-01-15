@@ -23,7 +23,7 @@
 void Calculate_Thermodynamics(
 		//vector< vector< double > >& CalculatedThermo,
 		vector< CalculatedThermodynamics >& CalculatedThermo,
-		const double& CurrentTemp,
+		const double& Temperature,
 		const vector< ThermodynamicData >& Thermodynamics
 		)
 {
@@ -34,11 +34,12 @@ void Calculate_Thermodynamics(
 
 	int Number_Species = Thermodynamics.size();
 
-	// reduce computational steps -> Is a bit quicker :)
-	double CurrentTemp2 = CurrentTemp*CurrentTemp;
-	double CurrentTemp3 = CurrentTemp2*CurrentTemp;
-	double CurrentTemp4 = CurrentTemp3*CurrentTemp;
-	double logCurrentTemp = log(CurrentTemp);
+	// reduce computational steps -> Is it a bit quicker?
+	double T2 = Temperature*Temperature;
+	double T3 = T2*Temperature;
+	double T4 = T3*Temperature;
+	double logT = log(Temperature);
+	double InvT = 1/Temperature;
 
 
 	/* Hf, Cp, Cv, S */
@@ -47,69 +48,67 @@ void Calculate_Thermodynamics(
 	{
 		// Thermodynamics Mapping:
 			// 0 - 2 -> low_T, high_T, change_T
-		if (CurrentTemp <= Thermodynamics[i].TChange) {
+		if (Temperature <= Thermodynamics[i].TChange) {
 			// 3 - 9 -> Nasa Low 1 to 7
 
 			//Hf
-			CalculatedThermo[i].Hf = R*CurrentTemp*(
+			CalculatedThermo[i].Hf = R*Temperature*(
 				Thermodynamics[i].NasaLow1 +
-				Thermodynamics[i].NasaLow2*CurrentTemp*0.5 +
-				Thermodynamics[i].NasaLow3*CurrentTemp2/3 +
-				Thermodynamics[i].NasaLow4*CurrentTemp3*0.25 +
-				Thermodynamics[i].NasaLow5*CurrentTemp4*0.2 +
-				Thermodynamics[i].NasaLow6/CurrentTemp);
+				Thermodynamics[i].NasaLow2*Temperature*0.5 +
+				Thermodynamics[i].NasaLow3*T2/3 +
+				Thermodynamics[i].NasaLow4*T3*0.25 +
+				Thermodynamics[i].NasaLow5*T4*0.2 +
+				Thermodynamics[i].NasaLow6*InvT);
 
 			//Cp
 			CalculatedThermo[i].Cp = R*(
 				Thermodynamics[i].NasaLow1+
-				Thermodynamics[i].NasaLow2*CurrentTemp +
-				Thermodynamics[i].NasaLow3*CurrentTemp2 +
-				Thermodynamics[i].NasaLow4*CurrentTemp3 +
-				Thermodynamics[i].NasaLow5*CurrentTemp4);
+				Thermodynamics[i].NasaLow2*Temperature +
+				Thermodynamics[i].NasaLow3*T2 +
+				Thermodynamics[i].NasaLow4*T3 +
+				Thermodynamics[i].NasaLow5*T4);
 
 			//Cv = Cp - R;
 			CalculatedThermo[i].Cv = CalculatedThermo[i].Cp - R;
 
 			//S
 			CalculatedThermo[i].S = R*(
-				Thermodynamics[i].NasaLow1*logCurrentTemp +
-				Thermodynamics[i].NasaLow2*CurrentTemp +
-				Thermodynamics[i].NasaLow3*CurrentTemp2*0.5 +
-				Thermodynamics[i].NasaLow4*CurrentTemp3/3 +
-				Thermodynamics[i].NasaLow5*CurrentTemp4*0.25 +
-				// .NasaLow6
+				Thermodynamics[i].NasaLow1*logT +
+				Thermodynamics[i].NasaLow2*Temperature +
+				Thermodynamics[i].NasaLow3*T2*0.5 +
+				Thermodynamics[i].NasaLow4*T3/3 +
+				Thermodynamics[i].NasaLow5*T4*0.25 +
 				Thermodynamics[i].NasaLow7);
 		}
 		else
 		{
 			//Hf =
-			CalculatedThermo[i].Hf = R*CurrentTemp*(
+			CalculatedThermo[i].Hf = R*Temperature*(
 				Thermodynamics[i].NasaHigh1+
-				Thermodynamics[i].NasaHigh2*CurrentTemp*0.5 +
-				Thermodynamics[i].NasaHigh3*CurrentTemp2/3 +
-				Thermodynamics[i].NasaHigh4*CurrentTemp3*0.25 +
-				Thermodynamics[i].NasaHigh5*CurrentTemp4*0.2 +
-				Thermodynamics[i].NasaHigh6/CurrentTemp);
+				Thermodynamics[i].NasaHigh2*Temperature*0.5 +
+				Thermodynamics[i].NasaHigh3*T2/3 +
+				Thermodynamics[i].NasaHigh4*T3*0.25 +
+				Thermodynamics[i].NasaHigh5*T4*0.2 +
+				Thermodynamics[i].NasaHigh6*InvT);
 
 			//Cp
 			CalculatedThermo[i].Cp = R*(
 				Thermodynamics[i].NasaHigh1+
-				Thermodynamics[i].NasaHigh2*CurrentTemp +
-				Thermodynamics[i].NasaHigh3*CurrentTemp2 +
-				Thermodynamics[i].NasaHigh4*CurrentTemp3 +
-				Thermodynamics[i].NasaHigh5*CurrentTemp4);
+				Thermodynamics[i].NasaHigh2*Temperature +
+				Thermodynamics[i].NasaHigh3*T2 +
+				Thermodynamics[i].NasaHigh4*T3 +
+				Thermodynamics[i].NasaHigh5*T4);
 
 			//Cv = Cp - R;
 			CalculatedThermo[i].Cv = CalculatedThermo[i].Cp - R;
 
 			//S
 			CalculatedThermo[i].S = R*(
-				Thermodynamics[i].NasaHigh1*logCurrentTemp +
-				Thermodynamics[i].NasaHigh2*CurrentTemp +
-				Thermodynamics[i].NasaHigh3*CurrentTemp2*0.5 +
-				Thermodynamics[i].NasaHigh4*CurrentTemp3/3 +
-				Thermodynamics[i].NasaHigh5*CurrentTemp4*0.25 +
-				// .NasaHigh6
+				Thermodynamics[i].NasaHigh1*logT +
+				Thermodynamics[i].NasaHigh2*Temperature +
+				Thermodynamics[i].NasaHigh3*T2*0.5 +
+				Thermodynamics[i].NasaHigh4*T3/3 +
+				Thermodynamics[i].NasaHigh5*T4*0.25 +
 				Thermodynamics[i].NasaHigh7);
 		} 
 	}

@@ -112,7 +112,16 @@ vector< SingleReactionData > Get_Reactions(
 						// only continue if the string is not empty or only whitespace or only tab
 						if(!line1.empty() && line1.find_first_not_of("	") != string::npos)
 						{
-							SplitLineIn = Tokenise_String_To_String(line1, "=>");
+
+							bool is_reversible = true;
+							if(line1.find("=>")!=string::npos) // log whether reaction is reversible or irreversible
+							{
+								is_reversible = false;
+								// this will cause havoc: Boolean Reversible ->
+								// false, i.e. not reversible,true, i.e. reversible
+							}
+
+							SplitLineIn = Tokenise_String_To_String(line1, "<=>");
 
 							vector< string > SplitLineLeft;
 							vector< string > SplitLineRight;
@@ -234,13 +243,7 @@ vector< SingleReactionData > Get_Reactions(
 							}
 
 
-							bool is_reversible = true;
-							if(line1.find("=>")!=string::npos) // log whether reaction is reversible or irreversible
-							{
-								is_reversible = false;
-								// this will cause havoc: Boolean Reversible ->
-								// false, i.e. not reversible,true, i.e. reversible
-							}
+
 
 							// Make New Input
 

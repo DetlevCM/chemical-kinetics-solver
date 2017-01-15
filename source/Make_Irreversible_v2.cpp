@@ -68,7 +68,7 @@ vector< SingleReactionData > Make_Irreversible(
 	for(i=0;i<50;i++)
 	{
 		//cout << i << "\n";
-		Temperature = 100 + 20 * i; // start at 200K, avoids issues at 0K
+		Temperature = 250 + 10 * i; // start at 100K, avoids issues at 0K
 		//Temperature = 500;
 
 		Calculate_Thermodynamics(CalculatedThermo, Temperature, Thermodynamics);

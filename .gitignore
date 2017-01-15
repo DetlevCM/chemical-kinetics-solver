@@ -18,3 +18,5 @@ Release-Makefile-MinGW/*.exe
 .project
 *.o
 *.d
+*.exe
+Release-Makefile-MinGW/CKS branches.exe
