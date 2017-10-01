@@ -148,7 +148,7 @@ int main(int argc, char* argv[])
 
 		WriteNewLabelsSpecies(
 				OutputFilenames.Species,
-				InitialParameters.separator,
+				InitialParameters.Param_Solver.separator,
 				Number_Species,
 				Species,
 				InitialParameters.GasPhase
@@ -158,7 +158,7 @@ int main(int argc, char* argv[])
 		{
 			WriteLabelsReactionRates(
 					OutputFilenames.Rates,
-					InitialParameters.separator,
+					InitialParameters.Param_Solver.separator,
 					Number_Reactions
 			);
 		}
@@ -174,7 +174,7 @@ int main(int argc, char* argv[])
 		cout << "\nHanding Mechanism to Integrator\n" << std::flush;
 
 
-		Integrate_Liquid_Phase(
+		Integrate_Liquid_Phase_Intel(
 				OutputFilenames,
 				InitialSpeciesConcentration,
 				Species,
@@ -240,14 +240,14 @@ int main(int argc, char* argv[])
 
 				WriteNewLabelsSpecies(
 						OutputFilenames.Species,
-						InitialParameters.separator,
+						InitialParameters.Param_Solver.separator,
 						Number_Species,
 						Species,
 						InitialParameters.GasPhase
 				);
 				WriteLabelsReactionRates(
 						OutputFilenames.Rates,
-						InitialParameters.separator,
+						InitialParameters.Param_Solver.separator,
 						Number_Reactions
 				);
 
@@ -264,7 +264,7 @@ int main(int argc, char* argv[])
 
 
 				//*
-				Integrate_Liquid_Phase(
+				Integrate_Liquid_Phase_Intel(
 						OutputFilenames,
 						InitialSpeciesConcentration,
 						Species,
@@ -279,7 +279,7 @@ int main(int argc, char* argv[])
 
 				// Not ideal, should use variables rather than handwritten filenames
 				ReportAccuracy(
-						InitialParameters.separator,
+						InitialParameters.Param_Solver.separator,
 						Number_Species,
 						Species,
 						"reduction_accuracy_report.txt",

@@ -1,8 +1,8 @@
 ### Libraries, MUST be download from Intel
-libraries/libiode_intel64.lib
-libraries/libiode_intel64.a
-libraries/libiode_ia32.lib
-libraries/libiode_ia32.a
+libraries/intel/libiode_intel64.lib
+libraries/intel/libiode_intel64.a
+libraries/intel/libiode_ia32.lib
+libraries/intel/libiode_ia32.a
 ### Build Folders...
 Release/
 Debug/

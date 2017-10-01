@@ -1,81 +1,5 @@
 
 
-//*** Define Intel ODE Solver ***//
-#ifndef _INTEL_ODE_H_
-#define _INTEL_ODE_H_
-//*
-extern "C" {
-
-void dodesol_mk52lfa(
-		int*,
-		int*,
-		double*,
-		double*,
-		double*,
-		void*,
-		void*,
-		double*,
-		double*,
-		double*,
-		double*,
-		double*,
-		int*,
-		int*
-);
-
-void dodesol_rkm9mka(
-		int*,
-		int*,
-		double*,
-		double*,
-		double*,
-		void*,
-		void*,
-		double*,
-		double*,
-		double*,
-		double*,
-		double*,
-		int*,
-		int*
-);
-
-void dodesol_mk52lfn(
-		int*,
-		int*,
-		double*,
-		double*,
-		double*,
-		void*,
-		double*,
-		double*,
-		double*,
-		double*,
-		double*,
-		int*,
-		int*
-);
-
-void dodesol_rkm9mkn(
-		int*,
-		int*,
-		double*,
-		double*,
-		double*,
-		void*,
-		double*,
-		double*,
-		double*,
-		double*,
-		double*,
-		int*,
-		int*
-);
-
-}//*/
-#endif /* _INTEL_ODE_H_ */
-
-
 
 #ifndef _MY_OTHER_FUNCTIONS_
 #define _MY_OTHER_FUNCTIONS_
@@ -103,7 +27,23 @@ vector< SingleReactionData > Make_Irreversible(
 		vector< ThermodynamicData >
 );
 
-void Integrate_Liquid_Phase(
+void Integrate_Liquid_Phase_Intel(
+		/*string,
+		string,
+		string,
+		string,//*/
+		Filenames,
+		vector< double >,
+		vector< string > ,
+		vector< ThermodynamicData > ,
+		vector< SingleReactionData > &,
+		InitParam,
+		vector< double >&,
+		PressureVesselCalc,
+		vector< vector < str_RatesAnalysis > > &
+);
+
+void Integrate_Liquid_Phase_Odepack(
 		/*string,
 		string,
 		string,

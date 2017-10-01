@@ -150,12 +150,43 @@ struct MechanismAnalysisConfig {
 
 };
 
+
+// new structure for initial parameters
+
+struct param_solver {
+
+	// we need to pick the solver tpe
+	int SolverType;
+	// 0 = Intel, 1 = Odepack
+
+	bool Use_Stiff_Solver;
+	bool Use_Analytical_Jacobian;
+
+
+	/* ODE Solver Parameters */
+	double rtol;
+	double threshold;
+	double atol; // atol = rtol * threshhold
+	double minimum_stepsize; // hm
+	double initial_stepsize; // h
+
+	// output control
+	string separator;
+};
+
+
 struct InitParam {
 
 
 	MechanismAnalysisConfig MechanismAnalysis;
 
+	// a block for solver parameters
+	param_solver Param_Solver;
+
+
+
 	/* Needed when Solving */
+
 
 
 	bool PrintReacRates;
@@ -167,18 +198,7 @@ struct InitParam {
 	double temperature;
 
 
-	bool UseStiffSolver;
 	double ReduceReactions;
-
-
-	/* ODE Solver Parameters */
-	double rtol;
-	double atol;
-	double threshold;
-	double hm;
-	double h;
-	string separator;
-	// END
 
 	/* Constant concentration option */
 	/* Single vector, to switch rates of specified species to zero */
@@ -198,12 +218,9 @@ struct InitParam {
 	bool UseNewLumping;
 	// END
 
-
-
-	bool Jacobian;
 	// END
 
-	/* Experimetnal Gas Phase Code */
+	/* Experimental Gas Phase Code */
 	bool GasPhase; // i.e. is gas phase, default false
 	double GasPhaseVolume;
 	double GasPhasePressure;

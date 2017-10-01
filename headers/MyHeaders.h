@@ -50,6 +50,9 @@ using std::istringstream;
 #include "Helpers.h"
 
 // Definitions of my functions
+#include "lib_headers/lib_Intel_ODE.h"
+#include "lib_headers/lib_odepack.h"
+
 #include "Get_Input.h"
 
 #include "initial_data_handling.h" // new input handling
@@ -61,6 +64,7 @@ using std::istringstream;
 #include "Write_Output.h"
 
 #include "MyFunctions.h"
+
 
 #include "PetroOxy.h"
 

@@ -22,7 +22,7 @@ void Handle_SolverParameters(InitParam& InitialParameters, vector<string> Input)
 
 		if (Input[i].find("Jacobian") != string::npos) // use analytical Jacobian
 		{
-			InitialParameters.Jacobian = true;
+			InitialParameters.Param_Solver.Use_Analytical_Jacobian = true;
 		}
 		if (Input[i].find("Force Stability")!=string::npos) // force no negative species
 		{
@@ -30,7 +30,7 @@ void Handle_SolverParameters(InitParam& InitialParameters, vector<string> Input)
 		}
 		if (Input[i].find("Use General Solver")!=string::npos) // use solver that can handle non stiff problems better but is slower
 		{
-			InitialParameters.UseStiffSolver = false;
+			InitialParameters.Param_Solver.Use_Stiff_Solver = false;
 		}
 
 		if(Input[i].find("hm")!=string::npos)
@@ -39,10 +39,10 @@ void Handle_SolverParameters(InitParam& InitialParameters, vector<string> Input)
 			p=strtok(NULL," \t"); // break again as first is the keyword
 
 			if(p!=NULL){ // only read remainder is something is left
-				InitialParameters.hm = strtod(p,NULL);
+				InitialParameters.Param_Solver.minimum_stepsize = strtod(p,NULL);
 				p=strtok(NULL," \t");
 			}
-			cout << "minimum stepsize (h): " << InitialParameters.hm << "\n";
+			cout << "minimum stepsize (h): " << InitialParameters.Param_Solver.minimum_stepsize << "\n";
 		}
 
 		if(Input[i].find("initialh")!=string::npos)
@@ -51,10 +51,10 @@ void Handle_SolverParameters(InitParam& InitialParameters, vector<string> Input)
 			p=strtok(NULL," \t"); // break again as first is the keyword
 
 			if(p!=NULL){ // only read remainder is something is left
-				InitialParameters.h = strtod(p,NULL);
+				InitialParameters.Param_Solver.initial_stepsize = strtod(p,NULL);
 				p=strtok(NULL," \t");
 			}
-			cout << "initial stepsize (h): " << InitialParameters.h << "\n";
+			cout << "initial stepsize (h): " << InitialParameters.Param_Solver.initial_stepsize << "\n";
 		}
 
 
@@ -68,11 +68,11 @@ void Handle_SolverParameters(InitParam& InitialParameters, vector<string> Input)
 				inputs.push_back(strtod(p,NULL));
 				p=strtok(NULL," \t");
 			}
-			InitialParameters.rtol = inputs[0];
-			InitialParameters.threshold = inputs[1];
+			InitialParameters.Param_Solver.rtol = inputs[0];
+			InitialParameters.Param_Solver.threshold = inputs[1];
 
-			cout << "relative tolerance: " << InitialParameters.rtol << "\n";
-			cout << "threshold: " << InitialParameters.threshold << "\n";
+			cout << "relative tolerance: " << InitialParameters.Param_Solver.rtol << "\n";
+			cout << "threshold: " << InitialParameters.Param_Solver.threshold << "\n";
 		}
 
 		if(Input[i].find("Threshold")!=string::npos || Input[i].find("threshold")!=string::npos)
@@ -81,11 +81,11 @@ void Handle_SolverParameters(InitParam& InitialParameters, vector<string> Input)
 			p=strtok(NULL," \t"); // break again as first is the keyword
 
 			if(p!=NULL){ // only read remainder is something is left
-				InitialParameters.threshold = strtod(p,NULL);
+				InitialParameters.Param_Solver.threshold = strtod(p,NULL);
 				p=strtok(NULL," \t");
 			}
 
-			cout << "threshold: " << InitialParameters.threshold << "\n";
+			cout << "threshold: " << InitialParameters.Param_Solver.threshold << "\n";
 		}
 
 		if(Input[i].find("RTOL")!=string::npos || Input[i].find("rtol")!=string::npos)
@@ -94,11 +94,11 @@ void Handle_SolverParameters(InitParam& InitialParameters, vector<string> Input)
 			p=strtok(NULL," \t"); // break again as first is the keyword
 
 			if(p!=NULL){ // only read remainder is something is left
-				InitialParameters.rtol = strtod(p,NULL);
+				InitialParameters.Param_Solver.rtol = strtod(p,NULL);
 				p=strtok(NULL," \t");
 			}
 
-			cout << "relative tolerance: " << InitialParameters.rtol << "\n";
+			cout << "relative tolerance: " << InitialParameters.Param_Solver.rtol << "\n";
 		}
 
 		if(Input[i].find("IRREV")!=string::npos)
@@ -113,12 +113,12 @@ void Handle_SolverParameters(InitParam& InitialParameters, vector<string> Input)
 
 		if(Input[i].find("Comma Separator")!=string::npos)
 				{
-					InitialParameters.separator = ",";
+					InitialParameters.Param_Solver.separator = ",";
 				}
 
 		if(Input[i].find("Tab Separator")!=string::npos)
 				{
-					InitialParameters.separator = "\t";
+					InitialParameters.Param_Solver.separator = "\t";
 				}
 
 		if(Input[i].find("Separator:")!=string::npos)
@@ -127,7 +127,7 @@ void Handle_SolverParameters(InitParam& InitialParameters, vector<string> Input)
 					p=strtok(NULL,"=: \t"); // break again as first is the keyword
 
 					if(p!=NULL){ // only read remainder is something is left
-						InitialParameters.separator = p;
+						InitialParameters.Param_Solver.separator = p;
 						p=strtok(NULL," \t");
 					}
 				}

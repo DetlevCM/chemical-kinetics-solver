@@ -62,18 +62,18 @@ void Read_Input_Data_v3(
 
 		/* Solver Parameters */
 		/* Solver tolerances parameters */
-		InitialParameters.rtol = 1.e-5;
-		InitialParameters.atol = 1.e-25;
-		InitialParameters.threshold = 1.e-10;
-		InitialParameters.hm = 1.e-12;
-		InitialParameters.h = 1.e-7;
-		InitialParameters.separator = ","; // more modern, comma delimited
+		InitialParameters.Param_Solver.rtol = 1.e-5;
+		InitialParameters.Param_Solver.atol = 1.e-25;
+		InitialParameters.Param_Solver.threshold = 1.e-10;
+		InitialParameters.Param_Solver.minimum_stepsize = 1.e-12;
+		InitialParameters.Param_Solver.initial_stepsize = 1.e-7;
+		InitialParameters.Param_Solver.separator = ","; // more modern, comma delimited
 		/* End the solver parameters */
 
 
-		InitialParameters.UseStiffSolver = true;
+		InitialParameters.Param_Solver.Use_Stiff_Solver = true;
 		InitialParameters.EnforceStability = false;
-		InitialParameters.Jacobian = false;
+		InitialParameters.Param_Solver.Use_Analytical_Jacobian = false;
 		/* End Solver Paramerters */
 
 

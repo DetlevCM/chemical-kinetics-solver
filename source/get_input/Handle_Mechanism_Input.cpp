@@ -141,30 +141,17 @@ bool Handle_Mechanism_Input(
 	//InitParam InitialParameters;
 	vector < InitSpecies > InitalSpecies;
 
-	/*
-	if(InputType2)
-	{
-	//*/
-		Read_Input_Data_v3(
-				initial_conditions_fileaname,
-				Species,
-				InitialParameters,
-				InitalSpecies
-		); // new function for improved input reading
-	/*
-	}
-	else
-	{
-	Read_Input_Data_v2(
-			"initial.inp",
+
+	Read_Input_Data_v3(
+			initial_conditions_fileaname,
 			Species,
 			InitialParameters,
 			InitalSpecies
 	); // new function for improved input reading
-	}//*/
+
 
 	cout << "Initial concentrations are supplied for " << InitalSpecies.size()
-								 << " species as follow:\n";
+										 << " species as follow:\n";
 
 
 	/*
