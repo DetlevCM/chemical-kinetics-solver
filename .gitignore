@@ -7,6 +7,7 @@ libraries/intel/libiode_ia32.a
 Release/
 Debug/
 Release-Intel/
+Benchmark/
 ### Interesting directories for those who build their own
 Release-Makefile-Linux/*.o
 Release-Makefile-Linux/*.exe
