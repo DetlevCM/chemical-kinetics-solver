@@ -1,4 +1,4 @@
-This ia a basic chemical kinetics solver for chemkin style mechanisms, employed in the thesis 
+This is a basic chemical kinetics solver for chemkin style mechanisms, employed in the thesis 
 titled "Autoxidation Behaviour of Hydrocarbons in the Context of Conventional and Alternative 
 Aviation Fuels",submitted at the University of Leeds in 2015.
 http://etheses.whiterose.ac.uk/10407/
@@ -9,10 +9,14 @@ done my best to use self contained functions, hence modifying the code should no
 difficult - though it may be tedious to step through some of my comments.
 
 The library is NOT included with the distribution and has to be downloaded separately from the
-Intel Website as the EULA disallows distribution of the library iteself:
+Intel website as the EULA disallows distribution of the library itself:
 https://software.intel.com/en-us/articles/intel-ordinary-differential-equations-solver-library
 Should the link "go dead", it is advised to search for "Intel ODE solver" with the help of a 
 search engine.
+
+A later expansion is seeking to implement the odepack library which is (as of writing this) 
+available as "public domain" code. Two sources are for example the LLNL website and netlib.
+
 
 The code was developed using Eclipse CDT using the included builder - if you would like to 
 build the code yourself, you will require a copy of GCC (Linux) or MinGW/TDM-GCC (Win) 
