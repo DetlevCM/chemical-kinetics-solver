@@ -43,6 +43,40 @@ void Handle_InitialConditions(InitParam& InitialParameters, vector<string> Input
 			// allows users to provide multiple time points
 			InitialParameters.TimeEnd.push_back(input[0]);
 			InitialParameters.TimeStep.push_back(input[1]);
+
+			// need to modify this function:
+			/* 3 positions: user gives endtime and timestep
+			 * 4 positions, stiffness/Jacobian/solver is specified
+			 * -> max 6 positions
+			 */
+
+
+			if (Input[i].find("Jacobian")!=string::npos)
+					{
+
+					}
+			if (Input[i].find("NoJacobian")!=string::npos)
+								{
+
+								}
+			if (Input[i].find("Stiff")!=string::npos)
+								{
+
+								}
+			if (Input[i].find("NoStiff")!=string::npos)
+								{
+
+								}
+			if (Input[i].find("Intel")!=string::npos)
+								{
+
+								}
+			if (Input[i].find("Odepack")!=string::npos)
+								{
+
+								}
+
+
 		}
 
 		// Gas Phase Code Extension

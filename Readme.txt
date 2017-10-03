@@ -18,10 +18,11 @@ A later expansion is seeking to implement the odepack library which is (as of wr
 available as "public domain" code. Two sources are for example the LLNL website and netlib.
 
 
-The code was developed using Eclipse CDT using the included builder - if you would like to 
-build the code yourself, you will require a copy of GCC (Linux) or MinGW/TDM-GCC (Win) 
-with Eclipse CDT.
+The code was originally developed using Eclipse CDT using the included builder.
+It used to compile on both Windows and Linux. With the inclusion of odepack, only Linux is 
+officially supported. (It is easier.) However, you are free to build the code under Windows too, 
+which may be possible if you built the odepack archive with static links.
 
-The included binary in the release folder should work on most 64Bit PCs, however a speedup
-can be achieved by compiling the code for the employed architecture with -march=native.
-Where the supplied binary does not work, it is recommended to compile it from source.
+To build the code, both a C++ compiler and a Fortran compiler are required.
+C++11 needs to be supported as a minimum required.
+
