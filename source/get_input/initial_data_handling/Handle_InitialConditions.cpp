@@ -7,7 +7,7 @@
 
 #include <MyHeaders.h>
 
-void Handle_InitialConditions(InitParam& InitialParameters, vector<string> Input)
+void Handle_InitialConditions(InitParam& InitialParameters, vector<string> Input, solver_type Global_Solver_Settings)
 {
 	int i;
 	for(i=0;i<(int)Input.size();i++)
@@ -31,6 +31,14 @@ void Handle_InitialConditions(InitParam& InitialParameters, vector<string> Input
 		}
 		if (Input[i].find("EndTime")!=string::npos)
 		{
+			string line;
+			vector< string > tokens;
+			// stupid implementation, but works... - maybe I improve it in the future...
+			tokens.push_back("!");
+			tokens.push_back("//");
+			// remove comments
+			line = Strip_Single_Line_Comments(Input[i],tokens);
+			/*
 			vector< double > input;
 			p=strtok (cstr," \t"); // break at space or tab
 			p=strtok(NULL," \t"); // break again as first is the keyword
@@ -39,43 +47,62 @@ void Handle_InitialConditions(InitParam& InitialParameters, vector<string> Input
 				input.push_back(strtod(p,NULL));
 				p=strtok(NULL," \t");
 			}
+			 */
+
+			// split the line into individual components
+			vector< string > line_content;
+			line_content = Tokenise_String_To_String(line," \t");
+
 
 			// allows users to provide multiple time points
-			InitialParameters.TimeEnd.push_back(input[0]);
-			InitialParameters.TimeStep.push_back(input[1]);
-
+			if((int)line_content.size()>=3){
+				//InitialParameters.TimeEnd.push_back(input[0]);
+				//InitialParameters.TimeStep.push_back(input[1]);
+				double timeend = strtod(line_content[1].c_str(),NULL);
+				double timestep = strtod(line_content[2].c_str(),NULL);
+				InitialParameters.TimeEnd.push_back(timeend);
+				InitialParameters.TimeStep.push_back(timestep);
+			}
 			// need to modify this function:
 			/* 3 positions: user gives endtime and timestep
 			 * 4 positions, stiffness/Jacobian/solver is specified
 			 * -> max 6 positions
 			 */
 
+			solver_type tmp = Global_Solver_Settings;
 
 			if (Input[i].find("Jacobian")!=string::npos)
-					{
-
-					}
+			{
+				tmp.Use_Analytical_Jacobian = true;
+			}
 			if (Input[i].find("NoJacobian")!=string::npos)
-								{
-
-								}
+			{
+				tmp.Use_Analytical_Jacobian = false;
+			}
 			if (Input[i].find("Stiff")!=string::npos)
-								{
-
-								}
+			{
+				tmp.Use_Stiff_Solver = true;
+			}
 			if (Input[i].find("NoStiff")!=string::npos)
-								{
+			{
+				tmp.Use_Stiff_Solver = false;
+			}
 
-								}
+			// switching the solver might be riscky right now...
+			// just keep the global option for now
+			/*
 			if (Input[i].find("Intel")!=string::npos)
-								{
-
-								}
+			{
+				tmp.SolverType = 0;
+			}
 			if (Input[i].find("Odepack")!=string::npos)
-								{
+			{
+				tmp.SolverType = 1;
+			}
+			//*/
 
-								}
-
+			// store the solver choice - either stores the global setting or the user choice
+			InitialParameters.Solver_Type.push_back(tmp);
 
 		}
 

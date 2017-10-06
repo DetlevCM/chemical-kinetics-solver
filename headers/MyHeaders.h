@@ -4,31 +4,33 @@
 #define _MY_HEADERS
 
 // File Streams and IO
-#include <cstdio>
-
+#include <stdio.h>
 #include <sstream>
 #include <iostream>
 #include <fstream>
 
-#include <cstdlib>
+// type conversion
+#include <stdlib.h>
 
-#include <cmath>
+// maths
+#include <math.h>
 
-#include <ctime>
+// timekeeping
+#include <time.h>
+
+// varibale types
 #include <vector>
-#include <cstring>
-
+#include <string.h>
 
 // Needed globally for the function definitions
 //using namespace std;
 
+// specific components of namespace std
 using std::vector;
 using std::cout;
 using std::string;
 
 using std::ofstream;
-//using std::iostream;
-//using std::fstream;
 using std::ifstream;
 using std::ios;
 
@@ -36,16 +38,13 @@ using std::ostringstream;
 using std::stringstream;
 using std::istringstream;
 
-// Looking into ODEint - as an open ODE solver
-//#include <boost/numeric/odeint.hpp>
-//using namespace boost::numeric::odeint;
 
-//#include <iterator>
+// My own headers
 
 #include "Structs.h"
 #include "Classes.h"
 #include "Namespaces.h"
-#include "Global_Variables.hpp"
+#include <Global_Variables.h>
 
 #include "Helpers.h"
 

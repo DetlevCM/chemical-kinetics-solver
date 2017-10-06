@@ -27,34 +27,34 @@ void CalculateReactionRates(
 
 	for(i = 0;i< (int) ReactantsForRates.size();i++){ // Forward Rates determined by the reactants
 
-		if(ReactantsForRates[i].coefficient != 1) // this is quicker than raising to the power of 1 - but check with the struct
+		if(ReactantsForRates[i].coefficient == 1) // this is quicker than raising to the power of 1 - but check with the struct
 		{
 			Forward_Rates[ReactantsForRates[i].ReactionID] =
 					Forward_Rates[ReactantsForRates[i].ReactionID]*
-					pow(SpeciesConcentration[ReactantsForRates[i].SpeciesID],ReactantsForRates[i].coefficient);
+					SpeciesConcentration[ReactantsForRates[i].SpeciesID];
 		}
 		else
 		{
 			Forward_Rates[ReactantsForRates[i].ReactionID] =
 					Forward_Rates[ReactantsForRates[i].ReactionID]*
-					SpeciesConcentration[ReactantsForRates[i].SpeciesID];
+					pow(SpeciesConcentration[ReactantsForRates[i].SpeciesID],ReactantsForRates[i].coefficient);
 		}
 	}
 
 
 	for(i = 0;i< (int) ProductsForRates.size();i++){ // Reverse Rates determined by the products
 
-		if(ProductsForRates[i].coefficient != 1) // this is quicker than raising to the power of 1 - but check with the struct
+		if(ProductsForRates[i].coefficient == 1) // this is quicker than raising to the power of 1 - but check with the struct
 		{
 			Reverse_Rates[ProductsForRates[i].ReactionID] =
 					Reverse_Rates[ProductsForRates[i].ReactionID]*
-					pow(SpeciesConcentration[ProductsForRates[i].SpeciesID],ProductsForRates[i].coefficient);
+					SpeciesConcentration[ProductsForRates[i].SpeciesID];
 		}
 		else
 		{
 			Reverse_Rates[ProductsForRates[i].ReactionID] =
 					Reverse_Rates[ProductsForRates[i].ReactionID]*
-					SpeciesConcentration[ProductsForRates[i].SpeciesID];
+					pow(SpeciesConcentration[ProductsForRates[i].SpeciesID],ProductsForRates[i].coefficient);
 		}
 	}
 

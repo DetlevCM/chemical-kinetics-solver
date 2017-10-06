@@ -154,6 +154,7 @@ void Read_Input_Data_v3(
 		 * for collisions, also it allows similar keywords in different blocks
 		 */
 
+		solver_type Global_Solver_Type;
 
 		while (Input_Data.good())
 		{
@@ -166,6 +167,28 @@ void Read_Input_Data_v3(
 			// only handle line if not a comment and not empty
 			if(LineNotCommentOrEmpty(line))
 			{
+
+				// first check on the solver parameters
+				// i.e. Jacobian, stiffness, etc.
+				if (line.find("<SolverParameters>") != string::npos)
+				{
+					do{
+						getline(Input_Data,line);
+						if(LineNotCommentOrEmpty(line))
+						{
+							Input.push_back(line);
+							//cout << line << "\n";
+						}
+					}while (line.find("</SolverParameters>") == string::npos);
+					// Read in data until the closing tag is found
+
+					Handle_SolverParameters(InitialParameters, Input);
+
+					Global_Solver_Type.SolverType = InitialParameters.Param_Solver.SolverType;
+					Global_Solver_Type.Use_Analytical_Jacobian = InitialParameters.Param_Solver.Use_Analytical_Jacobian;
+					Global_Solver_Type.Use_Stiff_Solver = InitialParameters.Param_Solver.Use_Stiff_Solver;
+				}
+				Input.clear();
 
 				//cout << line << "\n";
 
@@ -183,7 +206,7 @@ void Read_Input_Data_v3(
 					}while (line.find("</InitialConditions>") == string::npos);
 					// Read in data until the closing tag is found
 
-					Handle_InitialConditions(InitialParameters, Input);
+					Handle_InitialConditions(InitialParameters, Input, Global_Solver_Type);
 				}
 				Input.clear();
 
@@ -203,25 +226,6 @@ void Read_Input_Data_v3(
 					Handle_Species(InitialParameters, SetupSpecies, Input, Species);
 				}
 				Input.clear();
-
-
-
-				if (line.find("<SolverParameters>") != string::npos)
-				{
-					do{
-						getline(Input_Data,line);
-						if(LineNotCommentOrEmpty(line))
-						{
-							Input.push_back(line);
-							//cout << line << "\n";
-						}
-					}while (line.find("</SolverParameters>") == string::npos);
-					// Read in data until the closing tag is found
-
-					Handle_SolverParameters(InitialParameters, Input);
-				}
-				Input.clear();
-
 
 
 				if (line.find("<Analysis>") != string::npos)

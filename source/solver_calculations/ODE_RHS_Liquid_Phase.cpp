@@ -52,7 +52,7 @@ void ODE_RHS_Liquid_Phase(int*n, double*time_current, double*y, double*f)
 		Calculate_Rate_Constant(Kf, Kr, Concentration[Number_Species],ReactionParameters, CalculatedThermo, SpeciesLossAll, Delta_N);
 	}
 	CalculateReactionRates(Rates, Concentration, Kf, Kr, ReactantsForReactions, ProductsForReactions);
-	SpeciesConcentrationChange = SpeciesLossRate(SpeciesLossAll,Number_Species, Rates);
+	SpeciesConcentrationChange = SpeciesLossRate(Number_Species, Rates, SpeciesLossAll);
 
 
 	double ctot=0;

@@ -8,7 +8,7 @@
 #ifndef HEADERS_HELPERS_H_
 #define HEADERS_HELPERS_H_
 
-
+string Strip_Single_Line_Comments(string, vector< string >);
 
 vector< string > Tokenise_String_To_String(string , string );
 

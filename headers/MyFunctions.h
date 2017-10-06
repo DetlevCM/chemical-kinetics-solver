@@ -43,6 +43,22 @@ void Integrate_Liquid_Phase_Intel(
 		vector< vector < str_RatesAnalysis > > &
 );
 
+void Integrate_PetroOxy_Liquid_Phase_Intel(
+		/*string,
+		string,
+		string,
+		string,//*/
+		Filenames,
+		vector< double >,
+		vector< string > ,
+		vector< ThermodynamicData > ,
+		vector< SingleReactionData > &,
+		InitParam,
+		vector< double >&,
+		PressureVesselCalc,
+		vector< vector < str_RatesAnalysis > > &
+);
+
 void Integrate_Liquid_Phase_Odepack(
 		/*string,
 		string,

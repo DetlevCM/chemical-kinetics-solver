@@ -23,7 +23,6 @@ void Calculate_Rate_Constant(
 		vector< double >& Kr,
 		const double Temperature,
 		const vector< ReactionParameter >& ReactionParameters,
-		//const vector< vector< double > >& CalculatedThermo,
 		const vector< CalculatedThermodynamics >& CalculatedThermo,
 		const vector< TrackSpecies >& SpeciesAll,
 		const vector< double >& Delta_N
@@ -51,7 +50,7 @@ void Calculate_Rate_Constant(
 	vector< double > delta_S(Number_Reactions);
 	vector< double > delta_G(Number_Reactions);
 
-	double  temp_kp, temp_kc;
+
 
 
 
@@ -61,15 +60,18 @@ void Calculate_Rate_Constant(
 
 	for(i = 0;i<(int) SpeciesAll.size();i++){ // loop over every reaction
 
+		// only doing this calculation for reversible reactions does give a speedup on an irreversible scheme
+		// but not a huge one
+		//if(ReactionParameters[SpeciesAll[i].ReactionID].Reversible)
+		//{
 		delta_H[SpeciesAll[i].ReactionID] =
 				delta_H[SpeciesAll[i].ReactionID] +
-				CalculatedThermo[SpeciesAll[i].SpeciesID].Hf *
-				SpeciesAll[i].coefficient;
+				(CalculatedThermo[SpeciesAll[i].SpeciesID].Hf * SpeciesAll[i].coefficient);
 
 		delta_S[SpeciesAll[i].ReactionID] =
 				delta_S[SpeciesAll[i].ReactionID] +
-				CalculatedThermo[SpeciesAll[i].SpeciesID].S *
-				SpeciesAll[i].coefficient;
+				(CalculatedThermo[SpeciesAll[i].SpeciesID].S * SpeciesAll[i].coefficient);
+		//}
 	}
 
 
@@ -79,6 +81,8 @@ void Calculate_Rate_Constant(
 	{
 		Kf[i] = ReactionParameters[i].paramA *
 				exp(-ReactionParameters[i].paramEa/Temperature); // do NOT forget the - !!!
+
+
 
 		//* Speedup by only raising temperature to power where needed: improvement is large :)
 		if(ReactionParameters[i].paramN != 0) // raising to power 0 has no effect, so only if not 0
@@ -98,6 +102,7 @@ void Calculate_Rate_Constant(
 		// unbundle into two if statements
 		if(ReactionParameters[i].Reversible)
 		{
+			double  temp_kp, temp_kc;
 			delta_G[i] = delta_H[i] - Temperature*delta_S[i];
 			temp_kp = exp(-delta_G[i]/(R*Temperature));
 

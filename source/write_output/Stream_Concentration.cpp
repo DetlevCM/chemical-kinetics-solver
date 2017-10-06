@@ -98,5 +98,5 @@ void StreamConcentrationsV2(
 	ConcentrationOutput << Concentration[Number_Species] << separator;
 	ConcentrationOutput << "\n"; // new line
 
-	ConcentrationOutput.flush(); // To get the whole line
+	//ConcentrationOutput.flush(); // To get the whole line
 }

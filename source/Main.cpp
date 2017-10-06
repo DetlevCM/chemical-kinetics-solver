@@ -262,20 +262,17 @@ int main(int argc, char* argv[])
 
 				cout << "\nHanding Reduced Mechanism to Integrator\n" << std::flush;
 
-
-				//*
-				Integrate_Liquid_Phase_Intel(
-						OutputFilenames,
-						InitialSpeciesConcentration,
-						Species,
-						Thermodynamics,
-						ReducedReactions,
-						InitialParameters,
-						KeyRates,
-						PetroOxyDataInitial,
-						RatesAnalysisData
-				);//*/
-
+					Integrate_Liquid_Phase_Intel(
+							OutputFilenames,
+							InitialSpeciesConcentration,
+							Species,
+							Thermodynamics,
+							ReducedReactions,
+							InitialParameters,
+							KeyRates,
+							PetroOxyDataInitial,
+							RatesAnalysisData
+					);
 
 				// Not ideal, should use variables rather than handwritten filenames
 				ReportAccuracy(

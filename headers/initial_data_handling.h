@@ -9,7 +9,7 @@
 #define HEADERS_INITIAL_DATA_HANDLING_H_
 
 
-void Handle_InitialConditions(InitParam& , vector<string> );
+void Handle_InitialConditions(InitParam& , vector<string> , solver_type);
 
 void Handle_Species(InitParam&  , vector< InitSpecies >& , vector<string> , vector< string > );
 

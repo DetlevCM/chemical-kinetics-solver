@@ -59,9 +59,9 @@ void Calculate_Thermodynamics(
 
 
 vector< double > SpeciesLossRate(
-		const vector< TrackSpecies > &,
 		int,
-		const vector< double > &
+		const vector< double > &,
+		const vector< TrackSpecies > &
 );
 
 

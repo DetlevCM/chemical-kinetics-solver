@@ -6,22 +6,22 @@
  * every species in the system. */
 
 vector< double > SpeciesLossRate(
-		const vector< TrackSpecies >& SpeciesLossList,
 		int Number_Species,
-		const vector< double >& Combined_Rates
+		const vector< double >& Combined_Rates,
+		const vector< TrackSpecies >& SpeciesLossList
 		)
 {
 
 	int i;
 
-	vector< double > temp_species_loss;
-	temp_species_loss.resize(Number_Species);
+	vector< double > temp_species_loss(Number_Species);
+	//temp_species_loss.resize(Number_Species);
 
 	for(i=0;i< (int) SpeciesLossList.size();i++){
 
-		temp_species_loss[SpeciesLossList[i].SpeciesID]=
+		temp_species_loss[SpeciesLossList[i].SpeciesID] =
 				temp_species_loss[SpeciesLossList[i].SpeciesID] +
-				SpeciesLossList[i].coefficient * Combined_Rates[SpeciesLossList[i].ReactionID];
+				(Combined_Rates[SpeciesLossList[i].ReactionID] * SpeciesLossList[i].coefficient);
 	}
 
 	return temp_species_loss;

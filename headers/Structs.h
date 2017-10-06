@@ -64,8 +64,8 @@ struct ReactionParameter {
 //*/
 
 struct TrackSpecies {
-	int ReactionID;
 	int SpeciesID;
+	int ReactionID;
 	double coefficient;
 };
 
@@ -174,6 +174,13 @@ struct param_solver {
 	string separator;
 };
 
+// for the extra input choices with a mutli solver setup
+struct solver_type {
+	int SolverType;
+	// 0 = Intel, 0 = Odepack
+	bool Use_Stiff_Solver;
+	bool Use_Analytical_Jacobian;
+};
 
 struct InitParam {
 
@@ -182,7 +189,7 @@ struct InitParam {
 
 	// a block for solver parameters
 	param_solver Param_Solver;
-
+	vector<solver_type> Solver_Type; // for specifying a mix of solvers, no individual tolerances though
 
 
 	/* Needed when Solving */
