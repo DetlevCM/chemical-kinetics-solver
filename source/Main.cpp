@@ -52,10 +52,8 @@ int main(int argc, char* argv[])
 	}
 
 
-	/* The main variables that store the information from a reaction
-	 * mechanism after it is read in, namely the Species, Thermodynamic
-	 * Data and Reactions.
-	 */
+	// The main variables that store the information from a reaction mechanism after
+	// it is read in, namely the species, thermodynamic data and reactions.
 
 	vector< string > Species; // Species list
 	vector< ThermodynamicData > Thermodynamics; // Thermodynamic Data
@@ -89,7 +87,7 @@ int main(int argc, char* argv[])
 	}
 	else // Mechanism read in correctly, proceed:
 	{
-		// for someone else's optimistaion code, optional output
+		// for someone else's optimisation code, optional output
 		if(InitialParameters.StoichiometryMatrixForOpt)
 		{
 			//cout << "\n" << InitialParameters.StoichiometryMatrixForOpt << "\n\n";
@@ -171,42 +169,16 @@ int main(int argc, char* argv[])
 		}
 
 
-
 		cout << "\nHanding Mechanism to Integrator\n";
-
-		if(InitialParameters.Param_Solver.SolverType == 0){
-			cout << "Using Intel ODE\n" << std::flush;
-			Integrate_Liquid_Phase_Intel(
-					OutputFilenames,
-					InitialSpeciesConcentration,
-					Species,
-					Thermodynamics,
-					Reactions,
-					InitialParameters,
-					KeyRates,
-					PetroOxyDataInitial,
-					RatesAnalysisData
-			);
-		}
-		else if(InitialParameters.Param_Solver.SolverType == 1)
-		{
-			cout << "Using odepack\n" << std::flush;
-			Integrate_Liquid_Phase_Odepack_LSODA(
-					OutputFilenames,
-					InitialSpeciesConcentration,
-					Species,
-					Thermodynamics,
-					Reactions,
-					InitialParameters,
-					KeyRates,
-					PetroOxyDataInitial,
-					RatesAnalysisData
-			);
-		}
-		else
-		{
-			cout << "Error, solver undefined or not available.\n";
-		}
+		Choose_Integrator(
+				OutputFilenames,
+				InitialSpeciesConcentration,
+				Species,Thermodynamics,Reactions,
+				InitialParameters,
+				KeyRates,
+				PetroOxyDataInitial,
+				RatesAnalysisData
+		);
 
 
 		if(InitialParameters.ReduceReactions != 0)
@@ -273,50 +245,18 @@ int main(int argc, char* argv[])
 						Number_Reactions
 				);
 
-				/*
-				if(InitialParameters.PetroOxy)
-				{
-					//PetroOxyData = PetroOxyDataInitial;
-					PetroOxyOutputHeader("reduced_PetroOxy-Log.txt");
-				}//*/
-
-
 
 				cout << "\nHanding Reduced Mechanism to Integrator\n" << std::flush;
+				Choose_Integrator(
+						OutputFilenames,
+						InitialSpeciesConcentration,
+						Species,Thermodynamics,ReducedReactions,
+						InitialParameters,
+						KeyRates,
+						PetroOxyDataInitial,
+						RatesAnalysisData
+				);
 
-				if(InitialParameters.Param_Solver.SolverType == 0){
-					cout << "Using Intel ODE\n" << std::flush;
-					Integrate_Liquid_Phase_Intel(
-							OutputFilenames,
-							InitialSpeciesConcentration,
-							Species,
-							Thermodynamics,
-							ReducedReactions,
-							InitialParameters,
-							KeyRates,
-							PetroOxyDataInitial,
-							RatesAnalysisData
-					);
-				}
-				else if(InitialParameters.Param_Solver.SolverType == 1)
-				{
-					cout << "Using odepack\n" << std::flush;
-					Integrate_Liquid_Phase_Odepack_LSODA(
-							OutputFilenames,
-							InitialSpeciesConcentration,
-							Species,
-							Thermodynamics,
-							ReducedReactions,
-							InitialParameters,
-							KeyRates,
-							PetroOxyDataInitial,
-							RatesAnalysisData
-					);
-				}
-				else
-				{
-					cout << "Error, solver undefined or not available.\n";
-				}
 
 				// Not ideal, should use variables rather than handwritten filenames
 				ReportAccuracy(

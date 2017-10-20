@@ -17,7 +17,6 @@ void Integrate_Liquid_Phase_Odepack_LSODA(
 		vector< SingleReactionData >& Reactions,
 		InitParam InitialParameters,
 		vector< double >& KeyRates,
-		PressureVesselCalc PetroOxyDataInput,
 		vector< vector < str_RatesAnalysis > >& RatesAnalysisData
 )
 {
@@ -27,7 +26,6 @@ void Integrate_Liquid_Phase_Odepack_LSODA(
 
 	using namespace Jacobian_ODE_RHS;
 	using namespace ODE_RHS;
-	using namespace ODE_RHS_Pressure_Vessel_Variables;
 	using namespace Jacobian;
 
 
@@ -133,9 +131,7 @@ void Integrate_Liquid_Phase_Odepack_LSODA(
 	CalculatedThermo.resize(Number_Species);
 
 	InitialDataConstants.EnforceStability = InitialParameters.EnforceStability;
-	InitialDataConstants.PetroOxy = InitialParameters.PressureVessel.IsSet;
-	InitialDataConstants.PetroOxyTemperatureRise = InitialParameters.PressureVessel.TemperatureRise;
-	InitialDataConstants.temperature = InitialParameters.temperature;
+InitialDataConstants.temperature = InitialParameters.temperature;
 
 	// Set Constant Concentration if it Exists
 	//
@@ -162,26 +158,6 @@ void Integrate_Liquid_Phase_Odepack_LSODA(
 					SpeciesConcentration[InitialParameters.ConstantSpecies[i]];
 		}
 	}
-
-
-	if(InitialParameters.PressureVessel.IsSet)
-	{
-		PetroOxyOutputHeader(OutputFilenames.PetroOxy);
-		OxyGasSpeciesID = InitialParameters.PressureVessel.GasSpecies;
-		PetroOxyData = PetroOxyDataInput;
-	}
-	// Oxy with temperature Rise
-	if(
-			//GlobalArrays::
-			InitialParameters.PressureVessel.IsSet
-			&&
-			//GlobalArrays::
-			InitialParameters.PressureVessel.TemperatureRise != 0) // fix temperature for Oxy, rise desired
-	{
-		SpeciesConcentration[Number_Species] = 298;
-		// for Oxy diffusion limit, gets ignored if not required
-		time_previous = 0;
-	}//*/
 
 
 	Calculate_Thermodynamics(CalculatedThermo, SpeciesConcentration[Number_Species], Thermodynamics);
@@ -222,21 +198,7 @@ void Integrate_Liquid_Phase_Odepack_LSODA(
 		ReactionRateImportance(KeyRates, Rates, InitialParameters.ReduceReactions);
 	}
 
-	if(InitialParameters.PressureVessel.IsSet)
-	{
 
-		//  the PetroOxy will saturate the hydrocarbon with oxygen
-		// at no loss to the reservoir
-		Adjust_Gas_Concentration_Initial(
-				SpeciesConcentration[OxyGasSpeciesID],
-				SpeciesConcentration[Number_Species],
-				PetroOxyData);
-
-		PetroOxyOutputStream(
-				OutputFilenames.PetroOxy,
-				PetroOxyData,
-				time_current);
-	}
 
 
 	// do not forget output at time = 0
@@ -368,35 +330,19 @@ void Integrate_Liquid_Phase_Odepack_LSODA(
 		if(Solver_Type.Use_Analytical_Jacobian)
 		{
 			int JT = 1;
-			if(!InitialDataConstants.PetroOxy) // not a pressurised vessel
-			{
 				dlsoda_((void*) ODE_RHS_Liquid_Phase,&n,y,&time_current,&time_step,
 						&ITOL,&ep,&ATOL,&ITASK,&ISTATE,&IOPT,RWORK,&LRW,IWORK,&LIW,
 						(void*) Jacobian_Matrix_Odepack_LSODA,&JT);
-			}
-			else
-			{
-				dlsoda_((void*) ODE_RHS_Pressure_Vessel,&n,y,&time_current,&time_step,
-						&ITOL,&ep,&ATOL,&ITASK,&ISTATE,&IOPT,RWORK,&LRW,IWORK,&LIW,
-						(void*) Jacobian_Matrix_Odepack_LSODA,&JT);
-			}
+
 		}
 
 		if(!Solver_Type.Use_Analytical_Jacobian)
 		{
 			int JT = 2;
-			if(!InitialDataConstants.PetroOxy) // not a pressurised vessel
-			{
 				dlsoda_((void*) ODE_RHS_Liquid_Phase,&n,y,&time_current,&time_step,
 						&ITOL,&ep,&ATOL,&ITASK,&ISTATE,&IOPT,RWORK,&LRW,IWORK,&LIW,
 						(void*) Jacobian_Matrix_Odepack_LSODA,&JT);
-			}
-			else
-			{
-				dlsoda_((void*) ODE_RHS_Pressure_Vessel,&n,y,&time_current,&time_step,
-						&ITOL,&ep,&ATOL,&ITASK,&ISTATE,&IOPT,RWORK,&LRW,IWORK,&LIW,
-						(void*) Jacobian_Matrix_Odepack_LSODA,&JT);
-			}
+
 
 		}
 
@@ -500,15 +446,6 @@ void Integrate_Liquid_Phase_Odepack_LSODA(
 			);
 		}
 
-
-		if(InitialParameters.PressureVessel.IsSet)
-		{
-			PetroOxyOutputStream(
-					OutputFilenames.PetroOxy,
-					PetroOxyData,
-					time_current
-			);
-		}
 
 		if(InitialParameters.ReduceReactions != 0)
 		{
