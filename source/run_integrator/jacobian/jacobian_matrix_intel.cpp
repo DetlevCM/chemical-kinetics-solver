@@ -17,11 +17,6 @@ void Jacobian_Matrix_Intel(int*n,double*t,double*y,double*a) {
 
 	using namespace Jacobian_ODE_RHS;
 	using namespace Jacobian;
-
-	//using namespace ODESolverConstant;
-	//using namespace ODESolverVariable;
-
-
 	int i,j;
 
 	// enable force stability?
@@ -43,12 +38,8 @@ void Jacobian_Matrix_Intel(int*n,double*t,double*y,double*a) {
 		Concentration[i] = y[i];
 	}
 
-
-
 	// provides me a fresh array every time :) - ideal
 	vector< double > JacobeanColumnWise((Number_Species+1)*(Number_Species+1));
-
-
 
 	Calculate_Thermodynamics(CalculatedThermo, Concentration[Number_Species], Thermodynamics);
 	Calculate_Rate_Constant(Kf, Kr, Concentration[Number_Species],ReactionParameters, CalculatedThermo, SpeciesLossAll, Delta_N);
@@ -56,7 +47,6 @@ void Jacobian_Matrix_Intel(int*n,double*t,double*y,double*a) {
 	for(i=0;i<(int) JacobianMatrix.size();i++)
 	{
 		double temp;
-
 
 		if(JacobianMatrix[i].IsForward) // Forward
 		{
@@ -82,7 +72,6 @@ void Jacobian_Matrix_Intel(int*n,double*t,double*y,double*a) {
 			}
 		}
 
-
 		for(j=0;j<(int) JacobianMatrix[i].Species.size();j++)
 		{
 			if(JacobianMatrix[i].Species[j].power != 0) // power 0 = *1
@@ -100,7 +89,6 @@ void Jacobian_Matrix_Intel(int*n,double*t,double*y,double*a) {
 			}
 		}
 
-
 		JacobeanColumnWise[JacobianMatrix[i].ColumnWiseArrayPosition] =
 				JacobeanColumnWise[JacobianMatrix[i].ColumnWiseArrayPosition] + temp;
 	}
@@ -110,10 +98,7 @@ void Jacobian_Matrix_Intel(int*n,double*t,double*y,double*a) {
 		a[i] = JacobeanColumnWise[i];
 	}
 
-	/*
-	 * Debug Output
-	 */
-
+	/* Debug Output */
 	/*
 	cout << "\n" << "\n";
 	int temp_output = (int) sqrt(JacobeanColumnWise.size());
@@ -124,15 +109,13 @@ void Jacobian_Matrix_Intel(int*n,double*t,double*y,double*a) {
 			if(j % temp_output == i)
 			{
 				cout << a[j] << " ";
-				//cout << JacobeanColumnWise[j] << " ";
-				//cout << j % temp_output << " ";
 			}
 		}
 		cout << "\n";
 	}
 	cout << "\n" << "\n";
+	cout << "check\n";
 	//*/
-	//cout << "check\n";
 }
 
 
