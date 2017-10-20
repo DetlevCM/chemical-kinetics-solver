@@ -14,11 +14,12 @@ https://software.intel.com/en-us/articles/intel-ordinary-differential-equations-
 Should the link "go dead", it is advised to search for "Intel ODE solver" with the help of a 
 search engine.
 
-A later expansion is seeking to implement the odepack library which is (as of writing this) 
-available as "public domain" code. Two sources are for example the LLNL website and netlib.
+A later expansion is seeking to implement the odepack library, developed by Alan C. Hindmarsh 
+and Linda R. Petzold. As of writing this readme, the source code is freely availabl on the 
+ LLNL website. (As well as on other websites.)
 
 
-The code was originally developed using Eclipse CDT using the included builder.
+The chemical kinetics solver was originally developed using Eclipse CDT using the included builder.
 It used to compile on both Windows and Linux. With the inclusion of odepack, only Linux is 
 officially supported. (It is easier.) However, you are free to build the code under Windows too, 
 which may be possible if you built the odepack archive with static links.
