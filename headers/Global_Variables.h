@@ -34,6 +34,7 @@ extern vector< double > Kr;
 namespace ODE_RHS
 {
 //// constant (i.e. set once) ////
+
 extern int Number_Reactions;
 extern ConstantInitRHSODE InitialDataConstants;
 extern vector< TrackSpecies > ReactantsForReactions;

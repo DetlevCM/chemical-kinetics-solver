@@ -11,11 +11,7 @@ vector< double > Get_Delta_N(
 );
 
 
-void Prepare_Jacobian_Matrix (
-		vector< JacobianData > &,
-		const vector< SingleReactionData > &,
-		vector< string >
-);
+
 
 /*
  * Making Scheme Irreversible *
@@ -59,7 +55,7 @@ void Integrate_PetroOxy_Liquid_Phase_Intel(
 		vector< vector < str_RatesAnalysis > > &
 );
 
-void Integrate_Liquid_Phase_Odepack(
+void Integrate_Liquid_Phase_Odepack_LSODA(
 		/*string,
 		string,
 		string,

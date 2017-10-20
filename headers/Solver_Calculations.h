@@ -15,9 +15,6 @@ void ODE_RHS_Liquid_Phase(int*, double*, double*, double*);
 void ODE_RHS_Pressure_Vessel(int*, double*, double*, double*);
 
 
-// Jacobian Matrix for plain Arrhenius expressions only
-void Jacobian_Matrix(int*, double*, double*, double*);
-
 
 
 

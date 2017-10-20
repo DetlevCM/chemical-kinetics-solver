@@ -13,7 +13,7 @@
 
 
 
-void Prepare_Jacobian_Matrix (
+void Prepare_Jacobian_Matrix(
 		vector < JacobianData > & JacobianColumnWise,
 		const vector< SingleReactionData > & Reactions,
 		vector< string > Species

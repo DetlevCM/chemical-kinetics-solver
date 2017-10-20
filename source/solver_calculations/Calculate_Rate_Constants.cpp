@@ -1,16 +1,6 @@
 /*
  * Calculate_Rate_Constants.cpp
  *
- *  Created on: 11 Mar 2014
- *      Author: DetlevCM
- */
-
-
-
-
-/*
- * Calculate_Rate_Constants.cpp
- *
  *  Created on: 19.12.2012
  *      Author: DetlevCM
  */
@@ -59,11 +49,6 @@ void Calculate_Rate_Constant(
 	// per reaction, going through every species
 
 	for(i = 0;i<(int) SpeciesAll.size();i++){ // loop over every reaction
-
-		// only doing this calculation for reversible reactions does give a speedup on an irreversible scheme
-		// but not a huge one
-		//if(ReactionParameters[SpeciesAll[i].ReactionID].Reversible)
-		//{
 		delta_H[SpeciesAll[i].ReactionID] =
 				delta_H[SpeciesAll[i].ReactionID] +
 				(CalculatedThermo[SpeciesAll[i].SpeciesID].Hf * SpeciesAll[i].coefficient);
@@ -71,7 +56,6 @@ void Calculate_Rate_Constant(
 		delta_S[SpeciesAll[i].ReactionID] =
 				delta_S[SpeciesAll[i].ReactionID] +
 				(CalculatedThermo[SpeciesAll[i].SpeciesID].S * SpeciesAll[i].coefficient);
-		//}
 	}
 
 
@@ -83,23 +67,25 @@ void Calculate_Rate_Constant(
 				exp(-ReactionParameters[i].paramEa/Temperature); // do NOT forget the - !!!
 
 
-
 		//* Speedup by only raising temperature to power where needed: improvement is large :)
 		if(ReactionParameters[i].paramN != 0) // raising to power 0 has no effect, so only if not 0
 		{
-			if(ReactionParameters[i].paramN != 1)
-			{
+			// unsure if this check really gives a performance improvement...
+			// maybe it used to and no longer does with a modern compiler/processor/kernel
+			//if(ReactionParameters[i].paramN != 1)
+			//{
 				Kf[i] = Kf[i] * pow(Temperature,ReactionParameters[i].paramN);
-			}
+			/*}
 			else
 			{
 				Kf[i] = Kf[i] * Temperature; // raise temp^1 = temp
-			}
+			}//*/
 		}
 		//cout << ReactionParameter[i].A << " , " << ReactionParameter[i].N << " , " << ReactionParameter[i].Ea << " , " << Kf[i] << "\n";
 
-
-		// unbundle into two if statements
+		// default, change if reversible - seems a little bit faster...
+		Kr[i] = 0;
+		// then calculate and set the reverse if required
 		if(ReactionParameters[i].Reversible)
 		{
 			double  temp_kp, temp_kc;
@@ -124,8 +110,8 @@ void Calculate_Rate_Constant(
 			}//*/
 		}
 		// if it is set to zero at the start and not touched for irreversible reactions thus this is redundant
-		// Fewer memory allocations should speed things up
-		//*
+		// Fewer memory allocations should speed things up - or not?
+		/*
 		else
 		{
 			Kr[i] = 0;

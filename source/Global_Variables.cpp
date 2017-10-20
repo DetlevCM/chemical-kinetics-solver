@@ -24,6 +24,7 @@ namespace Jacobian
 vector< JacobianData > JacobianMatrix;
 }
 
+
 namespace Jacobian_ODE_RHS
 {
 //// constant (i.e. set once) ////
@@ -44,6 +45,7 @@ vector< double > Kr;
 namespace ODE_RHS
 {
 //// constant (i.e. set once) ////
+
 int Number_Reactions;
 ConstantInitRHSODE InitialDataConstants;
 vector< TrackSpecies > ReactantsForReactions;

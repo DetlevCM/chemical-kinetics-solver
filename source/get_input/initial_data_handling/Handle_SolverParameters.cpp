@@ -20,6 +20,21 @@ void Handle_SolverParameters(InitParam& InitialParameters, vector<string> Input)
 		cstr = new char [str.size()+1];
 		strcpy (cstr, str.c_str());
 
+		/* Let the user chose the type of solver to use */
+		/* maybe at some point I should make the setting terms case insensitive... */
+		if(Input[i].find("IntelODE")!=string::npos ||
+				Input[i].find("intelode")!=string::npos ||
+				Input[i].find("INTELODE")!=string::npos)
+		{
+			InitialParameters.Param_Solver.SolverType = 0;
+		}
+		if(Input[i].find("Odepack")!=string::npos ||
+				Input[i].find("odepack")!=string::npos ||
+				Input[i].find("ODEPACK")!=string::npos)
+		{
+			InitialParameters.Param_Solver.SolverType = 1;
+		}
+
 		if (Input[i].find("Jacobian") != string::npos) // use analytical Jacobian
 		{
 			InitialParameters.Param_Solver.Use_Analytical_Jacobian = true;
@@ -112,25 +127,25 @@ void Handle_SolverParameters(InitParam& InitialParameters, vector<string> Input)
 		}
 
 		if(Input[i].find("Comma Separator")!=string::npos)
-				{
-					InitialParameters.Param_Solver.separator = ",";
-				}
+		{
+			InitialParameters.Param_Solver.separator = ",";
+		}
 
 		if(Input[i].find("Tab Separator")!=string::npos)
-				{
-					InitialParameters.Param_Solver.separator = "\t";
-				}
+		{
+			InitialParameters.Param_Solver.separator = "\t";
+		}
 
 		if(Input[i].find("Separator:")!=string::npos)
-				{
-					p=strtok (cstr,"=: \t"); // break at space or tab
-					p=strtok(NULL,"=: \t"); // break again as first is the keyword
+		{
+			p=strtok (cstr,"=: \t"); // break at space or tab
+			p=strtok(NULL,"=: \t"); // break again as first is the keyword
 
-					if(p!=NULL){ // only read remainder is something is left
-						InitialParameters.Param_Solver.separator = p;
-						p=strtok(NULL," \t");
-					}
-				}
+			if(p!=NULL){ // only read remainder is something is left
+				InitialParameters.Param_Solver.separator = p;
+				p=strtok(NULL," \t");
+			}
+		}
 
 
 		if(Input[i].find("Stoichiometry Matrix For Opt")!=string::npos)
@@ -140,5 +155,6 @@ void Handle_SolverParameters(InitParam& InitialParameters, vector<string> Input)
 
 		delete[] cstr;
 	}
+
 }
 

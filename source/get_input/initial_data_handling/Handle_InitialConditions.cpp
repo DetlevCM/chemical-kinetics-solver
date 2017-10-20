@@ -38,16 +38,6 @@ void Handle_InitialConditions(InitParam& InitialParameters, vector<string> Input
 			tokens.push_back("//");
 			// remove comments
 			line = Strip_Single_Line_Comments(Input[i],tokens);
-			/*
-			vector< double > input;
-			p=strtok (cstr," \t"); // break at space or tab
-			p=strtok(NULL," \t"); // break again as first is the keyword
-
-			while(p!=NULL){ // only read remainder is something is left
-				input.push_back(strtod(p,NULL));
-				p=strtok(NULL," \t");
-			}
-			 */
 
 			// split the line into individual components
 			vector< string > line_content;
@@ -56,17 +46,14 @@ void Handle_InitialConditions(InitParam& InitialParameters, vector<string> Input
 
 			// allows users to provide multiple time points
 			if((int)line_content.size()>=3){
-				//InitialParameters.TimeEnd.push_back(input[0]);
-				//InitialParameters.TimeStep.push_back(input[1]);
 				double timeend = strtod(line_content[1].c_str(),NULL);
 				double timestep = strtod(line_content[2].c_str(),NULL);
 				InitialParameters.TimeEnd.push_back(timeend);
 				InitialParameters.TimeStep.push_back(timestep);
 			}
 			// need to modify this function:
-			/* 3 positions: user gives endtime and timestep
-			 * 4 positions, stiffness/Jacobian/solver is specified
-			 * -> max 6 positions
+			/* 3 positions: user gives end-time and time-step
+			 * 4 positions, stiffness/Jacobian is specified
 			 */
 
 			solver_type tmp = Global_Solver_Settings;
@@ -87,19 +74,6 @@ void Handle_InitialConditions(InitParam& InitialParameters, vector<string> Input
 			{
 				tmp.Use_Stiff_Solver = false;
 			}
-
-			// switching the solver might be riscky right now...
-			// just keep the global option for now
-			/*
-			if (Input[i].find("Intel")!=string::npos)
-			{
-				tmp.SolverType = 0;
-			}
-			if (Input[i].find("Odepack")!=string::npos)
-			{
-				tmp.SolverType = 1;
-			}
-			//*/
 
 			// store the solver choice - either stores the global setting or the user choice
 			InitialParameters.Solver_Type.push_back(tmp);

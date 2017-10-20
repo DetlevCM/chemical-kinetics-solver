@@ -9,23 +9,13 @@
 #define HEADERS_STRUCTS_H_
 
 
-// Seems better to manually code in than to reproduce ReactionParameter may be wrong...
-//*
-
 
 struct Filenames{
 	string Species;
 	string Rates;
 	string PetroOxy;
-	//string RatesAnalysisStream;
 	string Prefix;
 };
-
-/*
-struct JacobianSpecies{
-	int SpeciesID;
-	double coefficient;
-};//*/
 
 struct JacobianSpecies{
 	int SpeciesID;
@@ -52,16 +42,15 @@ struct SingleReactionData {
 	vector<double> Reactants;
 	vector<double> Products;
 };
-//*/
 
-//*
+
 struct ReactionParameter {
 	bool Reversible;
 	double paramA;
 	double paramN;
 	double paramEa;
 };
-//*/
+
 
 struct TrackSpecies {
 	int SpeciesID;
@@ -88,7 +77,6 @@ struct ConstantInitRHSODE {
 	double PetroOxyTemperatureRise;
 
 	// for constant concentration
-	//
 	bool ConstantConcentration;
 	vector< double > ConstantSpecies;
 };
@@ -174,16 +162,14 @@ struct param_solver {
 	string separator;
 };
 
-// for the extra input choices with a mutli solver setup
+// to allow modifying some solver behaviour during the run
 struct solver_type {
-	int SolverType;
-	// 0 = Intel, 0 = Odepack
 	bool Use_Stiff_Solver;
 	bool Use_Analytical_Jacobian;
 };
 
-struct InitParam {
 
+struct InitParam {
 
 	MechanismAnalysisConfig MechanismAnalysis;
 

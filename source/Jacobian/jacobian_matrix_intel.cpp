@@ -8,7 +8,7 @@
 #include <MyHeaders.h>
 
 
-void Jacobian_Matrix(int*n,double*t,double*y,double*a) {
+void Jacobian_Matrix_Intel(int*n,double*t,double*y,double*a) {
 
 	// n -> number of species
 	// t time

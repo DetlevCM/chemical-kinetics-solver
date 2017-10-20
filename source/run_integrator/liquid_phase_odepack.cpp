@@ -9,7 +9,7 @@
 
 
 // Not a perfect solution, but stick integrator into its own void with global variables via a namespace
-void Integrate_Liquid_Phase_Odepack(
+void Integrate_Liquid_Phase_Odepack_LSODA(
 		Filenames OutputFilenames,
 		vector< double > SpeciesConcentration,
 		vector< string > Species,
@@ -30,11 +30,12 @@ void Integrate_Liquid_Phase_Odepack(
 	using namespace ODE_RHS_Pressure_Vessel_Variables;
 	using namespace Jacobian;
 
+
 	Number_Species = Species.size();
 	Number_Reactions = Reactions.size();
 
 	// outputting mechanism size in integration routing so that it is printed every time
-	cout << "The mechanism to be integrated contains " << Number_Species << " species and " << Number_Reactions << " Reactions.\n";
+	cout << "The mechanism to be integrated contains " << Number_Species << " species and " << Number_Reactions << " Reactions.\n" << std::flush;
 
 
 	Thermodynamics = Thermo; // "Hack" - to fix a regression
@@ -58,42 +59,19 @@ void Integrate_Liquid_Phase_Odepack(
 	//vector< ofstream > RatesOfSpecies;
 
 	int n;
-	//int n, ierr, ipar[128], dpar_size;
-	//double h, hm ;
 	double ep, tr;
 	int i;
 
-	/* Because we do not know the size of kd and dpar in advance we need to be clever - or at least act as we are.
-	 * By defining kd and dpar as vectors we can assign a size "on the fly" as required. We can further pass a
-	 * pointer to the vector to the solver, thus this is what we do. Rather than arrays, kd and dpar are pointers
-	 * to vectors of doubles in our case.
-	 */
-
-
-	vector<int> kdstep(Number_Species + 1);
-
-   /*
-	int* kd = &kdstep[0];
-
-	n = Number_Species + 1;
-	if (13 * n > (7 + 2 * n) * n) {
-		dpar_size = 13 * n;
-	} else {
-		dpar_size = (7 + 2 * n) * n;
-	}
-	vector<double> dparstep(dpar_size);
-	double* dpar = &dparstep[0];//*/
-
-	// inefficient as it wastes RAM, but for now, extra LSODA array...
+	// LSODA array
 	// 22 + NEQ * MAX(16, NEQ + 9) + 3*NG.
 
 	int LRW;
 	n = Number_Species + 1;
-		if (13 * n > (7 + 2 * n) * n) {
-			LRW = 13 * n;
-		} else {
-			LRW = (7 + 2 * n) * n;
-		}
+	if (13 * n > (7 + 2 * n) * n) {
+		LRW = 13 * n;
+	} else {
+		LRW = (7 + 2 * n) * n;
+	}
 	vector<double> vector_RWORK(LRW);
 	double* RWORK = &vector_RWORK[0];
 
@@ -107,10 +85,8 @@ void Integrate_Liquid_Phase_Odepack(
 
 
 	// Some tolerances for the solver:
-	//hm = InitialParameters.Param_Solver.minimum_stepsize; // minimal step size for the methods, 1.0e-12 recommended for normalised problems
 	ep = InitialParameters.Param_Solver.rtol ; // relative tolerance. The code cannot guarantee the requested accuracy for ep<1.d-9
 	tr = InitialParameters.Param_Solver.threshold; // Threshold, absolute tolerance is ep*tr
-	//h = InitialParameters.Param_Solver.initial_stepsize;
 
 
 	Delta_N = Get_Delta_N(Reactions); // just make sure the Delta_N is current
@@ -135,25 +111,11 @@ void Integrate_Liquid_Phase_Odepack(
 
 	SpeciesLossAll = PrepareSpecies_ForSpeciesLoss(Reactions); // New method of listing species
 
-	// And now it is time to call the solver again... with the right information...
-	// According to Intel initialise ipar array with zeros before the first call to dodesol
-	/*
-	for (i = 0; i < 128; i++) {
-		ipar[i] = 0;
-	}//*/
-
 	// original old code
 	double* y = &SpeciesConcentration[0];
 	Concentration.clear();
 	Concentration.resize(Number_Species + 1);
 
-	// Should be faster, but is 10 times slower???
-	/*
-	Concentration.clear();
-	Concentration = SpeciesConcentration;
-	//cout << Concentration.size() << "\n";
-	double* y = &Concentration[0];
-	//*/
 	double time_current, time_step, time_step1, time_end;
 
 	time_current = 0;// -> Solver is designed for t_0 = 0
@@ -193,23 +155,12 @@ void Integrate_Liquid_Phase_Odepack(
 			InitialDataConstants.ConstantSpecies[i] = 0;
 		}
 
-		//cout << "checkpoint - array size " << (int)InitialParameters.ConstantSpecies.size() << "\n";
-		for(i=0;i<(int)InitialParameters.ConstantSpecies.size();i++)
-		{
-			// fix initial concentrations
-			InitialDataConstants.ConstantSpecies[
-												 InitialParameters.ConstantSpecies[i]] =
-														 SpeciesConcentration[
-																			  InitialParameters.ConstantSpecies[i]];
-			//cout << "check " << InitialParameters.ConstantSpecies[i] << "\n";
-		}
 
-		/*
-		for(i=0;i<Number_Species;i++)
-				{
-					cout << InitialDataConstants.ConstantSpecies[i] << "\n";
-				}
-		//*/
+		for(i=0;i<(int)InitialParameters.ConstantSpecies.size();i++)
+		{// fix initial concentrations
+			InitialDataConstants.ConstantSpecies[InitialParameters.ConstantSpecies[i]] =
+					SpeciesConcentration[InitialParameters.ConstantSpecies[i]];
+		}
 	}
 
 
@@ -254,14 +205,12 @@ void Integrate_Liquid_Phase_Odepack(
 
 
 	// For the Jacobian
-	Prepare_Jacobian_Matrix (
+	Prepare_Jacobian_Matrix(
 			JacobianMatrix,
 			Reactions,
 			Species
 	);
 	// Jacobian End
-
-
 
 	// Get the rate Constants, forward and backwards
 	Calculate_Rate_Constant(Kf, Kr, SpeciesConcentration[Number_Species],ReactionParameters, CalculatedThermo, SpeciesLossAll, Delta_N);
@@ -317,20 +266,10 @@ void Integrate_Liquid_Phase_Odepack(
 	// Not the betst place to put it, but OK for now:
 	if(InitialParameters.MechanismAnalysis.RatesOfSpecies)
 	{
-		// optimise the reaction rates list
-		// vector< vector< int > > ReactionsForSpeciesSelectedForRates;
-
-		//ReactantsForReactions = Reactants_ForReactionRate(Reactions);
-		//ProductsForReactions = Products_ForReactionRate(Reactions,false);
-		//vector< vector< int > > ReactionsForSpeciesConsAnalysis;
-		//vector< vector< int > > ReactionsForSpeciesProdAnalysis;
-
 		int tempi, tempj;
 
-		// ProductsForRatesAnalysis
-		// ReactantsForReactions
 		vector< vector< int > > TempMatrix;
-		vector< int > TempRow;//((int)Species.size());
+		vector< int > TempRow;
 		int Temp_Number_Species = (int) Species.size();
 
 		for(tempi=0;tempi<(int)Reactions.size();tempi++){
@@ -350,13 +289,7 @@ void Integrate_Liquid_Phase_Odepack(
 			TempRow.clear();
 		}
 
-		//vector< vector< int > > ReactionsForSpeciesSelectedForRates;
-
 		int Number_Of_Selected_Species_Temp = (int) InitialParameters.MechanismAnalysis.SpeciesSelectedForRates.size();
-
-		/*
-		cout << "-----------------------------\n";
-		//*/
 
 		for(tempj=0;tempj<Number_Of_Selected_Species_Temp;tempj++)
 		{
@@ -367,28 +300,13 @@ void Integrate_Liquid_Phase_Odepack(
 			{
 				if(TempMatrix[tempi][SpeciesID] !=0 )
 				{
-					//cout << "1 ";
 					temp.push_back(tempi);
 				}
-				//cout << "\n";
+
 			}
-			//cout << (int) temp.size() << "\n";
 			ReactionsForSpeciesSelectedForRates.push_back(temp);
 			temp.clear();
 		}
-
-		/*
-		for(tempi=0;tempi < ReactionsForSpeciesSelectedForRates[0].size();tempi++)
-		{
-			cout << ReactionsForSpeciesSelectedForRates[0][tempi] << "\n";
-		}
-		cout << "\n";//*/
-
-		/*
-		cout << "-----------------------------\n";
-		cout << (int) ReactionsForSpeciesSelectedForRates.size() << "\n";
-		cout << "-----------------------------\n";
-		//*/
 
 		//*
 		Prepare_Print_Rates_Per_Species(
@@ -409,13 +327,9 @@ void Integrate_Liquid_Phase_Odepack(
 
 	/* -- Got values at t = 0 -- */
 
-	// Resize the vector for the concentrations in the ODE void
-	//Concentration.clear(); // don't think it makes a difference if I clear or not
-	//Concentration.resize(Number_Species + 1);
 
 	// enables reset of Rates Analysis
 	int RatesAnalysisTimepoint = 0;
-
 
 	// set the solver:
 	solver_type Solver_Type;
@@ -424,154 +338,68 @@ void Integrate_Liquid_Phase_Odepack(
 	// start the clock:
 	cpu_time_begin = cpu_time_current = clock();
 
+	// Some LSODA settings
+	double ATOL = (ep*tr);
+	int ITOL = 1;
+	int ITASK = 1;
+	int ISTATE = 1;
+	int IOPT = 0;
+
+
 	do
 	{
 		time_step = time_current + time_step1;
 
 		//cout << InitialParameters.UseStiffSolver << " " << InitialParameters.Jacobian << "\n";
 
+		// we'll have the code with the Jacobian which is LSODA
+		// and we'll have the code without the Jacobian which is LSODE
 
-		if(!Solver_Type.Use_Stiff_Solver && Solver_Type.Use_Analytical_Jacobian)
-		//if(!InitialParameters.Param_Solver.Use_Stiff_Solver && InitialParameters.Param_Solver.Use_Analytical_Jacobian)
-		{
-			if(!InitialDataConstants.PetroOxy) // not a pressurised vessel
-			{/*
-				dodesol_rkm9mka(ipar, &n, &time_current, &time_step, y,
-						(void*) ODE_RHS_Liquid_Phase,
-						(void*) Jacobian_Matrix,
-						&h, &hm, &ep, &tr, dpar, kd, &ierr
-				);//*/
-			}
-			else
-			{/*
-				dodesol_rkm9mka(ipar, &n, &time_current, &time_step, y,
-						(void*) ODE_RHS_Pressure_Vessel,
-						(void*) Jacobian_Matrix,
-						&h, &hm, &ep, &tr, dpar, kd, &ierr
-				);//*/
-			}
-		}
+		/*
+		 *DECK DLSODE
+      SUBROUTINE DLSODE (F, NEQ, Y, T, TOUT, ITOL, RTOL, ATOL, ITASK,
+     1                  ISTATE, IOPT, RWORK, LRW, IWORK, LIW, JAC, MF)
+      EXTERNAL F, JAC
+      INTEGER NEQ, ITOL, ITASK, ISTATE, IOPT, LRW, IWORK, LIW, MF
+      DOUBLE PRECISION Y, T, TOUT, RTOL, ATOL, RWORK
+      DIMENSION NEQ(*), Y(*), RTOL(*), ATOL(*), RWORK(LRW), IWORK(LIW)
+		 */
 
-		if(Solver_Type.Use_Stiff_Solver && Solver_Type.Use_Analytical_Jacobian)
-		//if(InitialParameters.Param_Solver.Use_Stiff_Solver && InitialParameters.Param_Solver.Use_Analytical_Jacobian)
+		if(Solver_Type.Use_Analytical_Jacobian)
 		{
+			int JT = 1;
 			if(!InitialDataConstants.PetroOxy) // not a pressurised vessel
 			{
-				/*/ stiff solver with automatics numerical Jacobi matric computations
-				dodesol_mk52lfa(ipar, &n, &time_current, &time_step, y,
-						(void*) ODE_RHS_Liquid_Phase,
-						(void*) Jacobian_Matrix,
-						&h, &hm, &ep, &tr, dpar, kd, &ierr
-				);
-				// test DLSODA */
-				// stiff solver with automatics numerical Jacobi matric computations
-				double ATOL = (ep*tr);
-				int ITOL = 1;
-				int ITASK = 1;
-				int ISTATE = 1;
-				int IOPT = 0;
-				int JT = 5;
-
-				dlsoda_(
-						(void*) ODE_RHS_Liquid_Phase,
-						&n,
-						y,
-						&time_current,
-						&time_step,
-						&ITOL,
-						&ep, //RTOL,
-						&ATOL,
-						&ITASK,
-						&ISTATE,
-						&IOPT,
-						RWORK,
-						&LRW,
-						IWORK,
-						&LIW,
-						(void*) Jacobian_Matrix,
-						&JT
-				);
-				//*/
+				dlsoda_((void*) ODE_RHS_Liquid_Phase,&n,y,&time_current,&time_step,
+						&ITOL,&ep,&ATOL,&ITASK,&ISTATE,&IOPT,RWORK,&LRW,IWORK,&LIW,
+						(void*) Jacobian_Matrix_Odepack_LSODA,&JT);
 			}
 			else
-			{/*
-				dodesol_mk52lfa(ipar, &n, &time_current, &time_step, y,
-						(void*) ODE_RHS_Pressure_Vessel,
-						(void*) Jacobian_Matrix,
-						&h, &hm, &ep, &tr, dpar, kd, &ierr
-				);//*/
+			{
+				dlsoda_((void*) ODE_RHS_Pressure_Vessel,&n,y,&time_current,&time_step,
+						&ITOL,&ep,&ATOL,&ITASK,&ISTATE,&IOPT,RWORK,&LRW,IWORK,&LIW,
+						(void*) Jacobian_Matrix_Odepack_LSODA,&JT);
 			}
 		}
 
-		if(Solver_Type.Use_Stiff_Solver && !Solver_Type.Use_Analytical_Jacobian)
-		//if(InitialParameters.Param_Solver.Use_Stiff_Solver && !InitialParameters.Param_Solver.Use_Analytical_Jacobian)
+		if(!Solver_Type.Use_Analytical_Jacobian)
 		{
+			int JT = 2;
 			if(!InitialDataConstants.PetroOxy) // not a pressurised vessel
 			{
-				/*/ stiff solver with automatics numerical Jacobi matric computations
-				dodesol_mk52lfn(ipar, &n, &time_current, &time_step, y,
-						(void*) ODE_RHS_Liquid_Phase,
-						&h, &hm, &ep, &tr, dpar, kd, &ierr
-				);
-				// test DLSODA */
-				// stiff solver with automatics numerical Jacobi matric computations
-				double ATOL = (ep*tr);
-				int ITOL = 1;
-				int ITASK = 1;
-				int ISTATE = 1;
-				int IOPT = 0;
-				int JT = 2;
-
-				dlsoda_(
-						(void*) ODE_RHS_Liquid_Phase,
-						&n,
-						y,
-						&time_current,
-						&time_step,
-						&ITOL,
-						&ep, //RTOL,
-						&ATOL,
-						&ITASK,
-						&ISTATE,
-						&IOPT,
-						RWORK,
-						&LRW,
-						IWORK,
-						&LIW,
-						(void*) Jacobian_Matrix,
-						&JT
-				);
-				//*/
+				dlsoda_((void*) ODE_RHS_Liquid_Phase,&n,y,&time_current,&time_step,
+						&ITOL,&ep,&ATOL,&ITASK,&ISTATE,&IOPT,RWORK,&LRW,IWORK,&LIW,
+						(void*) Jacobian_Matrix_Odepack_LSODA,&JT);
 			}
 			else
-			{/*
-				dodesol_mk52lfn(ipar, &n, &time_current, &time_step, y,
-						(void*) ODE_RHS_Pressure_Vessel,
-						&h, &hm, &ep, &tr, dpar, kd, &ierr
-				);//*/
+			{
+				dlsoda_((void*) ODE_RHS_Pressure_Vessel,&n,y,&time_current,&time_step,
+						&ITOL,&ep,&ATOL,&ITASK,&ISTATE,&IOPT,RWORK,&LRW,IWORK,&LIW,
+						(void*) Jacobian_Matrix_Odepack_LSODA,&JT);
 			}
 
 		}
 
-		if(!Solver_Type.Use_Stiff_Solver && !Solver_Type.Use_Analytical_Jacobian)
-		//if(!InitialParameters.Param_Solver.Use_Stiff_Solver && !InitialParameters.Param_Solver.Use_Analytical_Jacobian)
-		{
-			if(!InitialDataConstants.PetroOxy) // not a pressurised vessel
-			{/*
-				// hybrid solver with automatic numerical Jacobi matrix computations
-				dodesol_rkm9mkn(ipar, &n, &time_current, &time_step, y,
-						(void*) ODE_RHS_Liquid_Phase,
-						&h, &hm, &ep, &tr, dpar, kd, &ierr
-				);//*/
-			}
-			else
-			{/*
-				dodesol_rkm9mkn(ipar, &n, &time_current, &time_step, y,
-						(void*) ODE_RHS_Pressure_Vessel,
-						&h, &hm, &ep, &tr, dpar, kd, &ierr
-				);//*/
-			}
-		}
 
 		/*
 		if (ierr != 0)

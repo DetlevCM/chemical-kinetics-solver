@@ -58,6 +58,8 @@ using std::istringstream;
 
 #include "Pre-Process.h"
 #include "Mechanism_Reduction.h"
+
+#include "Jacobian.h"
 #include "Solver_Calculations.h"
 #include "Rates-Analysis.h"
 #include "Write_Output.h"

@@ -18,7 +18,6 @@ vector< double > SpeciesLossRate(
 	//temp_species_loss.resize(Number_Species);
 
 	for(i=0;i< (int) SpeciesLossList.size();i++){
-
 		temp_species_loss[SpeciesLossList[i].SpeciesID] =
 				temp_species_loss[SpeciesLossList[i].SpeciesID] +
 				(Combined_Rates[SpeciesLossList[i].ReactionID] * SpeciesLossList[i].coefficient);

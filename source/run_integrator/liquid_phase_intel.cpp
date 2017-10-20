@@ -34,7 +34,7 @@ void Integrate_Liquid_Phase_Intel(
 	Number_Reactions = Reactions.size();
 
 	// outputting mechanism size in integration routing so that it is printed every time
-	cout << "The mechanism to be integrated contains " << Number_Species << " species and " << Number_Reactions << " Reactions.\n";
+	cout << "The mechanism to be integrated contains " << Number_Species << " species and " << Number_Reactions << " Reactions.\n" << std::flush;
 
 
 	Thermodynamics = Thermo; // "Hack" - to fix a regression
@@ -233,7 +233,7 @@ void Integrate_Liquid_Phase_Intel(
 
 
 	// For the Jacobian
-	Prepare_Jacobian_Matrix (
+	Prepare_Jacobian_Matrix(
 			JacobianMatrix,
 			Reactions,
 			Species
@@ -410,6 +410,7 @@ void Integrate_Liquid_Phase_Intel(
 
 	if(!InitialDataConstants.PetroOxy)
 	{
+
 		do
 		{
 			time_step = time_current + time_step1;
@@ -417,7 +418,7 @@ void Integrate_Liquid_Phase_Intel(
 			if(!Solver_Type.Use_Stiff_Solver && Solver_Type.Use_Analytical_Jacobian)
 			{
 				dodesol_rkm9mka(ipar, &n, &time_current, &time_step, y,(void*) ODE_RHS_Liquid_Phase,
-						(void*) Jacobian_Matrix, &h, &hm, &ep, &tr, dpar, kd, &ierr
+						(void*) Jacobian_Matrix_Intel, &h, &hm, &ep, &tr, dpar, kd, &ierr
 				);
 			}
 
@@ -425,7 +426,7 @@ void Integrate_Liquid_Phase_Intel(
 			{
 				// stiff solver with automatics numerical Jacobi matric computations
 				dodesol_mk52lfa(ipar, &n, &time_current, &time_step, y,(void*) ODE_RHS_Liquid_Phase,
-						(void*) Jacobian_Matrix, &h, &hm, &ep, &tr, dpar, kd, &ierr
+						(void*) Jacobian_Matrix_Intel, &h, &hm, &ep, &tr, dpar, kd, &ierr
 				);
 			}
 
@@ -580,14 +581,14 @@ void Integrate_Liquid_Phase_Intel(
 			if(!Solver_Type.Use_Stiff_Solver && Solver_Type.Use_Analytical_Jacobian)
 			{
 				dodesol_rkm9mka(ipar, &n, &time_current, &time_step, y,(void*) ODE_RHS_Pressure_Vessel,
-						(void*) Jacobian_Matrix, &h, &hm, &ep, &tr, dpar, kd, &ierr
+						(void*) Jacobian_Matrix_Intel, &h, &hm, &ep, &tr, dpar, kd, &ierr
 				);
 			}
 
 			if(Solver_Type.Use_Stiff_Solver && Solver_Type.Use_Analytical_Jacobian)
 			{
 				dodesol_mk52lfa(ipar, &n, &time_current, &time_step, y,(void*) ODE_RHS_Pressure_Vessel,
-						(void*) Jacobian_Matrix, &h, &hm, &ep, &tr, dpar, kd, &ierr
+						(void*) Jacobian_Matrix_Intel, &h, &hm, &ep, &tr, dpar, kd, &ierr
 				);
 			}
 
@@ -720,7 +721,8 @@ void Integrate_Liquid_Phase_Intel(
 			}
 
 
-
+			// not sure this really works how it should looking at odepack issues...
+			//*
 			if(tracker < (TimeChanges-1) && time_step >= InitialParameters.TimeEnd[tracker])
 			{
 				cout << "CPU Time: " << ((double) (clock() - cpu_time_current)) / CLOCKS_PER_SEC << " seconds\n";
@@ -735,7 +737,7 @@ void Integrate_Liquid_Phase_Intel(
 				Solver_Type = InitialParameters.Solver_Type[tracker];
 				cout << "New Solver Settings:\nJacobian: " << Solver_Type.Use_Analytical_Jacobian <<
 						"\nUse Stiff Solver: " << Solver_Type.Use_Stiff_Solver <<"\n";
-			}
+			}//*/
 
 
 		} while (time_step < time_end);

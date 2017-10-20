@@ -72,5 +72,4 @@ extern vector< JacobianData > JacobianMatrix;
 }
 
 
-
 #endif /* SOURCE_NAMESPACES_HPP_ */

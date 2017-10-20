@@ -171,20 +171,42 @@ int main(int argc, char* argv[])
 		}
 
 
-		cout << "\nHanding Mechanism to Integrator\n" << std::flush;
 
+		cout << "\nHanding Mechanism to Integrator\n";
 
-		Integrate_Liquid_Phase_Intel(
-				OutputFilenames,
-				InitialSpeciesConcentration,
-				Species,
-				Thermodynamics,
-				Reactions,
-				InitialParameters,
-				KeyRates,
-				PetroOxyDataInitial,
-				RatesAnalysisData
-		);
+		if(InitialParameters.Param_Solver.SolverType == 0){
+			cout << "Using Intel ODE\n" << std::flush;
+			Integrate_Liquid_Phase_Intel(
+					OutputFilenames,
+					InitialSpeciesConcentration,
+					Species,
+					Thermodynamics,
+					Reactions,
+					InitialParameters,
+					KeyRates,
+					PetroOxyDataInitial,
+					RatesAnalysisData
+			);
+		}
+		else if(InitialParameters.Param_Solver.SolverType == 1)
+		{
+			cout << "Using odepack\n" << std::flush;
+			Integrate_Liquid_Phase_Odepack_LSODA(
+					OutputFilenames,
+					InitialSpeciesConcentration,
+					Species,
+					Thermodynamics,
+					Reactions,
+					InitialParameters,
+					KeyRates,
+					PetroOxyDataInitial,
+					RatesAnalysisData
+			);
+		}
+		else
+		{
+			cout << "Error, solver undefined or not available.\n";
+		}
 
 
 		if(InitialParameters.ReduceReactions != 0)
@@ -262,6 +284,8 @@ int main(int argc, char* argv[])
 
 				cout << "\nHanding Reduced Mechanism to Integrator\n" << std::flush;
 
+				if(InitialParameters.Param_Solver.SolverType == 0){
+					cout << "Using Intel ODE\n" << std::flush;
 					Integrate_Liquid_Phase_Intel(
 							OutputFilenames,
 							InitialSpeciesConcentration,
@@ -273,6 +297,26 @@ int main(int argc, char* argv[])
 							PetroOxyDataInitial,
 							RatesAnalysisData
 					);
+				}
+				else if(InitialParameters.Param_Solver.SolverType == 1)
+				{
+					cout << "Using odepack\n" << std::flush;
+					Integrate_Liquid_Phase_Odepack_LSODA(
+							OutputFilenames,
+							InitialSpeciesConcentration,
+							Species,
+							Thermodynamics,
+							ReducedReactions,
+							InitialParameters,
+							KeyRates,
+							PetroOxyDataInitial,
+							RatesAnalysisData
+					);
+				}
+				else
+				{
+					cout << "Error, solver undefined or not available.\n";
+				}
 
 				// Not ideal, should use variables rather than handwritten filenames
 				ReportAccuracy(
