@@ -62,7 +62,6 @@ int main(int argc, char* argv[])
 
 	InitParam InitialParameters; // Initial Conditions/Parameters
 	vector< double > InitialSpeciesConcentration;
-
 	PressureVesselCalc PetroOxyDataInitial; // PetroOxy Specific Initial Data
 
 

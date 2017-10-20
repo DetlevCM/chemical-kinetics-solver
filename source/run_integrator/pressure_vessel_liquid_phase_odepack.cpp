@@ -40,6 +40,7 @@ void Integrate_Pressure_Vessel_Liquid_Phase_Odepack_LSODA(
 
 	Thermodynamics = Thermo; // "Hack" - to fix a regression
 
+	// Filestreams
 	string filename_concentrations;
 	string filename_rates;
 	string filename_petrooxy;
@@ -55,29 +56,34 @@ void Integrate_Pressure_Vessel_Liquid_Phase_Odepack_LSODA(
 		ReactionRatesOutput.open(OutputFilenames.Rates.c_str(),ios::app);
 	}
 
-	// This works :) good - well, need it soon...
-	//vector< ofstream > RatesOfSpecies;
+	// general variables
+	int i, n;
 
-	int n;
-	double ep, tr;
-	int i;
+	// general solver settings
+	double ep, tr, ATOL;
 
-	// LSODA array
-	// 22 + NEQ * MAX(16, NEQ + 9) + 3*NG.
+	// LSODA specific settings
+	int LRW, LIW;
+	int ITOL = 1;
+	int ITASK = 1;
+	int ISTATE = 1;
+	int IOPT = 0;
 
-	int LRW;
+	// calculate size of working vectors for LSODA
+	// LRS = 22 + 9*NEQ + NEQ**2           if JT = 1 or 2,
 	n = Number_Species + 1;
-	if (13 * n > (7 + 2 * n) * n) {
-		LRW = 13 * n;
+	if ( (20 + 16 * n) > (22 + 9 * n + n * n) ) {
+		LRW = (20 + 16 * n);
 	} else {
-		LRW = (7 + 2 * n) * n;
+		LRW = (22 + 9 * n + n * n);
 	}
-	vector<double> vector_RWORK(LRW);
-	double* RWORK = &vector_RWORK[0];
+	LIW = 20 + n;
 
-	int LIW = 20 + n;
+	// some vectors for LSODA
 	vector<int> vector_IWORK(LIW);
 	int* IWORK = &vector_IWORK[0];
+	vector<double> vector_RWORK(LRW);
+	double* RWORK = &vector_RWORK[0];
 
 	// For performance assessment, use a clock:
 	clock_t cpu_time_begin, cpu_time_end, cpu_time_current;
@@ -87,6 +93,7 @@ void Integrate_Pressure_Vessel_Liquid_Phase_Odepack_LSODA(
 	// Some tolerances for the solver:
 	ep = InitialParameters.Param_Solver.rtol ; // relative tolerance. The code cannot guarantee the requested accuracy for ep<1.d-9
 	tr = InitialParameters.Param_Solver.threshold; // Threshold, absolute tolerance is ep*tr
+	ATOL = (ep*tr);
 
 
 	Delta_N = Get_Delta_N(Reactions); // just make sure the Delta_N is current
@@ -204,13 +211,9 @@ void Integrate_Pressure_Vessel_Liquid_Phase_Odepack_LSODA(
 	Rates.resize(Number_Reactions);
 
 
-	// For the Jacobian
-	Prepare_Jacobian_Matrix(
-			JacobianMatrix,
-			Reactions,
-			Species
-	);
-	// Jacobian End
+	// prepare the jacobian matrix
+	Prepare_Jacobian_Matrix(JacobianMatrix,Reactions,Species);
+
 
 	// Get the rate Constants, forward and backwards
 	Calculate_Rate_Constant(Kf, Kr, SpeciesConcentration[Number_Species],ReactionParameters, CalculatedThermo, SpeciesLossAll, Delta_N);
@@ -338,13 +341,6 @@ void Integrate_Pressure_Vessel_Liquid_Phase_Odepack_LSODA(
 	// start the clock:
 	cpu_time_begin = cpu_time_current = clock();
 
-	// Some LSODA settings
-	double ATOL = (ep*tr);
-	int ITOL = 1;
-	int ITASK = 1;
-	int ISTATE = 1;
-	int IOPT = 0;
-
 
 	do
 	{
@@ -368,24 +364,24 @@ void Integrate_Pressure_Vessel_Liquid_Phase_Odepack_LSODA(
 		if(Solver_Type.Use_Analytical_Jacobian)
 		{
 			int JT = 1;
-				dlsoda_((void*) ODE_RHS_Pressure_Vessel,&n,y,&time_current,&time_step,
-						&ITOL,&ep,&ATOL,&ITASK,&ISTATE,&IOPT,RWORK,&LRW,IWORK,&LIW,
-						(void*) Jacobian_Matrix_Odepack_LSODA,&JT);
+			dlsoda_((void*) ODE_RHS_Pressure_Vessel,&n,y,&time_current,&time_step,
+					&ITOL,&ep,&ATOL,&ITASK,&ISTATE,&IOPT,RWORK,&LRW,IWORK,&LIW,
+					(void*) Jacobian_Matrix_Odepack_LSODA,&JT);
 		}
 
 		if(!Solver_Type.Use_Analytical_Jacobian)
 		{
 			int JT = 2;
-				dlsoda_((void*) ODE_RHS_Pressure_Vessel,&n,y,&time_current,&time_step,
-						&ITOL,&ep,&ATOL,&ITASK,&ISTATE,&IOPT,RWORK,&LRW,IWORK,&LIW,
-						(void*) Jacobian_Matrix_Odepack_LSODA,&JT);
+			dlsoda_((void*) ODE_RHS_Pressure_Vessel,&n,y,&time_current,&time_step,
+					&ITOL,&ep,&ATOL,&ITASK,&ISTATE,&IOPT,RWORK,&LRW,IWORK,&LIW,
+					(void*) Jacobian_Matrix_Odepack_LSODA,&JT);
 		}
 
 
-		/*
-		if (ierr != 0)
+		//*
+		if (ISTATE < 0)
 		{
-			printf("\n LSODA routine exited with error code %4d\n",ierr);
+			printf("\n LSODA routine exited with error code %4d\n",ISTATE);
 			//return -1;
 			// Break means it should leave the do loop which would be fine for an error response as it stops the solver
 			break ;

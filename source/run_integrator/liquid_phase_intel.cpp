@@ -211,14 +211,8 @@ void Integrate_Liquid_Phase_Intel(
 	Rates.resize(Number_Reactions);
 
 
-	// For the Jacobian
-	Prepare_Jacobian_Matrix(
-			JacobianMatrix,
-			Reactions,
-			Species
-	);
-	// Jacobian End
-
+	// prepare the jacobian matrix
+	Prepare_Jacobian_Matrix(JacobianMatrix,Reactions,Species);
 
 
 	// Get the rate Constants, forward and backwards
@@ -260,14 +254,6 @@ void Integrate_Liquid_Phase_Intel(
 	// Not the betst place to put it, but OK for now:
 	if(InitialParameters.MechanismAnalysis.RatesOfSpecies)
 	{
-		// optimise the reaction rates list
-		// vector< vector< int > > ReactionsForSpeciesSelectedForRates;
-
-		//ReactantsForReactions = Reactants_ForReactionRate(Reactions);
-		//ProductsForReactions = Products_ForReactionRate(Reactions,false);
-		//vector< vector< int > > ReactionsForSpeciesConsAnalysis;
-		//vector< vector< int > > ReactionsForSpeciesProdAnalysis;
-
 		int tempi, tempj;
 
 		// ProductsForRatesAnalysis
