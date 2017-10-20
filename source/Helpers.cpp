@@ -28,33 +28,28 @@ string Strip_Single_Line_Comments(string input , vector<string> tokens)
 
 	if(Token_Is_Found){
 
-	char *cstr, *p;
-	string str = input;
-	cstr = new char [str.size()+1];
-	strcpy (cstr, str.c_str());
+		char *cstr, *p;
+		string str = input;
+		cstr = new char [str.size()+1];
+		strcpy (cstr, str.c_str());
 
-	p=strtok (cstr,AllTokens.c_str());
-	output = p;
-	/*
-	while(p!=NULL)
+		p=strtok (cstr,AllTokens.c_str());
+		output = p;
+
+		delete[] cstr;
+		delete[] p;
+	}
+	else
 	{
-		output.push_back(p);
-		p=strtok(NULL,tokens.c_str());
-	}//*/
-	delete[] cstr;
-	delete[] p;
-}
-else
-{
-	output = input;
-}
+		output = input;
+	}
 
-return output;
+	return output;
 }
 
 
 vector< string > Tokenise_String_To_String(string input, string tokens)
-				{
+{
 	char *cstr, *p;
 	vector< string > output;
 
@@ -72,7 +67,7 @@ vector< string > Tokenise_String_To_String(string input, string tokens)
 	delete[] p;
 
 	return output;
-				}
+}
 
 void Tokenise_String_To_String_Append(vector< string >& data , string input, string tokens)
 {
@@ -93,7 +88,7 @@ void Tokenise_String_To_String_Append(vector< string >& data , string input, str
 }
 
 vector< double > Tokenise_String_To_Double(string input, string tokens)
-				{
+{
 	char *cstr, *p;
 	vector< double > output;
 
@@ -111,4 +106,24 @@ vector< double > Tokenise_String_To_Double(string input, string tokens)
 	delete[] p;
 
 	return output;
-				}
+}
+
+// from reading on the web, this approach is slow - but for the input file will do
+bool Test_If_Word_Found(string search_term, string string_to_search)
+{
+	// tolower or toupper - either works, just be consistent
+	transform(search_term.begin(),search_term.end(),search_term.begin(), tolower);
+	transform(string_to_search.begin(),string_to_search.end(),string_to_search.begin(), tolower);
+
+	bool output;
+	if(string_to_search.find(search_term)!=string::npos)
+	{
+		output = true;
+	}
+	else
+	{
+		output = false;
+	}
+	return output;
+}
+

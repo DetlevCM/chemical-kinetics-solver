@@ -13,20 +13,20 @@ void Handle_MechanismReduction(InitParam& InitialParameters, vector<string> Inpu
 	int i;
 	for(i=0;i<(int)Input.size();i++)
 	{
-		if(Input[i].find("Use New Lumping")!=string::npos)
+		if(Test_If_Word_Found("Use New Lumping", Input[i]))
 		{
 			InitialParameters.UseNewLumping = true;
 		}
-		if(Input[i].find("Use Slow New Lumping")!=string::npos)
+		if(Test_If_Word_Found("Use Slow New Lumping", Input[i]))
 		{
 			InitialParameters.UseNewLumping = true;
 			InitialParameters.UseFastLumping = false;
 		}
-		if(Input[i].find("Use Slow Lumping")!=string::npos)
+		if(Test_If_Word_Found("Use Slow Lumping", Input[i]))
 		{
 			InitialParameters.UseFastLumping = false;
 		}
-		if(Input[i].find("ReduceReactions")!=string::npos)
+		if(Test_If_Word_Found("ReduceReactions", Input[i]))
 		{
 			char * cstr, *p;
 			string str;

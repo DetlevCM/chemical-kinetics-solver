@@ -25,7 +25,6 @@ vector< string > Get_Species(string filename)
 				if(!end_flag){
 					vector< string > RemoveComments;
 					RemoveComments = Tokenise_String_To_String(line , "!" );
-					//line1 = RemoveComments[0];
 					Tokenise_String_To_String_Append(temp_species , RemoveComments[0] , " 	" );
 					RemoveComments.clear();
 				}

@@ -22,6 +22,10 @@
 #include <vector>
 #include <string.h>
 
+// for the case insensitive search
+#include <cctype>
+#include <algorithm>
+
 // Needed globally for the function definitions
 //using namespace std;
 

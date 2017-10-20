@@ -22,33 +22,29 @@ void Handle_SolverParameters(InitParam& InitialParameters, vector<string> Input)
 
 		/* Let the user chose the type of solver to use */
 		/* maybe at some point I should make the setting terms case insensitive... */
-		if(Input[i].find("IntelODE")!=string::npos ||
-				Input[i].find("intelode")!=string::npos ||
-				Input[i].find("INTELODE")!=string::npos)
+		if(Test_If_Word_Found("intelode", Input[i]))
 		{
 			InitialParameters.Param_Solver.SolverType = 0;
 		}
-		if(Input[i].find("Odepack")!=string::npos ||
-				Input[i].find("odepack")!=string::npos ||
-				Input[i].find("ODEPACK")!=string::npos)
+		if(Test_If_Word_Found("odepack", Input[i]))
 		{
 			InitialParameters.Param_Solver.SolverType = 1;
 		}
 
-		if (Input[i].find("Jacobian") != string::npos) // use analytical Jacobian
+		if (Test_If_Word_Found("Jacobian",Input[i])) // use analytical Jacobian
 		{
 			InitialParameters.Param_Solver.Use_Analytical_Jacobian = true;
 		}
-		if (Input[i].find("Force Stability")!=string::npos) // force no negative species
+		if (Test_If_Word_Found("Force Stability",Input[i])) // force no negative species
 		{
 			InitialParameters.EnforceStability = true;
 		}
-		if (Input[i].find("Use General Solver")!=string::npos) // use solver that can handle non stiff problems better but is slower
+		if (Test_If_Word_Found("Use General Solver",Input[i])) // use solver that can handle non stiff problems better but is slower
 		{
 			InitialParameters.Param_Solver.Use_Stiff_Solver = false;
 		}
 
-		if(Input[i].find("hm")!=string::npos)
+		if(Test_If_Word_Found("hm", Input[i]))
 		{
 			p=strtok (cstr," \t"); // break at space or tab
 			p=strtok(NULL," \t"); // break again as first is the keyword
@@ -60,7 +56,7 @@ void Handle_SolverParameters(InitParam& InitialParameters, vector<string> Input)
 			cout << "minimum stepsize (h): " << InitialParameters.Param_Solver.minimum_stepsize << "\n";
 		}
 
-		if(Input[i].find("initialh")!=string::npos)
+		if(Test_If_Word_Found("initialh", Input[i]))
 		{
 			p=strtok (cstr," \t"); // break at space or tab
 			p=strtok(NULL," \t"); // break again as first is the keyword
@@ -73,7 +69,7 @@ void Handle_SolverParameters(InitParam& InitialParameters, vector<string> Input)
 		}
 
 
-		if(Input[i].find("Tolerance")!=string::npos)
+		if(Test_If_Word_Found("Tolerance", Input[i]))
 		{
 			vector< double > inputs;
 			p=strtok (cstr," \t"); // break at space or tab
@@ -90,7 +86,7 @@ void Handle_SolverParameters(InitParam& InitialParameters, vector<string> Input)
 			cout << "threshold: " << InitialParameters.Param_Solver.threshold << "\n";
 		}
 
-		if(Input[i].find("Threshold")!=string::npos || Input[i].find("threshold")!=string::npos)
+		if(Test_If_Word_Found("Threshold", Input[i]))
 		{
 			p=strtok (cstr," \t"); // break at space or tab
 			p=strtok(NULL," \t"); // break again as first is the keyword
@@ -103,7 +99,7 @@ void Handle_SolverParameters(InitParam& InitialParameters, vector<string> Input)
 			cout << "threshold: " << InitialParameters.Param_Solver.threshold << "\n";
 		}
 
-		if(Input[i].find("RTOL")!=string::npos || Input[i].find("rtol")!=string::npos)
+		if(Test_If_Word_Found("RTOL", Input[i]))
 		{
 			p=strtok (cstr," \t"); // break at space or tab
 			p=strtok(NULL," \t"); // break again as first is the keyword
@@ -116,27 +112,27 @@ void Handle_SolverParameters(InitParam& InitialParameters, vector<string> Input)
 			cout << "relative tolerance: " << InitialParameters.Param_Solver.rtol << "\n";
 		}
 
-		if(Input[i].find("IRREV")!=string::npos)
+		if(Test_If_Word_Found("IRREV", Input[i]))
 		{
 			InitialParameters.irrev = true;
 		}
 
-		if(Input[i].find("Print Rates")!=string::npos)
+		if(Test_If_Word_Found("Print Rates", Input[i]))
 		{
 			InitialParameters.PrintReacRates = true;
 		}
 
-		if(Input[i].find("Comma Separator")!=string::npos)
+		if(Test_If_Word_Found("Comma Separator", Input[i]))
 		{
 			InitialParameters.Param_Solver.separator = ",";
 		}
 
-		if(Input[i].find("Tab Separator")!=string::npos)
+		if(Test_If_Word_Found("Tab Separator", Input[i]))
 		{
 			InitialParameters.Param_Solver.separator = "\t";
 		}
 
-		if(Input[i].find("Separator:")!=string::npos)
+		if(Test_If_Word_Found("Separator:", Input[i]))
 		{
 			p=strtok (cstr,"=: \t"); // break at space or tab
 			p=strtok(NULL,"=: \t"); // break again as first is the keyword
@@ -148,7 +144,7 @@ void Handle_SolverParameters(InitParam& InitialParameters, vector<string> Input)
 		}
 
 
-		if(Input[i].find("Stoichiometry Matrix For Opt")!=string::npos)
+		if(Test_If_Word_Found("Stoichiometry Matrix For Opt", Input[i]))
 		{
 			InitialParameters.StoichiometryMatrixForOpt = true;
 		}

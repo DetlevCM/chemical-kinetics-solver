@@ -3,7 +3,7 @@
 /* The Function in this file deals with obtaining the reactions mechanism
  * data from the text input in a format that may be processed by the
  * program. The reactants, products and reaction parameters are read into
- * a number of 2D arrays (layed out as reaction ID vs species ID which are
+ * a number of 2D arrays (laid out as reaction ID vs species ID which are
  * output as a 3D array, structured as follows:
  * 1: reactant coefficients
  * 2: product coefficients
@@ -30,8 +30,6 @@ struct SpeciesWithCoefficient
 SpeciesWithCoefficient Return_Species_With_Coefficient(string  , const vector< string > );
 
 
-
-//vector< SingleReactionData > Read_Reaction_Matrix(string filename, const vector< string >& Species){
 vector< SingleReactionData > Get_Reactions(
 		string filename,
 		const vector< string >& Species
@@ -70,10 +68,8 @@ vector< SingleReactionData > Get_Reactions(
 				found = line1.find("END"); // need to check for end in loop for 4 line blocks
 				if (found!=string::npos && begin_flag)
 				{
-					//printf("End found\n\r");
 					end_flag = 1;
 				}
-
 
 
 				if(!end_flag && !line1.empty() && line1.compare(0,1,"!") != 0){ // Abort if end reached or initial line is comment
