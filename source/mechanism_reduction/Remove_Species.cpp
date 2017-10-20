@@ -1,7 +1,8 @@
 /*
  * Remove_Species.cpp
  *
- *  Created on: 12 Mar 2014
+ *  Created on: 12.03.2014
+ *  Revised on: 20.10.2017
  *      Author: DetlevCM
  */
 
@@ -15,19 +16,16 @@ vector< bool > Read_Kill_List(
 		vector< string > Species
 )
 {
-	int i;
-
 	ifstream InputFile;
 	InputFile.open (filename.c_str());
 
-	string line1;
-
-	size_t found;
+	int i, j;
+	int Number_Species = (int) Species.size();
+	string line;
 
 	// vector to determine whether a species is retained or not
-	int Number_Species = (int) Species.size();
-
 	vector< bool > RetainOrNot(Number_Species);
+
 	for(i=0;i<Number_Species;i++){
 		RetainOrNot[i] = true;
 	}
@@ -35,64 +33,35 @@ vector< bool > Read_Kill_List(
 	// first I need to read in my species to remove
 	if (InputFile.is_open())
 	{
-		cout << "Killing selected species\n";
+		cout << "Removing selected species from the mcehanism.\n";
 
 		while (InputFile.good())
 		{
-			getline (InputFile,line1);
+			getline (InputFile,line);
+			if(LineNotCommentOrEmpty(line))
+			{
+				vector< string > Remove_Comments;
+				vector< string > Species_Present;
 
-			if(!line1.empty()){// && line1.compare(0,1,"!") != 0){ // stop if end reached or comment
+				Remove_Comments = Tokenise_String_To_String(line,"!"); // cut away comments
+				Species_Present = Tokenise_String_To_String(Remove_Comments[0],"\t "); // split entry
 
-				// filter comment
-				char * cstr, *p;
-
-				string str = line1;
-				cstr = new char [str.size()+1];
-				strcpy (cstr, str.c_str());
-
-				vector< string > RemoveComments;
-
-				found = line1.find("!");
-				if (found!=string::npos)
+				// in case more than one species is names on a single line
+				for(i=0;i<(int)Species_Present.size();i++)
 				{
-					p=strtok (cstr,"!");
-					RemoveComments.push_back(p);
-					str = RemoveComments[0];
-					delete[] cstr;
-				}
-				else
-				{
-					RemoveComments.push_back(cstr);
-					str = RemoveComments[0];
-					delete[] cstr;
-				}
-
-				// remove whitespaces
-				RemoveComments.clear();
-				cstr = new char [str.size()+1];
-				strcpy (cstr, str.c_str());
-
-				p=strtok (cstr," 	"); // split by space and tab
-				while (p!=NULL)
-				{
-					RemoveComments.push_back(p);
-					p=strtok(NULL," 	");
-				}
-				delete[] cstr;
-
-
-				for(i=0;i<Number_Species;i++){
-					// compare the name of the species with the species in the kill list
-					if(strcmp(Species[i].c_str(),RemoveComments[0].c_str()) == 0){
-						RetainOrNot[i] = false;
+					for(j=0;j<Number_Species;j++){
+						// compare the name of the species with the species in the kill list
+						if(strcmp(Species[j].c_str(),Species_Present[i].c_str()) == 0){
+							RetainOrNot[j] = false;
+						}
 					}
 				}
-
-				RemoveComments.clear(); //tidy up
+				Remove_Comments.clear(); //tidy up
+				Species_Present.clear();
 			}
 		}
+		InputFile.close();
 	}
-	InputFile.close();
 
 	return RetainOrNot;
 }
@@ -144,7 +113,6 @@ void Reduce_Species_Thermo_Mechanism(
 
 		if(!kill) // if not kill true, retain
 		{
-
 			int k;
 			vector< double > Reactants;
 			vector< double > Products;
