@@ -13,7 +13,9 @@ vector< double > Get_Delta_N(
 // Making Scheme Irreversible
 vector< SingleReactionData > Make_Irreversible(
 		vector< SingleReactionData > ,
-		vector< ThermodynamicData >
+		vector< ThermodynamicData > ,
+		double,
+		double
 );
 
 

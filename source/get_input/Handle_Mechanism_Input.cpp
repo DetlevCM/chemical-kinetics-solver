@@ -249,9 +249,8 @@ bool Handle_Mechanism_Input(
 	// Did the user request an irreversible scheme?
 	if (InitialParameters.irrev) // contains true of false
 	{
-		//cout << "Initial Parameters " << InitialParameters.irrev << "\n";
 		cout << "Transformation to irreversible scheme requested!\n";
-		Reactions = Make_Irreversible(Reactions, Thermodynamics);
+		Reactions = Make_Irreversible(Reactions, Thermodynamics, InitialParameters.temperature, 50); // hardcoded to +/- 50K right now
 		WriteReactions("irreversible_scheme.txt", Species, Reactions);
 	}
 
@@ -274,7 +273,7 @@ bool Handle_Mechanism_Input(
 		if(!InitialParameters.irrev) // contains true or false
 		{
 			printf("Transformation to irreversible scheme required! - This will be applied first. \n");
-			Reactions = Make_Irreversible(Reactions, Thermodynamics);
+			Reactions = Make_Irreversible(Reactions, Thermodynamics, InitialParameters.temperature, 50); // hardcoded to +/- 50K for now
 			WriteReactions("irreversible_scheme_for_mapping.txt", Species, Reactions);
 		}
 
