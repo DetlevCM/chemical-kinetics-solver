@@ -278,23 +278,7 @@ void Read_Input_Data_v3(
 }
 
 
-bool LineNotCommentOrEmpty( string InputLine)
-{
-	if(
-			InputLine.compare(0,2,"//") != 0// C/C++ style comment
-			//	&& line.compare(0,2,"/*") != 0 // opening comment in C/C++, not checking for the * yet
-			&& InputLine.compare(0,1,"!") != 0 // Chemkin Style comment
-			&& InputLine.compare(0,1,"#") != 0 // shell or Python style comments
-			&& !InputLine.empty() // check that line is not empty
-	)
-	{
-		return true;
-	}
-	else
-	{
-		return false;
-	}
-}
+
 
 
 

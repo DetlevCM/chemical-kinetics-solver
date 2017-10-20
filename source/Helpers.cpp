@@ -108,6 +108,24 @@ vector< double > Tokenise_String_To_Double(string input, string tokens)
 	return output;
 }
 
+bool LineNotCommentOrEmpty( string InputLine)
+{
+	if(
+			InputLine.compare(0,2,"//") != 0// C/C++ style comment
+			//	&& line.compare(0,2,"/*") != 0 // opening comment in C/C++, not checking for the * yet
+			&& InputLine.compare(0,1,"!") != 0 // Chemkin Style comment
+			&& InputLine.compare(0,1,"#") != 0 // shell or Python style comments
+			&& !InputLine.empty() // check that line is not empty
+	)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
 // from reading on the web, this approach is slow - but for the input file will do
 bool Test_If_Word_Found(string search_term, string string_to_search)
 {

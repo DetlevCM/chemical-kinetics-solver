@@ -16,6 +16,8 @@ void Tokenise_String_To_String_Append(vector< string > & , string, string);
 
 vector< double > Tokenise_String_To_Double(string , string );
 
+bool LineNotCommentOrEmpty(string);
+
 bool Test_If_Word_Found(string , string );
 
 
