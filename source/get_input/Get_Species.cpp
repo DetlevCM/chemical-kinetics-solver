@@ -23,10 +23,10 @@ vector< string > Get_Species(string filename)
 					end_flag = 1;
 				}
 				if(!end_flag){
-					vector< string > RemoveComments;
-					RemoveComments = Tokenise_String_To_String(line , "!" );
-					Tokenise_String_To_String_Append(temp_species , RemoveComments[0] , " 	" );
-					RemoveComments.clear();
+					vector< string > Remove_Comments;
+					Remove_Comments = Tokenise_String_To_String(line , "!" );
+					Tokenise_String_To_String_Append(temp_species , Remove_Comments[0] , "\t " );
+					Remove_Comments.clear();
 				}
 			}
 			// Moving species check to end of function avoids "SPECIES" being read in as a name

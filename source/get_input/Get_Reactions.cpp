@@ -87,7 +87,6 @@ vector< SingleReactionData > Get_Reactions(
 					if(line1.compare(0,1,"!") != 0  && line1.compare(0,1,"/") != 0 && line1.compare(0,3,"DUP") == 0)
 					{
 						int position = (int) Reaction_Matrix.size() - 1;
-						//bool temp = Reaction_Matrix[position].IsDuplicate;
 						Reaction_Matrix[position].IsDuplicate=true;
 						//cout << "check " << temp << " " << Reaction_Matrix[position].IsDuplicate << " " << position << "\n";
 					}
@@ -106,7 +105,7 @@ vector< SingleReactionData > Get_Reactions(
 						RemoveComments.clear();
 
 						// only continue if the string is not empty or only whitespace or only tab
-						if(!line1.empty() && line1.find_first_not_of("	") != string::npos)
+						if(!line1.empty() && line1.find_first_not_of("\t ") != string::npos)
 						{
 
 							bool is_reversible = true;
@@ -122,8 +121,8 @@ vector< SingleReactionData > Get_Reactions(
 							vector< string > SplitLineLeft;
 							vector< string > SplitLineRight;
 
-							SplitLineLeft = Tokenise_String_To_String(SplitLineIn[0]," 	+");
-							SplitLineRight = Tokenise_String_To_String(SplitLineIn[1]," 	+");
+							SplitLineLeft = Tokenise_String_To_String(SplitLineIn[0],"\t +");
+							SplitLineRight = Tokenise_String_To_String(SplitLineIn[1],"\t +");
 
 							// SplitLineLeft Contains all inputs on the left hand side
 							// SplitLineRight Contains all inputs on the right hand side -> last 3 are parameters
@@ -171,7 +170,7 @@ vector< SingleReactionData > Get_Reactions(
 							// Tokenize line, then take last 3 positions - easiest to work on whole line
 							vector< string > SplitLine;
 
-							SplitLine = Tokenise_String_To_String(line1," 	");
+							SplitLine = Tokenise_String_To_String(line1,"\t ");
 							int SplitLineSize = SplitLine.size();
 
 							if(SchemeUnits[0] == 0) // A is molecules / cm^3
@@ -255,8 +254,6 @@ vector< SingleReactionData > Get_Reactions(
 
 							Reaction_Matrix.push_back(temp);
 
-
-							//printf("Size of Vector that Contains info on one reaction: %u \n",SingleReactionData.size());
 
 							ReactantData.clear();
 							ProductData.clear();
