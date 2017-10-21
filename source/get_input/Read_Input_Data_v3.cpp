@@ -48,7 +48,7 @@ void Read_Input_Data_v3(
 
 	/* Solver Parameters */
 	InitialParameters.Param_Solver.rtol = 1.e-5;
-	InitialParameters.Param_Solver.atol = 1.e-25;
+	InitialParameters.Param_Solver.atol = 1.e-15;
 	InitialParameters.Param_Solver.threshold = 1.e-10;
 	InitialParameters.Param_Solver.minimum_stepsize = 1.e-12;
 	InitialParameters.Param_Solver.initial_stepsize = 1.e-7;
@@ -275,6 +275,8 @@ void Read_Input_Data_v3(
 		InitialParameters.irrev = true;
 		cout << "Rates Based Mechanism Reduction requires an irreversible scheme - method set. \n";
 	}
+
+
 }
 
 

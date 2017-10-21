@@ -57,7 +57,7 @@ void Integrate_Liquid_Phase_Odepack_LSODA(
 	int i, n;
 
 	// general solver settings
-	double ep, tr, ATOL;
+	double RTOL, ATOL; //tr,
 
 	// LSODA specific settings
 	int LRW, LIW;
@@ -86,9 +86,9 @@ void Integrate_Liquid_Phase_Odepack_LSODA(
 	clock_t cpu_time_begin, cpu_time_end, cpu_time_current;
 
 	// Some tolerances for the solver:
-	ep = InitialParameters.Param_Solver.rtol ; // relative tolerance. The code cannot guarantee the requested accuracy for ep<1.d-9
-	tr = InitialParameters.Param_Solver.threshold; // Threshold, absolute tolerance is ep*tr
-	ATOL = (ep*tr);
+	RTOL = InitialParameters.Param_Solver.rtol ; // relative tolerance. The code cannot guarantee the requested accuracy for ep<1.d-9
+	//tr = InitialParameters.Param_Solver.threshold; // Threshold, absolute tolerance is ep*tr
+	ATOL = InitialParameters.Param_Solver.atol; //(ep*tr);
 
 	Delta_N = Get_Delta_N(Reactions); // just make sure the Delta_N is current
 	// Reduce the matrix from a sparse matrix to something more manageable and quicker to use
@@ -308,7 +308,7 @@ void Integrate_Liquid_Phase_Odepack_LSODA(
 		{
 			int JT = 1;
 			dlsoda_((void*) ODE_RHS_Liquid_Phase,&n,y,&time_current,&time_step,
-					&ITOL,&ep,&ATOL,&ITASK,&ISTATE,&IOPT,RWORK,&LRW,IWORK,&LIW,
+					&ITOL,&RTOL,&ATOL,&ITASK,&ISTATE,&IOPT,RWORK,&LRW,IWORK,&LIW,
 					(void*) Jacobian_Matrix_Odepack_LSODA,&JT);
 		}
 
@@ -316,7 +316,7 @@ void Integrate_Liquid_Phase_Odepack_LSODA(
 		{
 			int JT = 2;
 			dlsoda_((void*) ODE_RHS_Liquid_Phase,&n,y,&time_current,&time_step,
-					&ITOL,&ep,&ATOL,&ITASK,&ISTATE,&IOPT,RWORK,&LRW,IWORK,&LIW,
+					&ITOL,&RTOL,&ATOL,&ITASK,&ISTATE,&IOPT,RWORK,&LRW,IWORK,&LIW,
 					(void*) Jacobian_Matrix_Odepack_LSODA,&JT);
 		}
 

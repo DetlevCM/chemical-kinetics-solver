@@ -80,12 +80,15 @@ void Handle_SolverParameters(InitParam& InitialParameters, vector<string> Input)
 				p=strtok(NULL," \t");
 			}
 			InitialParameters.Param_Solver.rtol = inputs[0];
-			InitialParameters.Param_Solver.threshold = inputs[1];
+			//InitialParameters.Param_Solver.threshold = inputs[1];
+			InitialParameters.Param_Solver.atol = inputs[1];
 
 			cout << "relative tolerance: " << InitialParameters.Param_Solver.rtol << "\n";
-			cout << "threshold: " << InitialParameters.Param_Solver.threshold << "\n";
+			//cout << "threshold: " << InitialParameters.Param_Solver.threshold << "\n";
+			cout << "absolute tolerance: " << InitialParameters.Param_Solver.atol << "\n";
 		}
 
+		/*
 		if(Test_If_Word_Found("Threshold", Input[i]))
 		{
 			p=strtok (cstr," \t"); // break at space or tab
@@ -97,7 +100,7 @@ void Handle_SolverParameters(InitParam& InitialParameters, vector<string> Input)
 			}
 
 			cout << "threshold: " << InitialParameters.Param_Solver.threshold << "\n";
-		}
+		}//*/
 
 		if(Test_If_Word_Found("RTOL", Input[i]))
 		{
@@ -110,6 +113,19 @@ void Handle_SolverParameters(InitParam& InitialParameters, vector<string> Input)
 			}
 
 			cout << "relative tolerance: " << InitialParameters.Param_Solver.rtol << "\n";
+		}
+
+		if(Test_If_Word_Found("ATOL", Input[i]))
+		{
+			p=strtok (cstr," \t"); // break at space or tab
+			p=strtok(NULL," \t"); // break again as first is the keyword
+
+			if(p!=NULL){ // only read remainder is something is left
+				InitialParameters.Param_Solver.atol = strtod(p,NULL);
+				p=strtok(NULL," \t");
+			}
+
+			cout << "absolute tolerance: " << InitialParameters.Param_Solver.atol << "\n";
 		}
 
 		if(Test_If_Word_Found("IRREV", Input[i]))
@@ -151,6 +167,9 @@ void Handle_SolverParameters(InitParam& InitialParameters, vector<string> Input)
 
 		delete[] cstr;
 	}
+
+	// deal with IntelODE threshold
+	InitialParameters.Param_Solver.threshold = InitialParameters.Param_Solver.atol/InitialParameters.Param_Solver.rtol;
 
 }
 
