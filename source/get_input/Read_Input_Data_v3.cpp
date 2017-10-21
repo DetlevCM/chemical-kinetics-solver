@@ -54,10 +54,10 @@ void Read_Input_Data_v3(
 	InitialParameters.Param_Solver.initial_stepsize = 1.e-7;
 	InitialParameters.Param_Solver.separator = ","; // more modern, comma delimited
 
-	InitialParameters.Param_Solver.SolverType = 0;
+	InitialParameters.Param_Solver.SolverType = 1; // odepack is quite a bit faster
 	InitialParameters.Param_Solver.Use_Stiff_Solver = true;
 	InitialParameters.EnforceStability = false;
-	InitialParameters.Param_Solver.Use_Analytical_Jacobian = false;
+	InitialParameters.Param_Solver.Use_Analytical_Jacobian = false; // better performance in odepack without Jacobian
 	/* End Solver Paramerters */
 
 

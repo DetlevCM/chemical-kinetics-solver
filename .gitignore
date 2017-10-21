@@ -22,7 +22,7 @@ Release-Makefile-MinGW/*.o
 Release-Makefile-MinGW/*.exe
 ### Eclipse files & settings & temp files
 .settings/
-#.cproject
+.cproject
 #.project
 *.o
 *.d
