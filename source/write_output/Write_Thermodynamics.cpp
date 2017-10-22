@@ -14,42 +14,16 @@ void Write_Thermodynamic_Data(
 		const vector< ThermodynamicData >& Thermodynamics
 )
 {
-
-
 	int i;
-	// Stream to output file, output mode
 	ofstream ThermodynamicsOutput (filename.c_str(),ios::out);
 
 	if (ThermodynamicsOutput.is_open())
 	{
 		int Number_Species = (int)Thermodynamics.size();
-
 		ThermodynamicsOutput << "ThermData \n";
-
 		for(i=0;i<Number_Species;i++)
 		{
 			ThermodynamicsOutput << Species[i] << "\n";
-			/*
-			for(j=0;j<3;j++) // Line 1
-			{
-				ThermodynamicsOutput <<  Thermodynamics[i][j] << " ";
-			}
-			ThermodynamicsOutput << "\n"; // new line
-
-			for(j=3;j<10;j++) // Nasa Low
-			{
-				//ThermodynamicsOutput << scientific << Thermodynamics[i][j] << " " ;
-				ThermodynamicsOutput << Thermodynamics[i][j] << " " ;
-			}
-			ThermodynamicsOutput << "\n";  // new line
-
-			for(j=10;j<17;j++) // Nasa High
-			{
-				//ThermodynamicsOutput << scientific << Thermodynamics[i][j] << " ";
-				ThermodynamicsOutput << Thermodynamics[i][j] << " ";
-			}
-			ThermodynamicsOutput << "\n"; // new line
-			//*/
 
 			ThermodynamicsOutput
 			<< Thermodynamics[i].TLow
@@ -77,11 +51,9 @@ void Write_Thermodynamic_Data(
 			ThermodynamicsOutput << "\n"; // new line
 		}
 		ThermodynamicsOutput << "End \n";
-
 		ThermodynamicsOutput.close();
 	}
 	else cout << "Unable to open file";
-
 	cout << "File " << filename << " written. \n";
 }
 

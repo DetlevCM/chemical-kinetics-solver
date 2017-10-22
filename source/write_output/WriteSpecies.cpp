@@ -9,33 +9,23 @@
 
 void WriteSpecies(string filename ,const vector< string >& Species)
 {
-
 	int i;
-	// Stream to output file, output mode
 	ofstream SpeciesOutput (filename.c_str(),ios::out);
 
 	if (SpeciesOutput.is_open())
 	{
-
 		int Number_Species = 0;
 		Number_Species = (int)Species.size();
-
-		//printf("%i",Number_Species);
 		SpeciesOutput << "SPECIES\n";
-
 		for(i=0;i<Number_Species;i++)
 		{
 
 			SpeciesOutput << "\t" << Species[i] << "\n";
 		}
-
 		SpeciesOutput << "END\n";
-
-		SpeciesOutput.close();//*/
+		SpeciesOutput.close();
 	}
 	else cout << "Unable to open file";
-
 	cout << "File " << filename << " written.\n";
-
 }
 

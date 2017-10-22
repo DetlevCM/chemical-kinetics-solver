@@ -14,22 +14,17 @@ void Write_Stoichiometric_Matrix_For_Opt
 )
 {
 	int i, j;
-	// Stream to output file, output mode
 	ofstream Output (filename.c_str(),ios::out);
-
 	if (Output.is_open())
 	{
-
 		int Number_Reactions = 0;
 		Number_Reactions = (int)Reactions.size();
 		int Number_Species = 0;
 		Number_Species = (int)Reactions[0].Reactants.size();
 
 		Output << "   ";
-
 		for(i=0;i<Number_Species;i++)
 		{
-			//Output << Species[i] << " ";
 			Output << i+1 << "  ";
 		}
 		Output << "\n";
@@ -37,19 +32,15 @@ void Write_Stoichiometric_Matrix_For_Opt
 		for(i=0;i<Number_Reactions;i++)
 		{
 			Output << i+1 << "  ";
-
 			for(j=0;j<Number_Species;j++)
 			{
 				Output << Reactions[i].Products[j] - Reactions[i].Reactants[j] << "  ";
-
 			}
 			Output << "\n";
 		}
-
 		Output.close();
 	}
 	else cout << "Unable to open file";
-
 	printf("File %s written. \n",filename.c_str());
 }
 

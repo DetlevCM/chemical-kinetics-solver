@@ -11,26 +11,22 @@ void WriteLabelsReactionRates(
 		string filename,
 		string separator,
 		int Number_Reactons
-		)
+)
 {
 	int i;
-	// Stream to output file, output mode (Should clear old content)
 	ofstream OutputFile (filename.c_str(),ios::out);
 
 	if (OutputFile.is_open())
 	{
 		OutputFile << "Time";
 		for(i=0;i<Number_Reactons;i++)
-			{
-			//OutputFile << "	Reaction(" << i << ")";
+		{
 			OutputFile << separator << "Reaction(" << i << ")";
-			}
-		//OutputFile << "Temperature 	"; // only needed for species concentrations
-		OutputFile << "\n"; // new line
+		}
+		OutputFile << "\n";
 		OutputFile.close();
 	}
 	else cout << "Unable to open file";
-
 }
 
 void StreamReactionRates(
@@ -38,16 +34,15 @@ void StreamReactionRates(
 		const string separator,
 		double CurrentTime,
 		vector<double >& ReactionRates
-		)
+)
 {
 	int i;
 	OutputFile << CurrentTime; // time
 
-		for(i=0;i< (int) ReactionRates.size();i++)
-		{
-			//OutputFile << "	" << ReactionRates[i] ;
-			OutputFile << separator << ReactionRates[i] ;
-		}
-		OutputFile << "\n"; // new line
-		//OutputFile.flush(); // To get the whole line
+	for(i=0;i< (int) ReactionRates.size();i++)
+	{
+		OutputFile << separator << ReactionRates[i] ;
+	}
+	OutputFile << "\n";
 }
+

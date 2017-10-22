@@ -19,7 +19,6 @@ void WriteNewLabelsSpecies(
 )
 {
 	int i;
-	// Stream to output file, output mode (Should clear old content)
 	ofstream ConcentrationOutput (filename.c_str(),ios::out);
 
 	if (ConcentrationOutput.is_open())
@@ -27,22 +26,17 @@ void WriteNewLabelsSpecies(
 		ConcentrationOutput << "Time";
 		for(i=0;i<Number_Species;i++)
 		{
-			//ConcentrationOutput << "\t" << Names[i];
 			ConcentrationOutput << separator << Names[i];
 		}
-		//?ConcentrationOutput << "\t" << "Temperature";
 		ConcentrationOutput << separator << "Temperature";
 		if(GasPhasePressure)
 		{
-			//ConcentrationOutput << "\t" << "Pressure";
 			ConcentrationOutput << separator << "Pressure";
 		}
-		ConcentrationOutput << "\n"; // new line
-
+		ConcentrationOutput << "\n";
 		ConcentrationOutput.close();
 	}
 	else cout << "Unable to open file";
-
 }
 
 
@@ -59,21 +53,16 @@ void StreamConcentrations(
 )
 {
 	int i;
-
-	ConcentrationOutput << CurrentTime;// << "\t" ; // time
-
+	ConcentrationOutput << CurrentTime;
 		for(i=0;i<=Number_Species;i++)
 		{
-			//ConcentrationOutput << "\t" << Concentration[i] ;
 			ConcentrationOutput << separator << Concentration[i] ;
 		}
 		if(GasPhasePressure)
 		{
-			//ConcentrationOutput << "\t" << Pressure;
 			ConcentrationOutput << separator << Pressure;
 		}
-		ConcentrationOutput << "\n"; // new line
-		//ConcentrationOutput.flush(); // To get the whole line
+		ConcentrationOutput << "\n";
 }
 
 
@@ -86,17 +75,14 @@ void StreamConcentrationsV2(
 		)
 {
 	int i;
-	//ConcentrationOutput << CurrentTime << " 	" ; // time
-	ConcentrationOutput << CurrentTime << separator ; // time
+	ConcentrationOutput << CurrentTime << separator;
 
 	for(i=0;i<Number_Species;i++)
 	{
-		//ConcentrationOutput << Concentration[i] << " 	" ;
-		ConcentrationOutput << Concentration[i] << separator ;
+		ConcentrationOutput << Concentration[i] << separator;
 	}
-	//ConcentrationOutput << Concentration[Number_Species] << " 	";
 	ConcentrationOutput << Concentration[Number_Species] << separator;
-	ConcentrationOutput << "\n"; // new line
-
-	//ConcentrationOutput.flush(); // To get the whole line
+	ConcentrationOutput << "\n";
 }
+
+
