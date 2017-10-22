@@ -145,7 +145,7 @@ int main(int argc, char* argv[])
 
 		WriteNewLabelsSpecies(
 				OutputFilenames.Species,
-				InitialParameters.Param_Solver.separator,
+				InitialParameters.Solver_Parameters.separator,
 				Number_Species,
 				Species,
 				InitialParameters.GasPhase
@@ -155,7 +155,7 @@ int main(int argc, char* argv[])
 		{
 			WriteLabelsReactionRates(
 					OutputFilenames.Rates,
-					InitialParameters.Param_Solver.separator,
+					InitialParameters.Solver_Parameters.separator,
 					Number_Reactions
 			);
 		}
@@ -233,14 +233,14 @@ int main(int argc, char* argv[])
 
 				WriteNewLabelsSpecies(
 						OutputFilenames.Species,
-						InitialParameters.Param_Solver.separator,
+						InitialParameters.Solver_Parameters.separator,
 						Number_Species,
 						Species,
 						InitialParameters.GasPhase
 				);
 				WriteLabelsReactionRates(
 						OutputFilenames.Rates,
-						InitialParameters.Param_Solver.separator,
+						InitialParameters.Solver_Parameters.separator,
 						Number_Reactions
 				);
 
@@ -259,7 +259,7 @@ int main(int argc, char* argv[])
 
 				// Not ideal, should use variables rather than handwritten filenames
 				ReportAccuracy(
-						InitialParameters.Param_Solver.separator,
+						InitialParameters.Solver_Parameters.separator,
 						Number_Species,
 						Species,
 						"reduction_accuracy_report.txt",

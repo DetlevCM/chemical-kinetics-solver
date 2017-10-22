@@ -24,16 +24,16 @@ void Handle_SolverParameters(InitParam& InitialParameters, vector<string> Input)
 		/* maybe at some point I should make the setting terms case insensitive... */
 		if(Test_If_Word_Found("intelode", Input[i]))
 		{
-			InitialParameters.Param_Solver.SolverType = 0;
+			InitialParameters.Solver_Parameters.SolverType = 0;
 		}
 		if(Test_If_Word_Found("odepack", Input[i]))
 		{
-			InitialParameters.Param_Solver.SolverType = 1;
+			InitialParameters.Solver_Parameters.SolverType = 1;
 		}
 
 		if (Test_If_Word_Found("Jacobian",Input[i])) // use analytical Jacobian
 		{
-			InitialParameters.Param_Solver.Use_Analytical_Jacobian = true;
+			InitialParameters.Solver_Parameters.Use_Analytical_Jacobian = true;
 		}
 		if (Test_If_Word_Found("Force Stability",Input[i])) // force no negative species
 		{
@@ -41,7 +41,7 @@ void Handle_SolverParameters(InitParam& InitialParameters, vector<string> Input)
 		}
 		if (Test_If_Word_Found("Use General Solver",Input[i])) // use solver that can handle non stiff problems better but is slower
 		{
-			InitialParameters.Param_Solver.Use_Stiff_Solver = false;
+			InitialParameters.Solver_Parameters.Use_Stiff_Solver = false;
 		}
 
 		if(Test_If_Word_Found("hm", Input[i]))
@@ -50,10 +50,10 @@ void Handle_SolverParameters(InitParam& InitialParameters, vector<string> Input)
 			p=strtok(NULL," \t"); // break again as first is the keyword
 
 			if(p!=NULL){ // only read remainder is something is left
-				InitialParameters.Param_Solver.minimum_stepsize = strtod(p,NULL);
+				InitialParameters.Solver_Parameters.minimum_stepsize = strtod(p,NULL);
 				p=strtok(NULL," \t");
 			}
-			cout << "minimum stepsize (h): " << InitialParameters.Param_Solver.minimum_stepsize << "\n";
+			cout << "minimum stepsize (h): " << InitialParameters.Solver_Parameters.minimum_stepsize << "\n";
 		}
 
 		if(Test_If_Word_Found("initialh", Input[i]))
@@ -62,10 +62,10 @@ void Handle_SolverParameters(InitParam& InitialParameters, vector<string> Input)
 			p=strtok(NULL," \t"); // break again as first is the keyword
 
 			if(p!=NULL){ // only read remainder is something is left
-				InitialParameters.Param_Solver.initial_stepsize = strtod(p,NULL);
+				InitialParameters.Solver_Parameters.initial_stepsize = strtod(p,NULL);
 				p=strtok(NULL," \t");
 			}
-			cout << "initial stepsize (h): " << InitialParameters.Param_Solver.initial_stepsize << "\n";
+			cout << "initial stepsize (h): " << InitialParameters.Solver_Parameters.initial_stepsize << "\n";
 		}
 
 
@@ -79,13 +79,13 @@ void Handle_SolverParameters(InitParam& InitialParameters, vector<string> Input)
 				inputs.push_back(strtod(p,NULL));
 				p=strtok(NULL," \t");
 			}
-			InitialParameters.Param_Solver.rtol = inputs[0];
+			InitialParameters.Solver_Parameters.rtol = inputs[0];
 			//InitialParameters.Param_Solver.threshold = inputs[1];
-			InitialParameters.Param_Solver.atol = inputs[1];
+			InitialParameters.Solver_Parameters.atol = inputs[1];
 
-			cout << "relative tolerance: " << InitialParameters.Param_Solver.rtol << "\n";
+			cout << "relative tolerance: " << InitialParameters.Solver_Parameters.rtol << "\n";
 			//cout << "threshold: " << InitialParameters.Param_Solver.threshold << "\n";
-			cout << "absolute tolerance: " << InitialParameters.Param_Solver.atol << "\n";
+			cout << "absolute tolerance: " << InitialParameters.Solver_Parameters.atol << "\n";
 		}
 
 		/*
@@ -108,11 +108,11 @@ void Handle_SolverParameters(InitParam& InitialParameters, vector<string> Input)
 			p=strtok(NULL," \t"); // break again as first is the keyword
 
 			if(p!=NULL){ // only read remainder is something is left
-				InitialParameters.Param_Solver.rtol = strtod(p,NULL);
+				InitialParameters.Solver_Parameters.rtol = strtod(p,NULL);
 				p=strtok(NULL," \t");
 			}
 
-			cout << "relative tolerance: " << InitialParameters.Param_Solver.rtol << "\n";
+			cout << "relative tolerance: " << InitialParameters.Solver_Parameters.rtol << "\n";
 		}
 
 		if(Test_If_Word_Found("ATOL", Input[i]))
@@ -121,11 +121,11 @@ void Handle_SolverParameters(InitParam& InitialParameters, vector<string> Input)
 			p=strtok(NULL," \t"); // break again as first is the keyword
 
 			if(p!=NULL){ // only read remainder is something is left
-				InitialParameters.Param_Solver.atol = strtod(p,NULL);
+				InitialParameters.Solver_Parameters.atol = strtod(p,NULL);
 				p=strtok(NULL," \t");
 			}
 
-			cout << "absolute tolerance: " << InitialParameters.Param_Solver.atol << "\n";
+			cout << "absolute tolerance: " << InitialParameters.Solver_Parameters.atol << "\n";
 		}
 
 		if(Test_If_Word_Found("IRREV", Input[i]))
@@ -140,12 +140,12 @@ void Handle_SolverParameters(InitParam& InitialParameters, vector<string> Input)
 
 		if(Test_If_Word_Found("Comma Separator", Input[i]))
 		{
-			InitialParameters.Param_Solver.separator = ",";
+			InitialParameters.Solver_Parameters.separator = ",";
 		}
 
 		if(Test_If_Word_Found("Tab Separator", Input[i]))
 		{
-			InitialParameters.Param_Solver.separator = "\t";
+			InitialParameters.Solver_Parameters.separator = "\t";
 		}
 
 		if(Test_If_Word_Found("Separator:", Input[i]))
@@ -154,7 +154,7 @@ void Handle_SolverParameters(InitParam& InitialParameters, vector<string> Input)
 			p=strtok(NULL,"=: \t"); // break again as first is the keyword
 
 			if(p!=NULL){ // only read remainder is something is left
-				InitialParameters.Param_Solver.separator = p;
+				InitialParameters.Solver_Parameters.separator = p;
 				p=strtok(NULL," \t");
 			}
 		}
@@ -167,9 +167,6 @@ void Handle_SolverParameters(InitParam& InitialParameters, vector<string> Input)
 
 		delete[] cstr;
 	}
-
-	// deal with IntelODE threshold
-	InitialParameters.Param_Solver.threshold = InitialParameters.Param_Solver.atol/InitialParameters.Param_Solver.rtol;
 
 }
 

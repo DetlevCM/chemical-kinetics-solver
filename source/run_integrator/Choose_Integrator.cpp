@@ -27,7 +27,7 @@ void Choose_Integrator(
 )
 {
 
-	if(InitialParameters.Param_Solver.SolverType == 0)
+	if(InitialParameters.Solver_Parameters.SolverType == 0)
 			{
 				cout << "Using Intel ODE\n" << std::flush;
 				// it is the pressure vessel case
@@ -55,7 +55,7 @@ void Choose_Integrator(
 					);
 				}
 			}
-			else if(InitialParameters.Param_Solver.SolverType == 1)
+			else if(InitialParameters.Solver_Parameters.SolverType == 1)
 			{
 				cout << "Using odepack\n" << std::flush;
 				// it is the pressure vessel case

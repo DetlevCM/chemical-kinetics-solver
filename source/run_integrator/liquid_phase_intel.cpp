@@ -38,12 +38,6 @@ void Integrate_Liquid_Phase_Intel(
 
 	Thermodynamics = Thermo; // "Hack" - to fix a regression
 
-	string filename_concentrations;
-	string filename_rates;
-	string filename_petrooxy;
-	string filename_rates_analysis_data;
-
-
 
 	ofstream ReactionRatesOutput;
 	ofstream ConcentrationOutput (OutputFilenames.Species.c_str(),ios::app);
@@ -85,14 +79,11 @@ void Integrate_Liquid_Phase_Intel(
 	// For performance assessment, use a clock:
 	clock_t cpu_time_begin, cpu_time_end, cpu_time_current;
 
-
-
 	// Some tolerances for the solver:
-	hm = InitialParameters.Param_Solver.minimum_stepsize; // minimal step size for the methods, 1.0e-12 recommended for normalised problems
-	ep = InitialParameters.Param_Solver.rtol ; // relative tolerance. The code cannot guarantee the requested accuracy for ep<1.d-9
-	tr = InitialParameters.Param_Solver.threshold; // Threshold, absolute tolerance is ep*tr
-	h = InitialParameters.Param_Solver.initial_stepsize;
-
+	ep = InitialParameters.Solver_Parameters.rtol ; // relative tolerance. The code cannot guarantee the requested accuracy for ep<1.d-9
+	tr = InitialParameters.Solver_Parameters.atol / InitialParameters.Solver_Parameters.rtol;
+	h = InitialParameters.Solver_Parameters.initial_stepsize;
+	hm = InitialParameters.Solver_Parameters.minimum_stepsize; // minimal step size for the methods, 1.0e-12 recommended for normalised problems
 
 	Delta_N = Get_Delta_N(Reactions); // just make sure the Delta_N is current
 	// Reduce the matrix from a sparse matrix to something more manageable and quicker to use
@@ -103,7 +94,6 @@ void Integrate_Liquid_Phase_Intel(
 	ReactantsForReactions = Reactants_ForReactionRate(Reactions);
 
 	ProductsForReactions = Products_ForReactionRate(Reactions,false);
-
 
 
 	if(InitialParameters.MechanismAnalysis.MaximumRates ||
@@ -122,18 +112,11 @@ void Integrate_Liquid_Phase_Intel(
 		ipar[i] = 0;
 	}
 
-	// original old code
+
 	double* y = &SpeciesConcentration[0];
 	Concentration.clear();
 	Concentration.resize(Number_Species + 1);
 
-	// Should be faster, but is 10 times slower???
-	/*
-	Concentration.clear();
-	Concentration = SpeciesConcentration;
-	//cout << Concentration.size() << "\n";
-	double* y = &Concentration[0];
-	//*/
 	double time_current, time_step, time_step1, time_end;
 
 	time_current = 0;// -> Solver is designed for t_0 = 0
@@ -153,13 +136,11 @@ void Integrate_Liquid_Phase_Intel(
 	InitialDataConstants.EnforceStability = InitialParameters.EnforceStability;
 	InitialDataConstants.temperature = InitialParameters.temperature;
 
-	// Set Constant Concentration if it Exists
-	//
 
+	// set constant concentration if desired
 	InitialDataConstants.ConstantConcentration = InitialParameters.ConstantConcentration;
 	if(InitialParameters.ConstantConcentration)
 	{
-
 		cout << "Constant Species desired\n";
 
 		InitialDataConstants.ConstantSpecies.clear();
@@ -171,23 +152,11 @@ void Integrate_Liquid_Phase_Intel(
 			InitialDataConstants.ConstantSpecies[i] = 0;
 		}
 
-		//cout << "checkpoint - array size " << (int)InitialParameters.ConstantSpecies.size() << "\n";
 		for(i=0;i<(int)InitialParameters.ConstantSpecies.size();i++)
-		{
-			// fix initial concentrations
-			InitialDataConstants.ConstantSpecies[
-												 InitialParameters.ConstantSpecies[i]] =
-														 SpeciesConcentration[
-																			  InitialParameters.ConstantSpecies[i]];
-			//cout << "check " << InitialParameters.ConstantSpecies[i] << "\n";
+		{// fix initial concentrations
+			InitialDataConstants.ConstantSpecies[InitialParameters.ConstantSpecies[i]] =
+					SpeciesConcentration[InitialParameters.ConstantSpecies[i]];
 		}
-
-		/*
-		for(i=0;i<Number_Species;i++)
-				{
-					cout << InitialDataConstants.ConstantSpecies[i] << "\n";
-				}
-		//*/
 	}
 
 
@@ -230,7 +199,7 @@ void Integrate_Liquid_Phase_Intel(
 	// do not forget output at time = 0
 	StreamConcentrations(
 			ConcentrationOutput,
-			InitialParameters.Param_Solver.separator,
+			InitialParameters.Solver_Parameters.separator,
 			InitialParameters.GasPhase,
 			Number_Species,
 			time_current,
@@ -243,7 +212,7 @@ void Integrate_Liquid_Phase_Intel(
 	{
 		StreamReactionRates(
 				ReactionRatesOutput,
-				InitialParameters.Param_Solver.separator,
+				InitialParameters.Solver_Parameters.separator,
 				time_current,
 				Rates
 		);
@@ -323,7 +292,7 @@ void Integrate_Liquid_Phase_Intel(
 		Prepare_Print_Rates_Per_Species(
 				ProductsForRatesAnalysis,
 				ReactantsForReactions,
-				InitialParameters.Param_Solver.separator,
+				InitialParameters.Solver_Parameters.separator,
 				Rates,
 				Species,
 				InitialParameters.MechanismAnalysis.SpeciesSelectedForRates,
@@ -359,166 +328,166 @@ void Integrate_Liquid_Phase_Intel(
 	// 2: PetroOxy settings
 
 
-		do
+	do
+	{
+		time_step = time_current + time_step1;
+
+		if(!Solver_Type.Use_Stiff_Solver && Solver_Type.Use_Analytical_Jacobian)
 		{
-			time_step = time_current + time_step1;
+			dodesol_rkm9mka(ipar, &n, &time_current, &time_step, y,(void*) ODE_RHS_Liquid_Phase,
+					(void*) Jacobian_Matrix_Intel, &h, &hm, &ep, &tr, dpar, kd, &ierr
+			);
+		}
 
-			if(!Solver_Type.Use_Stiff_Solver && Solver_Type.Use_Analytical_Jacobian)
-			{
-				dodesol_rkm9mka(ipar, &n, &time_current, &time_step, y,(void*) ODE_RHS_Liquid_Phase,
-						(void*) Jacobian_Matrix_Intel, &h, &hm, &ep, &tr, dpar, kd, &ierr
-				);
-			}
+		if(Solver_Type.Use_Stiff_Solver && Solver_Type.Use_Analytical_Jacobian)
+		{
+			// stiff solver with automatics numerical Jacobi matric computations
+			dodesol_mk52lfa(ipar, &n, &time_current, &time_step, y,(void*) ODE_RHS_Liquid_Phase,
+					(void*) Jacobian_Matrix_Intel, &h, &hm, &ep, &tr, dpar, kd, &ierr
+			);
+		}
 
-			if(Solver_Type.Use_Stiff_Solver && Solver_Type.Use_Analytical_Jacobian)
-			{
-				// stiff solver with automatics numerical Jacobi matric computations
-				dodesol_mk52lfa(ipar, &n, &time_current, &time_step, y,(void*) ODE_RHS_Liquid_Phase,
-						(void*) Jacobian_Matrix_Intel, &h, &hm, &ep, &tr, dpar, kd, &ierr
-				);
-			}
+		if(Solver_Type.Use_Stiff_Solver && !Solver_Type.Use_Analytical_Jacobian)
+		{
+			// stiff solver with automatics numerical Jacobi matric computations
+			dodesol_mk52lfn(ipar, &n, &time_current, &time_step, y,(void*) ODE_RHS_Liquid_Phase,
+					&h, &hm, &ep, &tr, dpar, kd, &ierr
+			);
+		}
 
-			if(Solver_Type.Use_Stiff_Solver && !Solver_Type.Use_Analytical_Jacobian)
-			{
-				// stiff solver with automatics numerical Jacobi matric computations
-				dodesol_mk52lfn(ipar, &n, &time_current, &time_step, y,(void*) ODE_RHS_Liquid_Phase,
-						&h, &hm, &ep, &tr, dpar, kd, &ierr
-				);
-			}
-
-			if(!Solver_Type.Use_Stiff_Solver && !Solver_Type.Use_Analytical_Jacobian)
-			{
-				// hybrid solver with automatic numerical Jacobi matrix computations
-				dodesol_rkm9mkn(ipar, &n, &time_current, &time_step, y,(void*) ODE_RHS_Liquid_Phase,
-						&h, &hm, &ep, &tr, dpar, kd, &ierr
-				);
-			}
+		if(!Solver_Type.Use_Stiff_Solver && !Solver_Type.Use_Analytical_Jacobian)
+		{
+			// hybrid solver with automatic numerical Jacobi matrix computations
+			dodesol_rkm9mkn(ipar, &n, &time_current, &time_step, y,(void*) ODE_RHS_Liquid_Phase,
+					&h, &hm, &ep, &tr, dpar, kd, &ierr
+			);
+		}
 
 
-			if (ierr != 0)
-			{
-				printf("\n dodesol_rkm9mkn routine exited with error code %4d\n",ierr);
-				//return -1;
-				// Break means it should leave the do loop which would be fine for an error response as it stops the solver
-				break ;
-			}
+		if (ierr != 0)
+		{
+			printf("\n dodesol_rkm9mkn routine exited with error code %4d\n",ierr);
+			//return -1;
+			// Break means it should leave the do loop which would be fine for an error response as it stops the solver
+			break ;
+		}
 
 
-			if(InitialParameters.MechanismAnalysis.MaximumRates)
-			{
-				MaxRatesAnalysis(RatesAnalysisData,ProductsForRatesAnalysis,ReactantsForReactions,Rates,time_current);
-			}
+		if(InitialParameters.MechanismAnalysis.MaximumRates)
+		{
+			MaxRatesAnalysis(RatesAnalysisData,ProductsForRatesAnalysis,ReactantsForReactions,Rates,time_current);
+		}
 
 
-			if(InitialParameters.MechanismAnalysis.RatesAnalysisAtTime &&
-					InitialParameters.MechanismAnalysis.RatesAnalysisAtTimeData[RatesAnalysisTimepoint] == time_current)
-			{
-				//using namespace GlobalArrays;
-				RatesAnalysisAtTimes(
-						ProductsForRatesAnalysis,
-						ReactantsForReactions,
-						Rates,
-						time_current,
-						Species,
-						Reactions
-				);
-
-				RatesAnalysisTimepoint = RatesAnalysisTimepoint + 1;
-			}
-
-
-			// Function for new per species output
-			//*
-			if(InitialParameters.MechanismAnalysis.RatesOfSpecies)
-			{
-				Print_Rates_Per_Species(
-						ProductsForRatesAnalysis,
-						ReactantsForReactions,
-						InitialParameters.Param_Solver.separator,
-						Rates,
-						time_current,
-						Species,
-						InitialParameters.MechanismAnalysis.SpeciesSelectedForRates,
-						ReactionsForSpeciesSelectedForRates,
-						Reactions
-				);
-			}
-			//*/
-
-			if(InitialParameters.MechanismAnalysis.StreamRatesAnalysis)
-			{
-				StreamRatesAnalysis(
-						OutputFilenames.Prefix,
-						ProductsForRatesAnalysis,
-						ReactantsForReactions,
-						Rates,
-						time_current,
-						Number_Species
-				);
-			}
-
-
-
-			double pressure = 0;
-			if(InitialParameters.GasPhase)
-			{
-				double R = 8.31451; // Gas Constant
-				/* Pressure Tracking for Gas Phase Kinetics */
-				double total_mol = 0;
-				for(i=0;i<Number_Species;i++)
-				{
-					total_mol = total_mol + SpeciesConcentration[i];
-				}
-				pressure = (total_mol  * R * SpeciesConcentration[Number_Species])/InitialParameters.GasPhaseVolume;
-
-			}
-
-			StreamConcentrations(
-					ConcentrationOutput,
-					InitialParameters.Param_Solver.separator,
-					InitialParameters.GasPhase,
-					Number_Species,
+		if(InitialParameters.MechanismAnalysis.RatesAnalysisAtTime &&
+				InitialParameters.MechanismAnalysis.RatesAnalysisAtTimeData[RatesAnalysisTimepoint] == time_current)
+		{
+			//using namespace GlobalArrays;
+			RatesAnalysisAtTimes(
+					ProductsForRatesAnalysis,
+					ReactantsForReactions,
+					Rates,
 					time_current,
-					pressure,
-					SpeciesConcentration
+					Species,
+					Reactions
 			);
 
-			if(InitialParameters.PrintReacRates)
+			RatesAnalysisTimepoint = RatesAnalysisTimepoint + 1;
+		}
+
+
+		// Function for new per species output
+		//*
+		if(InitialParameters.MechanismAnalysis.RatesOfSpecies)
+		{
+			Print_Rates_Per_Species(
+					ProductsForRatesAnalysis,
+					ReactantsForReactions,
+					InitialParameters.Solver_Parameters.separator,
+					Rates,
+					time_current,
+					Species,
+					InitialParameters.MechanismAnalysis.SpeciesSelectedForRates,
+					ReactionsForSpeciesSelectedForRates,
+					Reactions
+			);
+		}
+		//*/
+
+		if(InitialParameters.MechanismAnalysis.StreamRatesAnalysis)
+		{
+			StreamRatesAnalysis(
+					OutputFilenames.Prefix,
+					ProductsForRatesAnalysis,
+					ReactantsForReactions,
+					Rates,
+					time_current,
+					Number_Species
+			);
+		}
+
+
+
+		double pressure = 0;
+		if(InitialParameters.GasPhase)
+		{
+			double R = 8.31451; // Gas Constant
+			/* Pressure Tracking for Gas Phase Kinetics */
+			double total_mol = 0;
+			for(i=0;i<Number_Species;i++)
 			{
-				StreamReactionRates(
-						ReactionRatesOutput,
-						InitialParameters.Param_Solver.separator,
-						time_current,
-						Rates
-				);
+				total_mol = total_mol + SpeciesConcentration[i];
 			}
+			pressure = (total_mol  * R * SpeciesConcentration[Number_Species])/InitialParameters.GasPhaseVolume;
+
+		}
+
+		StreamConcentrations(
+				ConcentrationOutput,
+				InitialParameters.Solver_Parameters.separator,
+				InitialParameters.GasPhase,
+				Number_Species,
+				time_current,
+				pressure,
+				SpeciesConcentration
+		);
+
+		if(InitialParameters.PrintReacRates)
+		{
+			StreamReactionRates(
+					ReactionRatesOutput,
+					InitialParameters.Solver_Parameters.separator,
+					time_current,
+					Rates
+			);
+		}
 
 
-			if(InitialParameters.ReduceReactions != 0)
-			{
-				ReactionRateImportance(KeyRates, Rates, InitialParameters.ReduceReactions);
-			}
+		if(InitialParameters.ReduceReactions != 0)
+		{
+			ReactionRateImportance(KeyRates, Rates, InitialParameters.ReduceReactions);
+		}
 
 
 
-			if(tracker < (TimeChanges-1) && time_step >= InitialParameters.TimeEnd[tracker])
-			{
-				cout << "CPU Time: " << ((double) (clock() - cpu_time_current)) / CLOCKS_PER_SEC << " seconds\n";
-				cpu_time_current = clock();
+		if(tracker < (TimeChanges-1) && time_step >= InitialParameters.TimeEnd[tracker])
+		{
+			cout << "CPU Time: " << ((double) (clock() - cpu_time_current)) / CLOCKS_PER_SEC << " seconds\n";
+			cpu_time_current = clock();
 
-				tracker = tracker + 1;
-				time_step1 = InitialParameters.TimeStep[tracker];
-				time_end = InitialParameters.TimeEnd[tracker];
-				cout << "End Time: " << time_end << " Time Step: " << time_step1 << "\n";
+			tracker = tracker + 1;
+			time_step1 = InitialParameters.TimeStep[tracker];
+			time_end = InitialParameters.TimeEnd[tracker];
+			cout << "End Time: " << time_end << " Time Step: " << time_step1 << "\n";
 
-				// update the solver settings
-				Solver_Type = InitialParameters.Solver_Type[tracker];
-				cout << "New Solver Settings:\nJacobian: " << Solver_Type.Use_Analytical_Jacobian <<
-						"\nUse Stiff Solver: " << Solver_Type.Use_Stiff_Solver <<"\n";
-			}
+			// update the solver settings
+			Solver_Type = InitialParameters.Solver_Type[tracker];
+			cout << "New Solver Settings:\nJacobian: " << Solver_Type.Use_Analytical_Jacobian <<
+					"\nUse Stiff Solver: " << Solver_Type.Use_Stiff_Solver <<"\n";
+		}
 
 
-		} while (time_step < time_end);
+	} while (time_step < time_end);
 
 
 	cout << "CPU Time: " << ((double) (clock() - cpu_time_current)) / CLOCKS_PER_SEC << " seconds\n";

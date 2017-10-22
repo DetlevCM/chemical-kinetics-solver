@@ -40,12 +40,6 @@ void Integrate_Pressure_Vessel_Liquid_Phase_Intel(
 
 	Thermodynamics = Thermo; // "Hack" - to fix a regression
 
-	string filename_concentrations;
-	string filename_rates;
-	string filename_petrooxy;
-	string filename_rates_analysis_data;
-
-
 
 	ofstream ReactionRatesOutput;
 	ofstream ConcentrationOutput (OutputFilenames.Species.c_str(),ios::app);
@@ -87,13 +81,11 @@ void Integrate_Pressure_Vessel_Liquid_Phase_Intel(
 	// For performance assessment, use a clock:
 	clock_t cpu_time_begin, cpu_time_end, cpu_time_current;
 
-
-
 	// Some tolerances for the solver:
-	hm = InitialParameters.Param_Solver.minimum_stepsize; // minimal step size for the methods, 1.0e-12 recommended for normalised problems
-	ep = InitialParameters.Param_Solver.rtol ; // relative tolerance. The code cannot guarantee the requested accuracy for ep<1.d-9
-	tr = InitialParameters.Param_Solver.threshold; // Threshold, absolute tolerance is ep*tr
-	h = InitialParameters.Param_Solver.initial_stepsize;
+	ep = InitialParameters.Solver_Parameters.rtol ; // relative tolerance. The code cannot guarantee the requested accuracy for ep<1.d-9
+	tr = InitialParameters.Solver_Parameters.atol / InitialParameters.Solver_Parameters.rtol;
+	h = InitialParameters.Solver_Parameters.initial_stepsize;
+	hm = InitialParameters.Solver_Parameters.minimum_stepsize; // minimal step size for the methods, 1.0e-12 recommended for normalised problems
 
 
 	Delta_N = Get_Delta_N(Reactions); // just make sure the Delta_N is current
@@ -105,7 +97,6 @@ void Integrate_Pressure_Vessel_Liquid_Phase_Intel(
 	ReactantsForReactions = Reactants_ForReactionRate(Reactions);
 
 	ProductsForReactions = Products_ForReactionRate(Reactions,false);
-
 
 
 	if(InitialParameters.MechanismAnalysis.MaximumRates ||
@@ -157,13 +148,11 @@ void Integrate_Pressure_Vessel_Liquid_Phase_Intel(
 	InitialDataConstants.PetroOxyTemperatureRise = InitialParameters.PressureVessel.TemperatureRise;
 	InitialDataConstants.temperature = InitialParameters.temperature;
 
-	// Set Constant Concentration if it Exists
-	//
 
+	// set constant concentration if desired
 	InitialDataConstants.ConstantConcentration = InitialParameters.ConstantConcentration;
 	if(InitialParameters.ConstantConcentration)
 	{
-
 		cout << "Constant Species desired\n";
 
 		InitialDataConstants.ConstantSpecies.clear();
@@ -175,23 +164,11 @@ void Integrate_Pressure_Vessel_Liquid_Phase_Intel(
 			InitialDataConstants.ConstantSpecies[i] = 0;
 		}
 
-		//cout << "checkpoint - array size " << (int)InitialParameters.ConstantSpecies.size() << "\n";
 		for(i=0;i<(int)InitialParameters.ConstantSpecies.size();i++)
-		{
-			// fix initial concentrations
-			InitialDataConstants.ConstantSpecies[
-												 InitialParameters.ConstantSpecies[i]] =
-														 SpeciesConcentration[
-																			  InitialParameters.ConstantSpecies[i]];
-			//cout << "check " << InitialParameters.ConstantSpecies[i] << "\n";
+		{// fix initial concentrations
+			InitialDataConstants.ConstantSpecies[InitialParameters.ConstantSpecies[i]] =
+					SpeciesConcentration[InitialParameters.ConstantSpecies[i]];
 		}
-
-		/*
-		for(i=0;i<Number_Species;i++)
-				{
-					cout << InitialDataConstants.ConstantSpecies[i] << "\n";
-				}
-		//*/
 	}
 
 
@@ -267,7 +244,7 @@ void Integrate_Pressure_Vessel_Liquid_Phase_Intel(
 	// do not forget output at time = 0
 	StreamConcentrations(
 			ConcentrationOutput,
-			InitialParameters.Param_Solver.separator,
+			InitialParameters.Solver_Parameters.separator,
 			InitialParameters.GasPhase,
 			Number_Species,
 			time_current,
@@ -280,7 +257,7 @@ void Integrate_Pressure_Vessel_Liquid_Phase_Intel(
 	{
 		StreamReactionRates(
 				ReactionRatesOutput,
-				InitialParameters.Param_Solver.separator,
+				InitialParameters.Solver_Parameters.separator,
 				time_current,
 				Rates
 		);
@@ -360,7 +337,7 @@ void Integrate_Pressure_Vessel_Liquid_Phase_Intel(
 		Prepare_Print_Rates_Per_Species(
 				ProductsForRatesAnalysis,
 				ReactantsForReactions,
-				InitialParameters.Param_Solver.separator,
+				InitialParameters.Solver_Parameters.separator,
 				Rates,
 				Species,
 				InitialParameters.MechanismAnalysis.SpeciesSelectedForRates,
@@ -467,7 +444,7 @@ void Integrate_Pressure_Vessel_Liquid_Phase_Intel(
 			Print_Rates_Per_Species(
 					ProductsForRatesAnalysis,
 					ReactantsForReactions,
-					InitialParameters.Param_Solver.separator,
+					InitialParameters.Solver_Parameters.separator,
 					Rates,
 					time_current,
 					Species,
@@ -508,7 +485,7 @@ void Integrate_Pressure_Vessel_Liquid_Phase_Intel(
 
 		StreamConcentrations(
 				ConcentrationOutput,
-				InitialParameters.Param_Solver.separator,
+				InitialParameters.Solver_Parameters.separator,
 				InitialParameters.GasPhase,
 				Number_Species,
 				time_current,
@@ -520,7 +497,7 @@ void Integrate_Pressure_Vessel_Liquid_Phase_Intel(
 		{
 			StreamReactionRates(
 					ReactionRatesOutput,
-					InitialParameters.Param_Solver.separator,
+					InitialParameters.Solver_Parameters.separator,
 					time_current,
 					Rates
 			);

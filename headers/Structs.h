@@ -139,30 +139,19 @@ struct MechanismAnalysisConfig {
 };
 
 
-// new structure for initial parameters
-
-struct param_solver {
-
-	// we need to pick the solver tpe
-	int SolverType;
-	// 0 = Intel, 1 = Odepack
-
-	bool Use_Stiff_Solver;
+struct solver_parameters { // structure to store the solver parameters
+	int SolverType; // 0 = IntelODE, 1 = Odepack
+	bool Use_Stiff_Solver; // for IntelODE
 	bool Use_Analytical_Jacobian;
-
-
-	/* ODE Solver Parameters */
 	double rtol;
-	double threshold;
-	double atol; // atol = rtol * threshhold
+	double atol;
 	double minimum_stepsize; // hm
 	double initial_stepsize; // h
-
-	// output control
-	string separator;
+	string separator; // separator in text output, e.g. comma delimited
 };
 
-// to allow modifying some solver behaviour during the run
+
+// to allow modifying some solver behaviour during the run, for IntelODE only
 struct solver_type {
 	bool Use_Stiff_Solver;
 	bool Use_Analytical_Jacobian;
@@ -174,7 +163,7 @@ struct InitParam {
 	MechanismAnalysisConfig MechanismAnalysis;
 
 	// a block for solver parameters
-	param_solver Param_Solver;
+	solver_parameters Solver_Parameters;
 	vector<solver_type> Solver_Type; // for specifying a mix of solvers, no individual tolerances though
 
 

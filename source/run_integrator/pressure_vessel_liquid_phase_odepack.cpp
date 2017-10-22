@@ -40,13 +40,6 @@ void Integrate_Pressure_Vessel_Liquid_Phase_Odepack_LSODA(
 
 	Thermodynamics = Thermo; // "Hack" - to fix a regression
 
-	// Filestreams
-	string filename_concentrations;
-	string filename_rates;
-	string filename_petrooxy;
-	string filename_rates_analysis_data;
-
-
 
 	ofstream ReactionRatesOutput;
 	ofstream ConcentrationOutput (OutputFilenames.Species.c_str(),ios::app);
@@ -88,13 +81,9 @@ void Integrate_Pressure_Vessel_Liquid_Phase_Odepack_LSODA(
 	// For performance assessment, use a clock:
 	clock_t cpu_time_begin, cpu_time_end, cpu_time_current;
 
-
-
 	// Some tolerances for the solver:
-	RTOL = InitialParameters.Param_Solver.rtol ; // relative tolerance. The code cannot guarantee the requested accuracy for ep<1.d-9
-	//tr = InitialParameters.Param_Solver.threshold; // Threshold, absolute tolerance is ep*tr
-	ATOL = InitialParameters.Param_Solver.atol; // (ep*tr);
-
+	RTOL = InitialParameters.Solver_Parameters.rtol;
+	ATOL = InitialParameters.Solver_Parameters.atol;
 
 	Delta_N = Get_Delta_N(Reactions); // just make sure the Delta_N is current
 	// Reduce the matrix from a sparse matrix to something more manageable and quicker to use
@@ -105,7 +94,6 @@ void Integrate_Pressure_Vessel_Liquid_Phase_Odepack_LSODA(
 	ReactantsForReactions = Reactants_ForReactionRate(Reactions);
 
 	ProductsForReactions = Products_ForReactionRate(Reactions,false);
-
 
 
 	if(InitialParameters.MechanismAnalysis.MaximumRates ||
@@ -144,13 +132,11 @@ void Integrate_Pressure_Vessel_Liquid_Phase_Odepack_LSODA(
 	InitialDataConstants.PetroOxyTemperatureRise = InitialParameters.PressureVessel.TemperatureRise;
 	InitialDataConstants.temperature = InitialParameters.temperature;
 
-	// Set Constant Concentration if it Exists
-	//
 
+	// set constant concentration if desired
 	InitialDataConstants.ConstantConcentration = InitialParameters.ConstantConcentration;
 	if(InitialParameters.ConstantConcentration)
 	{
-
 		cout << "Constant Species desired\n";
 
 		InitialDataConstants.ConstantSpecies.clear();
@@ -161,7 +147,6 @@ void Integrate_Pressure_Vessel_Liquid_Phase_Odepack_LSODA(
 		{
 			InitialDataConstants.ConstantSpecies[i] = 0;
 		}
-
 
 		for(i=0;i<(int)InitialParameters.ConstantSpecies.size();i++)
 		{// fix initial concentrations
@@ -245,7 +230,7 @@ void Integrate_Pressure_Vessel_Liquid_Phase_Odepack_LSODA(
 	// do not forget output at time = 0
 	StreamConcentrations(
 			ConcentrationOutput,
-			InitialParameters.Param_Solver.separator,
+			InitialParameters.Solver_Parameters.separator,
 			InitialParameters.GasPhase,
 			Number_Species,
 			time_current,
@@ -258,7 +243,7 @@ void Integrate_Pressure_Vessel_Liquid_Phase_Odepack_LSODA(
 	{
 		StreamReactionRates(
 				ReactionRatesOutput,
-				InitialParameters.Param_Solver.separator,
+				InitialParameters.Solver_Parameters.separator,
 				time_current,
 				Rates
 		);
@@ -315,7 +300,7 @@ void Integrate_Pressure_Vessel_Liquid_Phase_Odepack_LSODA(
 		Prepare_Print_Rates_Per_Species(
 				ProductsForRatesAnalysis,
 				ReactantsForReactions,
-				InitialParameters.Param_Solver.separator,
+				InitialParameters.Solver_Parameters.separator,
 				Rates,
 				Species,
 				InitialParameters.MechanismAnalysis.SpeciesSelectedForRates,
@@ -334,9 +319,8 @@ void Integrate_Pressure_Vessel_Liquid_Phase_Odepack_LSODA(
 	// enables reset of Rates Analysis
 	int RatesAnalysisTimepoint = 0;
 
-	// set the solver:
-	solver_type Solver_Type;
-	Solver_Type = InitialParameters.Solver_Type[0];
+	bool Use_Analytical_Jacobian;
+		Use_Analytical_Jacobian = InitialParameters.Solver_Parameters.Use_Analytical_Jacobian;
 
 	// start the clock:
 	cpu_time_begin = cpu_time_current = clock();
@@ -346,30 +330,14 @@ void Integrate_Pressure_Vessel_Liquid_Phase_Odepack_LSODA(
 	{
 		time_step = time_current + time_step1;
 
-		//cout << InitialParameters.UseStiffSolver << " " << InitialParameters.Jacobian << "\n";
-
-		// we'll have the code with the Jacobian which is LSODA
-		// and we'll have the code without the Jacobian which is LSODE
-
-		/*
-		 *DECK DLSODE
-      SUBROUTINE DLSODE (F, NEQ, Y, T, TOUT, ITOL, RTOL, ATOL, ITASK,
-     1                  ISTATE, IOPT, RWORK, LRW, IWORK, LIW, JAC, MF)
-      EXTERNAL F, JAC
-      INTEGER NEQ, ITOL, ITASK, ISTATE, IOPT, LRW, IWORK, LIW, MF
-      DOUBLE PRECISION Y, T, TOUT, RTOL, ATOL, RWORK
-      DIMENSION NEQ(*), Y(*), RTOL(*), ATOL(*), RWORK(LRW), IWORK(LIW)
-		 */
-
-		if(Solver_Type.Use_Analytical_Jacobian)
+		if(Use_Analytical_Jacobian)
 		{
 			int JT = 1;
 			dlsoda_((void*) ODE_RHS_Pressure_Vessel,&n,y,&time_current,&time_step,
 					&ITOL,&RTOL,&ATOL,&ITASK,&ISTATE,&IOPT,RWORK,&LRW,IWORK,&LIW,
 					(void*) Jacobian_Matrix_Odepack_LSODA,&JT);
 		}
-
-		if(!Solver_Type.Use_Analytical_Jacobian)
+		else //if(!Use_Analytical_Jacobian)
 		{
 			int JT = 2;
 			dlsoda_((void*) ODE_RHS_Pressure_Vessel,&n,y,&time_current,&time_step,
@@ -377,15 +345,12 @@ void Integrate_Pressure_Vessel_Liquid_Phase_Odepack_LSODA(
 					(void*) Jacobian_Matrix_Odepack_LSODA,&JT);
 		}
 
-
-		//*
 		if (ISTATE < 0)
 		{
 			printf("\n LSODA routine exited with error code %4d\n",ISTATE);
-			//return -1;
 			// Break means it should leave the do loop which would be fine for an error response as it stops the solver
 			break ;
-		}//*/
+		}
 
 
 		if(InitialParameters.MechanismAnalysis.MaximumRates)
@@ -397,7 +362,6 @@ void Integrate_Pressure_Vessel_Liquid_Phase_Odepack_LSODA(
 		if(InitialParameters.MechanismAnalysis.RatesAnalysisAtTime &&
 				InitialParameters.MechanismAnalysis.RatesAnalysisAtTimeData[RatesAnalysisTimepoint] == time_current)
 		{
-			//using namespace GlobalArrays;
 			RatesAnalysisAtTimes(
 					ProductsForRatesAnalysis,
 					ReactantsForReactions,
@@ -406,19 +370,17 @@ void Integrate_Pressure_Vessel_Liquid_Phase_Odepack_LSODA(
 					Species,
 					Reactions
 			);
-
 			RatesAnalysisTimepoint = RatesAnalysisTimepoint + 1;
 		}
 
 
 		// Function for new per species output
-		//*
 		if(InitialParameters.MechanismAnalysis.RatesOfSpecies)
 		{
 			Print_Rates_Per_Species(
 					ProductsForRatesAnalysis,
 					ReactantsForReactions,
-					InitialParameters.Param_Solver.separator,
+					InitialParameters.Solver_Parameters.separator,
 					Rates,
 					time_current,
 					Species,
@@ -427,7 +389,7 @@ void Integrate_Pressure_Vessel_Liquid_Phase_Odepack_LSODA(
 					Reactions
 			);
 		}
-		//*/
+
 
 		if(InitialParameters.MechanismAnalysis.StreamRatesAnalysis)
 		{
@@ -459,7 +421,7 @@ void Integrate_Pressure_Vessel_Liquid_Phase_Odepack_LSODA(
 
 		StreamConcentrations(
 				ConcentrationOutput,
-				InitialParameters.Param_Solver.separator,
+				InitialParameters.Solver_Parameters.separator,
 				InitialParameters.GasPhase,
 				Number_Species,
 				time_current,
@@ -471,7 +433,7 @@ void Integrate_Pressure_Vessel_Liquid_Phase_Odepack_LSODA(
 		{
 			StreamReactionRates(
 					ReactionRatesOutput,
-					InitialParameters.Param_Solver.separator,
+					InitialParameters.Solver_Parameters.separator,
 					time_current,
 					Rates
 			);

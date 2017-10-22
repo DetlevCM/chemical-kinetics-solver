@@ -21,7 +21,6 @@ void Integrate_Liquid_Phase_Odepack_LSODA(
 )
 {
 
-
 	vector< TrackSpecies > ProductsForRatesAnalysis;
 
 	using namespace Jacobian_ODE_RHS;
@@ -37,12 +36,6 @@ void Integrate_Liquid_Phase_Odepack_LSODA(
 
 
 	Thermodynamics = Thermo; // "Hack" - to fix a regression
-
-	string filename_concentrations;
-	string filename_rates;
-	string filename_petrooxy;
-	string filename_rates_analysis_data;
-
 
 
 	ofstream ReactionRatesOutput;
@@ -86,9 +79,8 @@ void Integrate_Liquid_Phase_Odepack_LSODA(
 	clock_t cpu_time_begin, cpu_time_end, cpu_time_current;
 
 	// Some tolerances for the solver:
-	RTOL = InitialParameters.Param_Solver.rtol ; // relative tolerance. The code cannot guarantee the requested accuracy for ep<1.d-9
-	//tr = InitialParameters.Param_Solver.threshold; // Threshold, absolute tolerance is ep*tr
-	ATOL = InitialParameters.Param_Solver.atol; //(ep*tr);
+	RTOL = InitialParameters.Solver_Parameters.rtol;
+	ATOL = InitialParameters.Solver_Parameters.atol;
 
 	Delta_N = Get_Delta_N(Reactions); // just make sure the Delta_N is current
 	// Reduce the matrix from a sparse matrix to something more manageable and quicker to use
@@ -99,7 +91,6 @@ void Integrate_Liquid_Phase_Odepack_LSODA(
 	ReactantsForReactions = Reactants_ForReactionRate(Reactions);
 
 	ProductsForReactions = Products_ForReactionRate(Reactions,false);
-
 
 
 	if(InitialParameters.MechanismAnalysis.MaximumRates ||
@@ -136,13 +127,11 @@ void Integrate_Liquid_Phase_Odepack_LSODA(
 	InitialDataConstants.EnforceStability = InitialParameters.EnforceStability;
 	InitialDataConstants.temperature = InitialParameters.temperature;
 
-	// Set Constant Concentration if it Exists
-	//
 
+	// set constant concentration if desired
 	InitialDataConstants.ConstantConcentration = InitialParameters.ConstantConcentration;
 	if(InitialParameters.ConstantConcentration)
 	{
-
 		cout << "Constant Species desired\n";
 
 		InitialDataConstants.ConstantSpecies.clear();
@@ -154,7 +143,6 @@ void Integrate_Liquid_Phase_Odepack_LSODA(
 			InitialDataConstants.ConstantSpecies[i] = 0;
 		}
 
-
 		for(i=0;i<(int)InitialParameters.ConstantSpecies.size();i++)
 		{// fix initial concentrations
 			InitialDataConstants.ConstantSpecies[InitialParameters.ConstantSpecies[i]] =
@@ -162,13 +150,11 @@ void Integrate_Liquid_Phase_Odepack_LSODA(
 		}
 	}
 
-
 	Calculate_Thermodynamics(CalculatedThermo, SpeciesConcentration[Number_Species], Thermodynamics);
 
-	/*
-	for(i=0;i<Number_Species;i++)
+	/*for(i=0;i<Number_Species;i++)
 	{
-		cout << CalculatedThermo[i].Hf << " " << CalculatedThermo[i].Cp << " " << CalculatedThermo[i].S <<"\n";
+	cout << CalculatedThermo[i].Hf << " " << CalculatedThermo[i].Cp << " " << CalculatedThermo[i].S <<"\n";
 	}//*/
 
 	Kf.clear();
@@ -203,7 +189,7 @@ void Integrate_Liquid_Phase_Odepack_LSODA(
 	// do not forget output at time = 0
 	StreamConcentrations(
 			ConcentrationOutput,
-			InitialParameters.Param_Solver.separator,
+			InitialParameters.Solver_Parameters.separator,
 			InitialParameters.GasPhase,
 			Number_Species,
 			time_current,
@@ -216,7 +202,7 @@ void Integrate_Liquid_Phase_Odepack_LSODA(
 	{
 		StreamReactionRates(
 				ReactionRatesOutput,
-				InitialParameters.Param_Solver.separator,
+				InitialParameters.Solver_Parameters.separator,
 				time_current,
 				Rates
 		);
@@ -224,7 +210,7 @@ void Integrate_Liquid_Phase_Odepack_LSODA(
 
 	// not happy with this more widely available, needs a cleanup...
 	vector< vector< int > > ReactionsForSpeciesSelectedForRates;
-	// Not the betst place to put it, but OK for now:
+	// Not the best place to put it, but OK for now:
 	if(InitialParameters.MechanismAnalysis.RatesOfSpecies)
 	{
 		int tempi, tempj;
@@ -273,7 +259,7 @@ void Integrate_Liquid_Phase_Odepack_LSODA(
 		Prepare_Print_Rates_Per_Species(
 				ProductsForRatesAnalysis,
 				ReactantsForReactions,
-				InitialParameters.Param_Solver.separator,
+				InitialParameters.Solver_Parameters.separator,
 				Rates,
 				Species,
 				InitialParameters.MechanismAnalysis.SpeciesSelectedForRates,
@@ -293,8 +279,8 @@ void Integrate_Liquid_Phase_Odepack_LSODA(
 	int RatesAnalysisTimepoint = 0;
 
 	// set the solver:
-	solver_type Solver_Type;
-	Solver_Type = InitialParameters.Solver_Type[0];
+	bool Use_Analytical_Jacobian;
+	Use_Analytical_Jacobian = InitialParameters.Solver_Parameters.Use_Analytical_Jacobian;
 
 	// start the clock:
 	cpu_time_begin = cpu_time_current = clock();
@@ -304,15 +290,14 @@ void Integrate_Liquid_Phase_Odepack_LSODA(
 	{
 		time_step = time_current + time_step1;
 
-		if(Solver_Type.Use_Analytical_Jacobian)
+		if(Use_Analytical_Jacobian)
 		{
 			int JT = 1;
 			dlsoda_((void*) ODE_RHS_Liquid_Phase,&n,y,&time_current,&time_step,
 					&ITOL,&RTOL,&ATOL,&ITASK,&ISTATE,&IOPT,RWORK,&LRW,IWORK,&LIW,
 					(void*) Jacobian_Matrix_Odepack_LSODA,&JT);
 		}
-
-		if(!Solver_Type.Use_Analytical_Jacobian)
+		else //if(!Use_Analytical_Jacobian)
 		{
 			int JT = 2;
 			dlsoda_((void*) ODE_RHS_Liquid_Phase,&n,y,&time_current,&time_step,
@@ -320,15 +305,12 @@ void Integrate_Liquid_Phase_Odepack_LSODA(
 					(void*) Jacobian_Matrix_Odepack_LSODA,&JT);
 		}
 
-
-		//*
 		if (ISTATE < 0)
 		{
 			printf("\n LSODA routine exited with error code %4d\n",ISTATE);
-			//return -1;
 			// Break means it should leave the do loop which would be fine for an error response as it stops the solver
 			break ;
-		}//*/
+		}
 
 
 		if(InitialParameters.MechanismAnalysis.MaximumRates)
@@ -340,7 +322,6 @@ void Integrate_Liquid_Phase_Odepack_LSODA(
 		if(InitialParameters.MechanismAnalysis.RatesAnalysisAtTime &&
 				InitialParameters.MechanismAnalysis.RatesAnalysisAtTimeData[RatesAnalysisTimepoint] == time_current)
 		{
-			//using namespace GlobalArrays;
 			RatesAnalysisAtTimes(
 					ProductsForRatesAnalysis,
 					ReactantsForReactions,
@@ -349,19 +330,17 @@ void Integrate_Liquid_Phase_Odepack_LSODA(
 					Species,
 					Reactions
 			);
-
 			RatesAnalysisTimepoint = RatesAnalysisTimepoint + 1;
 		}
 
 
 		// Function for new per species output
-		//*
 		if(InitialParameters.MechanismAnalysis.RatesOfSpecies)
 		{
 			Print_Rates_Per_Species(
 					ProductsForRatesAnalysis,
 					ReactantsForReactions,
-					InitialParameters.Param_Solver.separator,
+					InitialParameters.Solver_Parameters.separator,
 					Rates,
 					time_current,
 					Species,
@@ -370,7 +349,7 @@ void Integrate_Liquid_Phase_Odepack_LSODA(
 					Reactions
 			);
 		}
-		//*/
+
 
 		if(InitialParameters.MechanismAnalysis.StreamRatesAnalysis)
 		{
@@ -383,7 +362,6 @@ void Integrate_Liquid_Phase_Odepack_LSODA(
 					Number_Species
 			);
 		}
-
 
 
 		double pressure = 0;
@@ -402,7 +380,7 @@ void Integrate_Liquid_Phase_Odepack_LSODA(
 
 		StreamConcentrations(
 				ConcentrationOutput,
-				InitialParameters.Param_Solver.separator,
+				InitialParameters.Solver_Parameters.separator,
 				InitialParameters.GasPhase,
 				Number_Species,
 				time_current,
@@ -414,7 +392,7 @@ void Integrate_Liquid_Phase_Odepack_LSODA(
 		{
 			StreamReactionRates(
 					ReactionRatesOutput,
-					InitialParameters.Param_Solver.separator,
+					InitialParameters.Solver_Parameters.separator,
 					time_current,
 					Rates
 			);

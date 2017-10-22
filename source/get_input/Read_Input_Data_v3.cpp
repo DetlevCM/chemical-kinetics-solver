@@ -46,19 +46,24 @@ void Read_Input_Data_v3(
 	InitialParameters.irrev = false; // make the scheme irreversible?
 	InitialParameters.PrintReacRates = false; // output reaction rates?
 
-	/* Solver Parameters */
-	InitialParameters.Param_Solver.rtol = 1.e-5;
-	InitialParameters.Param_Solver.atol = 1.e-15;
-	InitialParameters.Param_Solver.threshold = 1.e-10;
-	InitialParameters.Param_Solver.minimum_stepsize = 1.e-12;
-	InitialParameters.Param_Solver.initial_stepsize = 1.e-7;
-	InitialParameters.Param_Solver.separator = ","; // more modern, comma delimited
 
-	InitialParameters.Param_Solver.SolverType = 1; // odepack is quite a bit faster
-	InitialParameters.Param_Solver.Use_Stiff_Solver = true;
-	InitialParameters.EnforceStability = false;
-	InitialParameters.Param_Solver.Use_Analytical_Jacobian = false; // better performance in odepack without Jacobian
-	/* End Solver Paramerters */
+	solver_parameters Default_Solver_Parameters;
+
+	/* begin default solver settings */
+	Default_Solver_Parameters.SolverType = 1; // 0 = IntelODE, 1 = odepack (default)
+	Default_Solver_Parameters.Use_Stiff_Solver = true; // old setting from IntelODE
+	Default_Solver_Parameters.Use_Analytical_Jacobian = false; // faster with odepack
+	Default_Solver_Parameters.rtol = 1.e-5;
+	Default_Solver_Parameters.atol = 1.e-10;
+	Default_Solver_Parameters.minimum_stepsize = 1.e-12; // for IntelODE
+	Default_Solver_Parameters.initial_stepsize = 1.e-7; // for IntelODE
+	Default_Solver_Parameters.separator = ","; // use comma as a default separator
+	/* end default solver settings */
+
+
+
+
+	InitialParameters.Solver_Parameters = Default_Solver_Parameters;
 
 
 	/* Analysis functions */
@@ -159,8 +164,8 @@ void Read_Input_Data_v3(
 					}while (line.find("</SolverParameters>") == string::npos);
 					// Read in data until the closing tag is found
 					Handle_SolverParameters(InitialParameters, Input);
-					Global_Solver_Type.Use_Analytical_Jacobian = InitialParameters.Param_Solver.Use_Analytical_Jacobian;
-					Global_Solver_Type.Use_Stiff_Solver = InitialParameters.Param_Solver.Use_Stiff_Solver;
+					Global_Solver_Type.Use_Analytical_Jacobian = InitialParameters.Solver_Parameters.Use_Analytical_Jacobian;
+					Global_Solver_Type.Use_Stiff_Solver = InitialParameters.Solver_Parameters.Use_Stiff_Solver;
 				}
 				Input.clear();
 			}
@@ -182,7 +187,7 @@ void Read_Input_Data_v3(
 						if(LineNotCommentOrEmpty(line))
 						{
 							Input.push_back(line);
-													}
+						}
 					}while (line.find("</InitialConditions>") == string::npos);
 					Handle_InitialConditions(InitialParameters, Input, Global_Solver_Type);
 				}
