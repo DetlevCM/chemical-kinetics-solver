@@ -22,10 +22,7 @@ void Write_Thermodynamic_Data(
 
 	if (ThermodynamicsOutput.is_open())
 	{
-
-
-		int Number_Species = Thermodynamics.size();
-		//printf("%i",Number_Species);
+		int Number_Species = (int)Thermodynamics.size();
 
 		ThermodynamicsOutput << "ThermData \n";
 

@@ -31,8 +31,8 @@ void Integrate_Pressure_Vessel_Liquid_Phase_Odepack_LSODA(
 	using namespace Jacobian;
 
 
-	Number_Species = Species.size();
-	Number_Reactions = Reactions.size();
+	Number_Species = (int)Species.size();
+	Number_Reactions = (int)Reactions.size();
 
 	// outputting mechanism size in integration routing so that it is printed every time
 	cout << "The mechanism to be integrated contains " << Number_Species << " species and " << Number_Reactions << " Reactions.\n" << std::flush;
@@ -251,7 +251,7 @@ void Integrate_Pressure_Vessel_Liquid_Phase_Odepack_LSODA(
 
 	// not happy with this more widely available, needs a cleanup...
 	vector< vector< int > > ReactionsForSpeciesSelectedForRates;
-	// Not the betst place to put it, but OK for now:
+	// Not the best place to put it, but OK for now:
 	if(InitialParameters.MechanismAnalysis.RatesOfSpecies)
 	{
 		int tempi, tempj;
@@ -290,7 +290,6 @@ void Integrate_Pressure_Vessel_Liquid_Phase_Odepack_LSODA(
 				{
 					temp.push_back(tempi);
 				}
-
 			}
 			ReactionsForSpeciesSelectedForRates.push_back(temp);
 			temp.clear();

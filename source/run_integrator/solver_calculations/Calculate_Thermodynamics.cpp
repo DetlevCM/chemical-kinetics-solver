@@ -32,7 +32,7 @@ void Calculate_Thermodynamics(
 	double R = 8.314472e0;
 	int i;
 
-	int Number_Species = Thermodynamics.size();
+	int Number_Species = (int)Thermodynamics.size();
 
 	// reduce computational steps -> Is it a bit quicker?
 	double T2 = Temperature*Temperature;

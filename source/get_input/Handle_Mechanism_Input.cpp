@@ -71,7 +71,7 @@ bool Handle_Mechanism_Input(
 
 	// Get and store Species Information
 	Species = Get_Species(mechanism_filename);
-	Number_Species = Species.size();
+	Number_Species = (int)Species.size();
 	cout << "The Mechanism contains " << Number_Species <<" Species.\n";
 
 	Thermodynamics = Get_Thermodynamic_Data_New_Format(mechanism_filename, Species);
@@ -81,7 +81,7 @@ bool Handle_Mechanism_Input(
 	//Reactions = Read_Reaction_Matrix(mechanism_filename, Species);
 	Reactions = Get_Reactions(mechanism_filename, Species);
 
-	Number_Reactions = Reactions.size();
+	Number_Reactions = (int)Reactions.size();
 	cout << "The Mechanism contains " << Number_Reactions << " Reactions.\n";
 
 
@@ -98,8 +98,8 @@ bool Handle_Mechanism_Input(
 		DataInputFromFile.close();
 
 		// Update
-		Number_Species = (int) Species.size();
-		Number_Reactions = (int) Reactions.size();
+		Number_Species = (int)Species.size();
+		Number_Reactions = (int)Reactions.size();
 
 		WriteReactions("Reactions_After_Species_Removal.txt", Species, Reactions);
 	}
@@ -295,7 +295,7 @@ bool Handle_Mechanism_Input(
 		vector<ClassNaming> UserDefinedNames;
 		UserDefinedNames = GetSpeciesClassesNames(SpeciesMapping);
 		Species = RenameSpecies(Species, UserDefinedNames, SpeciesClassMapping); // Update Species Names
-		Number_Species_Classes = Species.size(); // need to resize species count a bit later
+		Number_Species_Classes = (int)Species.size(); // need to resize species count a bit later
 
 		Thermodynamics = Process_Thermodynamics_Species_Classes(SpeciesClassMapping, Thermodynamics); // create new thermodynamics
 

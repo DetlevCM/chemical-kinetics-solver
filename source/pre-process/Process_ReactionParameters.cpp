@@ -5,7 +5,7 @@ vector< ReactionParameter > Process_Reaction_Parameters(
 		)
 {
 	int i;
-	int Number_Reactions = Reactions.size();
+	int Number_Reactions = (int)Reactions.size();
 
 	ReactionParameter temp_one_reaction;
 	vector< ReactionParameter > temp_output;

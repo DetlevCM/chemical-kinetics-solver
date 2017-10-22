@@ -21,9 +21,9 @@ void Input_File_For_Ehsan_Opt
 	{
 
 		int Number_Reactions = 0;
-		Number_Reactions = Reactions.size();
+		Number_Reactions = (int)Reactions.size();
 		int Number_Species = 0;
-		Number_Species = Reactions[0].Reactants.size();
+		Number_Species = (int)Reactions[0].Reactants.size();
 
 /*		Output << "   ";
 

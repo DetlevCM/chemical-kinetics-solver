@@ -28,8 +28,8 @@ void Integrate_Liquid_Phase_Odepack_LSODA(
 	using namespace Jacobian;
 
 
-	Number_Species = Species.size();
-	Number_Reactions = Reactions.size();
+	Number_Species = (int)Species.size();
+	Number_Reactions = (int)Reactions.size();
 
 	// outputting mechanism size in integration routing so that it is printed every time
 	cout << "The mechanism to be integrated contains " << Number_Species << " species and " << Number_Reactions << " Reactions.\n" << std::flush;
@@ -182,8 +182,6 @@ void Integrate_Liquid_Phase_Odepack_LSODA(
 	{
 		ReactionRateImportance(KeyRates, Rates, InitialParameters.ReduceReactions);
 	}
-
-
 
 
 	// do not forget output at time = 0
@@ -403,7 +401,6 @@ void Integrate_Liquid_Phase_Odepack_LSODA(
 		{
 			ReactionRateImportance(KeyRates, Rates, InitialParameters.ReduceReactions);
 		}
-
 
 
 		if(tracker < (TimeChanges-1) && time_step >= InitialParameters.TimeEnd[tracker])

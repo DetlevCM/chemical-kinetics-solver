@@ -29,8 +29,8 @@ void Integrate_Liquid_Phase_Intel(
 	using namespace ODE_RHS;
 	using namespace Jacobian;
 
-	Number_Species = Species.size();
-	Number_Reactions = Reactions.size();
+	Number_Species = (int)Species.size();
+	Number_Reactions = (int)Reactions.size();
 
 	// outputting mechanism size in integration routing so that it is printed every time
 	cout << "The mechanism to be integrated contains " << Number_Species << " species and " << Number_Reactions << " Reactions.\n" << std::flush;
@@ -220,13 +220,11 @@ void Integrate_Liquid_Phase_Intel(
 
 	// not happy with this more widely available, needs a cleanup...
 	vector< vector< int > > ReactionsForSpeciesSelectedForRates;
-	// Not the betst place to put it, but OK for now:
+	// Not the best place to put it, but OK for now:
 	if(InitialParameters.MechanismAnalysis.RatesOfSpecies)
 	{
 		int tempi, tempj;
 
-		// ProductsForRatesAnalysis
-		// ReactantsForReactions
 		vector< vector< int > > TempMatrix;
 		vector< int > TempRow;//((int)Species.size());
 		int Temp_Number_Species = (int) Species.size();
@@ -248,13 +246,7 @@ void Integrate_Liquid_Phase_Intel(
 			TempRow.clear();
 		}
 
-		//vector< vector< int > > ReactionsForSpeciesSelectedForRates;
-
 		int Number_Of_Selected_Species_Temp = (int) InitialParameters.MechanismAnalysis.SpeciesSelectedForRates.size();
-
-		/*
-		cout << "-----------------------------\n";
-		//*/
 
 		for(tempj=0;tempj<Number_Of_Selected_Species_Temp;tempj++)
 		{
@@ -265,30 +257,14 @@ void Integrate_Liquid_Phase_Intel(
 			{
 				if(TempMatrix[tempi][SpeciesID] !=0 )
 				{
-					//cout << "1 ";
 					temp.push_back(tempi);
 				}
-				//cout << "\n";
 			}
-			//cout << (int) temp.size() << "\n";
 			ReactionsForSpeciesSelectedForRates.push_back(temp);
 			temp.clear();
 		}
 
-		/*
-		for(tempi=0;tempi < ReactionsForSpeciesSelectedForRates[0].size();tempi++)
-		{
-			cout << ReactionsForSpeciesSelectedForRates[0][tempi] << "\n";
-		}
-		cout << "\n";//*/
 
-		/*
-		cout << "-----------------------------\n";
-		cout << (int) ReactionsForSpeciesSelectedForRates.size() << "\n";
-		cout << "-----------------------------\n";
-		//*/
-
-		//*
 		Prepare_Print_Rates_Per_Species(
 				ProductsForRatesAnalysis,
 				ReactantsForReactions,
@@ -298,7 +274,7 @@ void Integrate_Liquid_Phase_Intel(
 				InitialParameters.MechanismAnalysis.SpeciesSelectedForRates,
 				ReactionsForSpeciesSelectedForRates,
 				Reactions
-		);//*/
+		);
 	}
 
 
@@ -382,7 +358,6 @@ void Integrate_Liquid_Phase_Intel(
 		if(InitialParameters.MechanismAnalysis.RatesAnalysisAtTime &&
 				InitialParameters.MechanismAnalysis.RatesAnalysisAtTimeData[RatesAnalysisTimepoint] == time_current)
 		{
-			//using namespace GlobalArrays;
 			RatesAnalysisAtTimes(
 					ProductsForRatesAnalysis,
 					ReactantsForReactions,
@@ -467,7 +442,6 @@ void Integrate_Liquid_Phase_Intel(
 		{
 			ReactionRateImportance(KeyRates, Rates, InitialParameters.ReduceReactions);
 		}
-
 
 
 		if(tracker < (TimeChanges-1) && time_step >= InitialParameters.TimeEnd[tracker])

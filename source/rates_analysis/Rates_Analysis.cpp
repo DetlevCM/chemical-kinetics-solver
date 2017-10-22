@@ -61,8 +61,8 @@ void WriteMaxRatesAnalysis(
 )
 {
 
-	int Number_Species = RatesAnalysisData.size();
-	int Number_Reactions = RatesAnalysisData[0].size();
+	int Number_Species = (int)RatesAnalysisData.size();
+	int Number_Reactions = (int)RatesAnalysisData[0].size();
 	int i,j;
 
 	i = 0; j = 0;
@@ -277,8 +277,8 @@ void RatesAnalysisAtTimes(
 
 	i = 0; j = 0;
 
-	int Number_Species = Species.size();
-	int Number_Reactions = Reactions.size();
+	int Number_Species = (int)Species.size();
+	int Number_Reactions = (int)Reactions.size();
 
 
 	vector< vector < str_RatesAnalysis > > RatesAnalysisData;

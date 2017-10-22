@@ -21,7 +21,7 @@ vector< ThermodynamicData > Get_Thermodynamic_Data_New_Format(
 	ifstream Mechanism_Data;
 	Mechanism_Data.open (filename.c_str());
 
-	int Number_Species = Species.size();
+	int Number_Species = (int)Species.size();
 	int i;
 
 	// Vector to store all data as a struct (more efficient than vector< vector> >

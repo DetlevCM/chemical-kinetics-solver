@@ -194,7 +194,6 @@ int main(int argc, char* argv[])
 				OutputFilenames.Species = "reduced_concentrations.txt";
 				OutputFilenames.Rates = "reduced_reaction_rates.txt";
 				OutputFilenames.PetroOxy = "reduced_PetroOxy-log.txt";
-				//OutputFilenames.RatesAnalysisStream = "reduced_";//"reduced_rates_analysis_stream";
 				OutputFilenames.Prefix = "reduced_";
 
 				Number_Reactions = (int) ReducedReactions.size();

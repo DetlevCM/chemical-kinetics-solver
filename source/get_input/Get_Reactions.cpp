@@ -54,7 +54,7 @@ vector< SingleReactionData > Get_Reactions(
 	string line1;
 	size_t found;
 
-	int Number_Species = Species.size();
+	int Number_Species = (int)Species.size();
 
 	if (Mechanism_Data.is_open())
 	{
@@ -129,8 +129,8 @@ vector< SingleReactionData > Get_Reactions(
 
 							int SplitLineLeftSize, SplitLineRightSize;
 
-							SplitLineLeftSize = SplitLineLeft.size();
-							SplitLineRightSize = SplitLineRight.size() - 3; //(last 3 entries are Arrhenius Parameters
+							SplitLineLeftSize = (int)SplitLineLeft.size();
+							SplitLineRightSize = (int)SplitLineRight.size() - 3; //(last 3 entries are Arrhenius Parameters
 
 							for(i = 0;i<SplitLineLeftSize;i++) // process all entries on left hand side
 							{
@@ -171,7 +171,7 @@ vector< SingleReactionData > Get_Reactions(
 							vector< string > SplitLine;
 
 							SplitLine = Tokenise_String_To_String(line1,"\t ");
-							int SplitLineSize = SplitLine.size();
+							int SplitLineSize = (int)SplitLine.size();
 
 							if(SchemeUnits[0] == 0) // A is molecules / cm^3
 							{
@@ -322,7 +322,7 @@ SpeciesWithCoefficient Return_Species_With_Coefficient(
 )
 {
 	int i,j;
-	int Number_Species = Species.size();
+	int Number_Species = (int)Species.size();
 	SpeciesWithCoefficient SpeciesAndCoefficient;
 	SpeciesAndCoefficient.ismatched = false; // default, defined here not globally
 

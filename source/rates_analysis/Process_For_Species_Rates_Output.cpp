@@ -42,7 +42,7 @@ void Prepare_Print_Rates_Per_Species(
 
 		int j;
 
-		int Number_Of_Selected_Reactions = ReactionsForSpeciesSelectedForRates[i].size();
+		int Number_Of_Selected_Reactions = (int)ReactionsForSpeciesSelectedForRates[i].size();
 
 		if(OutfileProd.is_open())
 		{
@@ -168,7 +168,7 @@ void Print_Rates_Per_Species(
 
 		int j;
 
-		int Number_Of_Selected_Reactions = ReactionsForSpeciesSelectedForRates[i].size();
+		int Number_Of_Selected_Reactions = (int)ReactionsForSpeciesSelectedForRates[i].size();
 
 		if(OutfileProd.is_open())
 		{

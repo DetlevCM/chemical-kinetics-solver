@@ -13,9 +13,9 @@ vector< int > Map_Species_Classes(
 		const vector< string >& Species
 		)
 {
-	int Number_Species = Species.size();
+	int Number_Species = (int)Species.size();
 	/* The Species Mapping is right now chaotic, so maybe sort that out */
-	int Species_Mapping_Source_Vector = SpeciesMapping.size();
+	int Species_Mapping_Source_Vector = (int)SpeciesMapping.size();
 	vector< int > OrderedSpeciesMapping;
 	OrderedSpeciesMapping.resize(Number_Species); // Needs enough space for all species
 

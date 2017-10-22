@@ -5,8 +5,8 @@ vector< TrackSpecies > PrepareSpecies_ForSpeciesLoss(
 		)
 {
 	int i,j;
-	int Number_Reactions = Reactions.size();
-	int Number_Species = Reactions[0].Reactants.size();
+	int Number_Reactions = (int)Reactions.size();
+	int Number_Species = (int)Reactions[0].Reactants.size();
 	vector< TrackSpecies > SpeciesLossAll;
 
 	TrackSpecies temp;

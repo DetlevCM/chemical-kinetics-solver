@@ -15,7 +15,7 @@ vector< string > RenameSpecies(
 		)
 {
 	int i;
-	int Number_Species = Species.size();
+	int Number_Species = (int)Species.size();
 
 
 	int Number_Species_Classes = 0;

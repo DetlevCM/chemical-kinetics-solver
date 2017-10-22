@@ -25,7 +25,7 @@ vector< ThermodynamicData > Process_Thermodynamics_Species_Classes(
 
 	int i,j;
 
-	int Number_Species = Thermodynamics.size();
+	int Number_Species = (int)Thermodynamics.size();
 
 
 	// Convert Thermodynamics for Mechanims Modification

@@ -24,7 +24,7 @@ void Calculate_Rate_Constant(
 	double R = 8.314472e0;
 	//double Na = 6.0221415e23;
 
-	int Number_Reactions = ReactionParameters.size();
+	int Number_Reactions = (int)ReactionParameters.size();
 
 	// Pressure Independent Reactions Only
 	/*

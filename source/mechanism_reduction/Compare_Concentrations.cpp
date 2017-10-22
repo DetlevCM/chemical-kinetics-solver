@@ -29,10 +29,10 @@ vector< double > Compare_Concentrations(
 
 	vector< double > EvaluationResult(2);
 
-	int Number_OldTimePoints = OldConcentrations.size();
-	int Number_NewTimePoints = NewConcentrations.size();
+	int Number_OldTimePoints = (int)OldConcentrations.size();
+	int Number_NewTimePoints = (int)NewConcentrations.size();
 
-	int Number_Species = OldConcentrations[0].size(); // Species count MUST be the same in both schemes
+	int Number_Species = (int)OldConcentrations[0].size(); // Species count MUST be the same in both schemes
 
 	int i, j, k;
 

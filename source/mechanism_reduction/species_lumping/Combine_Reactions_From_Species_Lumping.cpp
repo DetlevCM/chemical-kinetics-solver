@@ -30,8 +30,8 @@ vector< SingleReactionData > Process_Reactions_For_Species_Lumping(
 
 	int i,j,k;
 
-	int Number_Species = Reactions[0].Reactants.size();
-	int Number_Reactions = Reactions.size();
+	int Number_Species = (int)Reactions[0].Reactants.size();
+	int Number_Reactions = (int)Reactions.size();
 
 
 	/*
@@ -154,7 +154,7 @@ vector< SingleReactionData > Process_Reactions_For_Species_Lumping(
 		 */
 		//i = 0;
 
-		int compare_position = temp_reactions3.size();
+		int compare_position = (int)temp_reactions3.size();
 		temp_reactions3.push_back(temp_reactions2[0]); // retain the reaction we are testing
 		//temp_reactions2.erase (temp_reactions2.begin() + i); // remove the position i points to, will be first if we started searching, i.e. 0
 		temp_reactions2.erase (temp_reactions2.begin() + 0);

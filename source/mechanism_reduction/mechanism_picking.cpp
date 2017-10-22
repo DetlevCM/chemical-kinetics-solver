@@ -19,7 +19,7 @@ void mechanism_picking(
 	// Input File via a stream:
 	ifstream ReductionData;
 
-	int Number_Species = Species.size();
+	int Number_Species = (int)Species.size();
 
 	// Two files I want to open, mechanism data & input data
 	ReductionData.open(filename.c_str());
@@ -89,11 +89,10 @@ void mechanism_picking(
 					// compare the name of the species with the species in the kill list
 					if(strcmp(Species[i].c_str(),RemoveComments[0].c_str()) == 0){
 						ChosenSpecies[i].Choice = true;
-						//cout << "check " << i << "\n";
 						if(RemoveComments.size()>1)
 						{
-							ChosenSpecies[i].SpcClass = strtod(RemoveComments[1].c_str(),NULL);
-							//cout << "Chosen Species Class: " << ChosenSpecies[1].SpcClass << "\n";
+							//ChosenSpecies[i].SpcClass = strtod(RemoveComments[1].c_str(),NULL);
+							ChosenSpecies[i].SpcClass = atoi(RemoveComments[1].c_str());
 						}
 						else
 						{
@@ -133,8 +132,8 @@ void handle_reactions_with_chosen_species(
 	bool RunLoop;
 
 	int i,j ;
-	int Number_Reactions = Reactions.size();
-	int Number_Species = Species.size();
+	int Number_Reactions = (int)Reactions.size();
+	int Number_Species = (int)Species.size();
 
 	vector< string > PickedSpecies;
 	//vector< vector< double > > PickedThermodynamics;
@@ -196,7 +195,7 @@ void handle_reactions_with_chosen_species(
 		RetainOrNot[i] = false;
 	}
 
-	Number_Reactions = PickedReactions.size();
+	Number_Reactions = (int)PickedReactions.size();
 
 	for(i=0;i<Number_Reactions;i++)
 	{
@@ -223,8 +222,8 @@ void handle_reactions_with_chosen_species(
 	vector< SingleReactionData > RegularReaction;
 	vector< SingleReactionData > RecombinationReaction;
 
-	Number_Reactions = PickedReactions.size();
-	Number_Species = Species.size();
+	Number_Reactions = (int)PickedReactions.size();
+	Number_Species = (int)Species.size();
 
 	int nbr_spc_reac = 0 ;
 	int nbr_spc_prod = 0 ;

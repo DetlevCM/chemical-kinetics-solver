@@ -18,7 +18,7 @@ void WriteSpecies(string filename ,const vector< string >& Species)
 	{
 
 		int Number_Species = 0;
-		Number_Species = Species.size();
+		Number_Species = (int)Species.size();
 
 		//printf("%i",Number_Species);
 		SpeciesOutput << "SPECIES\n";

@@ -17,8 +17,8 @@ vector< TrackSpecies > Reactants_ForReactionRate(
 	// Bassically go through the reactions and accumulate the Relevant species
 
 	TrackSpecies temp;
-	int Number_Reactions = Reactions.size();
-	int Number_Species = Reactions[0].Reactants.size();
+	int Number_Reactions = (int)Reactions.size();
+	int Number_Species = (int)Reactions[0].Reactants.size();
 	int i,j;
 
 	// Output per reaction
@@ -50,8 +50,8 @@ vector< TrackSpecies > Products_ForReactionRate(
 	// Bassically go through the reactions and accumulate the Relevant species 
 	int i,j;
 	TrackSpecies temp;
-	int Number_Reactions = Reactions.size();
-	int Number_Species = Reactions[0].Reactants.size();
+	int Number_Reactions = (int)Reactions.size();
+	int Number_Species = (int)Reactions[0].Reactants.size();
 
 	if(!SwitchType) // false treat as rates function
 	{

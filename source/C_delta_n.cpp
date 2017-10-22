@@ -5,8 +5,8 @@ vector< double > Get_Delta_N(
 		)
 {
 	int i,j;
-	int number_species = Reactions[0].Reactants.size();
-	int number_reactions = Reactions.size();
+	int number_species = (int)Reactions[0].Reactants.size();
+	int number_reactions = (int)Reactions.size();
 
 	vector< double > temp_delta_n;
 

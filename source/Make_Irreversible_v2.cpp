@@ -34,8 +34,8 @@ vector< SingleReactionData > Make_Irreversible(
 	vector< SingleReactionData > Irreversible_Scheme;
 
 	int i,j,k;
-	int Number_Species = Thermodynamics.size();
-	int Number_Reactions = Reactions.size();
+	int Number_Species = (int)Thermodynamics.size();
+	int Number_Reactions = (int)Reactions.size();
 	double Temperature;
 
 	vector< double > Local_Delta_N = Get_Delta_N(Reactions);
