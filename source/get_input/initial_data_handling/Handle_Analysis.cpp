@@ -21,21 +21,21 @@ void Handle_Analysis(InitParam& InitialParameters, vector<string> Input, vector<
 		cstr = new char [str.size()+1];
 		strcpy (cstr, str.c_str());
 
-		if (Test_If_Word_Found(Input[i],"RatesMaxAnalysis")!=string::npos)
+		if (Test_If_Word_Found(Input[i],"RatesMaxAnalysis"))
 		{
 			InitialParameters.MechanismAnalysis.MaximumRates = true;
 			cout << "Identification of maximum rates desired.\n";
 		}
-		if (Test_If_Word_Found(Input[i],"StreamRatesAnalysis")!=string::npos)
+		if (Test_If_Word_Found(Input[i],"StreamRatesAnalysis"))
 		{
 			InitialParameters.MechanismAnalysis.StreamRatesAnalysis = true;
 		}
-		if (Test_If_Word_Found(Input[i],"RatesSpeciesAllAnalysis")!=string::npos)
+		if (Test_If_Word_Found(Input[i],"RatesSpeciesAllAnalysis"))
 		{
 			InitialParameters.MechanismAnalysis.RatesSpeciesAllAnalysis = true;
 		}
 
-		if (Test_If_Word_Found(Input[i],"RatesAnalysisAtTime")!=string::npos)
+		if (Test_If_Word_Found(Input[i],"RatesAnalysisAtTime"))
 		{
 			InitialParameters.MechanismAnalysis.RatesAnalysisAtTime = true; // user wants rates at specified times
 
@@ -56,7 +56,7 @@ void Handle_Analysis(InitParam& InitialParameters, vector<string> Input, vector<
 			}
 		}
 
-		if (Test_If_Word_Found(Input[i],"RatesOfSpecies")!=string::npos)
+		if (Test_If_Word_Found(Input[i],"RatesOfSpecies"))
 		{
 			InitialParameters.MechanismAnalysis.RatesOfSpecies = true; // user wants rates at specified times
 			//cout << "Rates of Species true\n";
