@@ -1,15 +1,23 @@
-### Libraries, MUST be download from Intel
+### Intel ODE library must be obtained from Intel
 libraries/intel/libiode_intel64.lib
 libraries/intel/libiode_intel64.a
 libraries/intel/libiode_ia32.lib
 libraries/intel/libiode_ia32.a
-##
+## odepack must be obtained from LLNL
 libraries/odepack/libodepack.a
 libraries/odepack/opkd-sum
 libraries/odepack/opkda1.f
 libraries/odepack/opkda2.f
 libraries/odepack/opkdmain.f
 libraries/odepack/opkddemos
+## exclude source and temp files for documentation
+*.tex
+*.aux
+*.toc
+documentation/*.log
+*.idx
+*.synctex.gz
+*.synctex
 ### Build Folders...
 Release/
 Debug/
