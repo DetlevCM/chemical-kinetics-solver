@@ -13,7 +13,7 @@
  */
 
 
-void Handle_PressureVessel(InitParam& InitialParameters, vector<string> Input, vector< string > Species)
+void Handle_Pressure_Vessel(InitParam& InitialParameters, vector<string> Input, vector< string > Species)
 {
 	bool OxyGasSpeciesDefined = false;
 

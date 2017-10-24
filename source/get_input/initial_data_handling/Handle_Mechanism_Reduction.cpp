@@ -8,7 +8,7 @@
 #include <MyHeaders.h>
 
 
-void Handle_MechanismReduction(InitParam& InitialParameters, vector<string> Input)
+void Handle_Mechanism_Reduction(InitParam& InitialParameters, vector<string> Input)
 {
 	int i;
 	for(i=0;i<(int)Input.size();i++)

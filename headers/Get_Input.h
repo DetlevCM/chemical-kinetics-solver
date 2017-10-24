@@ -37,21 +37,10 @@ vector< ThermodynamicData > Get_Thermodynamic_Data(
 );
 
 
-/*
-vector< SingleReactionData > Read_Reaction_Matrix(
-		string ,
-		const vector< string >&
-);//*/
 vector< SingleReactionData > Get_Reactions(
 		string ,
 		const vector< string >&
 );
-
-
-/*vector< vector< double > > Read_Input_Data(
-		string ,
-		const vector< string >&
-); // new function for improved input reading//*/
 
 
 void Get_Initial_Conditions(

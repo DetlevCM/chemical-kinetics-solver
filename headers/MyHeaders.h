@@ -43,36 +43,42 @@ using std::stringstream;
 using std::istringstream;
 
 
-// My own headers
 
-#include "Structs.h"
-#include "Classes.h"
+
+/* ************************** */
+/* user defined headers below */
+/* ************************** */
+
+
+// structs definitions
+#include "structs/Structs.h"
+#include "structs/initial_conditions_parameters.h"
+
+// namespaces with global variables for performance reasons
 #include "Namespaces.h"
-#include <Global_Variables.h>
 
+// helper functions for cleaner code
 #include "Helpers.h"
 
-// Definitions of my functions
+// headers for the ode libraries
 #include "lib_headers/lib_Intel_ODE.h"
 #include "lib_headers/lib_odepack.h"
 
+#
+// run_integrator subfolder
+#include "run_integrator/Jacobian.h"
+#include "run_integrator/Run_Integrator.h"
+#include "run_integrator/Solver_Calculations.h"
+
+
+// and somre more headers...
 #include "Get_Input.h"
-
-#include "initial_data_handling.h" // new input handling
-
+#include <Handle_Initial_Conditions.h> // new input handling
 #include "Pre-Process.h"
 #include "Mechanism_Reduction.h"
-
-#include "Jacobian.h"
-
-#include "Run_Integrator.h"
-#include "Solver_Calculations.h"
 #include "Rates-Analysis.h"
 #include "Write_Output.h"
-
 #include "MyFunctions.h"
-
-
 #include "PetroOxy.h"
 
 

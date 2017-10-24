@@ -8,7 +8,7 @@
 #include <MyHeaders.h>
 
 
-void Handle_SolverParameters(InitParam& InitialParameters, vector<string> Input)
+void Handle_Solver_Parameters(InitParam& InitialParameters, vector<string> Input)
 {
 	int i;
 	for(i=0;i<(int)Input.size();i++)

@@ -7,7 +7,7 @@
 
 #include <MyHeaders.h>
 
-void Handle_InitialConditions(InitParam& InitialParameters, vector<string> Input, solver_type Global_Solver_Settings)
+void Handle_Initial_Conditions(InitParam& InitialParameters, vector<string> Input, solver_type Global_Solver_Settings)
 {
 	int i;
 	for(i=0;i<(int)Input.size();i++)

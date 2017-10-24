@@ -163,7 +163,7 @@ void Get_Initial_Conditions(
 						}
 					}while (line.find("</SolverParameters>") == string::npos);
 					// Read in data until the closing tag is found
-					Handle_SolverParameters(InitialParameters, Input);
+					Handle_Solver_Parameters(InitialParameters, Input);
 					Global_Solver_Type.Use_Analytical_Jacobian = InitialParameters.Solver_Parameters.Use_Analytical_Jacobian;
 					Global_Solver_Type.Use_Stiff_Solver = InitialParameters.Solver_Parameters.Use_Stiff_Solver;
 				}
@@ -189,7 +189,7 @@ void Get_Initial_Conditions(
 							Input.push_back(line);
 						}
 					}while (line.find("</InitialConditions>") == string::npos);
-					Handle_InitialConditions(InitialParameters, Input, Global_Solver_Type);
+					Handle_Initial_Conditions(InitialParameters, Input, Global_Solver_Type);
 				}
 				Input.clear();
 
@@ -228,7 +228,7 @@ void Get_Initial_Conditions(
 							Input.push_back(line);
 						}
 					}while (line.find("</PressureVessel>") == string::npos);
-					Handle_PressureVessel(InitialParameters, Input, Species);
+					Handle_Pressure_Vessel(InitialParameters, Input, Species);
 				}
 				Input.clear();
 
@@ -241,7 +241,7 @@ void Get_Initial_Conditions(
 							Input.push_back(line);
 						}
 					}while (line.find("</MechanismReduction>") == string::npos);
-					Handle_MechanismReduction(InitialParameters, Input);
+					Handle_Mechanism_Reduction(InitialParameters, Input);
 				}
 				Input.clear();
 			}
