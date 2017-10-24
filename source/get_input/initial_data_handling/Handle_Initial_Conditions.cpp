@@ -19,7 +19,7 @@ void Handle_Initial_Conditions(InitParam& InitialParameters, vector<string> Inpu
 		cstr = new char [str.size()+1];
 		strcpy (cstr, str.c_str());
 
-		if (Test_If_Word_Found("Temperature", Input[i]))
+		if (Test_If_Word_Found(Input[i], "Temperature"))
 		{
 			p=strtok (cstr," \t"); // break at space or tab
 			p=strtok(NULL," \t"); // break again as first is the keyword
@@ -29,7 +29,7 @@ void Handle_Initial_Conditions(InitParam& InitialParameters, vector<string> Inpu
 				p=strtok(NULL," \t");
 			}
 		}
-		if (Test_If_Word_Found("EndTime", Input[i]))
+		if (Test_If_Word_Found(Input[i], "EndTime"))
 		{
 			string line;
 			vector< string > tokens;
@@ -58,19 +58,19 @@ void Handle_Initial_Conditions(InitParam& InitialParameters, vector<string> Inpu
 
 			solver_type tmp = Global_Solver_Settings;
 
-			if (Test_If_Word_Found("Jacobian", Input[i]))
+			if (Test_If_Word_Found(Input[i], "Jacobian"))
 			{
 				tmp.Use_Analytical_Jacobian = true;
 			}
-			if (Test_If_Word_Found("NoJacobian", Input[i]))
+			if (Test_If_Word_Found(Input[i], "NoJacobian"))
 			{
 				tmp.Use_Analytical_Jacobian = false;
 			}
-			if (Test_If_Word_Found("Stiff", Input[i]))
+			if (Test_If_Word_Found(Input[i], "Stiff"))
 			{
 				tmp.Use_Stiff_Solver = true;
 			}
-			if (Test_If_Word_Found("NoStiff", Input[i]))
+			if (Test_If_Word_Found(Input[i], "NoStiff"))
 			{
 				tmp.Use_Stiff_Solver = false;
 			}
@@ -81,7 +81,7 @@ void Handle_Initial_Conditions(InitParam& InitialParameters, vector<string> Inpu
 		}
 
 		// Gas Phase Code Extension
-		if (Test_If_Word_Found("GasPhasePressure", Input[i]))// We Assume kPa
+		if (Test_If_Word_Found(Input[i], "GasPhasePressure"))// We Assume kPa
 		{
 			//LineIn.clear(); // make sure storage array is empty
 			double temp = 0;
@@ -99,7 +99,7 @@ void Handle_Initial_Conditions(InitParam& InitialParameters, vector<string> Inpu
 			//SetupParam.GasPhase = true; // activate Gas Phase Correction for User
 		}
 
-		if (Test_If_Word_Found("GasPhaseVolume", Input[i]))// We Assume Litres
+		if (Test_If_Word_Found(Input[i], "GasPhaseVolume"))// We Assume Litres
 		{
 			//LineIn.clear(); // make sure storage array is empty
 			double temp = 0;

@@ -23,7 +23,7 @@ void Handle_Pressure_Vessel(InitParam& InitialParameters, vector<string> Input, 
 
 		vector<string> Readout;
 
-		if(string::npos!=Input[i].find("Sample Size="))
+		if(Test_If_Word_Found(Input[i],"Sample Size="))
 		{
 			char * cstr, *p;
 			string str = Input[i];
@@ -45,7 +45,7 @@ void Handle_Pressure_Vessel(InitParam& InitialParameters, vector<string> Input, 
 			Readout.clear();
 		}
 
-		if(string::npos!=Input[i].find("Vessel Size="))
+		if(Test_If_Word_Found(Input[i],"Vessel Size="))
 		{
 			char * cstr, *p;
 			string str = Input[i];
@@ -68,7 +68,7 @@ void Handle_Pressure_Vessel(InitParam& InitialParameters, vector<string> Input, 
 			// Calculated volume from estimate is 22.41mL - so let us assume 22.5mL, value is in m^3
 		}
 
-		if(string::npos!=Input[i].find("Initial Pressure="))
+		if(Test_If_Word_Found(Input[i],"Initial Pressure="))
 		{
 			char * cstr, *p;
 			string str = Input[i];
@@ -90,7 +90,7 @@ void Handle_Pressure_Vessel(InitParam& InitialParameters, vector<string> Input, 
 			Readout.clear();
 		}
 
-		if(string::npos!=Input[i].find("Maximum Pressure="))
+		if(Test_If_Word_Found(Input[i],"Maximum Pressure="))
 		{
 			char * cstr, *p;
 			string str = Input[i];
@@ -112,7 +112,7 @@ void Handle_Pressure_Vessel(InitParam& InitialParameters, vector<string> Input, 
 			Readout.clear();
 		}
 
-		if(string::npos!=Input[i].find("Gas Solubility="))
+		if(Test_If_Word_Found(Input[i],"Gas Solubility="))
 		{
 			char * cstr, *p;
 			string str = Input[i];
@@ -135,7 +135,7 @@ void Handle_Pressure_Vessel(InitParam& InitialParameters, vector<string> Input, 
 		}
 
 
-		if(string::npos!=Input[i].find("Gas Species="))
+		if(Test_If_Word_Found(Input[i],"Gas Species="))
 		{
 			char * cstr, *p;
 			string str = Input[i];
@@ -164,7 +164,7 @@ void Handle_Pressure_Vessel(InitParam& InitialParameters, vector<string> Input, 
 			Readout.clear();
 		}
 
-		if(string::npos!=Input[i].find("PetroOxy Temperature Rise="))
+		if(Test_If_Word_Found(Input[i],"PetroOxy Temperature Rise="))
 		{
 			char * cstr, *p;
 			string str = Input[i];
@@ -203,7 +203,7 @@ void Handle_Pressure_Vessel(InitParam& InitialParameters, vector<string> Input, 
 
 
 
-		if(string::npos!=Input[i].find("Henry Law Diffusion Limit="))
+		if(Test_If_Word_Found(Input[i],"Henry Law Diffusion Limit="))
 		{
 			char * cstr, *p;
 			string str = Input[i];

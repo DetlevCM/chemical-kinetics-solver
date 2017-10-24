@@ -27,7 +27,7 @@ void Handle_Species(InitParam&  InitialParameters, vector< InitSpecies >& SetupS
 		//cout << i << " " << str << "\n";
 
 		// Case 1: No Constant concentration, line will contain two entries
-		if(Input[i].find("ConstantConcentration")==string::npos)
+		if(Test_If_Word_Found(Input[i],"ConstantConcentration"))
 		{
 			p=strtok (cstr," \t"); // p contains the species name
 
@@ -49,7 +49,7 @@ void Handle_Species(InitParam&  InitialParameters, vector< InitSpecies >& SetupS
 		// Case 2: Constant concentration, line will contain three entries (concentration is in the middle)
 
 		// This will work, but I don't think it is the best implementation
-		if(Input[i].find("ConstantConcentration")!=string::npos)
+		if(Test_If_Word_Found(Input[i],"ConstantConcentration"))
 		{
 			// get species concentration the same way
 			p=strtok (cstr," \t"); // p contains the species name

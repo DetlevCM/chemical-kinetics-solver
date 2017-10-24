@@ -156,7 +156,7 @@ void Get_Initial_Conditions(
 
 			if(LineNotCommentOrEmpty(line)) // only handle line if not a comment and not empty
 			{
-				if (Test_If_Word_Found("No Integration",line)) // special case of user not wanting integration, e.g. for making a scheme irreversible only
+				if (Test_If_Word_Found(line, "no integration")) // special case of user not wanting integration, e.g. for making a scheme irreversible only
 				{
 					InitialParameters.NoIntegration = true;
 				}

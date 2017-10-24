@@ -127,7 +127,7 @@ bool LineNotCommentOrEmpty( string InputLine)
 }
 
 // from reading on the web, this approach is slow - but for the input file will do
-bool Test_If_Word_Found(string search_term, string string_to_search)
+bool Test_If_Word_Found(string string_to_search, string search_term)
 {
 	// tolower or toupper - either works, just be consistent
 	transform(search_term.begin(),search_term.end(),search_term.begin(), tolower);
