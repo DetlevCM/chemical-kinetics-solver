@@ -8,7 +8,7 @@ bool LineNotCommentOrEmpty( string );
 
 // http://stackoverflow.com/questions/7677007/passing-vector-to-function-c
 // Pass vector by reference as input needs not be changed
-void Read_Input_Data_v3(
+void Get_Initial_Conditions(
 		string filename,
 		const vector< string >& Species,
 		InitParam& InitialParameters,

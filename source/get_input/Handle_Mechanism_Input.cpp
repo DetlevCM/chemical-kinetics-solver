@@ -74,7 +74,7 @@ bool Handle_Mechanism_Input(
 	Number_Species = (int)Species.size();
 	cout << "The Mechanism contains " << Number_Species <<" Species.\n";
 
-	Thermodynamics = Get_Thermodynamic_Data_New_Format(mechanism_filename, Species);
+	Thermodynamics = Get_Thermodynamic_Data(mechanism_filename, Species);
 	cout << "The Mechanism contains " << Thermodynamics.size() << " Thermodynamic Data Entries.\n";
 
 	// Get and store the Reaction Mechanism data
@@ -142,7 +142,7 @@ bool Handle_Mechanism_Input(
 	vector < InitSpecies > InitalSpecies;
 
 
-	Read_Input_Data_v3(
+	Get_Initial_Conditions(
 			initial_conditions_fileaname,
 			Species,
 			InitialParameters,

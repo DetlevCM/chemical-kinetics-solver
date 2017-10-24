@@ -2,7 +2,7 @@
 
 // http://stackoverflow.com/questions/7677007/passing-vector-to-function-c
 // Pass vector by reference as input needs not be changed
-vector< ThermodynamicData > Get_Thermodynamic_Data_New_Format(
+vector< ThermodynamicData > Get_Thermodynamic_Data(
 		string filename, 
 		const vector< string >& Species
 )

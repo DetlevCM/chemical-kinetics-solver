@@ -31,7 +31,7 @@ vector< string > Get_Species(
 );
 
 
-vector< ThermodynamicData > Get_Thermodynamic_Data_New_Format(
+vector< ThermodynamicData > Get_Thermodynamic_Data(
 		string ,
 		const vector< string >&
 );
@@ -48,25 +48,18 @@ vector< SingleReactionData > Get_Reactions(
 );
 
 
-vector< vector< double > > Read_Input_Data(
+/*vector< vector< double > > Read_Input_Data(
 		string ,
 		const vector< string >&
-); // new function for improved input reading
+); // new function for improved input reading//*/
 
 
-void Read_Input_Data_v2(
+void Get_Initial_Conditions(
 		string,
 		const vector< string >& ,
 		InitParam& ,
 		vector< InitSpecies >&
-); // new function for improved input reading
-
-void Read_Input_Data_v3(
-		string,
-		const vector< string >& ,
-		InitParam& ,
-		vector< InitSpecies >&
-); // new function for improved input reading
+);
 
 
 #endif /* INPUT_FUNCTIONS_ */
