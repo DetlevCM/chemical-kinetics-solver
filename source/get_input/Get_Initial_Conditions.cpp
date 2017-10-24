@@ -46,6 +46,8 @@ void Get_Initial_Conditions(
 	InitialParameters.irrev = false; // make the scheme irreversible?
 	InitialParameters.PrintReacRates = false; // output reaction rates?
 
+	// enable making the scheme irreversible without integration, default false
+	InitialParameters.NoIntegration = false;
 
 	solver_parameters Default_Solver_Parameters;
 
@@ -151,9 +153,19 @@ void Get_Initial_Conditions(
 		while (Input_Data.good())
 		{
 			getline(Input_Data,line);
+
 			if(LineNotCommentOrEmpty(line)) // only handle line if not a comment and not empty
 			{
-				if (line.find("<SolverParameters>") != string::npos)
+				if (Test_If_Word_Found("No Integration",line)) // special case of user not wanting integration, e.g. for making a scheme irreversible only
+				{
+					InitialParameters.NoIntegration = true;
+				}
+			}
+
+
+			if(LineNotCommentOrEmpty(line)) // only handle line if not a comment and not empty
+			{
+				if (line.find("<Solver Parameters>") != string::npos)
 				{
 					do{
 						getline(Input_Data,line);
@@ -161,7 +173,7 @@ void Get_Initial_Conditions(
 						{
 							Input.push_back(line);
 						}
-					}while (line.find("</SolverParameters>") == string::npos);
+					}while (line.find("</Solver Parameters>") == string::npos);
 					// Read in data until the closing tag is found
 					Handle_Solver_Parameters(InitialParameters, Input);
 					Global_Solver_Type.Use_Analytical_Jacobian = InitialParameters.Solver_Parameters.Use_Analytical_Jacobian;
@@ -180,7 +192,7 @@ void Get_Initial_Conditions(
 			getline(Input_Data,line);
 			if(LineNotCommentOrEmpty(line)) // only handle line if not a comment and not empty
 			{
-				if (line.find("<InitialConditions>") != string::npos)
+				if (line.find("<Initial Conditions>") != string::npos)
 				{
 					do{
 						getline(Input_Data,line);
@@ -188,7 +200,7 @@ void Get_Initial_Conditions(
 						{
 							Input.push_back(line);
 						}
-					}while (line.find("</InitialConditions>") == string::npos);
+					}while (line.find("</Initial Conditions>") == string::npos);
 					Handle_Initial_Conditions(InitialParameters, Input, Global_Solver_Type);
 				}
 				Input.clear();
@@ -219,7 +231,7 @@ void Get_Initial_Conditions(
 				}
 				Input.clear();
 
-				if (line.find("<PressureVessel>") != string::npos)
+				if (line.find("<Pressure Vessel>") != string::npos)
 				{
 					do{
 						getline(Input_Data,line);
@@ -227,12 +239,12 @@ void Get_Initial_Conditions(
 						{
 							Input.push_back(line);
 						}
-					}while (line.find("</PressureVessel>") == string::npos);
+					}while (line.find("</Pressure Vessel>") == string::npos);
 					Handle_Pressure_Vessel(InitialParameters, Input, Species);
 				}
 				Input.clear();
 
-				if (line.find("<MechanismReduction>") != string::npos)
+				if (line.find("<Mechanism Reduction>") != string::npos)
 				{
 					do{
 						getline(Input_Data,line);
@@ -240,7 +252,7 @@ void Get_Initial_Conditions(
 						{
 							Input.push_back(line);
 						}
-					}while (line.find("</MechanismReduction>") == string::npos);
+					}while (line.find("</Mechanism Reduction>") == string::npos);
 					Handle_Mechanism_Reduction(InitialParameters, Input);
 				}
 				Input.clear();

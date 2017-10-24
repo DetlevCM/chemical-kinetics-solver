@@ -55,7 +55,7 @@ struct InitParam {
 
 	/* Needed when Solving */
 
-
+	bool NoIntegration;
 
 	bool PrintReacRates;
 

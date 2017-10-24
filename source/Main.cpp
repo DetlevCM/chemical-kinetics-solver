@@ -132,150 +132,153 @@ int main(int argc, char* argv[])
 		}
 
 
-		// Define output filenames:
-		Filenames OutputFilenames;
+		if(!InitialParameters.NoIntegration){
 
-		OutputFilenames.Species = "concentrations.txt";
-		OutputFilenames.Rates = "reaction_rates.txt";
-		OutputFilenames.PetroOxy = "PetroOxy-log.txt";
-		// May need to rethink the rates analysis output...
-		//OutputFilenames.RatesAnalysisStream = "";//rates_analysis_stream";
-		OutputFilenames.Prefix = "";
+			// Define output filenames:
+			Filenames OutputFilenames;
+
+			OutputFilenames.Species = "concentrations.txt";
+			OutputFilenames.Rates = "reaction_rates.txt";
+			OutputFilenames.PetroOxy = "PetroOxy-log.txt";
+			// May need to rethink the rates analysis output...
+			//OutputFilenames.RatesAnalysisStream = "";//rates_analysis_stream";
+			OutputFilenames.Prefix = "";
 
 
-		WriteNewLabelsSpecies(
-				OutputFilenames.Species,
-				InitialParameters.Solver_Parameters.separator,
-				Number_Species,
-				Species,
-				InitialParameters.GasPhase
-		);
-
-		if(InitialParameters.PrintReacRates)
-		{
-			WriteLabelsReactionRates(
-					OutputFilenames.Rates,
+			WriteNewLabelsSpecies(
+					OutputFilenames.Species,
 					InitialParameters.Solver_Parameters.separator,
-					Number_Reactions
+					Number_Species,
+					Species,
+					InitialParameters.GasPhase
 			);
-		}
 
-
-		// only required if the user desires mechanism reduction
-		if(InitialParameters.ReduceReactions != 0)
-		{
-			KeyRates.resize(Number_Reactions);
-		}
-
-
-		cout << "\nHanding Mechanism to Integrator\n";
-		Choose_Integrator(
-				OutputFilenames,
-				InitialSpeciesConcentration,
-				Species,Thermodynamics,Reactions,
-				InitialParameters,
-				KeyRates,
-				PetroOxyDataInitial,
-				RatesAnalysisData
-		);
-
-
-		if(InitialParameters.ReduceReactions != 0)
-		{
-			vector< SingleReactionData > ReducedReactions;
-			ReducedReactions = ReduceReactionsNew(Species, Reactions, KeyRates);
-
-
-			// start a second run only if reduced scheme is not empty and has size different
-			// to original scheme
-			if(Number_Reactions > 0 && Number_Reactions != (int) ReducedReactions.size()){
-
-
-				OutputFilenames.Species = "reduced_concentrations.txt";
-				OutputFilenames.Rates = "reduced_reaction_rates.txt";
-				OutputFilenames.PetroOxy = "reduced_PetroOxy-log.txt";
-				OutputFilenames.Prefix = "reduced_";
-
-				Number_Reactions = (int) ReducedReactions.size();
-
-				WriteReactions("reduced_scheme.txt", Species, ReducedReactions);
-
-				InitialParameters.ReduceReactions = 0; // switch off reduction...
-
-				if(InitialParameters.StoichiometryMatrixForOpt)
-				{
-					Write_Stoichiometric_Matrix_For_Opt
-					(
-							"reduced_stoichiometry_matrix.txt" ,
-							ReducedReactions
-					);
-				}
-
-
-				// Option considered experimental, cannot see why it won't work...
-				if(InitialParameters.MechanismAnalysis.MaximumRates)
-				{
-					// Initialise array
-					RatesAnalysisData.clear(); // empty for new run
-					vector < str_RatesAnalysis > temp(Number_Reactions);
-					for(i=0;i<Number_Species;i++)
-					{
-						RatesAnalysisData.push_back(temp);
-					}
-					// array prepared
-				}
-
-				if(InitialParameters.MechanismAnalysis.StreamRatesAnalysis)
-				{
-					PrepareStreamRatesAnalysis(Species,OutputFilenames.Prefix);
-				}
-
-				WriteNewLabelsSpecies(
-						OutputFilenames.Species,
-						InitialParameters.Solver_Parameters.separator,
-						Number_Species,
-						Species,
-						InitialParameters.GasPhase
-				);
+			if(InitialParameters.PrintReacRates)
+			{
 				WriteLabelsReactionRates(
 						OutputFilenames.Rates,
 						InitialParameters.Solver_Parameters.separator,
 						Number_Reactions
 				);
+			}
 
 
-				cout << "\nHanding Reduced Mechanism to Integrator\n" << std::flush;
-				Choose_Integrator(
-						OutputFilenames,
-						InitialSpeciesConcentration,
-						Species,Thermodynamics,ReducedReactions,
-						InitialParameters,
-						KeyRates,
-						PetroOxyDataInitial,
-						RatesAnalysisData
-				);
+			// only required if the user desires mechanism reduction
+			if(InitialParameters.ReduceReactions != 0)
+			{
+				KeyRates.resize(Number_Reactions);
+			}
 
 
-				// Not ideal, should use variables rather than handwritten filenames
-				ReportAccuracy(
-						InitialParameters.Solver_Parameters.separator,
-						Number_Species,
-						Species,
-						"reduction_accuracy_report.txt",
-						"concentrations.txt",
-						"reduced_concentrations.txt"
-				);
+			cout << "\nHanding Mechanism to Integrator\n";
+			Choose_Integrator(
+					OutputFilenames,
+					InitialSpeciesConcentration,
+					Species,Thermodynamics,Reactions,
+					InitialParameters,
+					KeyRates,
+					PetroOxyDataInitial,
+					RatesAnalysisData
+			);
+
+
+			if(InitialParameters.ReduceReactions != 0)
+			{
+				vector< SingleReactionData > ReducedReactions;
+				ReducedReactions = ReduceReactionsNew(Species, Reactions, KeyRates);
+
+
+				// start a second run only if reduced scheme is not empty and has size different
+				// to original scheme
+				if(Number_Reactions > 0 && Number_Reactions != (int) ReducedReactions.size()){
+
+
+					OutputFilenames.Species = "reduced_concentrations.txt";
+					OutputFilenames.Rates = "reduced_reaction_rates.txt";
+					OutputFilenames.PetroOxy = "reduced_PetroOxy-log.txt";
+					OutputFilenames.Prefix = "reduced_";
+
+					Number_Reactions = (int) ReducedReactions.size();
+
+					WriteReactions("reduced_scheme.txt", Species, ReducedReactions);
+
+					InitialParameters.ReduceReactions = 0; // switch off reduction...
+
+					if(InitialParameters.StoichiometryMatrixForOpt)
+					{
+						Write_Stoichiometric_Matrix_For_Opt
+						(
+								"reduced_stoichiometry_matrix.txt" ,
+								ReducedReactions
+						);
+					}
+
+
+					// Option considered experimental, cannot see why it won't work...
+					if(InitialParameters.MechanismAnalysis.MaximumRates)
+					{
+						// Initialise array
+						RatesAnalysisData.clear(); // empty for new run
+						vector < str_RatesAnalysis > temp(Number_Reactions);
+						for(i=0;i<Number_Species;i++)
+						{
+							RatesAnalysisData.push_back(temp);
+						}
+						// array prepared
+					}
+
+					if(InitialParameters.MechanismAnalysis.StreamRatesAnalysis)
+					{
+						PrepareStreamRatesAnalysis(Species,OutputFilenames.Prefix);
+					}
+
+					WriteNewLabelsSpecies(
+							OutputFilenames.Species,
+							InitialParameters.Solver_Parameters.separator,
+							Number_Species,
+							Species,
+							InitialParameters.GasPhase
+					);
+					WriteLabelsReactionRates(
+							OutputFilenames.Rates,
+							InitialParameters.Solver_Parameters.separator,
+							Number_Reactions
+					);
+
+
+					cout << "\nHanding Reduced Mechanism to Integrator\n" << std::flush;
+					Choose_Integrator(
+							OutputFilenames,
+							InitialSpeciesConcentration,
+							Species,Thermodynamics,ReducedReactions,
+							InitialParameters,
+							KeyRates,
+							PetroOxyDataInitial,
+							RatesAnalysisData
+					);
+
+
+					// Not ideal, should use variables rather than handwritten filenames
+					ReportAccuracy(
+							InitialParameters.Solver_Parameters.separator,
+							Number_Species,
+							Species,
+							"reduction_accuracy_report.txt",
+							"concentrations.txt",
+							"reduced_concentrations.txt"
+					);
+
+				}
+				else
+				{
+					cout <<
+							"Reduced Scheme does not contain any reactions or is identical in size to the original scheme."
+							" \n Aborting...!!!";
+				};
 
 			}
-			else
-			{
-				cout <<
-						"Reduced Scheme does not contain any reactions or is identical in size to the original scheme."
-						" \n Aborting...!!!";
-			};
 
 		}
-
 	}
 
 	out.close(); // close output stream
