@@ -36,3 +36,5 @@ Release-Makefile-MinGW/*.exe
 *.d
 *.exe
 Release-Makefile-MinGW/CKS branches.exe
+# no need to include the symbolic link
+gitignore
