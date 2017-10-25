@@ -21,7 +21,7 @@ vector< vector< string > > Get_Combine_Species_Mapping(string filename)
 		while (Input_Data.good())
 		{
 			getline (Input_Data,line);
-			if(LineNotCommentOrEmpty(line)) // only handle line if not a comment and not empty
+			if(Line_Not_Comment_Or_Empty(line)) // only handle line if not a comment and not empty
 			{
 				vector< string > Remove_Comments;
 				vector< string > Species_Mapping;

@@ -38,7 +38,7 @@ vector< bool > Read_Kill_List(
 		while (InputFile.good())
 		{
 			getline (InputFile,line);
-			if(LineNotCommentOrEmpty(line))
+			if(Line_Not_Comment_Or_Empty(line))
 			{
 				vector< string > Remove_Comments;
 				vector< string > Species_Present;

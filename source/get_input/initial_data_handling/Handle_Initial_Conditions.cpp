@@ -17,7 +17,7 @@ void Handle_Initial_Conditions(InitParam& InitialParameters, vector<string> Inpu
 		if (Test_If_Word_Found(Input[i], "Temperature"))
 		{
 			line_content = Tokenise_String_To_String(Input[i]," \t");
-			if((int)line_content.size()==2)
+			if((int)line_content.size()>=2)
 			{
 				InitialParameters.temperature = strtod(line_content[1].c_str(),NULL);
 			}
@@ -80,7 +80,7 @@ void Handle_Initial_Conditions(InitParam& InitialParameters, vector<string> Inpu
 		{
 			double temp = 0;
 			line_content = Tokenise_String_To_String(Input[i]," \t");
-			if((int)line_content.size()==2)
+			if((int)line_content.size()>=2)
 			{
 				temp = strtod(line_content[1].c_str(),NULL);
 				InitialParameters.GasPhasePressure = temp*1000;
@@ -93,7 +93,7 @@ void Handle_Initial_Conditions(InitParam& InitialParameters, vector<string> Inpu
 		{
 			double temp = 0;
 			line_content = Tokenise_String_To_String(Input[i]," \t");
-			if((int)line_content.size()==2)
+			if((int)line_content.size()>=2)
 			{
 				temp = strtod(line_content[1].c_str(),NULL);
 				InitialParameters.GasPhaseVolume = temp/1000; // Convert to m^3

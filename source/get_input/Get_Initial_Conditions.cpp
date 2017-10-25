@@ -3,7 +3,7 @@
 
 
 
-bool LineNotCommentOrEmpty( string );
+//bool LineNotCommentOrEmpty( string );
 
 
 // http://stackoverflow.com/questions/7677007/passing-vector-to-function-c
@@ -154,22 +154,23 @@ void Get_Initial_Conditions(
 		{
 			getline(Input_Data,line);
 
-			if(LineNotCommentOrEmpty(line)) // only handle line if not a comment and not empty
+
+			if(Line_Not_Comment_Or_Empty(line)) // only handle line if not a comment and not empty
 			{
-				if (Test_If_Word_Found(line, "no integration")) // special case of user not wanting integration, e.g. for making a scheme irreversible only
+				if (Test_If_Word_Found(line, "<<no integration>>")) // special case of user not wanting integration, e.g. for making a scheme irreversible only
 				{
 					InitialParameters.NoIntegration = true;
 				}
 			}
 
 
-			if(LineNotCommentOrEmpty(line)) // only handle line if not a comment and not empty
+			if(Line_Not_Comment_Or_Empty(line)) // only handle line if not a comment and not empty
 			{
 				if (line.find("<Solver Parameters>") != string::npos)
 				{
 					do{
 						getline(Input_Data,line);
-						if(LineNotCommentOrEmpty(line))
+						if(Line_Not_Comment_Or_Empty(line))
 						{
 							Input.push_back(line);
 						}
@@ -190,13 +191,13 @@ void Get_Initial_Conditions(
 		while (Input_Data.good())
 		{
 			getline(Input_Data,line);
-			if(LineNotCommentOrEmpty(line)) // only handle line if not a comment and not empty
+			if(Line_Not_Comment_Or_Empty(line)) // only handle line if not a comment and not empty
 			{
 				if (line.find("<Initial Conditions>") != string::npos)
 				{
 					do{
 						getline(Input_Data,line);
-						if(LineNotCommentOrEmpty(line))
+						if(Line_Not_Comment_Or_Empty(line))
 						{
 							Input.push_back(line);
 						}
@@ -209,7 +210,7 @@ void Get_Initial_Conditions(
 				{
 					do{
 						getline(Input_Data,line);
-						if(LineNotCommentOrEmpty(line))
+						if(Line_Not_Comment_Or_Empty(line))
 						{
 							Input.push_back(line);
 						}
@@ -222,7 +223,7 @@ void Get_Initial_Conditions(
 				{
 					do{
 						getline(Input_Data,line);
-						if(LineNotCommentOrEmpty(line))
+						if(Line_Not_Comment_Or_Empty(line))
 						{
 							Input.push_back(line);
 						}
@@ -235,7 +236,7 @@ void Get_Initial_Conditions(
 				{
 					do{
 						getline(Input_Data,line);
-						if(LineNotCommentOrEmpty(line))
+						if(Line_Not_Comment_Or_Empty(line))
 						{
 							Input.push_back(line);
 						}
@@ -248,7 +249,7 @@ void Get_Initial_Conditions(
 				{
 					do{
 						getline(Input_Data,line);
-						if(LineNotCommentOrEmpty(line))
+						if(Line_Not_Comment_Or_Empty(line))
 						{
 							Input.push_back(line);
 						}
