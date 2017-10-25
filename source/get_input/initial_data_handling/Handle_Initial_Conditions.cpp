@@ -9,26 +9,21 @@
 
 void Handle_Initial_Conditions(InitParam& InitialParameters, vector<string> Input, solver_type Global_Solver_Settings)
 {
-	int i;
+	int i ;
+	vector< string > line_content;
+
 	for(i=0;i<(int)Input.size();i++)
 	{
-		// prepare char array with tokenization from the start
-		char * cstr, *p;
-		string str;
-		str = Input[i];//a String - For some reason cannot pass line1 directly...
-		cstr = new char [str.size()+1];
-		strcpy (cstr, str.c_str());
-
 		if (Test_If_Word_Found(Input[i], "Temperature"))
 		{
-			p=strtok (cstr," \t"); // break at space or tab
-			p=strtok(NULL," \t"); // break again as first is the keyword
-
-			if(p!=NULL){ // only read remainder is something is left
-				InitialParameters.temperature = strtod(p,NULL);
-				p=strtok(NULL," \t");
+			line_content = Tokenise_String_To_String(Input[i]," \t");
+			if((int)line_content.size()==2)
+			{
+				InitialParameters.temperature = strtod(line_content[1].c_str(),NULL);
 			}
+			line_content.clear();
 		}
+
 		if (Test_If_Word_Found(Input[i], "EndTime"))
 		{
 			string line;
@@ -83,36 +78,27 @@ void Handle_Initial_Conditions(InitParam& InitialParameters, vector<string> Inpu
 		// Gas Phase Code Extension
 		if (Test_If_Word_Found(Input[i], "GasPhasePressure"))// We Assume kPa
 		{
-			//LineIn.clear(); // make sure storage array is empty
 			double temp = 0;
-
-			p=strtok (cstr," \t"); // break at space or tab
-			p=strtok(NULL," \t"); // break again as first is the keyword
-
-			if(p!=NULL){ // only read remainder is something is left
-				temp = strtod(p,NULL);
-				p=strtok(NULL," \t");
+			line_content = Tokenise_String_To_String(Input[i]," \t");
+			if((int)line_content.size()==2)
+			{
+				temp = strtod(line_content[1].c_str(),NULL);
+				InitialParameters.GasPhasePressure = temp*1000;
 			}
-			//line1.clear();
-			delete[] cstr;
-			InitialParameters.GasPhasePressure = temp*1000;
+			line_content.clear();
 			//SetupParam.GasPhase = true; // activate Gas Phase Correction for User
 		}
 
 		if (Test_If_Word_Found(Input[i], "GasPhaseVolume"))// We Assume Litres
 		{
-			//LineIn.clear(); // make sure storage array is empty
 			double temp = 0;
-			p=strtok (cstr," \t"); // break at space or tab
-			p=strtok(NULL," \t"); // break again as first is the keyword
-
-			while(p!=NULL){ // only read remainder is something is left
-				temp = strtod(p,NULL);
-				p=strtok(NULL," \t");
+			line_content = Tokenise_String_To_String(Input[i]," \t");
+			if((int)line_content.size()==2)
+			{
+				temp = strtod(line_content[1].c_str(),NULL);
+				InitialParameters.GasPhaseVolume = temp/1000; // Convert to m^3
 			}
-			//line1.clear();
-			delete[] cstr;
-			InitialParameters.GasPhaseVolume = temp/1000; // Convert to m^3
+			line_content.clear();
 			//SetupParam.GasPhase = true; // activate Gas Phase Correction for User
 		}
 
@@ -123,7 +109,6 @@ void Handle_Initial_Conditions(InitParam& InitialParameters, vector<string> Inpu
 		}
 		// End Gas Phase Code Extension
 
-		delete[] cstr;
 	}
 }
 
