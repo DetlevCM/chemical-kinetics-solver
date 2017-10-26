@@ -62,7 +62,7 @@ void ODE_RHS_Pressure_Vessel(int*n, double*time_current, double*y, double*f)
 			PetroOxyData);
 
 	// retain previous thermo if temperature change is effectively zero
-	if(f[Number_Species] < 1e-6)
+	if(f[Number_Species] > 1e-6)
 	{
 		// Thermodynamic data, Rate Constant, Rates, new Concentrations
 		Calculate_Thermodynamics(CalculatedThermo, Concentration[Number_Species], Thermodynamics);
