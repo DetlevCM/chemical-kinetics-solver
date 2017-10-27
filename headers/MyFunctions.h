@@ -18,6 +18,12 @@ vector< SingleReactionData > Make_Irreversible(
 		double
 );
 
-
+void Synchronize_Gas_Liquid_Model(
+		int ,
+		int , int ,
+		double* ,
+		double ,
+		vector< double >
+);
 
 #endif /* _MY_OTHER_FUNCTIONS_ */
