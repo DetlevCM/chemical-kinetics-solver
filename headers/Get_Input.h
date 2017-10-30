@@ -17,9 +17,10 @@
 bool Handle_Mechanism_Input(
 		string ,
 		string ,
-		vector< string >& ,
-		vector< ThermodynamicData >& ,
-		vector< SingleReactionData >& ,
+		MechanismData& ,
+		//vector< string >& ,
+		//vector< ThermodynamicData >& ,
+		//vector< SingleReactionData >& ,
 		InitParam& ,
 		vector< double >&,
 		PressureVesselCalc &

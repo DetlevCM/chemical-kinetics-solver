@@ -21,9 +21,8 @@
 bool Handle_Mechanism_Input(
 		string mechanism_filename,
 		string initial_conditions_fileaname,
-		vector< string >& Species,
-		vector< ThermodynamicData >& Thermodynamics,
-		vector< SingleReactionData >& Reactions,
+		MechanismData& Reaction_Mechanism,
+		//vector< string >& Species,vector< ThermodynamicData >& Thermodynamics,vector< SingleReactionData >& Reactions,
 		InitParam& InitialParameters,
 		vector< double >& InitialSpeciesConcentration,
 		PressureVesselCalc & PetroOxyData
@@ -70,18 +69,18 @@ bool Handle_Mechanism_Input(
 
 
 	// Get and store Species Information
-	Species = Get_Species(mechanism_filename);
-	Number_Species = (int)Species.size();
+	Reaction_Mechanism.Species = Get_Species(mechanism_filename);
+	Number_Species = (int)Reaction_Mechanism.Species.size();
 	cout << "The Mechanism contains " << Number_Species <<" Species.\n";
 
-	Thermodynamics = Get_Thermodynamic_Data(mechanism_filename, Species);
-	cout << "The Mechanism contains " << Thermodynamics.size() << " Thermodynamic Data Entries.\n";
+	Reaction_Mechanism.Thermodynamics = Get_Thermodynamic_Data(mechanism_filename, Reaction_Mechanism.Species);
+	cout << "The Mechanism contains " << Reaction_Mechanism.Thermodynamics.size() << " Thermodynamic Data Entries.\n";
 
 	// Get and store the Reaction Mechanism data
 	//Reactions = Read_Reaction_Matrix(mechanism_filename, Species);
-	Reactions = Get_Reactions(mechanism_filename, Species);
+	Reaction_Mechanism.Reactions = Get_Reactions(mechanism_filename, Reaction_Mechanism.Species);
 
-	Number_Reactions = (int)Reactions.size();
+	Number_Reactions = (int)Reaction_Mechanism.Reactions.size();
 	cout << "The Mechanism contains " << Number_Reactions << " Reactions.\n";
 
 
@@ -90,18 +89,18 @@ bool Handle_Mechanism_Input(
 	DataInputFromFile.open("kill.txt");
 	if (DataInputFromFile.is_open()) {
 		Reduce_Species_Thermo_Mechanism(
-				Read_Kill_List("kill.txt", Species),
-				Species,
-				Thermodynamics,
-				Reactions
+				Read_Kill_List("kill.txt", Reaction_Mechanism.Species),
+				Reaction_Mechanism.Species,
+				Reaction_Mechanism.Thermodynamics,
+				Reaction_Mechanism.Reactions
 		);
 		DataInputFromFile.close();
 
 		// Update
-		Number_Species = (int)Species.size();
-		Number_Reactions = (int)Reactions.size();
+		Number_Species = (int)Reaction_Mechanism.Species.size();
+		Number_Reactions = (int)Reaction_Mechanism.Reactions.size();
 
-		WriteReactions("Reactions_After_Species_Removal.txt", Species, Reactions);
+		WriteReactions("Reactions_After_Species_Removal.txt", Reaction_Mechanism.Species, Reaction_Mechanism.Reactions);
 	}
 
 	/*
@@ -122,20 +121,20 @@ bool Handle_Mechanism_Input(
 	if (DataInputFromFile.is_open()) {
 		mechanism_picking(
 				"SpeciesPicking.txt",
-				Species,
-				Thermodynamics,
-				Reactions
+				Reaction_Mechanism.Species,
+				Reaction_Mechanism.Thermodynamics,
+				Reaction_Mechanism.Reactions
 		);
 
 		DataInputFromFile.close();
-		WriteReactions("Species_Picked_Reactions.txt", Species, Reactions);
+		WriteReactions("Species_Picked_Reactions.txt", Reaction_Mechanism.Species, Reaction_Mechanism.Reactions);
 
-		Write_Thermodynamic_Data("Species_Picked_Thermo.txt", Species, Thermodynamics);
-		WriteSpecies("Species_Picked_Species.txt", Species);
+		Write_Thermodynamic_Data("Species_Picked_Thermo.txt", Reaction_Mechanism.Species, Reaction_Mechanism.Thermodynamics);
+		WriteSpecies("Species_Picked_Species.txt", Reaction_Mechanism.Species);
 
 		// Update
-		Number_Species = (int) Species.size();
-		Number_Reactions = (int) Reactions.size();
+		Number_Species = (int) Reaction_Mechanism.Species.size();
+		Number_Reactions = (int) Reaction_Mechanism.Reactions.size();
 	}
 
 	//InitParam InitialParameters;
@@ -144,7 +143,7 @@ bool Handle_Mechanism_Input(
 
 	Get_Initial_Conditions(
 			initial_conditions_fileaname,
-			Species,
+			Reaction_Mechanism.Species,
 			InitialParameters//,
 			//InitalSpecies
 	); // new function for improved input reading
@@ -228,7 +227,7 @@ bool Handle_Mechanism_Input(
 			InitialSpeciesConcentration[i] = conversion_factor * temp[i];
 			if(temp[i]!=0)
 			{
-				cout << Species[InitalSpecies[i].SpecID] << " " << InitialSpeciesConcentration[i] << "\n";
+				cout << Reaction_Mechanism.Species[InitalSpecies[i].SpecID] << " " << InitialSpeciesConcentration[i] << "\n";
 			}
 		}
 	}
@@ -238,7 +237,7 @@ bool Handle_Mechanism_Input(
 		{
 			InitialSpeciesConcentration[InitalSpecies[i].SpecID] =
 					InitalSpecies[i].SpecConc;
-			cout << Species[InitalSpecies[i].SpecID] << " " << InitalSpecies[i].SpecConc << "\n";
+			cout << Reaction_Mechanism.Species[InitalSpecies[i].SpecID] << " " << InitalSpecies[i].SpecConc << "\n";
 		}//*/
 	}
 
@@ -251,8 +250,8 @@ bool Handle_Mechanism_Input(
 	if (InitialParameters.irrev) // contains true of false
 	{
 		cout << "Transformation to irreversible scheme requested!\n";
-		Reactions = Make_Irreversible(Reactions, Thermodynamics, InitialParameters.temperature, 50); // hardcoded to +/- 50K right now
-		WriteReactions("irreversible_scheme.txt", Species, Reactions);
+		Reaction_Mechanism.Reactions = Make_Irreversible(Reaction_Mechanism.Reactions, Reaction_Mechanism.Thermodynamics, InitialParameters.temperature, 50); // hardcoded to +/- 50K right now
+		WriteReactions("irreversible_scheme.txt", Reaction_Mechanism.Species, Reaction_Mechanism.Reactions);
 	}
 
 
@@ -274,8 +273,8 @@ bool Handle_Mechanism_Input(
 		if(!InitialParameters.irrev) // contains true or false
 		{
 			printf("Transformation to irreversible scheme required! - This will be applied first. \n");
-			Reactions = Make_Irreversible(Reactions, Thermodynamics, InitialParameters.temperature, 50); // hardcoded to +/- 50K for now
-			WriteReactions("irreversible_scheme_for_mapping.txt", Species, Reactions);
+			Reaction_Mechanism.Reactions = Make_Irreversible(Reaction_Mechanism.Reactions, Reaction_Mechanism.Thermodynamics, InitialParameters.temperature, 50); // hardcoded to +/- 50K for now
+			WriteReactions("irreversible_scheme_for_mapping.txt", Reaction_Mechanism.Species, Reaction_Mechanism.Reactions);
 		}
 
 		int Number_Species_Classes = 0;
@@ -292,22 +291,22 @@ bool Handle_Mechanism_Input(
 		 * Combining the Species means that the reaction vector is re-mapped
 		 */
 
-		SpeciesClassMapping = Map_Species_Classes(SpeciesMapping, Species);
+		SpeciesClassMapping = Map_Species_Classes(SpeciesMapping, Reaction_Mechanism.Species);
 		vector<ClassNaming> UserDefinedNames;
 		UserDefinedNames = GetSpeciesClassesNames(SpeciesMapping);
-		Species = RenameSpecies(Species, UserDefinedNames, SpeciesClassMapping); // Update Species Names
-		Number_Species_Classes = (int)Species.size(); // need to resize species count a bit later
+		Reaction_Mechanism.Species = RenameSpecies(Reaction_Mechanism.Species, UserDefinedNames, SpeciesClassMapping); // Update Species Names
+		Number_Species_Classes = (int)Reaction_Mechanism.Species.size(); // need to resize species count a bit later
 
-		Thermodynamics = Process_Thermodynamics_Species_Classes(SpeciesClassMapping, Thermodynamics); // create new thermodynamics
+		Reaction_Mechanism.Thermodynamics = Process_Thermodynamics_Species_Classes(SpeciesClassMapping, Reaction_Mechanism.Thermodynamics); // create new thermodynamics
 
 		//if(InitialParameters.UseNewLumping)
 		// new mapping with average Ea and fitted n & A
 		//{
 		//	cout << "New parameter estimation method.\n";
-		Reactions = Process_Reactions_For_Species_Lumping(
+		Reaction_Mechanism.Reactions = Process_Reactions_For_Species_Lumping(
 				Number_Species_Classes,
 				SpeciesClassMapping,
-				Reactions,
+				Reaction_Mechanism.Reactions,
 				InitialParameters.temperature,
 				InitialParameters.MechanismReduction.UseNewLumping,
 				InitialParameters.MechanismReduction.UseFastLumping
@@ -324,9 +323,9 @@ bool Handle_Mechanism_Input(
 					InitialParameters.temperature
 			); // produce new reactions
 		}//*/
-		Write_Thermodynamic_Data("recombined_thermo.txt", Species, Thermodynamics);
-		WriteReactions("recombined_scheme.txt", Species, Reactions);
-		WriteSpecies("recombined_species.txt", Species);
+		Write_Thermodynamic_Data("recombined_thermo.txt", Reaction_Mechanism.Species, Reaction_Mechanism.Thermodynamics);
+		WriteReactions("recombined_scheme.txt", Reaction_Mechanism.Species, Reaction_Mechanism.Reactions);
+		WriteSpecies("recombined_species.txt", Reaction_Mechanism.Species);
 
 		// Correct the initial concentrations
 		vector<double> temp; // = SpeciesConcentration;
@@ -352,8 +351,8 @@ bool Handle_Mechanism_Input(
 		//	 <<	" reactions and " << Reactions[0].Reactants.size() << " species.\n";
 
 		cout << "\nAfter species lumping, the scheme contains the following counts:\n" <<
-				"Species: " << Reactions[0].Reactants.size() << "\n" <<
-				"Reactions: " << Reactions.size() << "\n\n";
+				"Species: " << Reaction_Mechanism.Reactions[0].Reactants.size() << "\n" <<
+				"Reactions: " << Reaction_Mechanism.Reactions.size() << "\n\n";
 
 	}
 	DataInputFromFile.close();

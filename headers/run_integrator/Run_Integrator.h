@@ -12,9 +12,8 @@
 void Choose_Integrator(
 		Filenames,
 		vector< double >,
-		vector< string > ,
-		vector< ThermodynamicData > ,
-		vector< SingleReactionData > &,
+		MechanismData ,
+		//vector< string > ,vector< ThermodynamicData > ,	vector< SingleReactionData > &,
 		InitParam,
 		vector< double >&,
 		PressureVesselCalc,
@@ -25,9 +24,8 @@ void Choose_Integrator(
 void Integrate_Liquid_Phase_Intel(
 		Filenames,
 		vector< double >,
-		vector< string > ,
-		vector< ThermodynamicData > ,
-		vector< SingleReactionData > &,
+		MechanismData ,
+		//vector< string > , vector< ThermodynamicData > , vector< SingleReactionData > &,
 		InitParam,
 		vector< double >&,
 		vector< vector < str_RatesAnalysis > > &
@@ -37,9 +35,8 @@ void Integrate_Liquid_Phase_Intel(
 void Integrate_Pressure_Vessel_Liquid_Phase_Intel(
 		Filenames,
 		vector< double >,
-		vector< string > ,
-		vector< ThermodynamicData > ,
-		vector< SingleReactionData > &,
+		MechanismData ,
+		//vector< string > , vector< ThermodynamicData > , vector< SingleReactionData > &,
 		InitParam,
 		vector< double >&,
 		PressureVesselCalc,
@@ -50,9 +47,8 @@ void Integrate_Pressure_Vessel_Liquid_Phase_Intel(
 void Integrate_Liquid_Phase_Odepack_LSODA(
 		Filenames,
 		vector< double >,
-		vector< string > ,
-		vector< ThermodynamicData > ,
-		vector< SingleReactionData > &,
+		MechanismData ,
+		//vector< string > ,vector< ThermodynamicData > ,vector< SingleReactionData > &,
 		InitParam,
 		vector< double >&,
 		vector< vector < str_RatesAnalysis > > &
@@ -61,9 +57,8 @@ void Integrate_Liquid_Phase_Odepack_LSODA(
 void Integrate_Gas_Phase_Odepack_LSODA(
 		Filenames,
 		vector< double >,
-		vector< string > ,
-		vector< ThermodynamicData > ,
-		vector< SingleReactionData > &,
+		MechanismData ,
+		//vector< string > ,vector< ThermodynamicData > ,vector< SingleReactionData > &,
 		InitParam,
 		vector< double >&,
 		vector< vector < str_RatesAnalysis > > &
@@ -73,9 +68,8 @@ void Integrate_Gas_Phase_Odepack_LSODA(
 void Integrate_Pressure_Vessel_Liquid_Phase_Odepack_LSODA(
 		Filenames,
 		vector< double >,
-		vector< string > ,
-		vector< ThermodynamicData > ,
-		vector< SingleReactionData > &,
+		MechanismData ,
+		//vector< string > ,vector< ThermodynamicData > ,vector< SingleReactionData > &,
 		InitParam,
 		vector< double >&,
 		PressureVesselCalc,

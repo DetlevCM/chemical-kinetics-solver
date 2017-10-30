@@ -17,9 +17,8 @@
 void Choose_Integrator(
 		Filenames OutputFilenames,
 		vector< double > InitialSpeciesConcentration,
-		vector< string > Species,
-		vector< ThermodynamicData > Thermodynamics,
-		vector< SingleReactionData >& Reactions,
+		MechanismData Reaction_Mechanism,
+		//vector< string > Species,vector< ThermodynamicData > Thermodynamics,vector< SingleReactionData >& Reactions,
 		InitParam InitialParameters,
 		vector< double >& KeyRates,
 		PressureVesselCalc PetroOxyDataInitial,
@@ -36,7 +35,8 @@ void Choose_Integrator(
 					Integrate_Pressure_Vessel_Liquid_Phase_Intel(
 							OutputFilenames,
 							InitialSpeciesConcentration,
-							Species,Thermodynamics,Reactions,
+							Reaction_Mechanism,
+							//Species,Thermodynamics,Reactions,
 							InitialParameters,
 							KeyRates,
 							PetroOxyDataInitial,
@@ -48,7 +48,8 @@ void Choose_Integrator(
 					Integrate_Liquid_Phase_Intel(
 							OutputFilenames,
 							InitialSpeciesConcentration,
-							Species,Thermodynamics,Reactions,
+							Reaction_Mechanism,
+							//Species,Thermodynamics,Reactions,
 							InitialParameters,
 							KeyRates,
 							RatesAnalysisData
@@ -64,7 +65,8 @@ void Choose_Integrator(
 					Integrate_Pressure_Vessel_Liquid_Phase_Odepack_LSODA(
 							OutputFilenames,
 							InitialSpeciesConcentration,
-							Species,Thermodynamics,Reactions,
+							Reaction_Mechanism,
+							//Species,Thermodynamics,Reactions,
 							InitialParameters,
 							KeyRates,
 							PetroOxyDataInitial,
@@ -76,7 +78,8 @@ void Choose_Integrator(
 					Integrate_Liquid_Phase_Odepack_LSODA(
 							OutputFilenames,
 							InitialSpeciesConcentration,
-							Species,Thermodynamics,Reactions,
+							Reaction_Mechanism,
+							//Species,Thermodynamics,Reactions,
 							InitialParameters,
 							KeyRates,
 							RatesAnalysisData

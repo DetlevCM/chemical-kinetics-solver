@@ -52,6 +52,7 @@ using std::istringstream;
 
 // structs definitions
 #include "structs/Structs.h"
+#include "structs/mechanism_storage.h"
 #include "structs/initial_conditions_parameters.h"
 
 // namespaces with global variables for performance reasons

@@ -75,7 +75,7 @@ struct InitParam {
 	bool PrintReacRates;
 
 	bool EnforceStability;
-	int nrspec;
+	//int nrspec;
 	vector< double > TimeEnd;
 	vector< double > TimeStep;
 	double temperature;
@@ -86,6 +86,8 @@ struct InitParam {
 	vector< InitSpecies > InitialGasSpecies;
 
 	// a block for mechanism reduction
+	// weirdly enough, this must be located after the initial species, as the code fails otherwise...
+	// for reasons unknownm, some parameters in this struct are apparently position dependant...
 	mechanism_reduction MechanismReduction;
 
 

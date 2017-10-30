@@ -91,7 +91,7 @@ void Get_Initial_Conditions(
 
 
 	/* Other functions */
-	InitialParameters.nrspec = 0;
+	//InitialParameters.nrspec = 0;
 
 	/* Code extension for Gas Phase */
 	InitialParameters.GasPhase = false; // default not gas phase
