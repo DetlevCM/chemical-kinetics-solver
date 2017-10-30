@@ -12,6 +12,8 @@
 
 // The ODE RHS functions are split - regular initial value & pressure vessel (reservoir)
 void ODE_RHS_Liquid_Phase(int*, double*, double*, double*);
+void ODE_RHS_Gas_Phase(int*, double*, double*, double*);
+void ODE_RHS_Gas_Liquid_Phase(int*, double*, double*, double*);
 void ODE_RHS_Pressure_Vessel(int*, double*, double*, double*);
 
 

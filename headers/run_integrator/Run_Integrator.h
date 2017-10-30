@@ -58,6 +58,17 @@ void Integrate_Liquid_Phase_Odepack_LSODA(
 		vector< vector < str_RatesAnalysis > > &
 );
 
+void Integrate_Gas_Phase_Odepack_LSODA(
+		Filenames,
+		vector< double >,
+		vector< string > ,
+		vector< ThermodynamicData > ,
+		vector< SingleReactionData > &,
+		InitParam,
+		vector< double >&,
+		vector< vector < str_RatesAnalysis > > &
+);
+
 // solve based on concentrations and consider headspace gas using Odepack LSODA
 void Integrate_Pressure_Vessel_Liquid_Phase_Odepack_LSODA(
 		Filenames,

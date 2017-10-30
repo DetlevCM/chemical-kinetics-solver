@@ -128,8 +128,8 @@ void Integrate_Pressure_Vessel_Liquid_Phase_Odepack_LSODA(
 	CalculatedThermo.resize(Number_Species);
 
 	InitialDataConstants.EnforceStability = InitialParameters.EnforceStability;
-	InitialDataConstants.PetroOxy = InitialParameters.PressureVessel.IsSet;
-	InitialDataConstants.PetroOxyTemperatureRise = InitialParameters.PressureVessel.TemperatureRise;
+	InitialDataConstants.PetroOxy = InitialParameters.PetroOxy.IsSet;
+	InitialDataConstants.PetroOxyTemperatureRise = InitialParameters.PetroOxy.TemperatureRise;
 	InitialDataConstants.temperature = InitialParameters.temperature;
 
 
@@ -156,19 +156,19 @@ void Integrate_Pressure_Vessel_Liquid_Phase_Odepack_LSODA(
 	}
 
 
-	if(InitialParameters.PressureVessel.IsSet)
+	if(InitialParameters.PetroOxy.IsSet)
 	{
 		PetroOxyOutputHeader(OutputFilenames.PetroOxy);
-		OxyGasSpeciesID = InitialParameters.PressureVessel.GasSpecies;
+		OxyGasSpeciesID = InitialParameters.PetroOxy.GasSpecies;
 		PetroOxyData = PetroOxyDataInput;
 	}
 	// Oxy with temperature Rise
 	if(
 			//GlobalArrays::
-			InitialParameters.PressureVessel.IsSet
+			InitialParameters.PetroOxy.IsSet
 			&&
 			//GlobalArrays::
-			InitialParameters.PressureVessel.TemperatureRise != 0) // fix temperature for Oxy, rise desired
+			InitialParameters.PetroOxy.TemperatureRise != 0) // fix temperature for Oxy, rise desired
 	{
 		SpeciesConcentration[Number_Species] = 298;
 		// for Oxy diffusion limit, gets ignored if not required
@@ -205,12 +205,12 @@ void Integrate_Pressure_Vessel_Liquid_Phase_Odepack_LSODA(
 	CalculateReactionRates(Rates, SpeciesConcentration, Kf, Kr, ReactantsForReactions, ProductsForReactions);
 
 	// Don't forget Rates Analysis for Mechanism Recution at t=0 - or is this nonsense?
-	if(InitialParameters.ReduceReactions != 0)
+	if(InitialParameters.MechanismReduction.ReduceReactions != 0)
 	{
-		ReactionRateImportance(KeyRates, Rates, InitialParameters.ReduceReactions);
+		ReactionRateImportance(KeyRates, Rates, InitialParameters.MechanismReduction.ReduceReactions);
 	}
 
-	if(InitialParameters.PressureVessel.IsSet)
+	if(InitialParameters.PetroOxy.IsSet)
 	{
 
 		//  the PetroOxy will saturate the hydrocarbon with oxygen
@@ -439,7 +439,7 @@ void Integrate_Pressure_Vessel_Liquid_Phase_Odepack_LSODA(
 		}
 
 
-		if(InitialParameters.PressureVessel.IsSet)
+		if(InitialParameters.PetroOxy.IsSet)
 		{
 			PetroOxyOutputStream(
 					OutputFilenames.PetroOxy,
@@ -448,9 +448,9 @@ void Integrate_Pressure_Vessel_Liquid_Phase_Odepack_LSODA(
 			);
 		}
 
-		if(InitialParameters.ReduceReactions != 0)
+		if(InitialParameters.MechanismReduction.ReduceReactions != 0)
 		{
-			ReactionRateImportance(KeyRates, Rates, InitialParameters.ReduceReactions);
+			ReactionRateImportance(KeyRates, Rates, InitialParameters.MechanismReduction.ReduceReactions);
 		}
 
 

@@ -1,4 +1,4 @@
-/*
+/*Mechanism_Reduction_Output
  * initial_data_handling.h
  *
  *  Created on: 19 Mar 2016
@@ -11,7 +11,7 @@
 
 void Handle_Initial_Conditions(InitParam& , vector<string> , solver_type);
 
-void Handle_Species(InitParam&  , vector< InitSpecies >& , vector<string> , vector< string > );
+vector< InitSpecies > Handle_Species(InitParam&  , vector<string> , vector< string > );
 
 void Handle_Solver_Parameters(InitParam& , vector<string> );
 
@@ -19,7 +19,9 @@ void Handle_Analysis(InitParam& , vector< string > , vector< string > );
 
 void Handle_Pressure_Vessel(InitParam& , vector<string> , vector< string >);
 
-void Handle_Mechanism_Reduction(InitParam& , vector<string> );
+void Handle_PetroOxy(InitParam& , vector<string> , vector< string >);
+
+mechanism_reduction Handle_Mechanism_Reduction(vector<string> );
 
 
 #endif /* HEADERS_HANDLE_INITIAL_CONDITIONS_H_ */

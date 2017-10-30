@@ -1,14 +1,14 @@
 /*
- * ODE_RHS_Liquid_Phase.cpp
+ * ODE_RHS_Gas_Phase.cpp
  *
- *  Created on: 06.07.2015
+ *  Created on: 26.10.2017
  *      Author: DetlevCM
  */
 
 #include <MyHeaders.h>
 
 
-void ODE_RHS_Liquid_Phase(int*n, double*time_current, double*y, double*f)
+void ODE_RHS_Gas_Phase(int*n, double*time_current, double*y, double*f)
 {
 	// A namespace allows global variables without causing a mess, should be quicker than redefining too
 	using namespace ODE_RHS;
@@ -43,9 +43,6 @@ void ODE_RHS_Liquid_Phase(int*n, double*time_current, double*y, double*f)
 			Concentration[i] = y[i];
 		}
 	}
-
-	//cout << Concentration[4] << " " << Concentration[5] << "\n";
-	//cout << f[4] << " " << f[5] << " " << f[Number_Species] << "\n";
 
 	// retain previous thermo if temperature change is effectively zero
 	if(f[Number_Species] > 1e-6)

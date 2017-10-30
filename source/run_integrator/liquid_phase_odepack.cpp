@@ -1,5 +1,5 @@
 /*
- * Run_Integrator.cpp
+ * liquid_phase_odepack.cpp
  *
  *  Created on: 02.07.2015
  *      Author: DetlevCM
@@ -178,9 +178,9 @@ void Integrate_Liquid_Phase_Odepack_LSODA(
 	CalculateReactionRates(Rates, SpeciesConcentration, Kf, Kr, ReactantsForReactions, ProductsForReactions);
 
 	// Don't forget Rates Analysis for Mechanism Recution at t=0 - or is this nonsense?
-	if(InitialParameters.ReduceReactions != 0)
+	if(InitialParameters.MechanismReduction.ReduceReactions != 0)
 	{
-		ReactionRateImportance(KeyRates, Rates, InitialParameters.ReduceReactions);
+		ReactionRateImportance(KeyRates, Rates, InitialParameters.MechanismReduction.ReduceReactions);
 	}
 
 
@@ -363,23 +363,23 @@ void Integrate_Liquid_Phase_Odepack_LSODA(
 
 
 		double pressure = 0;
+		/*
 		if(InitialParameters.GasPhase)
 		{
 			double R = 8.31451; // Gas Constant
-			/* Pressure Tracking for Gas Phase Kinetics */
-			double total_mol = 0;
-			for(i=0;i<Number_Species;i++)
-			{
-				total_mol = total_mol + SpeciesConcentration[i];
-			}
-			pressure = (total_mol  * R * SpeciesConcentration[Number_Species])/InitialParameters.GasPhaseVolume;
-
+			// Pressure Tracking for Gas Phase Kinetics
+		double total_mol = 0;
+		for(i=0;i<Number_Species;i++)
+		{
+			total_mol = total_mol + SpeciesConcentration[i];
 		}
+		pressure = (total_mol  * R * SpeciesConcentration[Number_Species])/InitialParameters.GasPhaseVolume;
+		}//*/
 
 		StreamConcentrations(
 				ConcentrationOutput,
 				InitialParameters.Solver_Parameters.separator,
-				InitialParameters.GasPhase,
+				false, //InitialParameters.GasPhase,
 				Number_Species,
 				time_current,
 				pressure,
@@ -397,9 +397,9 @@ void Integrate_Liquid_Phase_Odepack_LSODA(
 		}
 
 
-		if(InitialParameters.ReduceReactions != 0)
+		if(InitialParameters.MechanismReduction.ReduceReactions != 0)
 		{
-			ReactionRateImportance(KeyRates, Rates, InitialParameters.ReduceReactions);
+			ReactionRateImportance(KeyRates, Rates, InitialParameters.MechanismReduction.ReduceReactions);
 		}
 
 

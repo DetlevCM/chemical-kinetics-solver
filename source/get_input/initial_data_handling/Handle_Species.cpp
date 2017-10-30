@@ -7,9 +7,10 @@
 
 #include <MyHeaders.h>
 
-void Handle_Species(InitParam&  InitialParameters, vector< InitSpecies >& SetupSpecies, vector<string> Input, vector< string > Species)
+vector< InitSpecies > Handle_Species(InitParam&  InitialParameters,  vector<string> Input, vector< string > Species)
 {
 	int i,j;
+	vector< InitSpecies > SetupSpecies;
 
 	for(i=0;i<(int)Input.size();i++)
 	{
@@ -47,6 +48,8 @@ void Handle_Species(InitParam&  InitialParameters, vector< InitSpecies >& SetupS
 		}
 		line_content.clear(); // clean up
 	}
+
+	return SetupSpecies;
 }
 
 

@@ -46,8 +46,8 @@ vector< SingleReactionData > Get_Reactions(
 void Get_Initial_Conditions(
 		string,
 		const vector< string >& ,
-		InitParam& ,
-		vector< InitSpecies >&
+		InitParam& //,
+		//vector< InitSpecies >&
 );
 
 

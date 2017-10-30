@@ -43,6 +43,17 @@ struct PressureVesselConfig {
 	double VesselSize;
 };
 
+struct PressureVessel {
+	double Liquid_Sample_Volume;
+	double Gas_Sample_Volume;
+};
+
+
+struct mechanism_reduction {
+	double ReduceReactions;
+	bool UseFastLumping;
+	bool UseNewLumping;
+};
 
 struct InitParam {
 
@@ -52,6 +63,10 @@ struct InitParam {
 	solver_parameters Solver_Parameters;
 	vector<solver_type> Solver_Type; // for specifying a mix of solvers, no individual tolerances though
 
+
+	/*double ReduceReactions;
+	bool UseFastLumping;
+	bool UseNewLumping;//*/
 
 	/* Needed when Solving */
 
@@ -65,8 +80,14 @@ struct InitParam {
 	vector< double > TimeStep;
 	double temperature;
 
+	// initial concentrations
 
-	double ReduceReactions;
+	vector< InitSpecies > InitialLiquidSpecies;
+	vector< InitSpecies > InitialGasSpecies;
+
+	// a block for mechanism reduction
+	mechanism_reduction MechanismReduction;
+
 
 	/* Constant concentration option */
 	/* Single vector, to switch rates of specified species to zero */
@@ -82,8 +103,7 @@ struct InitParam {
 
 	/* Pre-Processing of the Mechanism */
 	bool irrev;
-	bool UseFastLumping;
-	bool UseNewLumping;
+
 	// END
 
 	// END
@@ -96,7 +116,9 @@ struct InitParam {
 	// END
 
 	// New option for storing the pressure vessel
-	PressureVesselConfig PressureVessel;
+	PressureVesselConfig PetroOxy;
+
+	PressureVessel Pressure_Vessel;
 };
 
 

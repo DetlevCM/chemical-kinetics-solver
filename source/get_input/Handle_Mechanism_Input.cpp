@@ -145,10 +145,11 @@ bool Handle_Mechanism_Input(
 	Get_Initial_Conditions(
 			initial_conditions_fileaname,
 			Species,
-			InitialParameters,
-			InitalSpecies
+			InitialParameters//,
+			//InitalSpecies
 	); // new function for improved input reading
 
+	InitalSpecies = InitialParameters.InitialLiquidSpecies; // to keep the legacy functionality
 
 	cout << "Initial concentrations are supplied for " << InitalSpecies.size()
 										 << " species as follow:\n";
@@ -308,8 +309,8 @@ bool Handle_Mechanism_Input(
 				SpeciesClassMapping,
 				Reactions,
 				InitialParameters.temperature,
-				InitialParameters.UseNewLumping,
-				InitialParameters.UseFastLumping
+				InitialParameters.MechanismReduction.UseNewLumping,
+				InitialParameters.MechanismReduction.UseFastLumping
 		); // produce new reactions
 		/*}
 		else
@@ -338,9 +339,9 @@ bool Handle_Mechanism_Input(
 		}
 		temp[Number_Species_Classes] = InitialSpeciesConcentration[Number_Species]; // reassign initial temperature
 
-		if(InitialParameters.PressureVessel.IsSet)
+		if(InitialParameters.PetroOxy.IsSet)
 		{
-			InitialParameters.PressureVessel.GasSpecies = SpeciesClassMapping[InitialParameters.PressureVessel.GasSpecies];
+			InitialParameters.PetroOxy.GasSpecies = SpeciesClassMapping[InitialParameters.PetroOxy.GasSpecies];
 		}
 
 		Number_Species = Number_Species_Classes; // Number_Species is accessed later and not re-evaluated
@@ -362,7 +363,7 @@ bool Handle_Mechanism_Input(
 
 	// did the user request a PetroOxy modification?
 
-	if(InitialParameters.PressureVessel.IsSet)
+	if(InitialParameters.PetroOxy.IsSet)
 	{
 		// adjust old array
 		/* 2002 CODATA values */
@@ -370,42 +371,42 @@ bool Handle_Mechanism_Input(
 		//double Na = 6.0221415e23;
 
 		// not ideal, but avoids the potentia for any issues
-		if(InitialParameters.PressureVessel.SampleSize >= InitialParameters.PressureVessel.VesselSize){
+		if(InitialParameters.PetroOxy.SampleSize >= InitialParameters.PetroOxy.VesselSize){
 			cout << "Pressure vessel is to small, smaller than or equal to the sample size. \n"
 					"Vessel Size is set to 110% of sample size.\n";
-			InitialParameters.PressureVessel.VesselSize = 1.1 * InitialParameters.PressureVessel.SampleSize;
-			cout << "Adjusted Pressure Vessel Size: " << InitialParameters.PressureVessel.VesselSize << "\n";
+			InitialParameters.PetroOxy.VesselSize = 1.1 * InitialParameters.PetroOxy.SampleSize;
+			cout << "Adjusted Pressure Vessel Size: " << InitialParameters.PetroOxy.VesselSize << "\n";
 		}
 
-		PetroOxyData.SampleSize = InitialParameters.PressureVessel.SampleSize;
+		PetroOxyData.SampleSize = InitialParameters.PetroOxy.SampleSize;
 
 		// Gas Phase Volume
 		//PetroOxyData.HeadSpaceGas = 22.5*1e-6 - PetroOxyData.SampleSize;
 		//cout << InitialParameters.PressureVessel.VesselSize << "\n";
 		//PetroOxyData.HeadSpaceGas = InitialParameters.PressureVessel.VesselSize*1e-6 - PetroOxyData.SampleSize;
-		PetroOxyData.HeadSpaceGas = InitialParameters.PressureVessel.VesselSize - PetroOxyData.SampleSize;
+		PetroOxyData.HeadSpaceGas = InitialParameters.PetroOxy.VesselSize - PetroOxyData.SampleSize;
 
 		// Initial pressure is at 25 degrees celsius
 		// n = pV/R/T
 		PetroOxyData.HeadSpaceGasMol =
-				InitialParameters.PressureVessel.InitPressure*PetroOxyData.HeadSpaceGas/R/298;
+				InitialParameters.PetroOxy.InitPressure*PetroOxyData.HeadSpaceGas/R/298;
 		// p = nRT/V
 		PetroOxyData.HeadSpaceGasPressure = PetroOxyData.HeadSpaceGasMol*R*InitialParameters.temperature/PetroOxyData.HeadSpaceGas;
 
 		// Solvent Component of Pressure
-		PetroOxyData.HeadSpaceSolventComponentPressure = InitialParameters.PressureVessel.MaxPressure-PetroOxyData.HeadSpaceGasPressure;
+		PetroOxyData.HeadSpaceSolventComponentPressure = InitialParameters.PetroOxy.MaxPressure-PetroOxyData.HeadSpaceGasPressure;
 
 
 		// the user is asked to input mol / L at 1atm
 		// 100% oxygen assumed - mol/L to mol/m^3 * 1000 - not Done
 		// atm to Pa - *101325
-		PetroOxyData.HenryConstantk = 101325/InitialParameters.PressureVessel.GasSolubility;
+		PetroOxyData.HenryConstantk = 101325/InitialParameters.PetroOxy.GasSolubility;
 		// k is now Pa mol / L
 
 
 		// Mod for limitied diffusion
-		PetroOxyData.HenryLawDiffusionLimitSet = InitialParameters.PressureVessel.HenryLawDiffusionLimitSet;
-		PetroOxyData.HenryLawDiffusionLimit = InitialParameters.PressureVessel.HenryLawDiffusionLimit;
+		PetroOxyData.HenryLawDiffusionLimitSet = InitialParameters.PetroOxy.HenryLawDiffusionLimitSet;
+		PetroOxyData.HenryLawDiffusionLimit = InitialParameters.PetroOxy.HenryLawDiffusionLimit;
 	}
 
 

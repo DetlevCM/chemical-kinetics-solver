@@ -11,8 +11,8 @@
 void Get_Initial_Conditions(
 		string filename,
 		const vector< string >& Species,
-		InitParam& InitialParameters,
-		vector< InitSpecies >& SetupSpecies
+		InitParam& InitialParameters//,
+		//vector< InitSpecies >& SetupSpecies
 )
 {
 
@@ -83,10 +83,10 @@ void Get_Initial_Conditions(
 
 
 	/* Mechanism Reductions */
-	InitialParameters.ReduceReactions = 0;
+	InitialParameters.MechanismReduction.ReduceReactions = 0;
 	// Mapping setup
-	InitialParameters.UseNewLumping = false;
-	InitialParameters.UseFastLumping = true; // old method wasn't wrong but inefficient and slow
+	InitialParameters.MechanismReduction.UseNewLumping = false;
+	InitialParameters.MechanismReduction.UseFastLumping = true; // old method wasn't wrong but inefficient and slow
 	/* End Mechanism Reduction */
 
 
@@ -97,6 +97,11 @@ void Get_Initial_Conditions(
 	InitialParameters.GasPhase = false; // default not gas phase
 	InitialParameters.GasPhaseVolume = 0; // 1 L = 0.001 m^3
 	InitialParameters.GasPhasePressure = 0; // Pa, normal pressure
+
+	InitialParameters.InitialLiquidSpecies.clear();
+	InitialParameters.InitialGasSpecies.clear();
+
+
 
 	/* Modification to deal with PetroOxy in main Input file */
 
@@ -114,17 +119,17 @@ void Get_Initial_Conditions(
 	 * 10) "k" as Henry's Law Constant, k = P_gas/C //  Pa mol / L
 	 */
 
-	InitialParameters.PressureVessel.IsSet = false;
-	InitialParameters.PressureVessel.SampleSize = 0;
-	InitialParameters.PressureVessel.VesselSize = 22.5; // my estimate of PetroOxy volume
-	InitialParameters.PressureVessel.InitPressure = 0;
-	InitialParameters.PressureVessel.MaxPressure = 0;
-	InitialParameters.PressureVessel.GasSpecies = 0;
-	InitialParameters.PressureVessel.GasSolubility = 0;
-	InitialParameters.PressureVessel.TemperatureRise = 0;
+	InitialParameters.PetroOxy.IsSet = false;
+	InitialParameters.PetroOxy.SampleSize = 0;
+	InitialParameters.PetroOxy.VesselSize = 22.5; // my estimate of PetroOxy volume
+	InitialParameters.PetroOxy.InitPressure = 0;
+	InitialParameters.PetroOxy.MaxPressure = 0;
+	InitialParameters.PetroOxy.GasSpecies = 0;
+	InitialParameters.PetroOxy.GasSolubility = 0;
+	InitialParameters.PetroOxy.TemperatureRise = 0;
 
-	InitialParameters.PressureVessel.HenryLawDiffusionLimitSet = false;
-	InitialParameters.PressureVessel.HenryLawDiffusionLimit = 0;
+	InitialParameters.PetroOxy.HenryLawDiffusionLimitSet = false;
+	InitialParameters.PetroOxy.HenryLawDiffusionLimit = 0;
 
 
 	InitialParameters.StoichiometryMatrixForOpt = false;
@@ -215,7 +220,22 @@ void Get_Initial_Conditions(
 							Input.push_back(line);
 						}
 					}while (line.find("</Species>") == string::npos);
-					Handle_Species(InitialParameters, SetupSpecies, Input, Species);
+					InitialParameters.InitialLiquidSpecies = Handle_Species(InitialParameters, Input, Species);
+				}
+				Input.clear();
+
+				// for a gas phase model (future work) or a combined gas/liquid model
+				if (line.find("<Gas Species>") != string::npos)
+				{
+					do{
+						getline(Input_Data,line);
+						if(Line_Not_Comment_Or_Empty(line))
+						{
+							Input.push_back(line);
+						}
+					}while (line.find("</Gas Species>") == string::npos);
+
+					InitialParameters.InitialGasSpecies = Handle_Species(InitialParameters, Input, Species);
 				}
 				Input.clear();
 
@@ -229,6 +249,20 @@ void Get_Initial_Conditions(
 						}
 					}while (line.find("</Analysis>") == string::npos);
 					Handle_Analysis(InitialParameters, Input, Species);
+				}
+				Input.clear();
+
+				// original PetroOxy functionality as initially implemented
+				if (line.find("<PetroOxy>") != string::npos)
+				{
+					do{
+						getline(Input_Data,line);
+						if(Line_Not_Comment_Or_Empty(line))
+						{
+							Input.push_back(line);
+						}
+					}while (line.find("</PetroOxy>") == string::npos);
+					Handle_PetroOxy(InitialParameters, Input, Species);
 				}
 				Input.clear();
 
@@ -254,7 +288,12 @@ void Get_Initial_Conditions(
 							Input.push_back(line);
 						}
 					}while (line.find("</Mechanism Reduction>") == string::npos);
-					Handle_Mechanism_Reduction(InitialParameters, Input);
+
+					InitialParameters.MechanismReduction = Handle_Mechanism_Reduction(Input);
+					/*InitialParameters.ReduceReactions = temp.ReduceReactions;
+					InitialParameters.UseFastLumping = temp.UseFastLumping;
+					InitialParameters.UseNewLumping = temp.UseNewLumping;//*/
+					cout << "check " << InitialParameters.MechanismReduction.ReduceReactions << "\n";
 				}
 				Input.clear();
 			}
@@ -288,7 +327,7 @@ void Get_Initial_Conditions(
 		cout << "Rates Analysis At Times requires an irreversible scheme - method set. \n";
 	}
 
-	if(InitialParameters.ReduceReactions != 0 && !InitialParameters.irrev)
+	if(InitialParameters.MechanismReduction.ReduceReactions != 0 && !InitialParameters.irrev)
 	{
 		InitialParameters.irrev = true;
 		cout << "Rates Based Mechanism Reduction requires an irreversible scheme - method set. \n";

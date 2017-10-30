@@ -31,7 +31,7 @@ void Choose_Integrator(
 			{
 				cout << "Using Intel ODE\n" << std::flush;
 				// it is the pressure vessel case
-				if(InitialParameters.PressureVessel.IsSet)
+				if(InitialParameters.PetroOxy.IsSet)
 				{
 					Integrate_Pressure_Vessel_Liquid_Phase_Intel(
 							OutputFilenames,
@@ -59,7 +59,7 @@ void Choose_Integrator(
 			{
 				cout << "Using odepack\n" << std::flush;
 				// it is the pressure vessel case
-				if(InitialParameters.PressureVessel.IsSet)
+				if(InitialParameters.PetroOxy.IsSet)
 				{
 					Integrate_Pressure_Vessel_Liquid_Phase_Odepack_LSODA(
 							OutputFilenames,

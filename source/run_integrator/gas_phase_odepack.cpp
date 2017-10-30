@@ -1,16 +1,17 @@
 /*
- * Run_Integrator.cpp
+ * gas_phase_odepack.cpp
  *
- *  Created on: 02.07.2015
+ *  Created on: 26.10.2017
  *      Author: DetlevCM
  */
-
 #include <MyHeaders.h>
 
+// initially this is the same as the liquid phase solver
+// in the long term, this function will need to get third body support etc. IF it is actively developed...
 
 
 // Not a perfect solution, but stick integrator into its own void with global variables via a namespace
-void Integrate_Pressure_Vessel_Liquid_Phase_Intel(
+void Integrate_Gas_Phase_Odepack_LSODA(
 		Filenames OutputFilenames,
 		vector< double > SpeciesConcentration,
 		vector< string > Species,
@@ -18,18 +19,16 @@ void Integrate_Pressure_Vessel_Liquid_Phase_Intel(
 		vector< SingleReactionData >& Reactions,
 		InitParam InitialParameters,
 		vector< double >& KeyRates,
-		PressureVesselCalc PetroOxyDataInput,
 		vector< vector < str_RatesAnalysis > >& RatesAnalysisData
 )
 {
-
 
 	vector< TrackSpecies > ProductsForRatesAnalysis;
 
 	using namespace Jacobian_ODE_RHS;
 	using namespace ODE_RHS;
-	using namespace ODE_RHS_Pressure_Vessel_Variables;
 	using namespace Jacobian;
+
 
 	Number_Species = (int)Species.size();
 	Number_Reactions = (int)Reactions.size();
@@ -49,44 +48,41 @@ void Integrate_Pressure_Vessel_Liquid_Phase_Intel(
 		ReactionRatesOutput.open(OutputFilenames.Rates.c_str(),ios::app);
 	}
 
-	// This works :) good - well, need it soon...
-	//vector< ofstream > RatesOfSpecies;
+	// general variables
+	int i, n;
 
-	int n, ierr, ipar[128], dpar_size;
-	double h, hm, ep, tr;
-	int i;
+	// general solver settings
+	double RTOL, ATOL; //tr,
 
-	/* Because we do not know the size of kd and dpar in advance we need to be clever - or at least act as we are.
-	 * By defining kd and dpar as vectors we can assign a size "on the fly" as required. We can further pass a
-	 * pointer to the vector to the solver, thus this is what we do. Rather than arrays, kd and dpar are pointers
-	 * to vectors of doubles in our case.
-	 */
+	// LSODA specific settings
+	int LRW, LIW;
+	int ITOL = 1;
+	int ITASK = 1;
+	int ISTATE = 1;
+	int IOPT = 0;
 
-
-	vector<int> kdstep(Number_Species + 1);
-
-
-	int* kd = &kdstep[0];
-
+	// calculate size of working vectors for LSODA
+	// LRS = 22 + 9*NEQ + NEQ**2           if JT = 1 or 2,
 	n = Number_Species + 1;
-	if (13 * n > (7 + 2 * n) * n) {
-		dpar_size = 13 * n;
+	if ( (20 + 16 * n) > (22 + 9 * n + n * n) ) {
+		LRW = (20 + 16 * n);
 	} else {
-		dpar_size = (7 + 2 * n) * n;
+		LRW = (22 + 9 * n + n * n);
 	}
-	vector<double> dparstep(dpar_size);
-	double* dpar = &dparstep[0];
+	LIW = 20 + n;
 
+	// some vectors for LSODA
+	vector<int> vector_IWORK(LIW);
+	int* IWORK = &vector_IWORK[0];
+	vector<double> vector_RWORK(LRW);
+	double* RWORK = &vector_RWORK[0];
 
 	// For performance assessment, use a clock:
 	clock_t cpu_time_begin, cpu_time_end, cpu_time_current;
 
 	// Some tolerances for the solver:
-	ep = InitialParameters.Solver_Parameters.rtol ; // relative tolerance. The code cannot guarantee the requested accuracy for ep<1.d-9
-	tr = InitialParameters.Solver_Parameters.atol / InitialParameters.Solver_Parameters.rtol;
-	h = InitialParameters.Solver_Parameters.initial_stepsize;
-	hm = InitialParameters.Solver_Parameters.minimum_stepsize; // minimal step size for the methods, 1.0e-12 recommended for normalised problems
-
+	RTOL = InitialParameters.Solver_Parameters.rtol;
+	ATOL = InitialParameters.Solver_Parameters.atol;
 
 	Delta_N = Get_Delta_N(Reactions); // just make sure the Delta_N is current
 	// Reduce the matrix from a sparse matrix to something more manageable and quicker to use
@@ -109,24 +105,11 @@ void Integrate_Pressure_Vessel_Liquid_Phase_Intel(
 
 	SpeciesLossAll = PrepareSpecies_ForSpeciesLoss(Reactions); // New method of listing species
 
-	// And now it is time to call the solver again... with the right information...
-	// According to Intel initialise ipar array with zeros before the first call to dodesol
-	for (i = 0; i < 128; i++) {
-		ipar[i] = 0;
-	}
-
 	// original old code
 	double* y = &SpeciesConcentration[0];
 	Concentration.clear();
 	Concentration.resize(Number_Species + 1);
 
-	// Should be faster, but is 10 times slower???
-	/*
-	Concentration.clear();
-	Concentration = SpeciesConcentration;
-	//cout << Concentration.size() << "\n";
-	double* y = &Concentration[0];
-	//*/
 	double time_current, time_step, time_step1, time_end;
 
 	time_current = 0;// -> Solver is designed for t_0 = 0
@@ -144,8 +127,6 @@ void Integrate_Pressure_Vessel_Liquid_Phase_Intel(
 	CalculatedThermo.resize(Number_Species);
 
 	InitialDataConstants.EnforceStability = InitialParameters.EnforceStability;
-	InitialDataConstants.PetroOxy = InitialParameters.PetroOxy.IsSet;
-	InitialDataConstants.PetroOxyTemperatureRise = InitialParameters.PetroOxy.TemperatureRise;
 	InitialDataConstants.temperature = InitialParameters.temperature;
 
 
@@ -171,31 +152,11 @@ void Integrate_Pressure_Vessel_Liquid_Phase_Intel(
 		}
 	}
 
-
-	if(InitialParameters.PetroOxy.IsSet)
-	{
-		PetroOxyOutputHeader(OutputFilenames.PetroOxy);
-		OxyGasSpeciesID = InitialParameters.PetroOxy.GasSpecies;
-		PetroOxyData = PetroOxyDataInput;
-	}
-	// Oxy with temperature Rise
-	if(
-			InitialParameters.PetroOxy.IsSet
-			&&
-			InitialParameters.PetroOxy.TemperatureRise != 0) // fix temperature for Oxy, rise desired
-	{
-		SpeciesConcentration[Number_Species] = 298;
-		// for Oxy diffusion limit, gets ignored if not required
-		time_previous = 0;
-	}//*/
-
-
 	Calculate_Thermodynamics(CalculatedThermo, SpeciesConcentration[Number_Species], Thermodynamics);
 
-	/*
-	for(i=0;i<Number_Species;i++)
+	/*for(i=0;i<Number_Species;i++)
 	{
-		cout << CalculatedThermo[i].Hf << " " << CalculatedThermo[i].Cp << " " << CalculatedThermo[i].S <<"\n";
+	cout << CalculatedThermo[i].Hf << " " << CalculatedThermo[i].Cp << " " << CalculatedThermo[i].S <<"\n";
 	}//*/
 
 	Kf.clear();
@@ -224,22 +185,6 @@ void Integrate_Pressure_Vessel_Liquid_Phase_Intel(
 		ReactionRateImportance(KeyRates, Rates, InitialParameters.MechanismReduction.ReduceReactions);
 	}
 
-	if(InitialParameters.PetroOxy.IsSet)
-	{
-
-		//  the PetroOxy will saturate the hydrocarbon with oxygen
-		// at no loss to the reservoir
-		Adjust_Gas_Concentration_Initial(
-				SpeciesConcentration[OxyGasSpeciesID],
-				SpeciesConcentration[Number_Species],
-				PetroOxyData);
-
-		PetroOxyOutputStream(
-				OutputFilenames.PetroOxy,
-				PetroOxyData,
-				time_current);
-	}
-
 
 	// do not forget output at time = 0
 	StreamConcentrations(
@@ -265,7 +210,7 @@ void Integrate_Pressure_Vessel_Liquid_Phase_Intel(
 
 	// not happy with this more widely available, needs a cleanup...
 	vector< vector< int > > ReactionsForSpeciesSelectedForRates;
-	// Not the betst place to put it, but OK for now:
+	// Not the best place to put it, but OK for now:
 	if(InitialParameters.MechanismAnalysis.RatesOfSpecies)
 	{
 		int tempi, tempj;
@@ -297,18 +242,20 @@ void Integrate_Pressure_Vessel_Liquid_Phase_Intel(
 		{
 			int SpeciesID = InitialParameters.MechanismAnalysis.SpeciesSelectedForRates[tempj];
 			vector< int > temp;
+
 			for(tempi=0;tempi<(int)Reactions.size();tempi++)
 			{
 				if(TempMatrix[tempi][SpeciesID] !=0 )
 				{
 					temp.push_back(tempi);
 				}
+
 			}
 			ReactionsForSpeciesSelectedForRates.push_back(temp);
 			temp.clear();
 		}
 
-
+		//*
 		Prepare_Print_Rates_Per_Species(
 				ProductsForRatesAnalysis,
 				ReactantsForReactions,
@@ -318,7 +265,7 @@ void Integrate_Pressure_Vessel_Liquid_Phase_Intel(
 				InitialParameters.MechanismAnalysis.SpeciesSelectedForRates,
 				ReactionsForSpeciesSelectedForRates,
 				Reactions
-		);
+		);//*/
 	}
 
 
@@ -327,63 +274,40 @@ void Integrate_Pressure_Vessel_Liquid_Phase_Intel(
 
 	/* -- Got values at t = 0 -- */
 
-	// Resize the vector for the concentrations in the ODE void
-	//Concentration.clear(); // don't think it makes a difference if I clear or not
-	//Concentration.resize(Number_Species + 1);
 
 	// enables reset of Rates Analysis
 	int RatesAnalysisTimepoint = 0;
 
-
 	// set the solver:
-	solver_type Solver_Type;
-	Solver_Type = InitialParameters.Solver_Type[0];
+	bool Use_Analytical_Jacobian;
+	Use_Analytical_Jacobian = InitialParameters.Solver_Parameters.Use_Analytical_Jacobian;
 
 	// start the clock:
 	cpu_time_begin = cpu_time_current = clock();
 
 
-	// lets split this into two parts:
-	// 1: regular solver
-	// 2: PetroOxy settings
-
 	do
 	{
 		time_step = time_current + time_step1;
 
-		if(!Solver_Type.Use_Stiff_Solver && Solver_Type.Use_Analytical_Jacobian)
+		if(Use_Analytical_Jacobian)
 		{
-			dodesol_rkm9mka(ipar, &n, &time_current, &time_step, y,(void*) ODE_RHS_Pressure_Vessel,
-					(void*) Jacobian_Matrix_Intel, &h, &hm, &ep, &tr, dpar, kd, &ierr
-			);
+			int JT = 1;
+			dlsoda_((void*) ODE_RHS_Gas_Phase,&n,y,&time_current,&time_step,
+					&ITOL,&RTOL,&ATOL,&ITASK,&ISTATE,&IOPT,RWORK,&LRW,IWORK,&LIW,
+					(void*) Jacobian_Matrix_Odepack_LSODA,&JT);
+		}
+		else //if(!Use_Analytical_Jacobian)
+		{
+			int JT = 2;
+			dlsoda_((void*) ODE_RHS_Gas_Phase,&n,y,&time_current,&time_step,
+					&ITOL,&RTOL,&ATOL,&ITASK,&ISTATE,&IOPT,RWORK,&LRW,IWORK,&LIW,
+					(void*) Jacobian_Matrix_Odepack_LSODA,&JT);
 		}
 
-		if(Solver_Type.Use_Stiff_Solver && Solver_Type.Use_Analytical_Jacobian)
+		if (ISTATE < 0)
 		{
-			dodesol_mk52lfa(ipar, &n, &time_current, &time_step, y,(void*) ODE_RHS_Pressure_Vessel,
-					(void*) Jacobian_Matrix_Intel, &h, &hm, &ep, &tr, dpar, kd, &ierr
-			);
-		}
-
-		if(Solver_Type.Use_Stiff_Solver && !Solver_Type.Use_Analytical_Jacobian)
-		{
-			dodesol_mk52lfn(ipar, &n, &time_current, &time_step, y,(void*) ODE_RHS_Pressure_Vessel,
-					&h, &hm, &ep, &tr, dpar, kd, &ierr
-			);
-		}
-
-		if(!Solver_Type.Use_Stiff_Solver && !Solver_Type.Use_Analytical_Jacobian)
-		{
-			dodesol_rkm9mkn(ipar, &n, &time_current, &time_step, y,(void*) ODE_RHS_Pressure_Vessel,
-					&h, &hm, &ep, &tr, dpar, kd, &ierr
-			);
-		}
-
-
-		if (ierr != 0)
-		{
-			printf("\n dodesol_rkm9mkn routine exited with error code %4d\n",ierr);
-			//return -1;
+			printf("\n LSODA routine exited with error code %4d\n",ISTATE);
 			// Break means it should leave the do loop which would be fine for an error response as it stops the solver
 			break ;
 		}
@@ -406,13 +330,11 @@ void Integrate_Pressure_Vessel_Liquid_Phase_Intel(
 					Species,
 					Reactions
 			);
-
 			RatesAnalysisTimepoint = RatesAnalysisTimepoint + 1;
 		}
 
 
 		// Function for new per species output
-		//*
 		if(InitialParameters.MechanismAnalysis.RatesOfSpecies)
 		{
 			Print_Rates_Per_Species(
@@ -427,7 +349,7 @@ void Integrate_Pressure_Vessel_Liquid_Phase_Intel(
 					Reactions
 			);
 		}
-		//*/
+
 
 		if(InitialParameters.MechanismAnalysis.StreamRatesAnalysis)
 		{
@@ -442,25 +364,21 @@ void Integrate_Pressure_Vessel_Liquid_Phase_Intel(
 		}
 
 
-
 		double pressure = 0;
-		if(InitialParameters.GasPhase)
-		{
-			double R = 8.31451; // Gas Constant
-			/* Pressure Tracking for Gas Phase Kinetics */
-			double total_mol = 0;
-			for(i=0;i<Number_Species;i++)
-			{
-				total_mol = total_mol + SpeciesConcentration[i];
-			}
-			pressure = (total_mol  * R * SpeciesConcentration[Number_Species])/InitialParameters.GasPhaseVolume;
 
+		double R = 8.31451; // Gas Constant
+		/* Pressure Tracking for Gas Phase Kinetics */
+		double total_mol = 0;
+		for(i=0;i<Number_Species;i++)
+		{
+			total_mol = total_mol + SpeciesConcentration[i];
 		}
+		pressure = (total_mol  * R * SpeciesConcentration[Number_Species])/InitialParameters.GasPhaseVolume;
 
 		StreamConcentrations(
 				ConcentrationOutput,
 				InitialParameters.Solver_Parameters.separator,
-				InitialParameters.GasPhase,
+				true, //InitialParameters.GasPhase,
 				Number_Species,
 				time_current,
 				pressure,
@@ -478,23 +396,12 @@ void Integrate_Pressure_Vessel_Liquid_Phase_Intel(
 		}
 
 
-		if(InitialParameters.PetroOxy.IsSet)
-		{
-			PetroOxyOutputStream(
-					OutputFilenames.PetroOxy,
-					PetroOxyData,
-					time_current
-			);
-		}
-
 		if(InitialParameters.MechanismReduction.ReduceReactions != 0)
 		{
 			ReactionRateImportance(KeyRates, Rates, InitialParameters.MechanismReduction.ReduceReactions);
 		}
 
 
-		// not sure this really works how it should looking at odepack issues...
-		//*
 		if(tracker < (TimeChanges-1) && time_step >= InitialParameters.TimeEnd[tracker])
 		{
 			cout << "CPU Time: " << ((double) (clock() - cpu_time_current)) / CLOCKS_PER_SEC << " seconds\n";
@@ -504,18 +411,10 @@ void Integrate_Pressure_Vessel_Liquid_Phase_Intel(
 			time_step1 = InitialParameters.TimeStep[tracker];
 			time_end = InitialParameters.TimeEnd[tracker];
 			cout << "End Time: " << time_end << " Time Step: " << time_step1 << "\n";
-
-			// update the solver settings
-			Solver_Type = InitialParameters.Solver_Type[tracker];
-			cout << "New Solver Settings:\nJacobian: " << Solver_Type.Use_Analytical_Jacobian <<
-					"\nUse Stiff Solver: " << Solver_Type.Use_Stiff_Solver <<"\n";
-		}//*/
+		}
 
 
 	} while (time_step < time_end);
-
-
-
 
 
 	cout << "CPU Time: " << ((double) (clock() - cpu_time_current)) / CLOCKS_PER_SEC << " seconds\n";

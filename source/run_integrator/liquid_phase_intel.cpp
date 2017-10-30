@@ -189,9 +189,9 @@ void Integrate_Liquid_Phase_Intel(
 	CalculateReactionRates(Rates, SpeciesConcentration, Kf, Kr, ReactantsForReactions, ProductsForReactions);
 
 	// Don't forget Rates Analysis for Mechanism Recution at t=0 - or is this nonsense?
-	if(InitialParameters.ReduceReactions != 0)
+	if(InitialParameters.MechanismReduction.ReduceReactions != 0)
 	{
-		ReactionRateImportance(KeyRates, Rates, InitialParameters.ReduceReactions);
+		ReactionRateImportance(KeyRates, Rates, InitialParameters.MechanismReduction.ReduceReactions);
 	}
 
 
@@ -438,9 +438,9 @@ void Integrate_Liquid_Phase_Intel(
 		}
 
 
-		if(InitialParameters.ReduceReactions != 0)
+		if(InitialParameters.MechanismReduction.ReduceReactions != 0)
 		{
-			ReactionRateImportance(KeyRates, Rates, InitialParameters.ReduceReactions);
+			ReactionRateImportance(KeyRates, Rates, InitialParameters.MechanismReduction.ReduceReactions);
 		}
 
 

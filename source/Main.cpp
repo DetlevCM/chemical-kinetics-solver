@@ -164,7 +164,7 @@ int main(int argc, char* argv[])
 
 
 			// only required if the user desires mechanism reduction
-			if(InitialParameters.ReduceReactions != 0)
+			if(InitialParameters.MechanismReduction.ReduceReactions != 0)
 			{
 				KeyRates.resize(Number_Reactions);
 			}
@@ -182,7 +182,7 @@ int main(int argc, char* argv[])
 			);
 
 
-			if(InitialParameters.ReduceReactions != 0)
+			if(InitialParameters.MechanismReduction.ReduceReactions != 0)
 			{
 				vector< SingleReactionData > ReducedReactions;
 				ReducedReactions = ReduceReactionsNew(Species, Reactions, KeyRates);
@@ -202,7 +202,7 @@ int main(int argc, char* argv[])
 
 					WriteReactions("reduced_scheme.txt", Species, ReducedReactions);
 
-					InitialParameters.ReduceReactions = 0; // switch off reduction...
+					InitialParameters.MechanismReduction.ReduceReactions = 0; // switch off reduction...
 
 					if(InitialParameters.StoichiometryMatrixForOpt)
 					{
