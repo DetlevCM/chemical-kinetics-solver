@@ -1,5 +1,3 @@
-image:https://api.codacy.com/project/badge/Grade/ac951e4dceef4780895803a01f46e713["Codacy code quality", link="https://www.codacy.com/app/DetlevCM/chemical-kinetics-solver?utm_source=github.com&utm_medium=referral&utm_content=DetlevCM/chemical-kinetics-solver&utm_campaign=Badge_Grade"]
-
 This is a basic chemical kinetics solver for chemkin style mechanisms, employed in the thesis 
 titled "Autoxidation Behaviour of Hydrocarbons in the Context of Conventional and Alternative 
 Aviation Fuels",submitted at the University of Leeds in 2015.
