@@ -27,3 +27,5 @@ which may be possible if you built the odepack archive with static links.
 To build the code, both a C++ compiler and a Fortran compiler are required.
 C++11 needs to be supported as a minimum required.
 
+
+Codacy Badge
