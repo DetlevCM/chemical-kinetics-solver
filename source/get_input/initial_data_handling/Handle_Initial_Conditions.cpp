@@ -7,7 +7,7 @@
 
 #include <MyHeaders.h>
 
-void Handle_Initial_Conditions(InitParam& InitialParameters, vector<string> Input, solver_type Global_Solver_Settings)
+void Handle_Initial_Conditions(Initial_Data& InitialParameters, vector<string> Input, solver_type Global_Solver_Settings)
 {
 	int i ;
 	vector< string > line_content;
@@ -19,7 +19,7 @@ void Handle_Initial_Conditions(InitParam& InitialParameters, vector<string> Inpu
 			line_content = Tokenise_String_To_String(Input[i]," \t");
 			if((int)line_content.size()>=2)
 			{
-				InitialParameters.temperature = strtod(line_content[1].c_str(),NULL);
+				InitialParameters.temperature = stod(line_content[1],NULL);
 			}
 			line_content.clear();
 		}
@@ -41,8 +41,8 @@ void Handle_Initial_Conditions(InitParam& InitialParameters, vector<string> Inpu
 
 			// allows users to provide multiple time points
 			if((int)line_content.size()>=3){
-				double timeend = strtod(line_content[1].c_str(),NULL);
-				double timestep = strtod(line_content[2].c_str(),NULL);
+				double timeend = stod(line_content[1],NULL);
+				double timestep = stod(line_content[2],NULL);
 				InitialParameters.TimeEnd.push_back(timeend);
 				InitialParameters.TimeStep.push_back(timestep);
 			}
@@ -50,6 +50,7 @@ void Handle_Initial_Conditions(InitParam& InitialParameters, vector<string> Inpu
 			/* 3 positions: user gives end-time and time-step
 			 * 4 positions, stiffness/Jacobian is specified
 			 */
+
 
 			solver_type tmp = Global_Solver_Settings;
 
@@ -82,7 +83,7 @@ void Handle_Initial_Conditions(InitParam& InitialParameters, vector<string> Inpu
 			line_content = Tokenise_String_To_String(Input[i]," \t");
 			if((int)line_content.size()>=2)
 			{
-				temp = strtod(line_content[1].c_str(),NULL);
+				temp = stod(line_content[1],NULL);
 				InitialParameters.GasPhasePressure = temp*1000;
 			}
 			line_content.clear();
@@ -95,7 +96,7 @@ void Handle_Initial_Conditions(InitParam& InitialParameters, vector<string> Inpu
 			line_content = Tokenise_String_To_String(Input[i]," \t");
 			if((int)line_content.size()>=2)
 			{
-				temp = strtod(line_content[1].c_str(),NULL);
+				temp = stod(line_content[1],NULL);
 				InitialParameters.GasPhaseVolume = temp/1000; // Convert to m^3
 			}
 			line_content.clear();

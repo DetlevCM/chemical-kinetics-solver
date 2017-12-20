@@ -14,7 +14,7 @@ void Integrate_Liquid_Phase_Odepack_LSODA(
 		vector< double > SpeciesConcentration,
 		MechanismData Reaction_Mechanism,
 		//vector< string > Species,vector< ThermodynamicData > Thermo,vector< SingleReactionData >& Reactions,
-		InitParam InitialParameters,
+		Initial_Data InitialParameters,
 		vector< double >& KeyRates,
 		vector< vector < str_RatesAnalysis > >& RatesAnalysisData
 )

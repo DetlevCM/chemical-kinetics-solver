@@ -7,7 +7,7 @@
 
 #include <MyHeaders.h>
 
-vector< InitSpecies > Handle_Species(InitParam&  InitialParameters,  vector<string> Input, vector< string > Species)
+vector< InitSpecies > Handle_Species(Initial_Data&  InitialParameters,  vector<string> Input, vector< string > Species)
 {
 	int i,j;
 	vector< InitSpecies > SetupSpecies;
@@ -35,7 +35,7 @@ vector< InitSpecies > Handle_Species(InitParam&  InitialParameters,  vector<stri
 				if(strcmp(line_content[0].c_str(),Species[j].c_str()) == 0)
 				{
 					SingleSpeciesInput.SpecID = j;
-					SingleSpeciesInput.SpecConc = strtod(line_content[1].c_str(),NULL);
+					SingleSpeciesInput.SpecConc = stod(line_content[1],NULL);
 					SetupSpecies.push_back(SingleSpeciesInput);
 
 					if(Test_If_Word_Found(Input[i],"ConstantConcentration") || Test_If_Word_Found(Input[i],"Constant Concentration"))

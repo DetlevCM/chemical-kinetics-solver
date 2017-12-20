@@ -11,7 +11,7 @@
 void Get_Initial_Conditions(
 		string filename,
 		const vector< string >& Species,
-		InitParam& InitialParameters//,
+		Initial_Data& InitialParameters//,
 		//vector< InitSpecies >& SetupSpecies
 )
 {
@@ -85,8 +85,9 @@ void Get_Initial_Conditions(
 	/* Mechanism Reductions */
 	InitialParameters.MechanismReduction.ReduceReactions = 0;
 	// Mapping setup
-	InitialParameters.MechanismReduction.UseNewLumping = false;
+	//InitialParameters.MechanismReduction.UseNewLumping = false;
 	InitialParameters.MechanismReduction.UseFastLumping = true; // old method wasn't wrong but inefficient and slow
+	InitialParameters.MechanismReduction.LumpingType = 0; // 0 = no lumping
 	/* End Mechanism Reduction */
 
 
@@ -293,7 +294,7 @@ void Get_Initial_Conditions(
 					/*InitialParameters.ReduceReactions = temp.ReduceReactions;
 					InitialParameters.UseFastLumping = temp.UseFastLumping;
 					InitialParameters.UseNewLumping = temp.UseNewLumping;//*/
-					cout << "check " << InitialParameters.MechanismReduction.ReduceReactions << "\n";
+					//cout << "check " << InitialParameters.MechanismReduction.ReduceReactions << "\n";
 				}
 				Input.clear();
 			}

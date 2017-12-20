@@ -38,12 +38,7 @@ struct ThermodynamicData {
 	double NasaHigh7;
 };
 
-struct MechanismData {
 
-	vector< string > Species;
-	vector< ThermodynamicData > Thermodynamics;
-	vector< SingleReactionData > Reactions;
-};
 
 
 #endif /* HEADERS_STRUCTS_MECHANISM_STORAGE_H_ */

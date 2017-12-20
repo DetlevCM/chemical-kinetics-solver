@@ -11,7 +11,7 @@
  * New input options for the inclusion of a pressure vessel
  */
 
-void Handle_Pressure_Vessel(InitParam& InitialParameters, vector<string> Input, vector< string > Species)
+void Handle_Pressure_Vessel(Initial_Data& InitialParameters, vector<string> Input, vector< string > Species)
 {
 
 	PressureVessel Pressure_Vessel;
@@ -26,7 +26,7 @@ void Handle_Pressure_Vessel(InitParam& InitialParameters, vector<string> Input, 
 			line_content = Tokenise_String_To_String(Input[i]," \t");
 
 			// it is mL -> make into m^3
-			Pressure_Vessel.Liquid_Sample_Volume = strtod(line_content[3].c_str(),NULL)*1e-6;
+			Pressure_Vessel.Liquid_Sample_Volume = stod(line_content[3],NULL)*1e-6;
 			cout << "Sample Size: " << InitialParameters.PetroOxy.SampleSize << "\n";
 			line_content.clear();
 		}
@@ -36,7 +36,7 @@ void Handle_Pressure_Vessel(InitParam& InitialParameters, vector<string> Input, 
 			line_content = Tokenise_String_To_String(Input[i]," \t");
 
 			// it is mL -> make into m^3
-			Pressure_Vessel.Gas_Sample_Volume = strtod(line_content[3].c_str(),NULL)*1e-6;
+			Pressure_Vessel.Gas_Sample_Volume = stod(line_content[3],NULL)*1e-6;
 			cout << "Sample Size: " << InitialParameters.PetroOxy.SampleSize << "\n";
 			line_content.clear();
 		}

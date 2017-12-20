@@ -14,8 +14,6 @@ ReactionParameter n_zero_CalculateNewParametersFast(
 		int Reaction_Group_Size
 )
 {
-
-
 	ReactionParameter ParameterOutput;
 	int j;
 

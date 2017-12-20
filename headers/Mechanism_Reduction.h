@@ -110,8 +110,9 @@ vector< SingleReactionData > Process_Reactions_For_Species_Lumping(
 		const vector< int >& ,
 		vector< SingleReactionData >,
 		double ,
+		//bool,
 		bool,
-		bool
+		int
 );
 
 // Some helpers for the reduction:
@@ -135,6 +136,12 @@ ReactionParameter n_zero_CalculateNewParametersFast(
 );
 
 ReactionParameter n_zero_CalculateNewParametersSlow(
+		vector< SingleReactionData >& ,
+		double ,
+		int
+);
+
+ReactionParameter Average_Ea_n_zero_k_fitted(
 		vector< SingleReactionData >& ,
 		double ,
 		int

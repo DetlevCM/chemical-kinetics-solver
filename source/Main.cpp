@@ -60,11 +60,12 @@ int main(int argc, char* argv[])
 	//vector< SingleReactionData > Reactions; // Reactions
 
 
-	InitParam InitialParameters; // Initial Conditions/Parameters
+	Initial_Data InitialParameters; // Initial Conditions/Parameters
 	vector< double > InitialSpeciesConcentration;
 	PressureVesselCalc PetroOxyDataInitial; // PetroOxy Specific Initial Data
 
 	MechanismData Reaction_Mechanism;
+
 
 	// Handle All the Data Input - The Arrays Contain the required information
 	//			"chem.inp",
@@ -77,7 +78,6 @@ int main(int argc, char* argv[])
 			InitialSpeciesConcentration,
 			PetroOxyDataInitial
 	);
-
 
 
 	if(!Mechanism_Read_In) // Mechanism failed to read in correctly

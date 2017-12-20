@@ -42,7 +42,7 @@ using std::ostringstream;
 using std::stringstream;
 using std::istringstream;
 
-
+using std::stod; // for C++ string to double
 
 
 /* ************************** */
@@ -54,6 +54,8 @@ using std::istringstream;
 #include "structs/Structs.h"
 #include "structs/mechanism_storage.h"
 #include "structs/initial_conditions_parameters.h"
+
+#include "Classes.h"
 
 // namespaces with global variables for performance reasons
 #include "Namespaces.h"

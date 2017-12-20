@@ -9,17 +9,17 @@
 #define HEADERS_HANDLE_INITIAL_CONDITIONS_H_
 
 
-void Handle_Initial_Conditions(InitParam& , vector<string> , solver_type);
+void Handle_Initial_Conditions(Initial_Data& , vector<string> , solver_type);
 
-vector< InitSpecies > Handle_Species(InitParam&  , vector<string> , vector< string > );
+vector< InitSpecies > Handle_Species(Initial_Data&  , vector<string> , vector< string > );
 
-void Handle_Solver_Parameters(InitParam& , vector<string> );
+void Handle_Solver_Parameters(Initial_Data& , vector<string> );
 
-void Handle_Analysis(InitParam& , vector< string > , vector< string > );
+void Handle_Analysis(Initial_Data& , vector< string > , vector< string > );
 
-void Handle_Pressure_Vessel(InitParam& , vector<string> , vector< string >);
+void Handle_Pressure_Vessel(Initial_Data& , vector<string> , vector< string >);
 
-void Handle_PetroOxy(InitParam& , vector<string> , vector< string >);
+void Handle_PetroOxy(Initial_Data& , vector<string> , vector< string >);
 
 mechanism_reduction Handle_Mechanism_Reduction(vector<string> );
 

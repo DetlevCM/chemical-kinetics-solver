@@ -50,78 +50,18 @@ struct PressureVessel {
 
 
 struct mechanism_reduction {
+	bool UseFastLumping;
+	//bool UseNewLumping;
+	int LumpingType;
 	double ReduceReactions;
-	bool UseFastLumping;
-	bool UseNewLumping;
 };
 
-struct InitParam {
 
-	MechanismAnalysisConfig MechanismAnalysis;
+struct Initial_Conditions {
 
-	// a block for solver parameters
-	solver_parameters Solver_Parameters;
-	vector<solver_type> Solver_Type; // for specifying a mix of solvers, no individual tolerances though
-
-
-	/*double ReduceReactions;
-	bool UseFastLumping;
-	bool UseNewLumping;//*/
-
-	/* Needed when Solving */
-
-	bool NoIntegration;
-
-	bool PrintReacRates;
-
-	bool EnforceStability;
-	//int nrspec;
-	vector< double > TimeEnd;
-	vector< double > TimeStep;
-	double temperature;
-
-	// initial concentrations
-
-	vector< InitSpecies > InitialLiquidSpecies;
-	vector< InitSpecies > InitialGasSpecies;
-
-	// a block for mechanism reduction
-	// weirdly enough, this must be located after the initial species, as the code fails otherwise...
-	// for reasons unknownm, some parameters in this struct are apparently position dependant...
-	mechanism_reduction MechanismReduction;
-
-
-	/* Constant concentration option */
-	/* Single vector, to switch rates of specified species to zero */
-	//
-	bool ConstantConcentration;
-	vector< int > ConstantSpecies;
-	// END
-
-	/* Extra Functionality */
-	bool StoichiometryMatrixForOpt;
-	// END
-
-
-	/* Pre-Processing of the Mechanism */
-	bool irrev;
-
-	// END
-
-	// END
-
-	/* Experimental Gas Phase Code */
-	bool GasPhase; // i.e. is gas phase, default false
-	double GasPhaseVolume;
-	double GasPhasePressure;
-
-	// END
-
-	// New option for storing the pressure vessel
-	PressureVesselConfig PetroOxy;
-
-	PressureVessel Pressure_Vessel;
 };
+
+
 
 
 

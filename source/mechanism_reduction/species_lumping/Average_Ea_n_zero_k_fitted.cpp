@@ -8,7 +8,7 @@
 #include <MyHeaders.h>
 
 
-ReactionParameter Average_Ea_CalculateNewParametersSlow(
+ReactionParameter Average_Ea_n_zero_k_fitted(
 		vector< SingleReactionData >& temp_reactions3,
 		double temperature,
 		int Reaction_Group_Size
@@ -16,7 +16,10 @@ ReactionParameter Average_Ea_CalculateNewParametersSlow(
 {
 
 	/*
-	 * Not functional as of now, not sure if it will be fully implemented
+	 * a "special" mapping...
+	 * we take the average Ea from RMG and set n to zero
+	 * we then fit the A value to match k
+	 * this will NOT give a correct temperature dependence
 	 */
 
 
@@ -40,6 +43,7 @@ ReactionParameter Average_Ea_CalculateNewParametersSlow(
 					pow((temperature + temp_mod),temp_reactions3[j].paramN) *
 					exp(-temp_reactions3[j].paramEa/(temperature + temp_mod));
 		}
+
 		// get average Ea
 		fitted_Ea = fitted_Ea + temp_reactions3[j].paramEa;
 	}
@@ -69,7 +73,7 @@ ReactionParameter Average_Ea_CalculateNewParametersSlow(
 
 
 	// Individual step would only be needed if the function is no monotonous...
-	//*
+	/*
 				double gradient = 0;
 				for(int k=1;k<41;k++){
 					gradient = gradient +
@@ -84,19 +88,20 @@ ReactionParameter Average_Ea_CalculateNewParametersSlow(
 	// Work out Ea component of gradient
 	double gradient_in_Group_k, gradient_in_Ea, gradient_in_lnT;
 
-	gradient_in_Group_k = gradient;//(Group_k[41] - Group_k[0])/40;
+	gradient_in_Group_k = (Group_k[41] - Group_k[0])/40;
 	gradient_in_Ea = (Ea_for_gradient[41] - Ea_for_gradient[0])/40;
 	gradient_in_lnT = (lnT_for_gradient[41] - lnT_for_gradient[0])/40;
 
 	double difference_in_gradient, fitted_n;
 	difference_in_gradient = gradient_in_Group_k - gradient_in_Ea;
 
-	fitted_n = difference_in_gradient / gradient_in_lnT;
-
+	//fitted_n = difference_in_gradient / gradient_in_lnT;
+	fitted_n = 0;
 
 	// now for the fitted A - just use the middle, the target temperature
 	double ln_fitted_a;
-	ln_fitted_a = Group_k[20]- fitted_n*log(temperature) - (-fitted_Ea/temperature);
+	//ln_fitted_a = Group_k[20]- fitted_n*log(temperature) - (-fitted_Ea/temperature);
+	ln_fitted_a = Group_k[20]- (-fitted_Ea/temperature);
 
 	// now need the intercept
 	//double intercept  = Group_k[20]+(1/temperature)*gradient;

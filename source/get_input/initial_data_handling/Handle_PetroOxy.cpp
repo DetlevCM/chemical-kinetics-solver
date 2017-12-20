@@ -13,7 +13,7 @@
  */
 
 
-void Handle_PetroOxy(InitParam& InitialParameters, vector<string> Input, vector< string > Species)
+void Handle_PetroOxy(Initial_Data& InitialParameters, vector<string> Input, vector< string > Species)
 {
 	bool OxyGasSpeciesDefined = false;
 
@@ -27,7 +27,7 @@ void Handle_PetroOxy(InitParam& InitialParameters, vector<string> Input, vector<
 			line_content = Tokenise_String_To_String(Input[i],"=");
 
 			// it is mL -> make into m^3
-			InitialParameters.PetroOxy.SampleSize = strtod(line_content[1].c_str(),NULL)*1e-6;
+			InitialParameters.PetroOxy.SampleSize = stod(line_content[1],NULL)*1e-6;
 			cout << "Sample Size: " << InitialParameters.PetroOxy.SampleSize << "\n";
 			line_content.clear();
 		}
@@ -37,7 +37,7 @@ void Handle_PetroOxy(InitParam& InitialParameters, vector<string> Input, vector<
 			line_content = Tokenise_String_To_String(Input[i],"=");
 
 			// it is mL -> make into m^3
-			InitialParameters.PetroOxy.VesselSize = strtod(line_content[1].c_str(),NULL)*1e-6;
+			InitialParameters.PetroOxy.VesselSize = stod(line_content[1],NULL)*1e-6;
 			cout << "Vessel Size: " << InitialParameters.PetroOxy.VesselSize << "\n";
 			line_content.clear();
 			// Calculated volume from estimate is 22.41mL - so let us assume 22.5mL, value is in m^3
@@ -48,7 +48,7 @@ void Handle_PetroOxy(InitParam& InitialParameters, vector<string> Input, vector<
 			line_content = Tokenise_String_To_String(Input[i],"=");
 
 			// kPa to Pa
-			InitialParameters.PetroOxy.InitPressure = strtod(line_content[1].c_str(),NULL) * 1000;
+			InitialParameters.PetroOxy.InitPressure = stod(line_content[1],NULL) * 1000;
 			cout << "Initial Pressure: " << InitialParameters.PetroOxy.InitPressure << "\n";
 			line_content.clear();
 		}
@@ -58,7 +58,7 @@ void Handle_PetroOxy(InitParam& InitialParameters, vector<string> Input, vector<
 			line_content = Tokenise_String_To_String(Input[i],"=");
 
 			// kPa to Pa
-			InitialParameters.PetroOxy.MaxPressure = strtod(line_content[1].c_str(),NULL) * 1000;
+			InitialParameters.PetroOxy.MaxPressure = stod(line_content[1],NULL) * 1000;
 			cout << "Maximum Pressure: " << InitialParameters.PetroOxy.MaxPressure << "\n";
 			line_content.clear();
 		}
@@ -68,7 +68,7 @@ void Handle_PetroOxy(InitParam& InitialParameters, vector<string> Input, vector<
 			line_content = Tokenise_String_To_String(Input[i],"=");
 
 			// kPa to Pa
-			InitialParameters.PetroOxy.GasSolubility = strtod(line_content[1].c_str(),NULL);// * 1000;
+			InitialParameters.PetroOxy.GasSolubility = stod(line_content[1],NULL);// * 1000;
 			cout << "Gas Solubility: " << InitialParameters.PetroOxy.GasSolubility << "\n";
 			line_content.clear();
 		}
@@ -96,7 +96,7 @@ void Handle_PetroOxy(InitParam& InitialParameters, vector<string> Input, vector<
 			line_content = Tokenise_String_To_String(Input[i],"=");
 
 			// kPa to Pa
-			InitialParameters.PetroOxy.TemperatureRise = strtod(line_content[1].c_str(),NULL) * 1000;
+			InitialParameters.PetroOxy.TemperatureRise = stod(line_content[1],NULL) * 1000;
 			cout << "Temperature Rise: " << InitialParameters.PetroOxy.TemperatureRise << "\n";
 			line_content.clear();
 		}
@@ -122,7 +122,7 @@ void Handle_PetroOxy(InitParam& InitialParameters, vector<string> Input, vector<
 		{
 			line_content = Tokenise_String_To_String(Input[i],"=");
 
-			InitialParameters.PetroOxy.HenryLawDiffusionLimit = strtod(line_content[1].c_str(),NULL);
+			InitialParameters.PetroOxy.HenryLawDiffusionLimit = stod(line_content[1],NULL);
 			InitialParameters.PetroOxy.HenryLawDiffusionLimitSet = true;
 			line_content.clear();
 		}

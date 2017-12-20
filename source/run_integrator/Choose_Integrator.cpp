@@ -19,13 +19,12 @@ void Choose_Integrator(
 		vector< double > InitialSpeciesConcentration,
 		MechanismData Reaction_Mechanism,
 		//vector< string > Species,vector< ThermodynamicData > Thermodynamics,vector< SingleReactionData >& Reactions,
-		InitParam InitialParameters,
+		Initial_Data InitialParameters,
 		vector< double >& KeyRates,
 		PressureVesselCalc PetroOxyDataInitial,
 		vector< vector < str_RatesAnalysis > >& RatesAnalysisData
 )
 {
-
 	if(InitialParameters.Solver_Parameters.SolverType == 0)
 			{
 				cout << "Using Intel ODE\n" << std::flush;

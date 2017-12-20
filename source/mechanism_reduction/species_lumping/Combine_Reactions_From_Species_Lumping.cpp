@@ -23,8 +23,9 @@ vector< SingleReactionData > Process_Reactions_For_Species_Lumping(
 		const vector< int >& SpeciesClassMapping,
 		vector< SingleReactionData >Reactions,
 		double temperature,
-		bool UseAverageEaLumping,
-		bool FastLumping // this will calculated only 3 points, hence is fast
+		//bool UseAverageEaLumping,
+		bool FastLumping, // this will calculated only 3 points, hence is fast
+		int LumpingType
 )
 {
 
@@ -211,6 +212,8 @@ vector< SingleReactionData > Process_Reactions_For_Species_Lumping(
 	// parameter fitting occcurs here:
 
 	// always starts at the start of the vector and then removes the entry, so no stepping through i
+
+
 	i = 0;
 	do{
 
@@ -223,7 +226,50 @@ vector< SingleReactionData > Process_Reactions_For_Species_Lumping(
 
 		if(Reaction_Grouping[i] > 1)
 		{
-
+			if(LumpingType == 1)
+			{
+				if(FastLumping)
+				{
+					NewParameters = n_zero_CalculateNewParametersFast(
+							temp_reactions3,
+							temperature,
+							Reaction_Grouping[i]);
+				}
+				else
+				{
+					NewParameters = n_zero_CalculateNewParametersSlow(
+							temp_reactions3,
+							temperature,
+							Reaction_Grouping[i]);
+				}
+			}
+			else if(LumpingType == 2)
+			{
+				if(FastLumping)
+				{
+					NewParameters = Average_Ea_CalculateNewParametersFast(
+							temp_reactions3,
+							temperature,
+							Reaction_Grouping[i]);
+				}
+				else
+				{
+					// Slow method does not exist yet
+					//NewParameters = Average_Ea_CalculateNewParametersSlow(
+					NewParameters = Average_Ea_CalculateNewParametersFast(
+							temp_reactions3,
+							temperature,
+							Reaction_Grouping[i]);
+				}
+			}
+			else if(LumpingType == 3)
+			{
+				NewParameters = Average_Ea_n_zero_k_fitted(
+						temp_reactions3,
+						temperature,
+						Reaction_Grouping[i]);
+			}
+			/*
 			if(UseAverageEaLumping) // use the method for fitting based on k,  Ea is averaged
 			{
 				if(FastLumping)
@@ -260,6 +306,7 @@ vector< SingleReactionData > Process_Reactions_For_Species_Lumping(
 							Reaction_Grouping[i]);
 				}
 			}
+			//*/
 
 		}
 		else // avoid the maths for reactions that aren't grouped, use previous values

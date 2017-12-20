@@ -9,7 +9,7 @@
 
 
 
-void Handle_Analysis(InitParam& InitialParameters, vector<string> Input, vector<string> Species)
+void Handle_Analysis(Initial_Data& InitialParameters, vector<string> Input, vector<string> Species)
 {
 	int i, j;
 	vector< string > line_content;
@@ -38,7 +38,7 @@ void Handle_Analysis(InitParam& InitialParameters, vector<string> Input, vector<
 			line_content = Tokenise_String_To_String(Input[i]," \t");
 			for(j=1;j<(int)line_content.size();j++) // start at 1, as first position is the keyword
 			{
-				InitialParameters.MechanismAnalysis.RatesAnalysisAtTimeData.push_back(strtod(line_content[j].c_str(),NULL));
+				InitialParameters.MechanismAnalysis.RatesAnalysisAtTimeData.push_back(stod(line_content[j],NULL));
 			}
 			line_content.clear(); // tidy up
 
