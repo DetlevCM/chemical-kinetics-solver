@@ -67,44 +67,58 @@ ReactionParameter Average_Ea_CalculateNewParametersFast(
 	vector <double> lnT_for_gradient(3);
 
 	// lower temperature point
-	Ea_for_gradient[0] = -fitted_Ea/((temperature - temperature_endpoints));
+	Ea_for_gradient[0] = -fitted_Ea/(temperature - temperature_endpoints);
 	lnT_for_gradient[0] = log(temperature - temperature_endpoints);
 	Group_k[0] = log(Group_k[0]);
 
 	// middle temperature point
-	//Ea_for_gradient[1] = -fitted_Ea/((temperature)); // not required
-	//lnT_for_gradient[1] = log(temperature); // not required
+	Ea_for_gradient[1] = -fitted_Ea/(temperature);
+	lnT_for_gradient[1] = log(temperature);
 	Group_k[1] = log(Group_k[1]);
 
 	// upper temperature point
-	Ea_for_gradient[2] = -fitted_Ea/((temperature + temperature_endpoints));
+	Ea_for_gradient[2] = -fitted_Ea/(temperature + temperature_endpoints);
 	lnT_for_gradient[2] = log(temperature + temperature_endpoints);
 	Group_k[2] = log(Group_k[2]);
 
 
 	// Work out Ea component of gradient
-	double gradient_in_Group_k, gradient_in_Ea, gradient_in_lnT;
+	double gradient_in_Group_k, gradient_in_Ea, gradient_in_lnT ;
 
-	gradient_in_Group_k = (Group_k[2] - Group_k[0])/(2*temperature_endpoints);
-	gradient_in_Ea = (Ea_for_gradient[2] - Ea_for_gradient[0])/(2*temperature_endpoints);
-	gradient_in_lnT = (lnT_for_gradient[2] - lnT_for_gradient[0])/(2*temperature_endpoints);
+	gradient_in_Group_k = 0.5 *(
+			(Group_k[1] - Group_k[0]) / (temperature_endpoints) +
+			(Group_k[2] - Group_k[1]) / (temperature_endpoints) );
+
+	gradient_in_Ea = 0.5 * (
+			(Ea_for_gradient[1] - Ea_for_gradient[0]) / (temperature_endpoints) +
+			(Ea_for_gradient[2] - Ea_for_gradient[1]) / (temperature_endpoints) );
+
+	gradient_in_lnT = 0.5 * (
+			(lnT_for_gradient[1] - lnT_for_gradient[0]) / (temperature_endpoints) +
+			(lnT_for_gradient[2] - lnT_for_gradient[1]) / (temperature_endpoints) );
 
 
 	double difference_in_gradient, fitted_n;
-	difference_in_gradient = gradient_in_Group_k - gradient_in_Ea;
+	difference_in_gradient = (gradient_in_Group_k - gradient_in_Ea) / gradient_in_lnT ;
 
-	/*
-	 * We can calculate our fitted n now:
-	 */
-	fitted_n = difference_in_gradient / gradient_in_lnT;
 
+	// We can calculate our fitted n now:
+	fitted_n = exp(difference_in_gradient);
+
+	cout << fitted_Ea * 1.987192 / 1000 << " " << gradient_in_Group_k << " " << gradient_in_Ea << " " << difference_in_gradient << " " << fitted_n << "\n";
 
 	// now for the fitted A, using the middle point
-	double ln_fitted_A, fitted_A;
+	//double ln_fitted_A, fitted_A;
+	double fitted_A;
 
-	ln_fitted_A = Group_k[1] - fitted_n*log(temperature) - (-fitted_Ea/(temperature));
-	fitted_A = exp(ln_fitted_A);
+	//ln_fitted_A = Group_k[1] - fitted_n*log(temperature) - (-fitted_Ea/(temperature));
+	//fitted_A = exp(ln_fitted_A);
 
+	// calculate A on the centerpoint
+	//cout << fitted_Ea * 1.987192 / 1000 << "\n";
+	double denominator = pow(temperature,fitted_n)*exp(-fitted_Ea/temperature);
+	fitted_A = Group_k[1] / denominator;
+	//cout << fitted_A << "\n";
 
 	ParameterOutput.Reversible = false; // reactions must be irreversible for lumping, they will come out irreversible
 	ParameterOutput.paramA = fitted_A;

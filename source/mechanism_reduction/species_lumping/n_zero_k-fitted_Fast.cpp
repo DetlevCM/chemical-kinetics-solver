@@ -54,7 +54,10 @@ ReactionParameter n_zero_CalculateNewParametersFast(
 	// average gradient of k vs 1/T
 	double gradient, intercept;
 
-	gradient = (Group_k[2] - Group_k[0])/(2*temperature_endpoints);
+	// we have 3 k, so we can use the average of the two gradients to get the middle point
+	gradient = 0.5 * (
+			(Group_k[1] - Group_k[0])/(temperature_endpoints) +
+			(Group_k[2] - Group_k[1])/(temperature_endpoints) );
 
 	// now need the intercept, use the middled point (average of end points)
 	intercept  = Group_k[1] + (1/temperature)*gradient;

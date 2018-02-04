@@ -2,6 +2,9 @@
 Subject to determining whether I can actually redistribute the odepack source code, 
 developed by Alan C. Hindmarsh at LLNL and Linda R. Petzold at the University of 
 California, only compile instructions will be supplied for now.
+To the best of my knowledge, this is the official source:
+https://computation.llnl.gov/casc/odepack/
+(Though the code is also mirrored elsewhere.)
 
 The main source code is written using C++, so Fortran code has no direct usability.
 The most painless implementation is to compile the Fortran code into a library, to 

@@ -16,7 +16,9 @@ search engine.
 
 A later expansion is seeking to implement the odepack library, developed by Alan C. Hindmarsh 
 and Linda R. Petzold. As of writing this readme, the source code is freely availabl on the 
- LLNL website. (As well as on other websites.)
+LLNL website. (As well as on other websites.)
+This addition should be considered experimental. While it is a lot faster, it currently suffers 
+from stability issues.
 
 
 The chemical kinetics solver was originally developed using Eclipse CDT using the included builder.
@@ -27,5 +29,3 @@ which may be possible if you built the odepack archive with static links.
 To build the code, both a C++ compiler and a Fortran compiler are required.
 C++11 needs to be supported as a minimum required.
 
-
-Codacy Badge

@@ -20,39 +20,34 @@ mechanism_reduction Handle_Mechanism_Reduction(vector<string> Input)
 	int i;
 	for(i=0;i<(int)Input.size();i++)
 	{
+		if(Test_If_Word_Found(Input[i], "Fast"))
+		{
+			Mechanism_Reduction_Output.UseFastLumping = true;
+		}
+
+		if(Test_If_Word_Found(Input[i], "Slow"))
+		{
+			Mechanism_Reduction_Output.UseFastLumping = false;
+		}
+
 		if(Test_If_Word_Found(Input[i], "Lumping Method 1"))
 		{
 			Mechanism_Reduction_Output.LumpingType = 1; // original method, n = 0, A & Ea fitted
 		}
 
-		if(Test_If_Word_Found(Input[i], "Fast Lumping"))
-		{
-			Mechanism_Reduction_Output.UseFastLumping = true;
-		}
-
-		if(Test_If_Word_Found(Input[i], "Slow Lumping"))
-		{
-			Mechanism_Reduction_Output.UseFastLumping = false;
-		}
-
-		if(Test_If_Word_Found(Input[i], "Use New Lumping") || Test_If_Word_Found(Input[i], "Lumping Method 2"))
+		if(Test_If_Word_Found(Input[i], "Lumping Method 2"))
 		{
 			Mechanism_Reduction_Output.LumpingType = 2; // second method, Ea averaged, n and A fitted
 		}
-		if(Test_If_Word_Found(Input[i], "Use Slow New Lumping") || Test_If_Word_Found(Input[i], "Lumping Method 2"))
-		{
-			Mechanism_Reduction_Output.UseFastLumping = false;
-			Mechanism_Reduction_Output.LumpingType = 2; // second method, Ea averaged, n and A fitted
-		}
-		if(Test_If_Word_Found(Input[i], "Use Slow Lumping"))
-		{
-			Mechanism_Reduction_Output.UseFastLumping = false;
-		}
 
-		if(Test_If_Word_Found(Input[i], "Lumping Method 3"))
+
+		if(Test_If_Word_Found(Input[i], "Lumping Method 3")) // not done yet
 		{
 			Mechanism_Reduction_Output.LumpingType = 2;
 		}
+
+
+
 		if(Test_If_Word_Found(Input[i], "ReduceReactions"))
 		{
 			vector< string > line_content;

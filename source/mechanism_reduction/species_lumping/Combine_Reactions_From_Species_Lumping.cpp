@@ -23,7 +23,6 @@ vector< SingleReactionData > Process_Reactions_For_Species_Lumping(
 		const vector< int >& SpeciesClassMapping,
 		vector< SingleReactionData >Reactions,
 		double temperature,
-		//bool UseAverageEaLumping,
 		bool FastLumping, // this will calculated only 3 points, hence is fast
 		int LumpingType
 )
@@ -254,9 +253,7 @@ vector< SingleReactionData > Process_Reactions_For_Species_Lumping(
 				}
 				else
 				{
-					// Slow method does not exist yet
-					//NewParameters = Average_Ea_CalculateNewParametersSlow(
-					NewParameters = Average_Ea_CalculateNewParametersFast(
+					NewParameters = Average_Ea_CalculateNewParametersSlow(
 							temp_reactions3,
 							temperature,
 							Reaction_Grouping[i]);
