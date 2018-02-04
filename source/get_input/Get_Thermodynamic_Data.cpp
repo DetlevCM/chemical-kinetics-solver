@@ -50,10 +50,8 @@ vector< ThermodynamicData > Get_Thermodynamic_Data(
 			}
 
 
-
 			if(begin_flag && !end_flag)
 			{
-				//cout << "checkoint 1";
 				//  Check that the End has not been reached
 				//  Check that the Line is not empty
 				//  Check the initial character is not !, whitespace or tab
@@ -228,7 +226,6 @@ vector< ThermodynamicData > Get_Thermodynamic_Data(
 
 					// Process the 3 temperature entries low_T, high_T, change_T
 					istringstream iss2(change_Temps);
-					//int k = 0;
 					do
 					{
 						string sub;
@@ -242,42 +239,6 @@ vector< ThermodynamicData > Get_Thermodynamic_Data(
 					temp_read_in_single_species.THigh = SingleSpeciesData[1];
 					temp_read_in_single_species.TChange = SingleSpeciesData[2];
 
-/*/
-					temp_read_in_single_species.NasaLow1 =
-							strtod(line2.substr( 0,15).c_str(),NULL);
-					temp_read_in_single_species.NasaLow2 =
-							strtod(line2.substr(15,15).c_str(),NULL);
-					temp_read_in_single_species.NasaLow3 =
-							strtod(line2.substr(30,15).c_str(),NULL);
-					temp_read_in_single_species.NasaLow4 =
-							strtod(line2.substr(45,15).c_str(),NULL);
-					temp_read_in_single_species.NasaLow5 =
-							strtod(line2.substr(60,15).c_str(),NULL);
-
-					temp_read_in_single_species.NasaLow6 =
-							strtod(line3.substr( 0,15).c_str(),NULL);
-					temp_read_in_single_species.NasaLow7 =
-							strtod(line3.substr(15,15).c_str(),NULL);
-					temp_read_in_single_species.NasaHigh1 =
-							strtod(line3.substr(30,15).c_str(),NULL);
-					temp_read_in_single_species.NasaHigh2 =
-							strtod(line3.substr(45,15).c_str(),NULL);
-					temp_read_in_single_species.NasaHigh3 =
-							strtod(line3.substr(60,15).c_str(),NULL);
-
-					temp_read_in_single_species.NasaHigh4 =
-							strtod(line4.substr( 0,15).c_str(),NULL);
-					temp_read_in_single_species.NasaHigh5 =
-							strtod(line4.substr(15,15).c_str(),NULL);
-					temp_read_in_single_species.NasaHigh6 =
-							strtod(line4.substr(30,15).c_str(),NULL);
-					temp_read_in_single_species.NasaHigh7 =
-							strtod(line4.substr(45,15).c_str(),NULL);
-//*/
-
-					// regression fix, these were switched round at some points somehow...
-					// not a problem for low temperature schemes (small impact)
-					// but bad for high temperature schemes
 					temp_read_in_single_species.NasaHigh1 =
 							strtod(line2.substr( 0,15).c_str(),NULL);
 					temp_read_in_single_species.NasaHigh2 =

@@ -55,25 +55,18 @@ int main(int argc, char* argv[])
 	// The main variables that store the information from a reaction mechanism after
 	// it is read in, namely the species, thermodynamic data and reactions.
 
-	//vector< string > Species; // Species list
-	//vector< ThermodynamicData > Thermodynamics; // Thermodynamic Data
-	//vector< SingleReactionData > Reactions; // Reactions
 
-
+	MechanismData Reaction_Mechanism;
 	Initial_Data InitialParameters; // Initial Conditions/Parameters
 	vector< double > InitialSpeciesConcentration;
 	PressureVesselCalc PetroOxyDataInitial; // PetroOxy Specific Initial Data
 
-	MechanismData Reaction_Mechanism;
-
 
 	// Handle All the Data Input - The Arrays Contain the required information
-	//			"chem.inp",
 	bool Mechanism_Read_In = Handle_Mechanism_Input(
 			mechanism_filename,
 			initial_data_filename,
 			Reaction_Mechanism,
-			//Species,Thermodynamics,Reactions,
 			InitialParameters,
 			InitialSpeciesConcentration,
 			PetroOxyDataInitial
@@ -89,7 +82,6 @@ int main(int argc, char* argv[])
 		// for someone else's optimisation code, optional output
 		if(InitialParameters.StoichiometryMatrixForOpt)
 		{
-			//cout << "\n" << InitialParameters.StoichiometryMatrixForOpt << "\n\n";
 			Write_Stoichiometric_Matrix_For_Opt
 			(
 					"stoichiometry_matrix.txt" ,

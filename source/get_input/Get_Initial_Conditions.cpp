@@ -106,19 +106,6 @@ void Get_Initial_Conditions(
 
 	/* Modification to deal with PetroOxy in main Input file */
 
-	/* Data is:
-	 * 0) Sample Size <- m^3
-	 * p - 1) Initial Pressure
-	 * T - 2) Target Temperature
-	 * pmax - 3) Maximum Pressure
-	 * 4) O2 space in PetroOxy <- m^3
-	 * 5) Gas Species
-	 * 6) mol of gas species at 25 degree celsius
-	 * 7) O2 derived pressure
-	 * 8) Vapour Pressure solvent component
-	 * 9) solubility of gas at 298K, mol/L (C)
-	 * 10) "k" as Henry's Law Constant, k = P_gas/C //  Pa mol / L
-	 */
 
 	InitialParameters.PetroOxy.IsSet = false;
 	InitialParameters.PetroOxy.SampleSize = 0;
