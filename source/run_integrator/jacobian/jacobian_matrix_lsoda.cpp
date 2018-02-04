@@ -47,7 +47,7 @@ void Jacobian_Matrix_Odepack_LSODA(int*n,double*t,double*y,double*ML,double*MU,d
 	// provides me a fresh array every time :) - ideal
 	vector< double > JacobeanColumnWise((Number_Species+1)*(Number_Species+1));
 
-	Calculate_Thermodynamics(CalculatedThermo, Concentration[Number_Species], Thermodynamics);
+	Evaluate_Thermodynamic_Parameters(CalculatedThermo, Thermodynamics, Concentration[Number_Species]);
 	Calculate_Rate_Constant(Kf, Kr, Concentration[Number_Species],ReactionParameters, CalculatedThermo, SpeciesLossAll, Delta_N);
 
 	for(i=0;i<(int) JacobianMatrix.size();i++)

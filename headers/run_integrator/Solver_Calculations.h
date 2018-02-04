@@ -49,11 +49,10 @@ void CalculateReactionRates(
 
 
 
-void Calculate_Thermodynamics(
-		//vector< vector< double > >& ,
-		vector< CalculatedThermodynamics >& ,
-		const double& ,
-		const vector< ThermodynamicData >&
+void Evaluate_Thermodynamic_Parameters(
+		vector<CalculatedThermodynamics> & ,
+		const vector<ThermodynamicData> & ,
+		double
 );
 
 

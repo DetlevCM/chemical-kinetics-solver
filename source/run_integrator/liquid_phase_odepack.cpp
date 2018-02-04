@@ -149,7 +149,7 @@ void Integrate_Liquid_Phase_Odepack_LSODA(
 		}
 	}
 
-	Calculate_Thermodynamics(CalculatedThermo, SpeciesConcentration[Number_Species], Thermodynamics);
+	Evaluate_Thermodynamic_Parameters(CalculatedThermo, Thermodynamics, SpeciesConcentration[Number_Species]);
 
 	/*for(i=0;i<Number_Species;i++)
 	{

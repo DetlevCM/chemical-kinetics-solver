@@ -11,11 +11,9 @@ vector< double > SpeciesLossRate(
 		const vector< TrackSpecies >& SpeciesLossList
 		)
 {
-
 	int i;
 
 	vector< double > temp_species_loss(Number_Species);
-	//temp_species_loss.resize(Number_Species);
 
 	for(i=0;i< (int) SpeciesLossList.size();i++){
 		temp_species_loss[SpeciesLossList[i].SpeciesID] =

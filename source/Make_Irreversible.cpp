@@ -82,7 +82,7 @@ vector< SingleReactionData > Make_Irreversible(
 	{
 		Temperature = Initial_Temperature - Range + (i*Range/25); // +/- Range, 25 Steps in either direction
 
-		Calculate_Thermodynamics(CalculatedThermo, Temperature, Thermodynamics);
+		Evaluate_Thermodynamic_Parameters(CalculatedThermo, Thermodynamics, Temperature);
 		Calculate_Rate_Constant(Kf, Kr, Temperature,LocalReactionParameters, CalculatedThermo, LocalSpeciesLossAll, Local_Delta_N);
 
 		for(j=0;j<(int)Kr.size();j++)

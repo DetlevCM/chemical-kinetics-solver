@@ -1,30 +1,10 @@
 #include <MyHeaders.h>
 
-/*
- * 	double TLow;
- *	double TMid;
- *	double THigh;
- *	double NasaLow1;
- *	double NasaLow2;
- *	double NasaLow3;
- *	double NasaLow4;
- *	double NasaLow5;
- *	double NasaLow6;
- *	double NasaLow7;
- *	double NasaHigh1;
- *	double NasaHigh2;
- *	double NasaHigh3;
- *	double NasaHigh4;
- *	double NasaHigh5;
- *	double NasaHigh6;
- *	double NasaHigh7;
- */
 
-void Calculate_Thermodynamics(
-		//vector< vector< double > >& CalculatedThermo,
-		vector< CalculatedThermodynamics >& CalculatedThermo,
-		const double& Temperature,
-		const vector< ThermodynamicData >& Thermodynamics
+void Evaluate_Thermodynamic_Parameters(
+		vector< CalculatedThermodynamics > &CalculatedThermo,
+		const vector<ThermodynamicData> &Thermodynamics,
+		double Temperature
 		)
 {
 
@@ -114,20 +94,5 @@ void Calculate_Thermodynamics(
 	}
 }
 
-	/* for (i = 1; i<=ns; i++)
-	{
-	third_body += y[i]; // calculate [M]
-	if (T <= change_T[i]) {
-	Hf[i] = R*T_fudge*(nasa_low[1][i]+nasa_low[2][i]*T_fudge*0.5 + nasa_low[3][i]*T_fudge*T_fudge*0.333333333 + nasa_low[4][i]*T_fudge*T_fudge*T_fudge*0.25 +nasa_low[5][i]*T_fudge*T_fudge*T_fudge*T_fudge*0.2 +nasa_low[6][i]*inv_T);
-	Cp[i] = R*(nasa_low[1][i]+nasa_low[2][i]*T_fudge + nasa_low[3][i]*T_fudge*T_fudge + nasa_low[4][i]*T_fudge*T_fudge*T_fudge +nasa_low[5][i]*T_fudge*T_fudge*T_fudge*T_fudge);
-	Cv[i] = Cp[i] - R;
-	S[i] = R*(nasa_low[1][i]*log(T_fudge) + nasa_low[2][i]*T_fudge + nasa_low[3][i]*0.5*T_fudge*T_fudge + nasa_low[4][i]*T_fudge*T_fudge*T_fudge/3 + nasa_low[5][i]*T_fudge*T_fudge*T_fudge*T_fudge/4 + nasa_low[7][i]);
-	}
-	else {
-	Hf[i] = R*T_fudge*(nasa_high[1][i]+nasa_high[2][i]*T_fudge*0.5 + nasa_high[3][i]*T_fudge*T_fudge*0.3333333 + nasa_high[4][i]*T_fudge*T_fudge*T_fudge*0.25 +nasa_high[5][i]*T_fudge*T_fudge*T_fudge*T_fudge*0.2 +nasa_high[6][i]*inv_T);
-	Cp[i] = R*(nasa_high[1][i]+nasa_high[2][i]*T_fudge + nasa_high[3][i]*T_fudge*T_fudge + nasa_high[4][i]*T_fudge*T_fudge*T_fudge +nasa_high[5][i]*T_fudge*T_fudge*T_fudge*T_fudge);
-	Cv[i] = Cp[i] - R;
-	S[i] = R*(nasa_high[1][i]*log(T_fudge) + nasa_high[2][i]*T_fudge + nasa_high[3][i]*0.5*T_fudge*T_fudge + nasa_high[4][i]*T_fudge*T_fudge*T_fudge/3 + nasa_high[5][i]*T_fudge*T_fudge*T_fudge*T_fudge/4 + nasa_high[7][i]);
-	} 
-	}//*/
+
 

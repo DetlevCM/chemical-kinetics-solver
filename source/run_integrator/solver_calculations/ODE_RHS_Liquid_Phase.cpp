@@ -51,7 +51,7 @@ void ODE_RHS_Liquid_Phase(int*n, double*time_current, double*y, double*f)
 	if(f[Number_Species] > 1e-6)
 	{
 		// Thermodynamic data, Rate Constant, Rates, new Concentrations
-		Calculate_Thermodynamics(CalculatedThermo, Concentration[Number_Species], Thermodynamics);
+		Evaluate_Thermodynamic_Parameters(CalculatedThermo, Thermodynamics, Concentration[Number_Species]);
 		Calculate_Rate_Constant(Kf, Kr, Concentration[Number_Species],ReactionParameters, CalculatedThermo, SpeciesLossAll, Delta_N);
 	}
 	CalculateReactionRates(Rates, Concentration, Kf, Kr, ReactantsForReactions, ProductsForReactions);
