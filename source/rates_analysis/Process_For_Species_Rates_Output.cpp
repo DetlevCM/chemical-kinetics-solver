@@ -9,14 +9,14 @@
 
 
 void Prepare_Print_Rates_Per_Species(
-		vector< TrackSpecies > & ProductsForRates,
-		vector< TrackSpecies > & ReactantsForRates,
+		//vector< TrackSpecies > & ProductsForRates,
+		//vector< TrackSpecies > & ReactantsForRates,
 		string separator,
-		vector< double > & Rates,
+		//vector< double > & Rates,
 		vector< string > Species,
 		vector< int > SelectedSpeciesID,
-		vector< vector< int > > ReactionsForSpeciesSelectedForRates,
-		vector< SingleReactionData >& Reactions
+		vector< vector< int > > ReactionsForSpeciesSelectedForRates//,
+		//vector< SingleReactionData >& Reactions
 )
 {
 
@@ -103,8 +103,8 @@ void Print_Rates_Per_Species(
 		double current_time,
 		vector< string > Species,
 		vector< int > SelectedSpeciesID,
-		vector< vector< int > > ReactionsForSpeciesSelectedForRates,
-		vector< SingleReactionData >& Reactions
+		vector< vector< int > > ReactionsForSpeciesSelectedForRates//,
+		//vector< SingleReactionData >& Reactions
 )
 {
 

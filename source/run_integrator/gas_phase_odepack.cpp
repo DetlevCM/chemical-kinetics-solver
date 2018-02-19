@@ -257,14 +257,14 @@ void Integrate_Gas_Phase_Odepack_LSODA(
 
 		//*
 		Prepare_Print_Rates_Per_Species(
-				ProductsForRatesAnalysis,
-				ReactantsForReactions,
+				//ProductsForRatesAnalysis,
+				//ReactantsForReactions,
 				InitialParameters.Solver_Parameters.separator,
-				Rates,
+				//Rates,
 				Reaction_Mechanism.Species,
 				InitialParameters.MechanismAnalysis.SpeciesSelectedForRates,
-				ReactionsForSpeciesSelectedForRates,
-				Reaction_Mechanism.Reactions
+				ReactionsForSpeciesSelectedForRates//,
+				//Reaction_Mechanism.Reactions
 		);//*/
 	}
 
@@ -345,8 +345,8 @@ void Integrate_Gas_Phase_Odepack_LSODA(
 					time_current,
 					Reaction_Mechanism.Species,
 					InitialParameters.MechanismAnalysis.SpeciesSelectedForRates,
-					ReactionsForSpeciesSelectedForRates,
-					Reaction_Mechanism.Reactions
+					ReactionsForSpeciesSelectedForRates//,
+					//Reaction_Mechanism.Reactions
 			);
 		}
 

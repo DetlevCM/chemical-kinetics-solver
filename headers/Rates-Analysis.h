@@ -51,14 +51,14 @@ void StreamRatesAnalysis(
 // New function for rates of production
 
 void Prepare_Print_Rates_Per_Species(
-		vector< TrackSpecies > & ,
-		vector< TrackSpecies > & ,
+		//vector< TrackSpecies > & ,
+		//vector< TrackSpecies > & ,
 		string,
-		vector< double > & ,
+		//vector< double > & ,
 		vector< string > ,
 		vector< int > ,
-		vector< vector< int > >,
-		vector< SingleReactionData >&
+		vector< vector< int > >//,
+		//vector< SingleReactionData >&
 );
 
 
@@ -70,8 +70,8 @@ void Print_Rates_Per_Species(
 		double ,
 		vector< string > ,
 		vector< int > ,
-		vector< vector< int > > ,
-		vector< SingleReactionData >&
+		vector< vector< int > > //,
+		//vector< SingleReactionData >&
 );
 
 
