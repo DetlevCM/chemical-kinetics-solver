@@ -23,6 +23,7 @@ void ODE_RHS_Liquid_Phase(int*n, double*time_current, double*y, double*f)
 
 
 	// stability hack
+	/*
 	if(InitialDataConstants.EnforceStability)
 	{
 		for (i = 0; i <= Number_Species; i++)
@@ -42,10 +43,8 @@ void ODE_RHS_Liquid_Phase(int*n, double*time_current, double*y, double*f)
 		{
 			Concentration[i] = y[i];
 		}
-	}
+	}//*/
 
-	//cout << Concentration[4] << " " << Concentration[5] << "\n";
-	//cout << f[4] << " " << f[5] << " " << f[Number_Species] << "\n";
 
 	// retain previous thermo if temperature change is effectively zero
 	if(f[Number_Species] > 1e-6)

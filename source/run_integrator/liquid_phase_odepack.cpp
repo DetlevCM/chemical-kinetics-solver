@@ -105,12 +105,9 @@ void Integrate_Liquid_Phase_Odepack_LSODA(
 
 	SpeciesLossAll = PrepareSpecies_ForSpeciesLoss(Reaction_Mechanism.Reactions); // New method of listing species
 
-	// original old code
-	double* y = SpeciesConcentration.data();
-
-
 	Concentration.clear(); // ensure the concentrations array is empty
 	Concentration = SpeciesConcentration; // set it to the initial values, also ensures it has the right length
+	double* y = Concentration.data(); // point the solver-array directly at the vector intended for calculations
 
 	double time_current, time_step, time_step1, time_end;
 

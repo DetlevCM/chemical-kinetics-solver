@@ -103,19 +103,13 @@ void Print_Rates_Per_Species(
 		double current_time,
 		vector< string > Species,
 		vector< int > SelectedSpeciesID,
-		vector< vector< int > > ReactionsForSpeciesSelectedForRates//,
-		//vector< SingleReactionData >& Reactions
+		vector< vector< int > > ReactionsForSpeciesSelectedForRates
 )
 {
-
 	int i;
-
-	// ideally I can be pickier with calculating rates...
-
 
 	int Number_Species = (int) Species.size();
 	int Number_Reactions = (int) Rates.size();
-	//int Number_Of_Selected_Species = (int) SpeciesSelection.size();
 
 	vector< vector < str_RatesAnalysis > > RatesAnalysisData;
 	vector< str_RatesAnalysis > temp(Number_Reactions);
@@ -124,9 +118,7 @@ void Print_Rates_Per_Species(
 		RatesAnalysisData.push_back(temp);
 	}
 
-
 	vector< str_RatesAnalysis > RatesAnalysisDataTimeStepTotal(Number_Species);
-
 
 	for(i = 0;i< (int) ProductsForRates.size();i++){
 		RatesAnalysisData[ProductsForRates[i].SpeciesID][ProductsForRates[i].ReactionID].productionrate =
@@ -148,13 +140,11 @@ void Print_Rates_Per_Species(
 				Rates[ReactantsForRates[i].ReactionID];
 	}
 
-
 	ofstream OutfileProd;
 	ofstream OutfileCons;
 
 	int Number_Selected_Species = (int) SelectedSpeciesID.size();
 
-	//for(i=0;i<Number_Species;i++)
 	for(i=0;i<Number_Selected_Species;i++)
 	{
 		string OutFilenameProd, OutFilenameCons;
@@ -173,20 +163,15 @@ void Print_Rates_Per_Species(
 		if(OutfileProd.is_open())
 		{
 			OutfileProd << current_time <<
-					//" 	" <<
 					separator <<
 					RatesAnalysisDataTimeStepTotal[SelectedSpeciesID[i]].productionrate <<
-					//" 	";
 					separator;
 
 			// sort first, then print out sorted output
-			//for(j=0;j<Number_Reactions;j++)
 			for(j=0;j<Number_Of_Selected_Reactions;j++)
 			{
-				//OutfileProd << RatesAnalysisData[SelectedSpeciesID[i]][j].productionrate <<" 	";
 				OutfileProd <<
 						RatesAnalysisData[SelectedSpeciesID[i]][ReactionsForSpeciesSelectedForRates[i][j]].productionrate <<
-						//" 	";
 						separator;
 			};
 			OutfileProd << "\n";
@@ -196,30 +181,22 @@ void Print_Rates_Per_Species(
 		if(OutfileCons.is_open())
 		{
 			OutfileCons << current_time <<
-					//" 	" <<
 					separator <<
 					RatesAnalysisDataTimeStepTotal[SelectedSpeciesID[i]].consumptionrate <<
-					//" 	";
 					separator;
 
 			// sort first, then print out sorted output
-			//for(j=0;j<Number_Reactions;j++)
 			for(j=0;j<Number_Of_Selected_Reactions;j++)
 			{
-				//OutfileCons << RatesAnalysisData[SelectedSpeciesID[i]][j].consumptionrate <<" 	";
 				OutfileCons <<
 						RatesAnalysisData[SelectedSpeciesID[i]][ReactionsForSpeciesSelectedForRates[i][j]].consumptionrate <<
-						//" 	";
 						separator;
 			};
 			OutfileCons << "\n";
 		};
 		OutfileCons.close();
 
-		//OutfileProd.close();
-		//OutfileCons.close();
 	}
-
 
 }
 

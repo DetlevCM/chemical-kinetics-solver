@@ -48,16 +48,12 @@ void ReportAccuracy(
 		while (Input_Data_Full.good() && Input_Data_Reduced.good())
 		{
 
-			//cout << "Loop check \n";
 			getline (Input_Data_Full,Line1);
 			getline (Input_Data_Reduced,Line2);
 
 			int i;
-			//LineIn.resize(4);
+
 			char *cstr1, *cstr2, *p;
-			//					string str;
-			//string line1;
-			//						size_t found;
 
 			cstr1 = new char [Line1.size()+1];
 			strcpy (cstr1, Line1.c_str());
@@ -86,7 +82,6 @@ void ReportAccuracy(
 
 			while(p!=NULL){ // only read remainder is something is left
 				DataReduced.push_back(strtod(p,NULL));
-				//cout << p << " ";
 				p=strtok(NULL,separator.c_str());
 			}
 			delete[] cstr2;

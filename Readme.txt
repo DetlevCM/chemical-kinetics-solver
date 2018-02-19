@@ -17,11 +17,9 @@ search engine.
 A later expansion is seeking to implement the odepack library, developed by Alan C. Hindmarsh 
 and Linda R. Petzold. As of writing this readme, the source code is freely availabl on the 
 LLNL website. (As well as on other websites.)
-This addition should be considered experimental. While it is a lot faster, it currently suffers 
-from stability issues.
-(Maybe an overflow issue of some sort? - It will fail or succeed on the same task at times... 
-- The numerical results are comparable with the intel ode solver.)
-
+This addition should be considered experimental. 
+An advantage is the superior speed when compared to the Intel ODE Solver. This implementation 
+had a stability issue, which appears to be resolved.
 
 The chemical kinetics solver was originally developed using Eclipse CDT using the included builder.
 It used to compile on both Windows and Linux. With the inclusion of odepack, only Linux is 
@@ -31,9 +29,3 @@ which may be possible if you built the odepack archive with static links.
 To build the code, both a C++ compiler and a Fortran compiler are required.
 C++11 needs to be supported as a minimum required.
 
-Bug notice:
-Since a major redesign of bits of the code, carried out to improve future stabibility and 
-expandability, odepack suffers from an instability. This can be resolved by carrying out the initial 
-calculations with a very small timestep, e.g. to 1e-25 seconds with a step of 1e-26 seconds. 
-This should not affect the final result.
-(...until a proper solution is found)

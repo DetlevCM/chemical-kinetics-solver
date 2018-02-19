@@ -21,8 +21,6 @@ void MaxRatesAnalysis(
 {
 	int i;
 
-	//cout << ProductsForRates.size();
-
 	// collects the maximum rate per reaction, per species
 	for(i = 0;i< (int) ProductsForRates.size();i++){
 
@@ -104,7 +102,6 @@ void WriteMaxRatesAnalysis(
 
 
 	filename = rates_analysis_stream_filename + "RatesAnalysis-Max-Consumption-Rate.txt";
-	//Outfile.open("RatesAnalysis-Max-Consumption-Rate.txt");
 	Outfile.open(filename.c_str());
 
 	if(Outfile.is_open())
@@ -123,13 +120,9 @@ void WriteMaxRatesAnalysis(
 							RatesAnalysisData[i][j].consumptionrate << " 	, at 	" << RatesAnalysisData[i][j].cons_time << " 	s    ";
 
 					// now need to print the reaction
-
-
 					Outfile << Prepare_Single_Reaction_Output(Number_Species, Species, Reactions[j]);
-
 				};
 			};
-
 
 			Outfile << "\n\n";
 		};
@@ -197,8 +190,6 @@ void StreamRatesAnalysis(
 {
 	int i;
 
-	//int Number_Species = Nbr_Species - 1;
-
 	vector< str_RatesAnalysis > RatesAnalysisData(Number_Species);
 
 	// Sum the rates for all species - I'm not intereste in recording which reactions take part
@@ -214,17 +205,11 @@ void StreamRatesAnalysis(
 				Rates[ReactantsForRates[i].ReactionID];
 	}
 
-	// rates_analysis_stream_filename
 
 	string filename;
-
-	//ostringstream strs;
-	//strs << rates_analysis_stream_filename;
-
 	filename = rates_analysis_stream_filename + "RatesAnalysis-Species-Production-Rate-Stream" + ".txt";
 
 	ofstream Outfile;
-
 	Outfile.open(filename.c_str(),ios::app);
 
 	if(Outfile.is_open())
