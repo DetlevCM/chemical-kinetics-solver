@@ -70,10 +70,10 @@ void Integrate_Liquid_Phase_Odepack_LSODA(
 
 	// some vectors for LSODA
 	vector<int> vector_IWORK(LIW);
-	int* IWORK = vector_IWORK.data();
+	//int* IWORK = vector_IWORK.data();
 
 	vector<double> vector_RWORK(LRW);
-	double* RWORK = vector_RWORK.data();
+	//double* RWORK = vector_RWORK.data();
 
 	// For performance assessment, use a clock:
 	clock_t cpu_time_begin, cpu_time_end, cpu_time_current;
@@ -106,7 +106,7 @@ void Integrate_Liquid_Phase_Odepack_LSODA(
 
 	Concentration.clear(); // ensure the concentrations array is empty
 	Concentration = SpeciesConcentration; // set it to the initial values, also ensures it has the right length
-	double* y = SpeciesConcentration.data();
+	//double* y = SpeciesConcentration.data();
 
 	double time_current, time_step, time_step1, time_end;
 
@@ -253,17 +253,12 @@ void Integrate_Liquid_Phase_Odepack_LSODA(
 			temp.clear();
 		}
 
-		//*
 		Prepare_Print_Rates_Per_Species(
-				//ProductsForRatesAnalysis,
-				//ReactantsForReactions,
 				InitialParameters.Solver_Parameters.separator,
-				//Rates,
 				Reaction_Mechanism.Species,
 				InitialParameters.MechanismAnalysis.SpeciesSelectedForRates,
-				ReactionsForSpeciesSelectedForRates//,
-				//Reaction_Mechanism.Reactions
-		);//*/
+				ReactionsForSpeciesSelectedForRates
+		);
 	}
 
 
@@ -291,16 +286,24 @@ void Integrate_Liquid_Phase_Odepack_LSODA(
 		if(Use_Analytical_Jacobian)
 		{
 			int JT = 1;
+			/*
 			dlsoda_((void*) ODE_RHS_Liquid_Phase,&n,y,&time_current,&time_step,
 					&ITOL,&RTOL,&ATOL,&ITASK,&ISTATE,&IOPT,RWORK,&LRW,IWORK,&LIW,
-					(void*) Jacobian_Matrix_Odepack_LSODA,&JT);
+					(void*) Jacobian_Matrix_Odepack_LSODA,&JT);//*/
+			dlsoda_((void*) ODE_RHS_Liquid_Phase,&n,SpeciesConcentration.data(),&time_current,&time_step,
+								&ITOL,&RTOL,&ATOL,&ITASK,&ISTATE,&IOPT,vector_RWORK.data(),&LRW,vector_IWORK.data(),&LIW,
+								(void*) Jacobian_Matrix_Odepack_LSODA,&JT);
 		}
 		else //if(!Use_Analytical_Jacobian)
 		{
 			int JT = 2;
+			/*
 			dlsoda_((void*) ODE_RHS_Liquid_Phase,&n,y,&time_current,&time_step,
 					&ITOL,&RTOL,&ATOL,&ITASK,&ISTATE,&IOPT,RWORK,&LRW,IWORK,&LIW,
-					(void*) Jacobian_Matrix_Odepack_LSODA,&JT);
+					(void*) Jacobian_Matrix_Odepack_LSODA,&JT);//*/
+			dlsoda_((void*) ODE_RHS_Liquid_Phase,&n,SpeciesConcentration.data(),&time_current,&time_step,
+								&ITOL,&RTOL,&ATOL,&ITASK,&ISTATE,&IOPT,vector_RWORK.data(),&LRW,vector_IWORK.data(),&LIW,
+								(void*) Jacobian_Matrix_Odepack_LSODA,&JT);
 		}
 
 		if (ISTATE < 0)

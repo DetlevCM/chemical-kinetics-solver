@@ -8,7 +8,7 @@
 #include <MyHeaders.h>
 
 
-void ODE_RHS_Liquid_Phase(int*n, double*time_current, double*y, double*f)
+void ODE_RHS_Liquid_Phase(int*n, double*t, double*y, double*f)
 {
 	// A namespace allows global variables without causing a mess, should be quicker than redefining too
 	using namespace ODE_RHS;
@@ -16,20 +16,12 @@ void ODE_RHS_Liquid_Phase(int*n, double*time_current, double*y, double*f)
 
 	int i;
 
-
-	/* 2002 CODATA values */
-	//double R = 8.314472e0;
-	//double Na = 6.0221415e23;
-
-
-	// stability hack
-	//*
+	// stability hack - but has a performance impact...
 	if(InitialDataConstants.EnforceStability)
 	{
 		for (i = 0; i <= Number_Species; i++)
 		{
 			if(y[i]<0){
-				//if(y[i]<1.e-24){
 				Concentration[i] = 0;
 			}
 			else
@@ -43,15 +35,11 @@ void ODE_RHS_Liquid_Phase(int*n, double*time_current, double*y, double*f)
 		{
 			Concentration[i] = y[i];
 		}
-	}//*/
-
-	// retain previous thermo if temperature change is effectively zero
-	if(f[Number_Species] > 1e-6)
-	{
-		// Thermodynamic data, Rate Constant, Rates, new Concentrations
-		Evaluate_Thermodynamic_Parameters(CalculatedThermo, Thermodynamics, Concentration[Number_Species]);
-		Calculate_Rate_Constant(Kf, Kr, Concentration[Number_Species],ReactionParameters, CalculatedThermo, SpeciesLossAll, Delta_N);
 	}
+
+
+	Evaluate_Thermodynamic_Parameters(CalculatedThermo, Thermodynamics, Concentration[Number_Species]);
+	Calculate_Rate_Constant(Kf, Kr, Concentration[Number_Species],ReactionParameters, CalculatedThermo, SpeciesLossAll, Delta_N);
 	CalculateReactionRates(Rates, Concentration, Kf, Kr, ReactantsForReactions, ProductsForReactions);
 	SpeciesConcentrationChange = SpeciesLossRate(Number_Species, Rates, SpeciesLossAll);
 
@@ -61,21 +49,12 @@ void ODE_RHS_Liquid_Phase(int*n, double*time_current, double*y, double*f)
 	double qtot=0;
 
 
-
-
-
-
-
-
 	for (i = 0; i < Number_Species; i++)
 	{
 		ctot = ctot + CalculatedThermo[i].Cv * Concentration[i];
-		//cout << CalculatedThermo[i].Hf << " ";
-
 		// reduce number of loops
 		f[i] = SpeciesConcentrationChange[i];
 	}
-	//cout << "\n";
 	// ctot = ctot / 1000; // working in moles/l so no Na;
 
 	for (i = 0; i < Number_Reactions; i++)
@@ -84,13 +63,7 @@ void ODE_RHS_Liquid_Phase(int*n, double*time_current, double*y, double*f)
 	}
 	qtot = -qint / (ctot);//*1000); // scale l to ml and Na not needed for moles/l * Na); //*/
 
-	// Checked f[i] -> no unexpected rates of change for "inert gases", all 0.
-	/*
-	for (i = 0; i < Number_Species; i++)
-	{
-		f[i] = SpeciesConcentrationChange[i]; // Species equations //
-	}//*/
-	f[Number_Species] = qtot; // Temperature equation //
+	f[Number_Species] = qtot; // Temperature equation
 	//cout << ctot << " " << qint << " " << qtot << "\n";
 
 
