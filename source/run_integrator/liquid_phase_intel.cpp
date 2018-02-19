@@ -46,10 +46,8 @@ void Integrate_Liquid_Phase_Intel(
 		ReactionRatesOutput.open(OutputFilenames.Rates.c_str(),ios::app);
 	}
 
-	// This works :) good - well, need it soon...
-	//vector< ofstream > RatesOfSpecies;
 
-	int n, ierr, ipar[128], dpar_size;
+	int n, ierr, dpar_size;
 	double h, hm, ep, tr;
 	int i;
 
@@ -59,11 +57,9 @@ void Integrate_Liquid_Phase_Intel(
 	 * to vectors of doubles in our case.
 	 */
 
-
-	vector<int> kdstep(Number_Species + 1);
-
-
-	int* kd = &kdstep[0];
+	vector<int> vector_ipar(128);
+	vector<int> vector_kd(Number_Species + 1);
+	//int* kd = &kdstep[0];
 
 	n = Number_Species + 1;
 	if (13 * n > (7 + 2 * n) * n) {
@@ -71,8 +67,8 @@ void Integrate_Liquid_Phase_Intel(
 	} else {
 		dpar_size = (7 + 2 * n) * n;
 	}
-	vector<double> dparstep(dpar_size);
-	double* dpar = &dparstep[0];
+	vector<double> vector_dpar(dpar_size);
+	//double* dpar = vector_dpar.data();
 
 
 	// For performance assessment, use a clock:
@@ -107,14 +103,15 @@ void Integrate_Liquid_Phase_Intel(
 
 	// And now it is time to call the solver again... with the right information...
 	// According to Intel initialise ipar array with zeros before the first call to dodesol
+	/*
 	for (i = 0; i < 128; i++) {
 		ipar[i] = 0;
-	}
-
+	}//*/
+	// not needed as vectors are automatically initialised
 
 	Concentration.clear(); // ensure the concentrations array is empty
 	Concentration = SpeciesConcentration; // set it to the initial values, also ensures it has the right length
-	double* y = SpeciesConcentration.data();
+	//double* y = SpeciesConcentration.data();
 
 	double time_current, time_step, time_step1, time_end;
 
@@ -225,7 +222,7 @@ void Integrate_Liquid_Phase_Intel(
 		int tempi, tempj;
 
 		vector< vector< int > > TempMatrix;
-		vector< int > TempRow;//((int)Species.size());
+		vector< int > TempRow;
 		int Temp_Number_Species = (int) Reaction_Mechanism.Species.size();
 
 		for(tempi=0;tempi<(int)Reaction_Mechanism.Reactions.size();tempi++){
@@ -305,8 +302,39 @@ void Integrate_Liquid_Phase_Intel(
 
 	do
 	{
-		time_step = time_current + time_step1;
 
+		time_step = time_current + time_step1;
+		if(!Solver_Type.Use_Stiff_Solver && Solver_Type.Use_Analytical_Jacobian)
+		{
+			dodesol_rkm9mka(vector_ipar.data(), &n, &time_current, &time_step, SpeciesConcentration.data(),(void*) ODE_RHS_Liquid_Phase,
+					(void*) Jacobian_Matrix_Intel, &h, &hm, &ep, &tr, vector_dpar.data(), vector_kd.data(), &ierr
+			);
+		}
+
+		if(Solver_Type.Use_Stiff_Solver && Solver_Type.Use_Analytical_Jacobian)
+		{
+			// stiff solver with automatics numerical Jacobi matric computations
+			dodesol_mk52lfa(vector_ipar.data(), &n, &time_current, &time_step, SpeciesConcentration.data(),(void*) ODE_RHS_Liquid_Phase,
+					(void*) Jacobian_Matrix_Intel, &h, &hm, &ep, &tr, vector_dpar.data(), vector_kd.data(), &ierr
+			);
+		}
+
+		if(Solver_Type.Use_Stiff_Solver && !Solver_Type.Use_Analytical_Jacobian)
+		{
+			// stiff solver with automatics numerical Jacobi matric computations
+			dodesol_mk52lfn(vector_ipar.data(), &n, &time_current, &time_step, SpeciesConcentration.data(),(void*) ODE_RHS_Liquid_Phase,
+					&h, &hm, &ep, &tr, vector_dpar.data(), vector_kd.data(), &ierr
+			);
+		}
+
+		if(!Solver_Type.Use_Stiff_Solver && !Solver_Type.Use_Analytical_Jacobian)
+		{
+			// hybrid solver with automatic numerical Jacobi matrix computations
+			dodesol_rkm9mkn(vector_ipar.data(), &n, &time_current, &time_step, SpeciesConcentration.data(),(void*) ODE_RHS_Liquid_Phase,
+					&h, &hm, &ep, &tr, vector_dpar.data(), vector_kd.data(), &ierr
+			);
+		}
+		/*
 		if(!Solver_Type.Use_Stiff_Solver && Solver_Type.Use_Analytical_Jacobian)
 		{
 			dodesol_rkm9mka(ipar, &n, &time_current, &time_step, y,(void*) ODE_RHS_Liquid_Phase,
@@ -337,7 +365,7 @@ void Integrate_Liquid_Phase_Intel(
 					&h, &hm, &ep, &tr, dpar, kd, &ierr
 			);
 		}
-
+//*/
 
 		if (ierr != 0)
 		{
