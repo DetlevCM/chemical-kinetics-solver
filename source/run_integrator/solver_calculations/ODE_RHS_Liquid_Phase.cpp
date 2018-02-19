@@ -45,7 +45,6 @@ void ODE_RHS_Liquid_Phase(int*n, double*time_current, double*y, double*f)
 		}
 	}//*/
 
-
 	// retain previous thermo if temperature change is effectively zero
 	if(f[Number_Species] > 1e-6)
 	{

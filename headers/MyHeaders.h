@@ -18,7 +18,7 @@
 // timekeeping
 #include <time.h>
 
-// varibale types
+// variable types
 #include <vector>
 #include <string.h>
 
