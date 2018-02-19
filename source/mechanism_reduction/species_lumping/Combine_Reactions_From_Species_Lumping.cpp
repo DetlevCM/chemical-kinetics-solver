@@ -221,7 +221,11 @@ vector< SingleReactionData > Process_Reactions_For_Species_Lumping(
 
 		SingleReactionData SingleReaction;
 
-		ReactionParameter NewParameters;
+		ReactionParameter NewParameters; // create working variable and initialise
+		NewParameters.Reversible = true;
+		NewParameters.paramA = 0;
+		NewParameters.paramN = 0;
+		NewParameters.paramEa = 0;
 
 		if(Reaction_Grouping[i] > 1)
 		{
@@ -266,47 +270,8 @@ vector< SingleReactionData > Process_Reactions_For_Species_Lumping(
 						temperature,
 						Reaction_Grouping[i]);
 			}
-			/*
-			if(UseAverageEaLumping) // use the method for fitting based on k,  Ea is averaged
-			{
-				if(FastLumping)
-				{
-					NewParameters = Average_Ea_CalculateNewParametersFast(
-							temp_reactions3,
-							temperature,
-							Reaction_Grouping[i]);
-				}
-				else
-				{
-					// Slow method does not exist yet
-					//NewParameters = Average_Ea_CalculateNewParametersSlow(
-					NewParameters = Average_Ea_CalculateNewParametersFast(
-							temp_reactions3,
-							temperature,
-							Reaction_Grouping[i]);
-				}
-			}
-			else // Use the old method for fitting based on k, with n=0
-			{
-				if(FastLumping)
-				{
-					NewParameters = n_zero_CalculateNewParametersFast(
-							temp_reactions3,
-							temperature,
-							Reaction_Grouping[i]);
-				}
-				else
-				{
-					NewParameters = n_zero_CalculateNewParametersSlow(
-							temp_reactions3,
-							temperature,
-							Reaction_Grouping[i]);
-				}
-			}
-			//*/
-
 		}
-		else // avoid the maths for reactions that aren't grouped, use previous values
+		else // avoid the mathematicss for reactions that aren't grouped, use previous values
 		{
 			NewParameters.Reversible = false; // must be irreversible, else no lumping
 			NewParameters.paramA = temp_reactions3[i].paramA;

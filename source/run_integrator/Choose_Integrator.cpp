@@ -18,7 +18,6 @@ void Choose_Integrator(
 		Filenames OutputFilenames,
 		vector< double > InitialSpeciesConcentration,
 		MechanismData Reaction_Mechanism,
-		//vector< string > Species,vector< ThermodynamicData > Thermodynamics,vector< SingleReactionData >& Reactions,
 		Initial_Data InitialParameters,
 		vector< double >& KeyRates,
 		PressureVesselCalc PetroOxyDataInitial,

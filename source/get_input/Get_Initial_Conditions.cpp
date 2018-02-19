@@ -263,7 +263,7 @@ void Get_Initial_Conditions(
 							Input.push_back(line);
 						}
 					}while (line.find("</Pressure Vessel>") == string::npos);
-					Handle_Pressure_Vessel(InitialParameters, Input, Species);
+					Handle_Pressure_Vessel(InitialParameters, Input);
 				}
 				Input.clear();
 

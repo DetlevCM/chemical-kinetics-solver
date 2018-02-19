@@ -13,7 +13,6 @@ void Choose_Integrator(
 		Filenames,
 		vector< double >,
 		MechanismData ,
-		//vector< string > ,vector< ThermodynamicData > ,	vector< SingleReactionData > &,
 		Initial_Data,
 		vector< double >&,
 		PressureVesselCalc,
@@ -25,7 +24,6 @@ void Integrate_Liquid_Phase_Intel(
 		Filenames,
 		vector< double >,
 		MechanismData ,
-		//vector< string > , vector< ThermodynamicData > , vector< SingleReactionData > &,
 		Initial_Data,
 		vector< double >&,
 		vector< vector < str_RatesAnalysis > > &
@@ -36,7 +34,6 @@ void Integrate_Pressure_Vessel_Liquid_Phase_Intel(
 		Filenames,
 		vector< double >,
 		MechanismData ,
-		//vector< string > , vector< ThermodynamicData > , vector< SingleReactionData > &,
 		Initial_Data,
 		vector< double >&,
 		PressureVesselCalc,
@@ -48,7 +45,6 @@ void Integrate_Liquid_Phase_Odepack_LSODA(
 		Filenames,
 		vector< double >,
 		MechanismData ,
-		//vector< string > ,vector< ThermodynamicData > ,vector< SingleReactionData > &,
 		Initial_Data,
 		vector< double >&,
 		vector< vector < str_RatesAnalysis > > &
@@ -58,7 +54,6 @@ void Integrate_Gas_Phase_Odepack_LSODA(
 		Filenames,
 		vector< double >,
 		MechanismData ,
-		//vector< string > ,vector< ThermodynamicData > ,vector< SingleReactionData > &,
 		Initial_Data,
 		vector< double >&,
 		vector< vector < str_RatesAnalysis > > &
@@ -69,7 +64,6 @@ void Integrate_Pressure_Vessel_Liquid_Phase_Odepack_LSODA(
 		Filenames,
 		vector< double >,
 		MechanismData ,
-		//vector< string > ,vector< ThermodynamicData > ,vector< SingleReactionData > &,
 		Initial_Data,
 		vector< double >&,
 		PressureVesselCalc,

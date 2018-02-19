@@ -11,7 +11,7 @@
  * New input options for the inclusion of a pressure vessel
  */
 
-void Handle_Pressure_Vessel(Initial_Data& InitialParameters, vector<string> Input, vector< string > Species)
+void Handle_Pressure_Vessel(Initial_Data& InitialParameters, vector<string> Input)
 {
 
 	PressureVessel Pressure_Vessel;

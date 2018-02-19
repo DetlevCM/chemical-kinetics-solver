@@ -8,9 +8,9 @@
 #include <MyHeaders.h>
 
 vector< double > Compare_Concentrations(
-		const vector< double >& OldTimePoints,
+		//const vector< double >& OldTimePoints,
 		const vector< vector< double > >& OldConcentrations,
-		const vector< double >& NewTimePoints,
+		//const vector< double >& NewTimePoints,
 		const vector< vector< double > >& NewConcentrations
 )
 {
