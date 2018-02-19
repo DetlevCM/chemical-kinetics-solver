@@ -23,7 +23,7 @@ void ODE_RHS_Liquid_Phase(int*n, double*time_current, double*y, double*f)
 
 
 	// stability hack
-	/*
+	//*
 	if(InitialDataConstants.EnforceStability)
 	{
 		for (i = 0; i <= Number_Species; i++)

@@ -18,8 +18,11 @@ A later expansion is seeking to implement the odepack library, developed by Alan
 and Linda R. Petzold. As of writing this readme, the source code is freely availabl on the 
 LLNL website. (As well as on other websites.)
 This addition should be considered experimental. 
-An advantage is the superior speed when compared to the Intel ODE Solver. This implementation 
-had a stability issue, which appears to be resolved.
+Unfortunately, for some reason, the solver is unstable under some conditions.
+(Initial time steps too large.)
+This can be resolved by running the first calculations for very small time steps.
+For example 10 steps at 1e.-26s up to 1e-25s before switching to the desired time step.
+This should not change the result in any significant manner.
 
 The chemical kinetics solver was originally developed using Eclipse CDT using the included builder.
 It used to compile on both Windows and Linux. With the inclusion of odepack, only Linux is 

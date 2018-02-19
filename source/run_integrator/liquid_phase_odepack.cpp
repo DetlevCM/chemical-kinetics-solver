@@ -70,11 +70,9 @@ void Integrate_Liquid_Phase_Odepack_LSODA(
 
 	// some vectors for LSODA
 	vector<int> vector_IWORK(LIW);
-	//int *IWORK = &vector_IWORK[0];
 	int* IWORK = vector_IWORK.data();
 
 	vector<double> vector_RWORK(LRW);
-	//double *RWORK = &vector_RWORK[0];
 	double* RWORK = vector_RWORK.data();
 
 	// For performance assessment, use a clock:
@@ -105,9 +103,10 @@ void Integrate_Liquid_Phase_Odepack_LSODA(
 
 	SpeciesLossAll = PrepareSpecies_ForSpeciesLoss(Reaction_Mechanism.Reactions); // New method of listing species
 
+
 	Concentration.clear(); // ensure the concentrations array is empty
 	Concentration = SpeciesConcentration; // set it to the initial values, also ensures it has the right length
-	double* y = Concentration.data(); // point the solver-array directly at the vector intended for calculations
+	double* y = SpeciesConcentration.data();
 
 	double time_current, time_step, time_step1, time_end;
 

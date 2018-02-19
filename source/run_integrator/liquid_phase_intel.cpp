@@ -112,9 +112,9 @@ void Integrate_Liquid_Phase_Intel(
 	}
 
 
-	double* y = &SpeciesConcentration[0];
-	Concentration.clear();
-	Concentration.resize(Number_Species + 1);
+	Concentration.clear(); // ensure the concentrations array is empty
+	Concentration = SpeciesConcentration; // set it to the initial values, also ensures it has the right length
+	double* y = SpeciesConcentration.data();
 
 	double time_current, time_step, time_step1, time_end;
 
