@@ -32,5 +32,8 @@ To build the code, both a C++ compiler and a Fortran compiler are required.
 C++11 needs to be supported as a minimum required.
 
 Bug notice:
-Since a major redesign of bits of the code, carried out to improve future stabibility and expandability, odepack suffers from an instability. This can be resolved by carrying out the initial calculations with a very small timestep, e.g. to 1e-25 seconds with a step of 1e-26 seconds. This should not affect the final result.
+Since a major redesign of bits of the code, carried out to improve future stabibility and 
+expandability, odepack suffers from an instability. This can be resolved by carrying out the initial 
+calculations with a very small timestep, e.g. to 1e-25 seconds with a step of 1e-26 seconds. 
+This should not affect the final result.
 (...until a proper solution is found)
