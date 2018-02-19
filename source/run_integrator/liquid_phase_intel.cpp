@@ -269,13 +269,8 @@ void Integrate_Liquid_Phase_Intel(
 
 	/* -- Got values at t = 0 -- */
 
-	// Resize the vector for the concentrations in the ODE void
-	//Concentration.clear(); // don't think it makes a difference if I clear or not
-	//Concentration.resize(Number_Species + 1);
-
 	// enables reset of Rates Analysis
 	int RatesAnalysisTimepoint = 0;
-
 
 	// set the solver:
 	solver_type Solver_Type;
@@ -288,7 +283,6 @@ void Integrate_Liquid_Phase_Intel(
 	// lets split this into two parts:
 	// 1: regular solver
 	// 2: PetroOxy settings
-
 
 	do
 	{
@@ -389,7 +383,6 @@ void Integrate_Liquid_Phase_Intel(
 
 
 		// Function for new per species output
-		//*
 		if(InitialParameters.MechanismAnalysis.RatesOfSpecies)
 		{
 			Print_Rates_Per_Species(
@@ -400,11 +393,9 @@ void Integrate_Liquid_Phase_Intel(
 					time_current,
 					Reaction_Mechanism.Species,
 					InitialParameters.MechanismAnalysis.SpeciesSelectedForRates,
-					ReactionsForSpeciesSelectedForRates//,
-					//Reaction_Mechanism.Reactions
+					ReactionsForSpeciesSelectedForRates
 			);
 		}
-		//*/
 
 		if(InitialParameters.MechanismAnalysis.StreamRatesAnalysis)
 		{
