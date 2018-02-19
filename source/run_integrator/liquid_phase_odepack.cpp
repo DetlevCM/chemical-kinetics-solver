@@ -13,7 +13,6 @@ void Integrate_Liquid_Phase_Odepack_LSODA(
 		Filenames OutputFilenames,
 		vector< double > SpeciesConcentration,
 		MechanismData Reaction_Mechanism,
-		//vector< string > Species,vector< ThermodynamicData > Thermo,vector< SingleReactionData >& Reactions,
 		Initial_Data InitialParameters,
 		vector< double >& KeyRates,
 		vector< vector < str_RatesAnalysis > >& RatesAnalysisData
@@ -49,7 +48,7 @@ void Integrate_Liquid_Phase_Odepack_LSODA(
 	int i, n;
 
 	// general solver settings
-	double RTOL, ATOL; //tr,
+	double RTOL, ATOL;
 
 	// LSODA specific settings
 	int LRW, LIW;
@@ -70,10 +69,7 @@ void Integrate_Liquid_Phase_Odepack_LSODA(
 
 	// some vectors for LSODA
 	vector<int> vector_IWORK(LIW);
-	//int* IWORK = vector_IWORK.data();
-
 	vector<double> vector_RWORK(LRW);
-	//double* RWORK = vector_RWORK.data();
 
 	// For performance assessment, use a clock:
 	clock_t cpu_time_begin, cpu_time_end, cpu_time_current;

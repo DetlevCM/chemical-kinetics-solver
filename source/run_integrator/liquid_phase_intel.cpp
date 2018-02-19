@@ -57,9 +57,8 @@ void Integrate_Liquid_Phase_Intel(
 	 * to vectors of doubles in our case.
 	 */
 
-	vector<int> vector_ipar(128);
+	vector<int> vector_ipar(128); // vectors initialise to zero, as required by the solver
 	vector<int> vector_kd(Number_Species + 1);
-	//int* kd = &kdstep[0];
 
 	n = Number_Species + 1;
 	if (13 * n > (7 + 2 * n) * n) {
@@ -68,7 +67,6 @@ void Integrate_Liquid_Phase_Intel(
 		dpar_size = (7 + 2 * n) * n;
 	}
 	vector<double> vector_dpar(dpar_size);
-	//double* dpar = vector_dpar.data();
 
 
 	// For performance assessment, use a clock:
@@ -100,14 +98,6 @@ void Integrate_Liquid_Phase_Intel(
 	}
 
 	SpeciesLossAll = PrepareSpecies_ForSpeciesLoss(Reaction_Mechanism.Reactions); // New method of listing species
-
-	// And now it is time to call the solver again... with the right information...
-	// According to Intel initialise ipar array with zeros before the first call to dodesol
-	/*
-	for (i = 0; i < 128; i++) {
-		ipar[i] = 0;
-	}//*/
-	// not needed as vectors are automatically initialised
 
 	Concentration.clear(); // ensure the concentrations array is empty
 	Concentration = SpeciesConcentration; // set it to the initial values, also ensures it has the right length
