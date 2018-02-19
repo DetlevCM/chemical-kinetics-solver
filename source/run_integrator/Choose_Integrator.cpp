@@ -35,7 +35,6 @@ void Choose_Integrator(
 							OutputFilenames,
 							InitialSpeciesConcentration,
 							Reaction_Mechanism,
-							//Species,Thermodynamics,Reactions,
 							InitialParameters,
 							KeyRates,
 							PetroOxyDataInitial,
@@ -48,7 +47,6 @@ void Choose_Integrator(
 							OutputFilenames,
 							InitialSpeciesConcentration,
 							Reaction_Mechanism,
-							//Species,Thermodynamics,Reactions,
 							InitialParameters,
 							KeyRates,
 							RatesAnalysisData
@@ -65,7 +63,6 @@ void Choose_Integrator(
 							OutputFilenames,
 							InitialSpeciesConcentration,
 							Reaction_Mechanism,
-							//Species,Thermodynamics,Reactions,
 							InitialParameters,
 							KeyRates,
 							PetroOxyDataInitial,
@@ -78,7 +75,6 @@ void Choose_Integrator(
 							OutputFilenames,
 							InitialSpeciesConcentration,
 							Reaction_Mechanism,
-							//Species,Thermodynamics,Reactions,
 							InitialParameters,
 							KeyRates,
 							RatesAnalysisData

@@ -92,7 +92,8 @@ ReactionParameter Average_Ea_n_zero_k_fitted(
 	gradient_in_Ea = (Ea_for_gradient[41] - Ea_for_gradient[0])/40;
 	gradient_in_lnT = (lnT_for_gradient[41] - lnT_for_gradient[0])/40;
 
-	double difference_in_gradient, fitted_n;
+	double difference_in_gradient = 0;
+	double fitted_n;
 	difference_in_gradient = gradient_in_Group_k - gradient_in_Ea;
 
 	//fitted_n = difference_in_gradient / gradient_in_lnT;

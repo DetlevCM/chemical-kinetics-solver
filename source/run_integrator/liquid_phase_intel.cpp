@@ -180,7 +180,7 @@ void Integrate_Liquid_Phase_Intel(
 
 
 	// prepare the jacobian matrix
-	Prepare_Jacobian_Matrix(JacobianMatrix,Reaction_Mechanism.Reactions,Reaction_Mechanism.Species);
+	Prepare_Jacobian_Matrix(JacobianMatrix,Reaction_Mechanism.Reactions);
 
 
 	// Get the rate Constants, forward and backwards

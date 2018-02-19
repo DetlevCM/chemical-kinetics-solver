@@ -13,8 +13,8 @@
 
 void Prepare_Jacobian_Matrix(
 		vector< JacobianData > &,
-		const vector< SingleReactionData > &,
-		vector< string >
+		const vector< SingleReactionData > &//,
+		//vector< string >
 );
 
 void Jacobian_Matrix_Intel(int*, double*, double*, double*);

@@ -71,11 +71,11 @@ void Integrate_Liquid_Phase_Odepack_LSODA(
 	// some vectors for LSODA
 	vector<int> vector_IWORK(LIW);
 	//int *IWORK = &vector_IWORK[0];
-	int *IWORK = vector_IWORK.data();
+	int* IWORK = vector_IWORK.data();
 
 	vector<double> vector_RWORK(LRW);
 	//double *RWORK = &vector_RWORK[0];
-	double *RWORK = vector_RWORK.data();
+	double* RWORK = vector_RWORK.data();
 
 	// For performance assessment, use a clock:
 	clock_t cpu_time_begin, cpu_time_end, cpu_time_current;
@@ -106,14 +106,15 @@ void Integrate_Liquid_Phase_Odepack_LSODA(
 	SpeciesLossAll = PrepareSpecies_ForSpeciesLoss(Reaction_Mechanism.Reactions); // New method of listing species
 
 	// original old code
-	//double* y = &SpeciesConcentration[0];
-	double *y = SpeciesConcentration.data();
-	Concentration.clear();
-	Concentration.resize(Number_Species + 1);
+	double* y = SpeciesConcentration.data();
+
+
+	Concentration.clear(); // ensure the concentrations array is empty
+	Concentration = SpeciesConcentration; // set it to the initial values, also ensures it has the right length
 
 	double time_current, time_step, time_step1, time_end;
 
-	time_current = 0;// -> Solver is designed for t_0 = 0
+	time_current = 0; // -> Solver is designed for t_0 = 0
 	time_step1 = InitialParameters.TimeStep[0];
 	time_end = InitialParameters.TimeEnd[0];
 	int TimeChanges = (int) InitialParameters.TimeStep.size();
@@ -173,7 +174,7 @@ void Integrate_Liquid_Phase_Odepack_LSODA(
 
 
 	// prepare the jacobian matrix
-	Prepare_Jacobian_Matrix(JacobianMatrix,Reaction_Mechanism.Reactions,Reaction_Mechanism.Species);
+	Prepare_Jacobian_Matrix(JacobianMatrix,Reaction_Mechanism.Reactions);
 
 
 	// Get the rate Constants, forward and backwards

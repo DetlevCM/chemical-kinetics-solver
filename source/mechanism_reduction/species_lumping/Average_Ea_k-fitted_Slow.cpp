@@ -98,7 +98,8 @@ ReactionParameter Average_Ea_CalculateNewParametersSlow(
 	difference_in_gradient = gradient_in_Group_k - gradient_in_Ea;
 	fitted_n = difference_in_gradient / gradient_in_lnT;//*/
 
-	double difference_in_gradient, fitted_n;
+	double difference_in_gradient = 0;
+	double fitted_n;
 	//difference_in_gradient = gradient_in_Group_k - gradient_in_Ea;
 	// We can calculate our fitted n now:
 	fitted_n = exp(difference_in_gradient);

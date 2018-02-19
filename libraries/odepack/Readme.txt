@@ -17,6 +17,8 @@ Create the binary files using either of:
 
   gfortran -c opkda1.f opkda2.f opkdmain.f
 
+  gfortran -O2 -march=native -c opkda1.f opkda2.f opkdmain.f
+  
   gfortran -O3 -march=native -c opkda1.f opkda2.f opkdmain.f
 
   gfortran -O3 -march=native -ffast-math -c opkda1.f opkda2.f opkdmain.f
