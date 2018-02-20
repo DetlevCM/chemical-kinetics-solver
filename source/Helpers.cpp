@@ -78,8 +78,10 @@ void Tokenise_String_To_String_Append(vector< string >& data , string input, str
 	strcpy (cstr, str.c_str());
 
 	p=strtok (cstr,tokens.c_str());
+
 	while(p!=NULL)
 	{
+		//cout << ":" << p << ":\n";
 		data.push_back(p);
 		p=strtok(NULL,tokens.c_str());
 	}

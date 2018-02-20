@@ -233,7 +233,25 @@ vector< SingleReactionData > Get_Reactions(
 								if(SchemeUnits[1] == 1) // Scale Ea
 								{
 									double step = (strtod(SplitLine[SplitLineSize - 1].c_str(),NULL)); // clumsy, but makes
-									ReactionData[2] = step*1000/1.98709; // sure input gets converted
+									ReactionData[2] = step*1.98709e-3; // sure input gets converted
+								}
+
+								if(SchemeUnits[1] == 2) // Scale Ea
+								{
+									double step = (strtod(SplitLine[SplitLineSize - 1].c_str(),NULL)); // clumsy, but makes
+									ReactionData[2] = step*1.98709; // sure input gets converted
+								}
+
+								if(SchemeUnits[1] == 3) // Scale Ea
+								{
+									double step = (strtod(SplitLine[SplitLineSize - 1].c_str(),NULL)); // clumsy, but makes
+									ReactionData[2] = step/8.3144621e-3; // sure input gets converted
+								}
+
+								if(SchemeUnits[1] == 4) // Scale Ea
+								{
+									double step = (strtod(SplitLine[SplitLineSize - 1].c_str(),NULL)); // clumsy, but makes
+									ReactionData[2] = step/8.3144621; // sure input gets converted
 								}
 							}
 
@@ -277,26 +295,45 @@ vector< SingleReactionData > Get_Reactions(
 				begin_flag=1;
 
 				// Identify the units
-				found = line1.find("MOLECULES");
-				if (found!=string::npos)
+				//found = line1.find("MOLECULES");
+				//if (found!=string::npos)
+				if(Test_If_Word_Found(line1, "MOLECULES")) // enable case independent test
 				{
 					SchemeUnits[0] = 0; // A in molecules cm^(-3)
 				}
-				found = line1.find("KELVINS");
-				if (found!=string::npos)
+				//found = line1.find("KELVINS");
+				//if (found!=string::npos)
+				if(Test_If_Word_Found(line1, "KELVINS"))
 				{
 					SchemeUnits[1] = 0; // Ea in Kelvins, great :)
 				}
 
-				found = line1.find("MOLES");
-				if (found!=string::npos)
+				//found = line1.find("MOLES");
+				//if (found!=string::npos)
+				if(Test_If_Word_Found(line1, "MOLES"))
 				{
 					SchemeUnits[0] = 1; // A in moles
 				}
-				found = line1.find("KCAL/MOL");
-				if (found!=string::npos)
+				//found = line1.find("KCAL/MOL");
+				//if (found!=string::npos)
+				if(Test_If_Word_Found(line1, " KCAL/MOL"))
 				{
 					SchemeUnits[1] = 1; // Ea in kcal/mol
+				}
+
+				if(Test_If_Word_Found(line1, " CAL/MOL"))
+				{
+					SchemeUnits[1] = 2; // Ea in kcal/mol
+				}
+
+				if(Test_If_Word_Found(line1, " kJ/MOL"))
+				{
+					SchemeUnits[1] = 3; // Ea in kJ/mol
+				}
+
+				if(Test_If_Word_Found(line1, " J/MOL"))
+				{
+					SchemeUnits[1] = 4; // Ea in J/mol
 				}
 
 				//getline (Mechanism_Data,line1);

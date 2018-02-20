@@ -23,10 +23,12 @@ vector< string > Get_Species(string filename)
 					end_flag = 1;
 				}
 				if(!end_flag){
+
 					vector< string > Remove_Comments;
 					Remove_Comments = Tokenise_String_To_String(line , "!" );
-					Tokenise_String_To_String_Append(temp_species , Remove_Comments[0] , "\t " );
+					line = Remove_Comments[0];
 					Remove_Comments.clear();
+					Tokenise_String_To_String_Append(temp_species , line , " \t" ); // this is really weird, but a " ! " string is required after a species name
 				}
 			}
 			// Moving species check to end of function avoids "SPECIES" being read in as a name
@@ -37,5 +39,12 @@ vector< string > Get_Species(string filename)
 		}
 		Mechanism_Data.close();
 	}
+
+	/*
+	for(int i=0;i<(int)temp_species.size();i++)
+	{
+		cout << temp_species[i] << "\n";
+	}//*/
+
 	return temp_species;
 }
