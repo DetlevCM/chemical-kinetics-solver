@@ -9,6 +9,12 @@
 #define HEADERS_STRUCTS_MECHANISM_STORAGE_H_
 
 
+struct SpeciesWithCoefficient
+{
+	int SpeciesID;
+	double coefficient;
+	bool ismatched;// = false;
+};
 
 struct ThermodynamicData {
 	double TLow;
@@ -29,8 +35,6 @@ struct ThermodynamicData {
 	double NasaHigh6;
 	double NasaHigh7;
 };
-
-
 
 
 #endif /* HEADERS_STRUCTS_MECHANISM_STORAGE_H_ */

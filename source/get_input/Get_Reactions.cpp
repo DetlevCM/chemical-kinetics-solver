@@ -20,14 +20,10 @@
 
 
 
-struct SpeciesWithCoefficient
-{
-	int SpeciesID;
-	double coefficient;
-	bool ismatched;// = false;
-};
+
 
 SpeciesWithCoefficient Return_Species_With_Coefficient(string  , const vector< string > );
+
 
 
 vector< SingleReactionData > Get_Reactions(
@@ -105,7 +101,7 @@ vector< SingleReactionData > Get_Reactions(
 		vector< double > ReactionData; // Reaction parameters such as Arrhenius parameters and whether irreversible or not
 		ReactionData.resize(4); // A, n, Ea and whether reversible or irreversible
 
-		// Reaction is marked a duplicate
+		// Reaction is marked a duplicate (First line cannot be "DUP", else this will crash...)
 		if(line.compare(0,1,"!") != 0  && line.compare(0,1,"/") != 0 && line.compare(0,3,"DUP") == 0)
 		{
 			int position = (int) Reaction_Matrix.size() - 1;
@@ -195,87 +191,17 @@ vector< SingleReactionData > Get_Reactions(
 				// Tokenize line, then take last 3 positions - easiest to work on whole line
 				vector< string > SplitLine;
 
+				double step;
+
 				SplitLine = Tokenise_String_To_String(line,"\t ");
 				int SplitLineSize = (int)SplitLine.size();
+				step = (strtod(SplitLine[SplitLineSize - 3].c_str(),NULL)); // A as read in
+				ReactionData[0] = Scale_A(step, ReactantData, SchemeUnits[0]); // A in adjusted units for calc.
 
-				if(SchemeUnits[0] == 0) // A is molecules / cm^3
-				{
-					// For molecules / cm^3
-					//ReactionData[0]=(strtod(SplitLine[SplitLineSize - 3].c_str(),NULL)); // This is A
+				ReactionData[1]=(strtod(SplitLine[SplitLineSize - 2].c_str(),NULL)); // n as read in
 
-					// for moles / dm^3
-					//*
-					double order = 0;
-					for(int i=0;i<(int)ReactantData.size();i++)
-					{
-						order = order + ReactantData[i];
-					}
-					order = fabs(order) - 1; // make sure it is positive
-
-					double step = (strtod(SplitLine[SplitLineSize - 3].c_str(),NULL));
-					// 6.0221e+23 <- molecules per L
-					double scale = (6.0221e+23); // convert to molecules / cm^(-3)
-					step = step * pow(scale,(order));
-
-					//ReactionData[0] = step * 1000;
-					ReactionData[0] = step / 1000;
-					//*/
-				}
-				else
-				{
-					if(SchemeUnits[0] == 1) // A is in moles / cm^3
-					{
-						// for molecules / cm^3
-						/*
-								// get the reaction order
-								double order = 0;
-								for(i=0;i<(int)ReactantData.size();i++)
-								{
-									order = order + ReactantData[i];
-								}
-								order = abs(order) - 1; // make sure it is positive
-
-								double step = (strtod(SplitLine[SplitLineSize - 3].c_str(),NULL));
-								double scale = 1 /(6.0221e+23); // convert to molecules / cm^(-3)
-								step = step * pow(scale,(order));
-								ReactionData[0] = step;
-								//*/
-
-						// For working in moles/dm^3
-						ReactionData[0]=(strtod(SplitLine[SplitLineSize - 3].c_str(),NULL));
-						ReactionData[0] = ReactionData[0]/1000; // per liter
-					}
-				}
-
-				ReactionData[1]=(strtod(SplitLine[SplitLineSize - 2].c_str(),NULL)); // This is n
-				double step = (strtod(SplitLine[SplitLineSize - 1].c_str(),NULL));
-				//cout << step << "\n";
-
-				if(SchemeUnits[1] == 0) // Ea is in Kelvin
-				{
-					ReactionData[2] = step;
-				}
-				else if(SchemeUnits[1] == 1) // Ea is in kcal/mol
-				{
-					ReactionData[2] = step*1.98709e-3; // sure input gets converted
-				}
-
-				else if(SchemeUnits[1] == 2) // Ea is in cal/mol
-				{
-					ReactionData[2] = step*1.98709; // sure input gets converted
-				}
-
-				else if(SchemeUnits[1] == 3) // Ea is in kJ/mol
-				{
-					ReactionData[2] = step/8.3144621e-3; // sure input gets converted
-				}
-
-				else if(SchemeUnits[1] == 4) // Ea is in J/mol
-				{
-					ReactionData[2] = step/8.3144621; // sure input gets converted
-				}
-
-				cout << SchemeUnits[1] << " " << ReactionData[2] << "\n";
+				step = (strtod(SplitLine[SplitLineSize - 1].c_str(),NULL)); // Ea as read in
+				ReactionData[2] = Scale_Ea(step,SchemeUnits[1]); // Ea in adjusted units for calc.
 
 				// Make New Input
 				SingleReactionData temp;
@@ -313,16 +239,11 @@ vector< SingleReactionData > Get_Reactions(
 
 				Reaction_Matrix.push_back(temp);
 
-				//cout << temp.paramA << " " << temp.paramN << " " << temp.paramEa << "\n";
-
 				ReactantData.clear();
 				ProductData.clear();
 				ReactionData.clear();
 
 			}
-			// Format per Reaction: First Coefficient of Species, negative for Reactant, Positive for Product
-			// followed by pre-exponential constant A, n (from T^n), then Activation Energy Ea and
-			// finally a flag to denote a reversible reaction (0) or irreversible reaction (1)
 		}
 	}
 
@@ -333,11 +254,7 @@ vector< SingleReactionData > Get_Reactions(
 
 
 
-
-
-
-// Helper function to simplify code
-// splits Species Coefficient from Species Name
+// Helper function which splits species coefficient from species name
 SpeciesWithCoefficient Return_Species_With_Coefficient(
 		string InputToSplit,
 		const vector< string > Species

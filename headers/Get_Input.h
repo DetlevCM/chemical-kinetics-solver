@@ -41,7 +41,8 @@ vector< SingleReactionData > Get_Reactions(
 		string ,
 		const vector< string >&
 );
-
+double Scale_Ea(double , int );
+double Scale_A(double , vector<double> , int );
 
 void Get_Initial_Conditions(
 		string,
