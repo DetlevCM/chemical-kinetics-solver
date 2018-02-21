@@ -17,6 +17,12 @@ struct Filenames{
 	string Prefix;
 };
 
+struct ThirdBodyParameters{
+	int SpeciesID;
+	double value;
+};
+
+
 struct JacobianSpecies{
 	int SpeciesID;
 	double power;

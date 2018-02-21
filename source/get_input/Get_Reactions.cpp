@@ -205,7 +205,7 @@ vector< SingleReactionData > Get_Reactions(
 
 				// Make New Input
 				SingleReactionData temp;
-
+				vector<ThirdBodyParameters> ThBd_param;
 				// check for Third Body Indicator:
 				temp.ThirdBodyType = 0; // no third body, default
 				if(Test_If_Word_Found(line, "+M")) // first type, set parameter
@@ -226,10 +226,28 @@ vector< SingleReactionData > Get_Reactions(
 					while(Test_If_Word_Found(Reactions_List[j+1], "/")
 							&&
 							!Test_If_Word_Found(Reactions_List[j+1], "=")
-					)
+					) // the initial implementation will assume a single line of entries
 					{
 						// split the string and get the values
+						vector<string> PdepTerms = Tokenise_String_To_String(Reactions_List[j+1]," \t/");
+						// now this should contain a list of entries - name, number
+						// the length should be a multiple of two
+						ThirdBodyParameters tmp_ThBd_param;
 
+						for(int k=0;k<((int)PdepTerms.size()/2);k++) // this WILL fail if the number of elements does not divide by 2
+						{
+							int m = 0;
+							for(int m=0;m<Number_Species;m++)
+							{
+								if(Test_If_Word_Found(Species[m],PdepTerms[2*k]) &&
+										(int)Species[m].size() - (int)PdepTerms[2*k].size() == 0) // test for same length
+								{
+									tmp_ThBd_param.SpeciesID = m;
+									tmp_ThBd_param.value = stod(PdepTerms[2*k+1],NULL);
+									ThBd_param.push_back(tmp_ThBd_param);
+								}
+							}
+						}
 						j = j+1; // the loop will end when the next line contains a species
 					}
 				}
@@ -259,6 +277,25 @@ vector< SingleReactionData > Get_Reactions(
 						)
 						{
 							// split the string and get the values
+							vector<string> PdepTerms = Tokenise_String_To_String(Reactions_List[j+1]," \t/");
+							// now this should contain a list of entries - name, number
+							// the length should be a multiple of two
+							ThirdBodyParameters tmp_ThBd_param;
+
+							for(int k=0;k<((int)PdepTerms.size()/2);k++) // this WILL fail if the number of elements does not divide by 2
+							{
+								int m = 0;
+								for(int m=0;m<Number_Species;m++)
+								{
+									if(Test_If_Word_Found(Species[m],PdepTerms[2*k]) &&
+											(int)Species[m].size() - (int)PdepTerms[2*k].size() == 0) // test for same length
+									{
+										tmp_ThBd_param.SpeciesID = m;
+										tmp_ThBd_param.value = stod(PdepTerms[2*k+1],NULL);
+										ThBd_param.push_back(tmp_ThBd_param);
+									}
+								}
+							}
 							j = j+1; // the loop will end when the next line contains a species
 						}
 					}
