@@ -18,13 +18,12 @@ bool Handle_Mechanism_Input(
 		string ,
 		string ,
 		MechanismData& ,
-		//vector< string >& ,
-		//vector< ThermodynamicData >& ,
-		//vector< SingleReactionData >& ,
 		Initial_Data& ,
 		vector< double >&,
 		PressureVesselCalc &
 );
+
+vector<int> Set_Mechanism_Units(string );
 
 
 vector< string > Get_Species(
@@ -46,9 +45,8 @@ vector< SingleReactionData > Get_Reactions(
 
 void Get_Initial_Conditions(
 		string,
-		const vector< string >& ,
-		Initial_Data& //,
-		//vector< InitSpecies >&
+		vector< string > ,
+		Initial_Data&
 );
 
 

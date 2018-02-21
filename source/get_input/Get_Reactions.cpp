@@ -287,57 +287,12 @@ vector< SingleReactionData > Get_Reactions(
 
 
 			// Moving reaction data check to end of function avoids "REAC" being read in as a name
-
-			found = line1.find("REAC");
-			if (found!=string::npos)
+			if(Test_If_Word_Found(line1, "REAC"))
 			{
-				//printf("Reaction data found! \n\r");
 				begin_flag=1;
-
-				// Identify the units
-				//found = line1.find("MOLECULES");
-				//if (found!=string::npos)
-				if(Test_If_Word_Found(line1, "MOLECULES")) // enable case independent test
-				{
-					SchemeUnits[0] = 0; // A in molecules cm^(-3)
-				}
-				//found = line1.find("KELVINS");
-				//if (found!=string::npos)
-				if(Test_If_Word_Found(line1, "KELVINS"))
-				{
-					SchemeUnits[1] = 0; // Ea in Kelvins, great :)
-				}
-
-				//found = line1.find("MOLES");
-				//if (found!=string::npos)
-				if(Test_If_Word_Found(line1, "MOLES"))
-				{
-					SchemeUnits[0] = 1; // A in moles
-				}
-				//found = line1.find("KCAL/MOL");
-				//if (found!=string::npos)
-				if(Test_If_Word_Found(line1, " KCAL/MOL"))
-				{
-					SchemeUnits[1] = 1; // Ea in kcal/mol
-				}
-
-				if(Test_If_Word_Found(line1, " CAL/MOL"))
-				{
-					SchemeUnits[1] = 2; // Ea in kcal/mol
-				}
-
-				if(Test_If_Word_Found(line1, " kJ/MOL"))
-				{
-					SchemeUnits[1] = 3; // Ea in kJ/mol
-				}
-
-				if(Test_If_Word_Found(line1, " J/MOL"))
-				{
-					SchemeUnits[1] = 4; // Ea in J/mol
-				}
-
-				//getline (Mechanism_Data,line1);
+				SchemeUnits = Set_Mechanism_Units(line1);
 			}
+
 
 		}
 		Mechanism_Data.close();

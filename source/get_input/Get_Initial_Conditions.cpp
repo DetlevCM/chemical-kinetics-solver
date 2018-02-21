@@ -10,9 +10,8 @@
 // Pass vector by reference as input needs not be changed
 void Get_Initial_Conditions(
 		string filename,
-		const vector< string >& Species,
-		Initial_Data& InitialParameters//,
-		//vector< InitSpecies >& SetupSpecies
+		vector< string > Species,
+		Initial_Data& InitialParameters
 )
 {
 
