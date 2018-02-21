@@ -221,8 +221,17 @@ vector< SingleReactionData > Get_Reactions(
 						j + 1 < (int)Reactions_List.size() // we need a minimum of one extra line
 				)
 				{
-					//
+					// a common feature of the pressure dependency parameters is the
+					// presence of a slash and the lack of an equal sign
+					while(Test_If_Word_Found(Reactions_List[j+1], "/")
+							&&
+							!Test_If_Word_Found(Reactions_List[j+1], "=")
+					)
+					{
+						// split the string and get the values
 
+						j = j+1; // the loop will end when the next line contains a species
+					}
 				}
 				else if(
 						temp.ThirdBodyType == 2 &&
@@ -240,11 +249,23 @@ vector< SingleReactionData > Get_Reactions(
 						temp.ThBd_LOW =  Tokenise_String_To_Double(Reactions_List[j+1] , "lowLOW \t/" );
 						temp.ThBd_TROE = Tokenise_String_To_Double(Reactions_List[j+2] , "troeTROE \t/" );
 						j = j + 2; // set counter forward, to skip these lines
+						// the next line would be "species_name/ number/ ..."
+
+						// a common feature of the pressure dependency parameters is the
+						// presence of a slash and the lack of an equal sign
+						while(Test_If_Word_Found(Reactions_List[j+1], "/")
+								&&
+								!Test_If_Word_Found(Reactions_List[j+1], "=")
+						)
+						{
+							// split the string and get the values
+							j = j+1; // the loop will end when the next line contains a species
+						}
 					}
-					// the next line would be "species_name/ number/ ..."
+
 
 				}
-
+				cout << Reactions_List[j] << "\n";
 
 				temp.Reactants = ReactantData;
 				temp.Products = ProductData;
