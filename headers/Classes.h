@@ -29,6 +29,8 @@ public:
 	double GasPhaseVolume;
 	double GasPhasePressure;
 
+	// initial concentrations are part of the initial conditions
+	vector< double > InitialSpeciesConcentration;
 
 	// Mechanism Reduction:
 	mechanism_reduction MechanismReduction;

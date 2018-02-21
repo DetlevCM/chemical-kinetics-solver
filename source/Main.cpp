@@ -1,11 +1,10 @@
+
+// Central header file that collates all header, functions etc.
 #include <MyHeaders.h>
-
-
 
 
 int main(int argc, char* argv[])
 {
-
 	// Add a switch to have regular output to a log file or debug to command line
 	// http://stackoverflow.com/questions/12774207/fastest-way-to-check-if-a-file-exist-using-standard-c-c11-c
 	ifstream debug_file_exists("debug");
@@ -58,7 +57,7 @@ int main(int argc, char* argv[])
 
 	MechanismData Reaction_Mechanism;
 	Initial_Data InitialParameters; // Initial Conditions/Parameters
-	vector< double > InitialSpeciesConcentration;
+	//vector< double > InitialSpeciesConcentration;
 	PressureVesselCalc PetroOxyDataInitial; // PetroOxy Specific Initial Data
 
 
@@ -68,7 +67,7 @@ int main(int argc, char* argv[])
 			initial_data_filename,
 			Reaction_Mechanism,
 			InitialParameters,
-			InitialSpeciesConcentration,
+			//InitialSpeciesConcentration,
 			PetroOxyDataInitial
 	);
 
@@ -165,7 +164,7 @@ int main(int argc, char* argv[])
 			cout << "\nHanding Mechanism to Integrator\n";
 			Choose_Integrator(
 					OutputFilenames,
-					InitialSpeciesConcentration,
+					//InitialSpeciesConcentration,
 					Reaction_Mechanism,
 					//Species,Thermodynamics,Reactions,
 					InitialParameters,
@@ -246,7 +245,7 @@ int main(int argc, char* argv[])
 					cout << "\nHanding Reduced Mechanism to Integrator\n" << std::flush;
 					Choose_Integrator(
 							OutputFilenames,
-							InitialSpeciesConcentration,
+							//InitialSpeciesConcentration,
 							Reduced_Reaction_Mechanism,
 							//Species,Thermodynamics,ReducedReactions,
 							InitialParameters,

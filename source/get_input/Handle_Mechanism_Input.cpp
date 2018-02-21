@@ -23,7 +23,7 @@ bool Handle_Mechanism_Input(
 		string initial_conditions_fileaname,
 		MechanismData& Reaction_Mechanism,
 		Initial_Data& InitialParameters,
-		vector< double >& InitialSpeciesConcentration,
+		//vector< double >& InitialSpeciesConcentration,
 		PressureVesselCalc & PetroOxyData
 )
 {
@@ -135,12 +135,13 @@ bool Handle_Mechanism_Input(
 	 */
 
 	// We'll store the initial Concentrations separately so we have a reset parameter for multiple runs
-	InitialSpeciesConcentration.clear();
-	InitialSpeciesConcentration.resize(Number_Species + 1);
+	InitialParameters.InitialSpeciesConcentration.clear(); // not needed as it should be empty, but doesn't hurt
+	InitialParameters.InitialSpeciesConcentration.resize(Number_Species + 1);
+	/* not needed with a vector, default is initialisation to zero
 	for (i = 0; i <= Number_Species; i++)
 	{
-		InitialSpeciesConcentration[i] = 0;
-	}
+		InitialParameters.InitialSpeciesConcentration[i] = 0;
+	}//*/
 
 	/*
 	 * We have obtained the ID of the initial species when we read in the input data
@@ -198,10 +199,10 @@ bool Handle_Mechanism_Input(
 
 		for (i = 0; i < Number_Species; i++)
 		{
-			InitialSpeciesConcentration[i] = conversion_factor * temp[i];
+			InitialParameters.InitialSpeciesConcentration[i] = conversion_factor * temp[i];
 			if(temp[i]!=0)
 			{
-				cout << Reaction_Mechanism.Species[InitialParameters.InitialLiquidSpecies[i].SpecID] << " " << InitialSpeciesConcentration[i] << "\n";
+				cout << Reaction_Mechanism.Species[InitialParameters.InitialLiquidSpecies[i].SpecID] << " " << InitialParameters.InitialSpeciesConcentration[i] << "\n";
 			}
 		}
 	}
@@ -209,14 +210,14 @@ bool Handle_Mechanism_Input(
 	{
 		for (i = 0; i < (int) InitialParameters.InitialLiquidSpecies.size(); i++)
 		{
-			InitialSpeciesConcentration[InitialParameters.InitialLiquidSpecies[i].SpecID] =
+			InitialParameters.InitialSpeciesConcentration[InitialParameters.InitialLiquidSpecies[i].SpecID] =
 					InitialParameters.InitialLiquidSpecies[i].SpecConc;
 			cout << Reaction_Mechanism.Species[InitialParameters.InitialLiquidSpecies[i].SpecID] << " " << InitialParameters.InitialLiquidSpecies[i].SpecConc << "\n";
 		}//*/
 	}
 
 	// and the Initial Temperature
-	InitialSpeciesConcentration[Number_Species] = InitialParameters.temperature; //Input[1][0];
+	InitialParameters.InitialSpeciesConcentration[Number_Species] = InitialParameters.temperature; //Input[1][0];
 	cout << "\n";
 
 
@@ -296,9 +297,9 @@ bool Handle_Mechanism_Input(
 		for (i = 0; i < Number_Species; i++)
 		{
 			int SpeciesID = SpeciesClassMapping[i];
-			temp[SpeciesID] = temp[SpeciesID] + InitialSpeciesConcentration[i];
+			temp[SpeciesID] = temp[SpeciesID] + InitialParameters.InitialSpeciesConcentration[i];
 		}
-		temp[Number_Species_Classes] = InitialSpeciesConcentration[Number_Species]; // reassign initial temperature
+		temp[Number_Species_Classes] = InitialParameters.InitialSpeciesConcentration[Number_Species]; // reassign initial temperature
 
 		if(InitialParameters.PetroOxy.IsSet)
 		{
@@ -306,8 +307,8 @@ bool Handle_Mechanism_Input(
 		}
 
 		Number_Species = Number_Species_Classes; // Number_Species is accessed later and not re-evaluated
-		InitialSpeciesConcentration.clear(); // we overwrite the reactions, so why not the initial concentrations, can be used later for reset
-		InitialSpeciesConcentration = temp;
+		InitialParameters.InitialSpeciesConcentration.clear(); // we overwrite the reactions, so why not the initial concentrations, can be used later for reset
+		InitialParameters.InitialSpeciesConcentration = temp;
 
 		cout << "\nAfter species lumping, the scheme contains the following counts:\n" <<
 				"Species: " << Reaction_Mechanism.Reactions[0].Reactants.size() << "\n" <<
