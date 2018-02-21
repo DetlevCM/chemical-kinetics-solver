@@ -37,7 +37,7 @@ vector< SingleReactionData > Get_Reactions(
 
 	/* Struct Reaction Matrix
 	 * 1) Vector Ractants
-	 * 2) Vectro Reactants
+	 * 2) Vector Reactants
 	 * 3) boolean reversible, doubles for A, n, Ea
 	 */
 
@@ -256,11 +256,22 @@ vector< SingleReactionData > Get_Reactions(
 							}
 
 
-
-
 							// Make New Input
-
 							SingleReactionData temp;
+
+
+							// check for Third Body Indicator:
+							temp.ThirdBodyType = 0; // no thrid body, default
+							if(Test_If_Word_Found(line1, "+M")) // first type, set parameter
+							{
+								temp.ThirdBodyType = 1;
+							}
+							if(Test_If_Word_Found(line1, "+(M)")) // apparently not the first, but the second type
+							{
+								temp.ThirdBodyType = 2;
+							}
+
+
 
 							temp.Reactants = ReactantData;
 							temp.Products = ProductData;
@@ -359,3 +370,4 @@ SpeciesWithCoefficient Return_Species_With_Coefficient(
 
 	return SpeciesAndCoefficient;
 }
+
