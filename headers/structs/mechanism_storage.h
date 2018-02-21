@@ -8,18 +8,7 @@
 #ifndef HEADERS_STRUCTS_MECHANISM_STORAGE_H_
 #define HEADERS_STRUCTS_MECHANISM_STORAGE_H_
 
-class SingleReactionData {
-public:
-//struct SingleReactionData {
-	bool Reversible;
-	bool IsDuplicate;
-	double paramA;
-	double paramN;
-	double paramEa;
-	int ThirdBodyType; // 1: +M  2: (+M)
-	vector<double> Reactants;
-	vector<double> Products;
-};
+
 
 struct ThermodynamicData {
 	double TLow;

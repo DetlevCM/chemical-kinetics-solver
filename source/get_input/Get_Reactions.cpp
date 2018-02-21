@@ -41,167 +41,192 @@ vector< SingleReactionData > Get_Reactions(
 	 * 3) boolean reversible, doubles for A, n, Ea
 	 */
 
+	vector<string> Reactions_List; // vector to hold the list of reactions for processing
+
 	vector< SingleReactionData > Reaction_Matrix;
 
 	ifstream Mechanism_Data;
 	Mechanism_Data.open (filename.c_str());
 
-	vector< int > SchemeUnits;
-	SchemeUnits.resize(2); // 2 identifiers to contain IDs for units to A and Ea
+	vector< int > SchemeUnits(2); // identifiers for units of A and Ea
 	vector< int > mapping;
 
-	int i, begin_flag = 0, end_flag = 0; // treat as Boolean, true/false
-	string line1;
+	int begin_flag = 0, end_flag = 0; // treat as Boolean, true/false
+
 	size_t found;
 
 	int Number_Species = (int)Species.size();
 
+	/*
+	 * New implementation:
+	 * 1: read the entire mechanism into a vector (this needs more RAM)
+	 * 2: process the reactions into the mechanism for the solver
+	 */
+
+
 	if (Mechanism_Data.is_open())
 	{
+		string line;
 		while (Mechanism_Data.good())
 		{
-			getline (Mechanism_Data,line1);
+			getline (Mechanism_Data,line);
 
 			if(begin_flag && !end_flag)
 			{
-
-				found = line1.find("END"); // need to check for end in loop for 4 line blocks
+				found = line.find("END"); // need to check for end in loop for 4 line blocks
 				if (found!=string::npos && begin_flag)
 				{
 					end_flag = 1;
 				}
 
+				if(!end_flag && !line.empty() && line.compare(0,1,"!") != 0) // Abort if end reached or initial line is comment
+				{
+					Reactions_List.push_back(line);
+				}
+			}
 
-				if(!end_flag && !line1.empty() && line1.compare(0,1,"!") != 0){ // Abort if end reached or initial line is comment
+			// Moving reaction data check to end of function avoids "REAC" being read in as a name
+			if(Test_If_Word_Found(line,"REAC") && !begin_flag) // only test once... once we found the reactions, its done
+			{
+				begin_flag=1;
+				SchemeUnits = Set_Mechanism_Units(line);
+			}
+		}
+		Mechanism_Data.close();
+	}
+
+	for(int j=0;j<(int)Reactions_List.size();j++)
+	{
+		string line = Reactions_List[j];
+		vector< double > ReactantData; // Reactant Information
+		ReactantData.resize(Number_Species);
+		vector< double > ProductData; // Product Information
+		ProductData.resize(Number_Species);
+		vector< double > ReactionData; // Reaction parameters such as Arrhenius parameters and whether irreversible or not
+		ReactionData.resize(4); // A, n, Ea and whether reversible or irreversible
+
+		// Reaction is marked a duplicate
+		if(line.compare(0,1,"!") != 0  && line.compare(0,1,"/") != 0 && line.compare(0,3,"DUP") == 0)
+		{
+			int position = (int) Reaction_Matrix.size() - 1;
+			Reaction_Matrix[position].IsDuplicate=true;
+		}
+		// content in here - check if line does not start with a comment, ! or / or DUP
+		else if(line.compare(0,1,"!") != 0  && line.compare(0,1,"/") != 0 && line.compare(0,3,"DUP") != 0)
+		{
+			// Split by = or => sign
+			vector< string > SplitLineIn;
+			vector< string > RemoveComments;
+
+			RemoveComments = Tokenise_String_To_String(line , "!" );
+			line = RemoveComments[0];
+			RemoveComments.clear();
 
 
-					vector< double > ReactantData; // Reactant Information
-					ReactantData.resize(Number_Species);
-					vector< double > ProductData; // Product Information
-					ProductData.resize(Number_Species);
-					vector< double > ReactionData; // Reaction parameters such as Arrhenius parameters and whether irreversible or not
-					ReactionData.resize(4); // A, n, Ea and whether reversible or irreversible
-
-
-					// Reaction is marked a duplicate
-					if(line1.compare(0,1,"!") != 0  && line1.compare(0,1,"/") != 0 && line1.compare(0,3,"DUP") == 0)
+			// only continue if the string is not empty or only whitespace or only tab
+			if(!line.empty() && line.find_first_not_of("\t ") != string::npos)
+			{
+				// Determine if the reaction is irreversible. We assume it is reversible and then correct.
+				// irreversible is indicated using => or ->
+				bool is_reversible = true;
+				if(Test_If_Word_Found(line,"=>") || Test_If_Word_Found(line,"->"))
+				{
+					is_reversible = false;
+					// assume the user may write "<=>" or "<=>" which he shouldn't...
+					if(Test_If_Word_Found(line,"<=>") || Test_If_Word_Found(line,"<->"))
 					{
-						int position = (int) Reaction_Matrix.size() - 1;
-						Reaction_Matrix[position].IsDuplicate=true;
-						//cout << "check " << temp << " " << Reaction_Matrix[position].IsDuplicate << " " << position << "\n";
+						is_reversible = true;
 					}
+				}
 
-					// content in here
-					// check if line does not start with a comment, ! or / or DUP
-					// Do I still need the comment check in here?
-					if(line1.compare(0,1,"!") != 0  && line1.compare(0,1,"/") != 0 && line1.compare(0,3,"DUP") != 0)
+
+				SplitLineIn = Tokenise_String_To_String(line, "<=>");
+
+				vector< string > SplitLineLeft;
+				vector< string > SplitLineRight;
+
+				// SplitLineLeft Contains all inputs on the left hand side
+				SplitLineLeft = Tokenise_String_To_String(SplitLineIn[0],"\t +");
+				// SplitLineRight Contains all inputs on the right hand side -> last 3 are parameters
+				SplitLineRight = Tokenise_String_To_String(SplitLineIn[1],"\t +");
+
+
+				int SplitLineLeftSize, SplitLineRightSize;
+				SplitLineLeftSize = (int)SplitLineLeft.size();
+				SplitLineRightSize = (int)SplitLineRight.size() - 3; //(last 3 entries are Arrhenius Parameters
+
+				//cout << SplitLineLeftSize << " " << SplitLineRightSize << "\n";
+
+				for(int i = 0;i<SplitLineLeftSize;i++) // process all entries on left hand side
+				{
+					SpeciesWithCoefficient SpeciesAndCoefficient;
+					SpeciesAndCoefficient = Return_Species_With_Coefficient(SplitLineLeft[i], Species);
+
+					if(SpeciesAndCoefficient.ismatched)
 					{
-						// Split by = or => sign
-						vector< string > SplitLineIn;
-						vector< string > RemoveComments;
-
-						RemoveComments = Tokenise_String_To_String(line1 , "!" );
-						line1 = RemoveComments[0];
-						RemoveComments.clear();
-
-						// only continue if the string is not empty or only whitespace or only tab
-						if(!line1.empty() && line1.find_first_not_of("\t ") != string::npos)
-						{
-
-							bool is_reversible = true;
-							if(line1.find("=>")!=string::npos) // log whether reaction is reversible or irreversible
-							{
-								is_reversible = false;
-								// this will cause havoc: Boolean Reversible ->
-								// false, i.e. not reversible,true, i.e. reversible
-							}
-
-							SplitLineIn = Tokenise_String_To_String(line1, "<=>");
-
-							vector< string > SplitLineLeft;
-							vector< string > SplitLineRight;
-
-							SplitLineLeft = Tokenise_String_To_String(SplitLineIn[0],"\t +");
-							SplitLineRight = Tokenise_String_To_String(SplitLineIn[1],"\t +");
-
-							// SplitLineLeft Contains all inputs on the left hand side
-							// SplitLineRight Contains all inputs on the right hand side -> last 3 are parameters
-
-							int SplitLineLeftSize, SplitLineRightSize;
-
-							SplitLineLeftSize = (int)SplitLineLeft.size();
-							SplitLineRightSize = (int)SplitLineRight.size() - 3; //(last 3 entries are Arrhenius Parameters
-
-							for(i = 0;i<SplitLineLeftSize;i++) // process all entries on left hand side
-							{
-								SpeciesWithCoefficient SpeciesAndCoefficient;
-								SpeciesAndCoefficient = Return_Species_With_Coefficient(SplitLineLeft[i], Species);
-
-								if(SpeciesAndCoefficient.ismatched)
-								{
-									ReactantData[SpeciesAndCoefficient.SpeciesID] =
-											ReactantData[SpeciesAndCoefficient.SpeciesID] - SpeciesAndCoefficient.coefficient;
-								}
-							}
+						ReactantData[SpeciesAndCoefficient.SpeciesID] =
+								ReactantData[SpeciesAndCoefficient.SpeciesID] - SpeciesAndCoefficient.coefficient;
+					}
+				}
 
 
 
-							for(i = 0;i<SplitLineRightSize;i++) // process all entries on right hand side
-							{
+				for(int i = 0;i<SplitLineRightSize;i++) // process all entries on right hand side
+				{
 
-								SpeciesWithCoefficient SpeciesAndCoefficient;
-								SpeciesAndCoefficient = Return_Species_With_Coefficient(SplitLineRight[i], Species);
+					SpeciesWithCoefficient SpeciesAndCoefficient;
+					SpeciesAndCoefficient = Return_Species_With_Coefficient(SplitLineRight[i], Species);
 
-								if(SpeciesAndCoefficient.ismatched)
-								{
-									ProductData[SpeciesAndCoefficient.SpeciesID] =
-											ProductData[SpeciesAndCoefficient.SpeciesID] + SpeciesAndCoefficient.coefficient;
-								}
-							}
+					if(SpeciesAndCoefficient.ismatched)
+					{
+						ProductData[SpeciesAndCoefficient.SpeciesID] =
+								ProductData[SpeciesAndCoefficient.SpeciesID] + SpeciesAndCoefficient.coefficient;
+					}
+				}
 
 
 
-							/* In a next step we need to handle the Arrhenius parameters
+				/* In a next step we need to handle the Arrhenius parameters
 						For simplicity, these get attached to the end of the reaction matrix
 						i.e as columns Species +1,+2,+3
-							 */
+				 */
 
 
-							// Tokenize line, then take last 3 positions - easiest to work on whole line
-							vector< string > SplitLine;
+				// Tokenize line, then take last 3 positions - easiest to work on whole line
+				vector< string > SplitLine;
 
-							SplitLine = Tokenise_String_To_String(line1,"\t ");
-							int SplitLineSize = (int)SplitLine.size();
+				SplitLine = Tokenise_String_To_String(line,"\t ");
+				int SplitLineSize = (int)SplitLine.size();
 
-							if(SchemeUnits[0] == 0) // A is molecules / cm^3
-							{
-								// For molecules / cm^3
-								//ReactionData[0]=(strtod(SplitLine[SplitLineSize - 3].c_str(),NULL)); // This is A
+				if(SchemeUnits[0] == 0) // A is molecules / cm^3
+				{
+					// For molecules / cm^3
+					//ReactionData[0]=(strtod(SplitLine[SplitLineSize - 3].c_str(),NULL)); // This is A
 
-								// for moles / dm^3
-								//*
-								double order = 0;
-								for(i=0;i<(int)ReactantData.size();i++)
-								{
-									order = order + ReactantData[i];
-								}
-								order = fabs(order) - 1; // make sure it is positive
+					// for moles / dm^3
+					//*
+					double order = 0;
+					for(int i=0;i<(int)ReactantData.size();i++)
+					{
+						order = order + ReactantData[i];
+					}
+					order = fabs(order) - 1; // make sure it is positive
 
-								double step = (strtod(SplitLine[SplitLineSize - 3].c_str(),NULL));
-								// 6.0221e+23 <- molecules per L
-								double scale = (6.0221e+23); // convert to molecules / cm^(-3)
-								step = step * pow(scale,(order));
+					double step = (strtod(SplitLine[SplitLineSize - 3].c_str(),NULL));
+					// 6.0221e+23 <- molecules per L
+					double scale = (6.0221e+23); // convert to molecules / cm^(-3)
+					step = step * pow(scale,(order));
 
-								//ReactionData[0] = step * 1000;
-								ReactionData[0] = step / 1000;
-								//*/
-							}
-							else
-							{
-								if(SchemeUnits[0] == 1) // A is in moles / cm^3
-								{
-									// for molecules / cm^3
-									/*
+					//ReactionData[0] = step * 1000;
+					ReactionData[0] = step / 1000;
+					//*/
+				}
+				else
+				{
+					if(SchemeUnits[0] == 1) // A is in moles / cm^3
+					{
+						// for molecules / cm^3
+						/*
 								// get the reaction order
 								double order = 0;
 								for(i=0;i<(int)ReactantData.size();i++)
@@ -216,102 +241,96 @@ vector< SingleReactionData > Get_Reactions(
 								ReactionData[0] = step;
 								//*/
 
-									// For working in moles/dm^3
-									ReactionData[0]=(strtod(SplitLine[SplitLineSize - 3].c_str(),NULL));
-									ReactionData[0] = ReactionData[0]/1000; // per liter
-								}
-							}
-
-							ReactionData[1]=(strtod(SplitLine[SplitLineSize - 2].c_str(),NULL)); // This is n
-
-							if(SchemeUnits[1] == 0) // Ea is fine
-							{
-								ReactionData[2]=(strtod(SplitLine[SplitLineSize - 1].c_str(),NULL)); // This is Ea
-							}
-							else
-							{
-								if(SchemeUnits[1] == 1) // Scale Ea
-								{
-									double step = (strtod(SplitLine[SplitLineSize - 1].c_str(),NULL)); // clumsy, but makes
-									ReactionData[2] = step*1.98709e-3; // sure input gets converted
-								}
-
-								if(SchemeUnits[1] == 2) // Scale Ea
-								{
-									double step = (strtod(SplitLine[SplitLineSize - 1].c_str(),NULL)); // clumsy, but makes
-									ReactionData[2] = step*1.98709; // sure input gets converted
-								}
-
-								if(SchemeUnits[1] == 3) // Scale Ea
-								{
-									double step = (strtod(SplitLine[SplitLineSize - 1].c_str(),NULL)); // clumsy, but makes
-									ReactionData[2] = step/8.3144621e-3; // sure input gets converted
-								}
-
-								if(SchemeUnits[1] == 4) // Scale Ea
-								{
-									double step = (strtod(SplitLine[SplitLineSize - 1].c_str(),NULL)); // clumsy, but makes
-									ReactionData[2] = step/8.3144621; // sure input gets converted
-								}
-							}
-
-
-							// Make New Input
-							SingleReactionData temp;
-
-
-							// check for Third Body Indicator:
-							temp.ThirdBodyType = 0; // no thrid body, default
-							if(Test_If_Word_Found(line1, "+M")) // first type, set parameter
-							{
-								temp.ThirdBodyType = 1;
-							}
-							if(Test_If_Word_Found(line1, "+(M)")) // apparently not the first, but the second type
-							{
-								temp.ThirdBodyType = 2;
-							}
-
-
-
-							temp.Reactants = ReactantData;
-							temp.Products = ProductData;
-							temp.paramA = ReactionData[0];
-							temp.paramN = ReactionData[1];
-							temp.paramEa = ReactionData[2];
-							temp.Reversible = is_reversible;
-							temp.IsDuplicate = false; // default, not a duplicate
-
-							Reaction_Matrix.push_back(temp);
-
-
-							ReactantData.clear();
-							ProductData.clear();
-							ReactionData.clear();
-
-						}
-						// Format per Reaction: First Coefficient of Species, negative for Reactant, Positive for Product
-						// followed by pre-exponential constant A, n (from T^n), then Activation Energy Ea and
-						// finally a flag to denote a reversible reaction (0) or irreversible reaction (1)
+						// For working in moles/dm^3
+						ReactionData[0]=(strtod(SplitLine[SplitLineSize - 3].c_str(),NULL));
+						ReactionData[0] = ReactionData[0]/1000; // per liter
 					}
 				}
+
+				ReactionData[1]=(strtod(SplitLine[SplitLineSize - 2].c_str(),NULL)); // This is n
+				double step = (strtod(SplitLine[SplitLineSize - 1].c_str(),NULL));
+				//cout << step << "\n";
+
+				if(SchemeUnits[1] == 0) // Ea is in Kelvin
+				{
+					ReactionData[2] = step;
+				}
+				else if(SchemeUnits[1] == 1) // Ea is in kcal/mol
+				{
+					ReactionData[2] = step*1.98709e-3; // sure input gets converted
+				}
+
+				else if(SchemeUnits[1] == 2) // Ea is in cal/mol
+				{
+					ReactionData[2] = step*1.98709; // sure input gets converted
+				}
+
+				else if(SchemeUnits[1] == 3) // Ea is in kJ/mol
+				{
+					ReactionData[2] = step/8.3144621e-3; // sure input gets converted
+				}
+
+				else if(SchemeUnits[1] == 4) // Ea is in J/mol
+				{
+					ReactionData[2] = step/8.3144621; // sure input gets converted
+				}
+
+				cout << SchemeUnits[1] << " " << ReactionData[2] << "\n";
+
+				// Make New Input
+				SingleReactionData temp;
+
+				// check for Third Body Indicator:
+				temp.ThirdBodyType = 0; // no third body, default
+				if(Test_If_Word_Found(line, "+M")) // first type, set parameter
+				{
+					temp.ThirdBodyType = 1;
+				}
+				if(Test_If_Word_Found(line, "+(M)")) // apparently not the first, but the second type
+				{
+					temp.ThirdBodyType = 2;
+				}
+				/*/ if there is a thrid body reaction, we need to read in the parameters...
+				if(temp.ThirdBodyType == 1)
+				{
+				//
+
+				}
+				else if{temp.ThirdBodyType == 2}
+				{
+				// LOW/TROE parameters
+
+				//*/
+
+
+				temp.Reactants = ReactantData;
+				temp.Products = ProductData;
+				temp.paramA = ReactionData[0];
+				temp.paramN = ReactionData[1];
+				temp.paramEa = ReactionData[2];
+				temp.Reversible = is_reversible;
+				temp.IsDuplicate = false; // default, not a duplicate
+
+				Reaction_Matrix.push_back(temp);
+
+				//cout << temp.paramA << " " << temp.paramN << " " << temp.paramEa << "\n";
+
+				ReactantData.clear();
+				ProductData.clear();
+				ReactionData.clear();
+
 			}
-
-
-			// Moving reaction data check to end of function avoids "REAC" being read in as a name
-			if(Test_If_Word_Found(line1, "REAC"))
-			{
-				begin_flag=1;
-				SchemeUnits = Set_Mechanism_Units(line1);
-			}
-
-
+			// Format per Reaction: First Coefficient of Species, negative for Reactant, Positive for Product
+			// followed by pre-exponential constant A, n (from T^n), then Activation Energy Ea and
+			// finally a flag to denote a reversible reaction (0) or irreversible reaction (1)
 		}
-		Mechanism_Data.close();
 	}
 
 
 	return Reaction_Matrix;
 }
+
+
 
 
 
