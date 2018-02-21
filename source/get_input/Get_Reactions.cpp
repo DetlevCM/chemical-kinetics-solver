@@ -108,7 +108,13 @@ vector< SingleReactionData > Get_Reactions(
 			Reaction_Matrix[position].IsDuplicate=true;
 		}
 		// content in here - check if line does not start with a comment, ! or / or DUP
-		else if(line.compare(0,1,"!") != 0  && line.compare(0,1,"/") != 0 && line.compare(0,3,"DUP") != 0)
+		else if(
+				line.compare(0,1,"!") != 0 &&
+				line.compare(0,1,"/") != 0 &&
+				line.compare(0,3,"DUP") != 0 &&
+				!Test_If_Word_Found(line, "LOW/") && // not LOW term for third bodies
+				!Test_If_Word_Found(line, "TROE/") // not TROE term for third bodies
+		)
 		{
 			// Split by = or => sign
 			vector< string > SplitLineIn;
@@ -181,14 +187,8 @@ vector< SingleReactionData > Get_Reactions(
 				}
 
 
-
-				/* In a next step we need to handle the Arrhenius parameters
-						For simplicity, these get attached to the end of the reaction matrix
-						i.e as columns Species +1,+2,+3
-				 */
-
-
-				// Tokenize line, then take last 3 positions - easiest to work on whole line
+				// In a next step we need to handle the Arrhenius parameters
+				// Tokenize line, then take last 3 positions - easiest to work on the whole line without comments
 				vector< string > SplitLine;
 
 				double step;
@@ -216,17 +216,34 @@ vector< SingleReactionData > Get_Reactions(
 				{
 					temp.ThirdBodyType = 2;
 				}
-				/*/ if there is a thrid body reaction, we need to read in the parameters...
-				if(temp.ThirdBodyType == 1)
+				// if there is a third body reaction, we need to read in the parameters...
+				if(temp.ThirdBodyType == 1 &&
+						j + 1 < (int)Reactions_List.size() // we need a minimum of one extra line
+				)
 				{
-				//
+					//
 
 				}
-				else if{temp.ThirdBodyType == 2}
+				else if(
+						temp.ThirdBodyType == 2 &&
+						j + 3 < (int)Reactions_List.size() // we need a minimum of 3 extra lines
+				)
 				{
-				// LOW/TROE parameters
+					// LOW/TROE parameters
+					// we can test the next lines for their presence and extract the values
+					if(
+							Test_If_Word_Found(Reactions_List[j+1], "LOW/")
+							&&
+							Test_If_Word_Found(Reactions_List[j+2], "TROE/")
+					)
+					{
+						temp.ThBd_LOW =  Tokenise_String_To_Double(Reactions_List[j+1] , "lowLOW \t/" );
+						temp.ThBd_TROE = Tokenise_String_To_Double(Reactions_List[j+2] , "troeTROE \t/" );
+						j = j + 2; // set counter forward, to skip these lines
+					}
+					// the next line would be "species_name/ number/ ..."
 
-				//*/
+				}
 
 
 				temp.Reactants = ReactantData;

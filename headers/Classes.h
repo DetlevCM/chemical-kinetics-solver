@@ -79,6 +79,8 @@ public:
 	double paramN;
 	double paramEa;
 	int ThirdBodyType; // 1: +M  2: (+M)
+	vector<double> ThBd_LOW;
+	vector<double> ThBd_TROE;
 	vector<double> Reactants;
 	vector<double> Products;
 };
