@@ -25,10 +25,20 @@ vector< string > Get_Species(string filename)
 				if(!end_flag){
 
 					vector< string > Remove_Comments;
-					Remove_Comments = Tokenise_String_To_String(line , "!" );
-					line = Remove_Comments[0];
+					if(line.find("!")!=string::npos) // contains comments, so remove comments
+					{
+						Remove_Comments = Tokenise_String_To_String(line , "!" );
+						line = Remove_Comments[0];
+					}
 					Remove_Comments.clear();
-					Tokenise_String_To_String_Append(temp_species , line , " \t" ); // this is really weird, but a " ! " string is required after a species name
+					if(line.find(" ")!=string::npos || line.find("\t")!=string::npos) // contains spaces or tabs, so tokenize
+					{
+						Tokenise_String_To_String_Append(temp_species , line , " \t" ); // this is really weird, but a " ! " string is required after a species name
+					}
+					else
+					{
+						temp_species.push_back(line);
+					}
 				}
 			}
 			// Moving species check to end of function avoids "SPECIES" being read in as a name
