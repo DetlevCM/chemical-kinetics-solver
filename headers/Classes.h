@@ -58,6 +58,13 @@ public:
 		vector< int > ConstantSpecies;
 
 
+	// extension to consider TGA conditions
+	// (ThermoGravimetric Analysis)
+	bool TGA;
+	vector<double> TGA_temperatures; // provide initial temperature, rate and final temperature
+
+
+
 	// Old mess below...
 
 

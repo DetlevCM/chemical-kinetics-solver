@@ -101,6 +101,8 @@ void Get_Initial_Conditions(
 	InitialParameters.InitialLiquidSpecies.clear();
 	InitialParameters.InitialGasSpecies.clear();
 
+	// extra settings for a TGA
+	InitialParameters.TGA = false; // default
 
 
 	/* Modification to deal with PetroOxy in main Input file */
