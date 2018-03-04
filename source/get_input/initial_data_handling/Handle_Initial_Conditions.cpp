@@ -24,6 +24,32 @@ void Handle_Initial_Conditions(Initial_Data& InitialParameters, vector<string> I
 			line_content.clear();
 		}
 
+
+		// additional options for the TGA conditions
+		if (Test_If_Word_Found(Input[i], "TGA"))
+		{
+			InitialParameters.TGA = true;
+
+			string line;
+			vector< string > tokens;
+			// stupid implementation, but works... - maybe I improve it in the future...
+			tokens.push_back("!");
+			tokens.push_back("//");
+			// remove comments
+			line = Strip_Single_Line_Comments(Input[i],tokens);
+
+			// split the line into individual components
+			vector< string > line_content;
+			line_content = Tokenise_String_To_String(line," \t");
+
+			vector <double> temperature_range(3);
+			if((int)line_content.size()>=3){
+				InitialParameters.TGA_rate = stod(line_content[1],NULL);
+				InitialParameters.TGA_target = stod(line_content[2],NULL);
+			}
+		}
+
+
 		if (Test_If_Word_Found(Input[i], "EndTime"))
 		{
 			string line;

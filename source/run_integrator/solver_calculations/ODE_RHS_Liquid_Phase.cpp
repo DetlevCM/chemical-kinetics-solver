@@ -37,7 +37,6 @@ void ODE_RHS_Liquid_Phase(int*n, double*t, double*y, double*f)
 		}
 	}
 
-
 	Evaluate_Thermodynamic_Parameters(CalculatedThermo, Thermodynamics, Concentration[Number_Species]);
 	Calculate_Rate_Constant(Kf, Kr, Concentration[Number_Species],ReactionParameters, CalculatedThermo, SpeciesLossAll, Delta_N);
 	CalculateReactionRates(Rates, Concentration, Kf, Kr, ReactantsForReactions, ProductsForReactions);
@@ -77,6 +76,18 @@ void ODE_RHS_Liquid_Phase(int*n, double*t, double*y, double*f)
 				f[i] = 0 ; // concentration reset
 				//cout << "f[" << i << "] = " << f[i];
 			}
+		}
+	}
+
+	if(InitialDataConstants.TGA)
+	{
+		if(Concentration[Number_Species] < InitialDataConstants.TGA_target) // temperature needs to rise
+		{
+			f[Number_Species] = InitialDataConstants.TGA_rate;
+		}
+		else // temperature has reached target value, so no more rise
+		{
+			f[Number_Species] = 0;
 		}
 	}
 

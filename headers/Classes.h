@@ -53,16 +53,16 @@ public:
 	vector< InitSpecies > InitialLiquidSpecies;
 	vector< InitSpecies > InitialGasSpecies;
 	/* Constant concentration option */
-		/* Single vector, to switch rates of specified species to zero */
+	/* Single vector, to switch rates of specified species to zero */
 	bool ConstantConcentration;
-		vector< int > ConstantSpecies;
+	vector< int > ConstantSpecies;
 
 
 	// extension to consider TGA conditions
 	// (ThermoGravimetric Analysis)
 	bool TGA;
-	vector<double> TGA_temperatures; // provide initial temperature, rate and final temperature
-
+	double TGA_rate; // provide rate and final temperature
+	double TGA_target; // provide target temperature
 
 
 	// Old mess below...
@@ -79,7 +79,7 @@ public:
 
 class SingleReactionData {
 public:
-//struct SingleReactionData {
+	//struct SingleReactionData {
 	bool Reversible;
 	bool IsDuplicate;
 	double paramA;

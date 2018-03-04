@@ -122,6 +122,11 @@ void Integrate_Liquid_Phase_Intel(
 	InitialDataConstants.EnforceStability = InitialParameters.EnforceStability;
 	InitialDataConstants.temperature = InitialParameters.temperature;
 
+	// TGA settings
+	InitialDataConstants.TGA = InitialParameters.TGA;
+	InitialDataConstants.TGA_rate = InitialParameters.TGA_rate;
+	InitialDataConstants.TGA_target = InitialParameters.TGA_target;
+	// end TGA settings
 
 	// set constant concentration if desired
 	InitialDataConstants.ConstantConcentration = InitialParameters.ConstantConcentration;
