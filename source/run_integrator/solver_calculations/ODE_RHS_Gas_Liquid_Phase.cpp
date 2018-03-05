@@ -178,9 +178,9 @@ void ODE_RHS_Gas_Liquid_Phase(int*n, double*time_current, double*y, double*f)
 
 
 
-	// notes:
-	/* This will need to be fed a combined system of two mechanisms, so they are solved in synch
-	 * there needs to be a transfer section for rates too that links the two....
-	 * The system will be huge for big mechanisms...
-	 */
+// notes:
+/* This will need to be fed a combined system of two mechanisms, so they are solved in synch
+ * there needs to be a transfer section for rates too that links the two....
+ * The system will be huge for big mechanisms...
+ */
 

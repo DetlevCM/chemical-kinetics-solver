@@ -57,12 +57,12 @@ double Scale_Ea(double Ea_read_in, int scaling_type)
 {
 	if(scaling_type == 1) // Ea is in kcal/mol
 	{
-		return Ea_read_in*1.98709e-3; // sure input gets converted
+		return Ea_read_in/1.98709e-3; // sure input gets converted
 	}
 
 	else if(scaling_type== 2) // Ea is in cal/mol
 	{
-		return Ea_read_in*1.98709; // sure input gets converted
+		return Ea_read_in/1.98709; // sure input gets converted
 	}
 
 	else if(scaling_type == 3) // Ea is in kJ/mol

@@ -80,6 +80,18 @@ void ODE_RHS_Liquid_Phase(int*n, double*t, double*y, double*f)
 		}
 	}
 
+	if(InitialDataConstants.TGA_used)
+	{
+		if(Concentration[Number_Species] < InitialDataConstants.TGA_target)
+		{
+			f[Number_Species] = InitialDataConstants.TGA_rate;
+		}
+		else if(Concentration[Number_Species] >= InitialDataConstants.TGA_target)
+		{
+			f[Number_Species] = 0;
+		}
+	}
+
 	// IEEE standard hack to check for NaN
 	// if temperature blows up, freeze it
 	//*

@@ -123,6 +123,13 @@ void Integrate_Liquid_Phase_Odepack_LSODA(
 	InitialDataConstants.EnforceStability = InitialParameters.EnforceStability;
 	InitialDataConstants.temperature = InitialParameters.temperature;
 
+	// in case we want to simulate a TGA
+	if(InitialParameters.TGA_used)
+	{
+		InitialDataConstants.TGA_used = InitialParameters.TGA_used;
+		InitialDataConstants.TGA_rate = InitialParameters.TGA_rate;
+		InitialDataConstants.TGA_target = InitialParameters.TGA_target;
+	}
 
 	// set constant concentration if desired
 	InitialDataConstants.ConstantConcentration = InitialParameters.ConstantConcentration;
@@ -287,8 +294,8 @@ void Integrate_Liquid_Phase_Odepack_LSODA(
 					&ITOL,&RTOL,&ATOL,&ITASK,&ISTATE,&IOPT,RWORK,&LRW,IWORK,&LIW,
 					(void*) Jacobian_Matrix_Odepack_LSODA,&JT);//*/
 			dlsoda_((void*) ODE_RHS_Liquid_Phase,&n,SpeciesConcentration.data(),&time_current,&time_step,
-								&ITOL,&RTOL,&ATOL,&ITASK,&ISTATE,&IOPT,vector_RWORK.data(),&LRW,vector_IWORK.data(),&LIW,
-								(void*) Jacobian_Matrix_Odepack_LSODA,&JT);
+					&ITOL,&RTOL,&ATOL,&ITASK,&ISTATE,&IOPT,vector_RWORK.data(),&LRW,vector_IWORK.data(),&LIW,
+					(void*) Jacobian_Matrix_Odepack_LSODA,&JT);
 		}
 		else //if(!Use_Analytical_Jacobian)
 		{
@@ -298,8 +305,8 @@ void Integrate_Liquid_Phase_Odepack_LSODA(
 					&ITOL,&RTOL,&ATOL,&ITASK,&ISTATE,&IOPT,RWORK,&LRW,IWORK,&LIW,
 					(void*) Jacobian_Matrix_Odepack_LSODA,&JT);//*/
 			dlsoda_((void*) ODE_RHS_Liquid_Phase,&n,SpeciesConcentration.data(),&time_current,&time_step,
-								&ITOL,&RTOL,&ATOL,&ITASK,&ISTATE,&IOPT,vector_RWORK.data(),&LRW,vector_IWORK.data(),&LIW,
-								(void*) Jacobian_Matrix_Odepack_LSODA,&JT);
+					&ITOL,&RTOL,&ATOL,&ITASK,&ISTATE,&IOPT,vector_RWORK.data(),&LRW,vector_IWORK.data(),&LIW,
+					(void*) Jacobian_Matrix_Odepack_LSODA,&JT);
 		}
 
 		if (ISTATE < 0)

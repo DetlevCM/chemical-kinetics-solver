@@ -74,6 +74,10 @@ struct ConstantInitRHSODE {
 	double temperature;
 	double PetroOxyTemperatureRise;
 
+	bool TGA_used;
+	double TGA_rate;
+	double TGA_target;
+
 	// for constant concentration
 	bool ConstantConcentration;
 	vector< double > ConstantSpecies;

@@ -53,10 +53,15 @@ public:
 	vector< InitSpecies > InitialLiquidSpecies;
 	vector< InitSpecies > InitialGasSpecies;
 	/* Constant concentration option */
-		/* Single vector, to switch rates of specified species to zero */
+	/* Single vector, to switch rates of specified species to zero */
 	bool ConstantConcentration;
-		vector< int > ConstantSpecies;
+	vector< int > ConstantSpecies;
 
+
+	// extra parameters for a TGA case
+	bool TGA_used;
+	double TGA_rate;
+	double TGA_target;
 
 	// Old mess below...
 
@@ -72,7 +77,7 @@ public:
 
 class SingleReactionData {
 public:
-//struct SingleReactionData {
+	//struct SingleReactionData {
 	bool Reversible;
 	bool IsDuplicate;
 	double paramA;
