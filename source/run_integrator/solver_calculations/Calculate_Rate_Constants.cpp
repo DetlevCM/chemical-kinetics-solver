@@ -11,7 +11,7 @@
 void Calculate_Rate_Constant(
 		vector< double >& Kf,
 		vector< double >& Kr,
-		const double Temperature,
+		double Temperature,
 		const vector< ReactionParameter >& ReactionParameters,
 		const vector< CalculatedThermodynamics >& CalculatedThermo,
 		const vector< TrackSpecies >& SpeciesAll,
@@ -66,7 +66,6 @@ void Calculate_Rate_Constant(
 		Kf[i] = ReactionParameters[i].paramA *
 				exp(-ReactionParameters[i].paramEa/Temperature); // do NOT forget the - !!!
 
-
 		//* Speedup by only raising temperature to power where needed: improvement is large :)
 		if(ReactionParameters[i].paramN != 0) // raising to power 0 has no effect, so only if not 0
 		{
@@ -81,7 +80,15 @@ void Calculate_Rate_Constant(
 				Kf[i] = Kf[i] * Temperature; // raise temp^1 = temp
 			}//*/
 		}
-		//cout << ReactionParameter[i].A << " , " << ReactionParameter[i].N << " , " << ReactionParameter[i].Ea << " , " << Kf[i] << "\n";
+
+		/*
+		cout <<
+		//		Temperature << " , " <<
+		//		exp(-ReactionParameters[i].paramEa/Temperature) << " , " <<
+				ReactionParameters[i].paramA << " , " <<
+				ReactionParameters[i].paramN << " , " <<
+				ReactionParameters[i].paramEa << " , " <<
+				Kf[i] << "\n";//*/
 
 		// default, change if reversible - seems a little bit faster...
 		Kr[i] = 0;
