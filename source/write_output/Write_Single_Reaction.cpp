@@ -19,6 +19,8 @@ string Prepare_Single_Reaction_Output(
 
 	ostringstream convert;
 
+	double Reaction_Order = 0;
+
 	check = false;
 	for(i=0;i<Number_Species;i++) // Line 1
 	{
@@ -31,6 +33,7 @@ string Prepare_Single_Reaction_Output(
 				}
 				convert << Species[i];
 				check = true;
+				Reaction_Order = Reaction_Order + 1; // stoichiometry 1
 			}
 			else
 			{
@@ -40,6 +43,7 @@ string Prepare_Single_Reaction_Output(
 				}
 				convert << fabs(Reaction.Reactants[i]) << Species[i];
 				check = true;
+				Reaction_Order = Reaction_Order + fabs(Reaction.Reactants[i]); // stoichiometry not 1
 			}
 		}
 	}
@@ -83,8 +87,12 @@ string Prepare_Single_Reaction_Output(
 	// Arrhenius parameters correct moles/l to moles/cm^3
 	/*convert << "\t\t" << Reaction.paramA*1000 << "\t" << Reaction.paramN << "\t" << Reaction.paramEa << "\n"; //*/
 
+	// ensure that A is scaled correctly to per cm^3 units depending on the reaction order
+	double prexponential_A = Reaction.paramA * pow(1000,(Reaction_Order-1));
+
 	convert << "\t\t" <<
-			Reaction.paramA*1000 << "\t" << // mol / cm^3
+			prexponential_A << "\t" <<
+			//Reaction.paramA*1000 << "\t" << // mol / cm^3
 			Reaction.paramN << "\t" <<
 			(Reaction.paramEa/1000*1.98709) << "\n"; // correct for kcal/mol
 

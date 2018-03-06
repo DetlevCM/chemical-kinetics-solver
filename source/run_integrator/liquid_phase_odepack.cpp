@@ -123,11 +123,21 @@ void Integrate_Liquid_Phase_Odepack_LSODA(
 	InitialDataConstants.EnforceStability = InitialParameters.EnforceStability;
 	InitialDataConstants.temperature = InitialParameters.temperature;
 
+<<<<<<< HEAD
 	// TGA settings
 	InitialDataConstants.TGA = InitialParameters.TGA;
 	InitialDataConstants.TGA_rate = InitialParameters.TGA_rate;
 	InitialDataConstants.TGA_target = InitialParameters.TGA_target;
 	// end TGA settings
+=======
+	// in case we want to simulate a TGA
+	if(InitialParameters.TGA_used)
+	{
+		InitialDataConstants.TGA_used = InitialParameters.TGA_used;
+		InitialDataConstants.TGA_rate = InitialParameters.TGA_rate;
+		InitialDataConstants.TGA_target = InitialParameters.TGA_target;
+	}
+>>>>>>> 08a628148d86c0018411817c44cf433d1ffca3eb
 
 	// set constant concentration if desired
 	InitialDataConstants.ConstantConcentration = InitialParameters.ConstantConcentration;

@@ -236,7 +236,6 @@ vector< SingleReactionData > Get_Reactions(
 
 						for(int k=0;k<((int)PdepTerms.size()/2);k++) // this WILL fail if the number of elements does not divide by 2
 						{
-							int m = 0;
 							for(int m=0;m<Number_Species;m++)
 							{
 								if(Test_If_Word_Found(Species[m],PdepTerms[2*k]) &&
@@ -284,7 +283,6 @@ vector< SingleReactionData > Get_Reactions(
 
 							for(int k=0;k<((int)PdepTerms.size()/2);k++) // this WILL fail if the number of elements does not divide by 2
 							{
-								int m = 0;
 								for(int m=0;m<Number_Species;m++)
 								{
 									if(Test_If_Word_Found(Species[m],PdepTerms[2*k]) &&

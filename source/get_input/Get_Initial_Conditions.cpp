@@ -104,6 +104,8 @@ void Get_Initial_Conditions(
 	// extra settings for a TGA
 	InitialParameters.TGA = false; // default
 
+	// for the TGA case:
+	InitialParameters.TGA_used = false; // default
 
 	/* Modification to deal with PetroOxy in main Input file */
 

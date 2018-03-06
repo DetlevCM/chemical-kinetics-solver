@@ -220,7 +220,6 @@ bool Handle_Mechanism_Input(
 	InitialParameters.InitialSpeciesConcentration[Number_Species] = InitialParameters.temperature; //Input[1][0];
 	cout << "\n";
 
-
 	// Did the user request an irreversible scheme?
 	if (InitialParameters.irrev) // contains true of false
 	{
@@ -228,9 +227,6 @@ bool Handle_Mechanism_Input(
 		Reaction_Mechanism.Reactions = Make_Irreversible(Reaction_Mechanism.Reactions, Reaction_Mechanism.Thermodynamics, InitialParameters.temperature, 50); // hardcoded to +/- 50K right now
 		WriteReactions("irreversible_scheme.txt", Reaction_Mechanism.Species, Reaction_Mechanism.Reactions);
 	}
-
-
-
 	// End of initial data
 
 

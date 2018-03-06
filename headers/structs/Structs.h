@@ -74,7 +74,11 @@ struct ConstantInitRHSODE {
 	double temperature;
 	double PetroOxyTemperatureRise;
 
+<<<<<<< HEAD
 	bool TGA;
+=======
+	bool TGA_used;
+>>>>>>> 08a628148d86c0018411817c44cf433d1ffca3eb
 	double TGA_rate;
 	double TGA_target;
 

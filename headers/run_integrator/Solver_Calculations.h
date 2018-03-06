@@ -28,7 +28,7 @@ void ODE_RHS_Pressure_Vessel(int*, double*, double*, double*);
 void Calculate_Rate_Constant(
 		vector< double >& ,
 		vector< double >& ,
-		const double ,
+		double ,
 		const vector< ReactionParameter >& ,
 		//const vector< vector< double > >& ,
 		const vector< CalculatedThermodynamics >& ,
