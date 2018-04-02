@@ -79,15 +79,6 @@ void ODE_RHS_Liquid_Phase(int*n, double*t, double*y, double*f)
 		}
 	}
 
-<<<<<<< HEAD
-	if(InitialDataConstants.TGA)
-	{
-		if(Concentration[Number_Species] < InitialDataConstants.TGA_target) // temperature needs to rise
-		{
-			f[Number_Species] = InitialDataConstants.TGA_rate;
-		}
-		else // temperature has reached target value, so no more rise
-=======
 	if(InitialDataConstants.TGA_used)
 	{
 		if(Concentration[Number_Species] < InitialDataConstants.TGA_target)
@@ -95,7 +86,6 @@ void ODE_RHS_Liquid_Phase(int*n, double*t, double*y, double*f)
 			f[Number_Species] = InitialDataConstants.TGA_rate;
 		}
 		else if(Concentration[Number_Species] >= InitialDataConstants.TGA_target)
->>>>>>> 08a628148d86c0018411817c44cf433d1ffca3eb
 		{
 			f[Number_Species] = 0;
 		}

@@ -101,9 +101,6 @@ void Get_Initial_Conditions(
 	InitialParameters.InitialLiquidSpecies.clear();
 	InitialParameters.InitialGasSpecies.clear();
 
-	// extra settings for a TGA
-	InitialParameters.TGA = false; // default
-
 	// for the TGA case:
 	InitialParameters.TGA_used = false; // default
 

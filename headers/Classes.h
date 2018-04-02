@@ -56,17 +56,6 @@ public:
 	/* Single vector, to switch rates of specified species to zero */
 	bool ConstantConcentration;
 	vector< int > ConstantSpecies;
-<<<<<<< HEAD
-
-
-	// extension to consider TGA conditions
-	// (ThermoGravimetric Analysis)
-	bool TGA;
-	double TGA_rate; // provide rate and final temperature
-	double TGA_target; // provide target temperature
-=======
->>>>>>> 08a628148d86c0018411817c44cf433d1ffca3eb
-
 
 	// extra parameters for a TGA case
 	bool TGA_used;
@@ -74,7 +63,6 @@ public:
 	double TGA_target;
 
 	// Old mess below...
-
 
 	bool PrintReacRates;
 	bool EnforceStability;
