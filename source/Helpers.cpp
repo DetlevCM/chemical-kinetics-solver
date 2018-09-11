@@ -5,7 +5,7 @@
  *      Author: DetlevCM
  */
 
-#include "MyHeaders.h"
+#include <Headers.hpp>
 
 string Strip_Single_Line_Comments(string input , vector<string> tokens)
 {

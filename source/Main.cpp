@@ -1,6 +1,6 @@
 
 // Central header file that collates all header, functions etc.
-#include <MyHeaders.h>
+#include <Headers.hpp>
 
 
 int main(int argc, char* argv[])

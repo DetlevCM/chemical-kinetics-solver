@@ -1,4 +1,4 @@
-#include <MyHeaders.h>
+#include <Headers.hpp>
 
 // http://stackoverflow.com/questions/7677007/passing-vector-to-function-c
 // Pass vector by reference as input needs not be changed

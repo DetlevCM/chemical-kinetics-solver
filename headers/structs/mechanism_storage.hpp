@@ -5,8 +5,8 @@
  *      Author: detlevcm
  */
 
-#ifndef HEADERS_STRUCTS_MECHANISM_STORAGE_H_
-#define HEADERS_STRUCTS_MECHANISM_STORAGE_H_
+#ifndef HEADERS_STRUCTS_MECHANISM_STORAGE_HPP_
+#define HEADERS_STRUCTS_MECHANISM_STORAGE_HPP_
 
 
 struct SpeciesWithCoefficient
@@ -37,4 +37,4 @@ struct ThermodynamicData {
 };
 
 
-#endif /* HEADERS_STRUCTS_MECHANISM_STORAGE_H_ */
+#endif /* HEADERS_STRUCTS_MECHANISM_STORAGE_HPP_ */

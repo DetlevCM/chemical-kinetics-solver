@@ -5,8 +5,8 @@
  *      Author: DetlevCM
  */
 
-#ifndef HEADERS_RATES_ANALYSIS_H_
-#define HEADERS_RATES_ANALYSIS_H_
+#ifndef HEADERS_RATES_ANALYSIS_HPP_
+#define HEADERS_RATES_ANALYSIS_HPP_
 
 void MaxRatesAnalysis(
 		vector< vector < str_RatesAnalysis > >& ,
@@ -76,4 +76,4 @@ void Print_Rates_Per_Species(
 
 
 
-#endif /* HEADERS_RATES_ANALYSIS_H_ */
+#endif /* HEADERS_RATES_ANALYSIS_HPP_ */

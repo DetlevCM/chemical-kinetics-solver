@@ -5,7 +5,7 @@
  *      Author: DetlevCM
  */
 
-#include <MyHeaders.h>
+#include <Headers.hpp>
 
 void ReportAccuracy(
 		string separator,

@@ -5,8 +5,8 @@
  *      Author: detlevcm
  */
 
-#ifndef HEADERS_CLASSES_H_
-#define HEADERS_CLASSES_H_
+#ifndef HEADERS_CLASSES_HPP_
+#define HEADERS_CLASSES_HPP_
 
 //struct InitParam {
 class Initial_Data{
@@ -99,4 +99,4 @@ public:
 };
 
 
-#endif /* HEADERS_CLASSES_H_ */
+#endif /* HEADERS_CLASSES_HPP_ */

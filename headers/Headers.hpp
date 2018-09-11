@@ -51,38 +51,38 @@ using std::stod; // for C++ string to double
 
 
 // structs definitions
-#include "structs/Structs.h"
-#include "structs/mechanism_storage.h"
-#include "structs/initial_conditions_parameters.h"
+#include <structs/Structs.hpp>
+#include <structs/mechanism_storage.hpp>
+#include <structs/initial_conditions_parameters.hpp>
 
-#include "Classes.h"
+#include <Classes.hpp>
 
 // namespaces with global variables for performance reasons
-#include "Namespaces.h"
+#include <Namespaces.hpp>
 
 // helper functions for cleaner code
-#include "Helpers.h"
+#include <Helpers.hpp>
 
 // headers for the ode libraries
-#include "lib_headers/lib_Intel_ODE.h"
-#include "lib_headers/lib_odepack.h"
+#include <lib_headers/lib_Intel_ODE.hpp>
+#include <lib_headers/lib_odepack.hpp>
 
 #
 // run_integrator subfolder
-#include "run_integrator/Jacobian.h"
-#include "run_integrator/Run_Integrator.h"
-#include "run_integrator/Solver_Calculations.h"
+#include <Jacobian.hpp>
+#include <Run_Integrator.hpp>
+#include <Solver_Calculations.hpp>
 
 
 // and somre more headers...
-#include "Get_Input.h"
-#include <Handle_Initial_Conditions.h> // new input handling
-#include "Pre-Process.h"
-#include "Mechanism_Reduction.h"
-#include "Rates-Analysis.h"
-#include "Write_Output.h"
-#include "MyFunctions.h"
-#include "PetroOxy.h"
+#include <Get_Input.hpp>
+#include <Handle_Initial_Conditions.hpp> // new input handling
+#include <Pre-Process.hpp>
+#include <Mechanism_Reduction.hpp>
+#include <Rates-Analysis.hpp>
+#include <Write_Output.hpp>
+#include <MyFunctions.hpp>
+#include <PetroOxy.hpp>
 
 
 #endif

@@ -5,7 +5,7 @@
  *      Author: DetlevCM
  */
 
-#include <MyHeaders.h>
+#include <Headers.hpp>
 
 
 void Handle_Solver_Parameters(Initial_Data& InitialParameters, vector<string> Input)

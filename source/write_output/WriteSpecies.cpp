@@ -4,7 +4,7 @@
  *  Created on: 9 Jan 2013
  *      Author: DetlevCM
  */
-#include <MyHeaders.h>
+#include <Headers.hpp>
 
 
 void WriteSpecies(string filename ,const vector< string >& Species)

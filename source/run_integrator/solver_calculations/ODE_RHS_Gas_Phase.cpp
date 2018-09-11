@@ -5,7 +5,7 @@
  *      Author: DetlevCM
  */
 
-#include <MyHeaders.h>
+#include <Headers.hpp>
 
 
 void ODE_RHS_Gas_Phase(int*n, double*time_current, double*y, double*f)

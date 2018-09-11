@@ -5,7 +5,7 @@
  *      Author: DetlevCM
  */
 
-#include <MyHeaders.h>
+#include <Headers.hpp>
 
 
 ReactionParameter Average_Ea_CalculateNewParametersFast(

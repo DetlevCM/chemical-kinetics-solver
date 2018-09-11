@@ -5,8 +5,8 @@
  *      Author: DetlevCM
  */
 
-#ifndef HEADERS_HELPERS_H_
-#define HEADERS_HELPERS_H_
+#ifndef HEADERS_HELPERS_HPP_
+#define HEADERS_HELPERS_HPP_
 
 string Strip_Single_Line_Comments(string, vector< string >);
 
@@ -21,4 +21,4 @@ bool Line_Not_Comment_Or_Empty(string);
 bool Test_If_Word_Found(string , string );
 
 
-#endif /* HEADERS_HELPERS_H_ */
+#endif /* HEADERS_HELPERS_HPP_ */

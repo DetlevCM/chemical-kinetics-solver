@@ -5,8 +5,8 @@
  *      Author: DetlevCM
  */
 
-#ifndef HEADERS_PETROOXY_H_
-#define HEADERS_PETROOXY_H_
+#ifndef HEADERS_PETROOXY_HPP_
+#define HEADERS_PETROOXY_HPP_
 
 
 void AdjustGasConcentration(
@@ -25,4 +25,4 @@ void Adjust_Gas_Concentration_Initial(
 
 
 
-#endif /* HEADERS_PETROOXY_H_ */
+#endif /* HEADERS_PETROOXY_HPP_ */

@@ -5,8 +5,8 @@
  *      Author: DetlevCM
  */
 
-#ifndef HEADERS_MECHANISM_REDUCTION_H_
-#define HEADERS_MECHANISM_REDUCTION_H_
+#ifndef HEADERS_MECHANISM_REDUCTION_HPP_
+#define HEADERS_MECHANISM_REDUCTION_HPP_
 
 
 void Reduce_Species_Thermo_Mechanism(
@@ -147,4 +147,4 @@ ReactionParameter Average_Ea_n_zero_k_fitted(
 		int
 );
 
-#endif /* HEADERS_MECHANISM_REDUCTION_H_ */
+#endif /* HEADERS_MECHANISM_REDUCTION_HPP_ */

@@ -5,8 +5,8 @@
  *      Author: DetlevCM
  */
 
-#ifndef HEADERS_HANDLE_INITIAL_CONDITIONS_H_
-#define HEADERS_HANDLE_INITIAL_CONDITIONS_H_
+#ifndef HEADERS_HANDLE_INITIAL_CONDITIONS_HPP_
+#define HEADERS_HANDLE_INITIAL_CONDITIONS_HPP_
 
 
 void Handle_Initial_Conditions(Initial_Data& , vector<string> , solver_type);
@@ -24,4 +24,4 @@ void Handle_PetroOxy(Initial_Data& , vector<string> , vector< string >);
 mechanism_reduction Handle_Mechanism_Reduction(vector<string> );
 
 
-#endif /* HEADERS_HANDLE_INITIAL_CONDITIONS_H_ */
+#endif /* HEADERS_HANDLE_INITIAL_CONDITIONS_HPP_ */
