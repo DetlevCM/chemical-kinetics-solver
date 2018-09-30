@@ -141,7 +141,12 @@ void Get_Initial_Conditions(
 	Input_Data.open (filename.c_str());
 
 	// proceed only if input file is open
-	if (Input_Data.is_open())
+	if(!Input_Data.is_open())
+	{
+		cout << "error opening initial data input file " << filename << "\n";
+		exit(1); // exit code with error status
+	}
+	else if(Input_Data.is_open())
 	{// I need to get the solver parameters first
 		while (Input_Data.good())
 		{

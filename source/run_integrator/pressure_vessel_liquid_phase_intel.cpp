@@ -13,7 +13,7 @@
 void Integrate_Pressure_Vessel_Liquid_Phase_Intel(
 		Filenames OutputFilenames,
 		vector< double > SpeciesConcentration,
-		MechanismData Reaction_Mechanism,
+		Reaction_Mechanism reaction_mechanism,
 		//vector< string > Species,vector< ThermodynamicData > Thermo,vector< SingleReactionData >& Reactions,
 		Initial_Data InitialParameters,
 		vector< double >& KeyRates,
@@ -30,14 +30,14 @@ void Integrate_Pressure_Vessel_Liquid_Phase_Intel(
 	using namespace ODE_RHS_Pressure_Vessel_Variables;
 	using namespace Jacobian;
 
-	Number_Species = (int)Reaction_Mechanism.Species.size();
-	Number_Reactions = (int)Reaction_Mechanism.Reactions.size();
+	Number_Species = (int)reaction_mechanism.Species.size();
+	Number_Reactions = (int)reaction_mechanism.Reactions.size();
 
 	// outputting mechanism size in integration routing so that it is printed every time
 	cout << "The mechanism to be integrated contains " << Number_Species << " species and " << Number_Reactions << " Reactions.\n" << std::flush;
 
 
-	Thermodynamics = Reaction_Mechanism.Thermodynamics; // "Hack" - to fix a regression
+	Thermodynamics = reaction_mechanism.Thermodynamics; // "Hack" - to fix a regression
 
 
 	ofstream ReactionRatesOutput;
@@ -87,15 +87,15 @@ void Integrate_Pressure_Vessel_Liquid_Phase_Intel(
 	hm = InitialParameters.Solver_Parameters.minimum_stepsize; // minimal step size for the methods, 1.0e-12 recommended for normalised problems
 
 
-	Delta_N = Get_Delta_N(Reaction_Mechanism.Reactions); // just make sure the Delta_N is current
+	Delta_N = Get_Delta_N(reaction_mechanism.Reactions); // just make sure the Delta_N is current
 	// Reduce the matrix from a sparse matrix to something more manageable and quicker to use
 
 
-	ReactionParameters = Process_Reaction_Parameters(Reaction_Mechanism.Reactions);
+	ReactionParameters = Process_Reaction_Parameters(reaction_mechanism.Reactions);
 
-	ReactantsForReactions = Reactants_ForReactionRate(Reaction_Mechanism.Reactions);
+	ReactantsForReactions = Reactants_ForReactionRate(reaction_mechanism.Reactions);
 
-	ProductsForReactions = Products_ForReactionRate(Reaction_Mechanism.Reactions,false);
+	ProductsForReactions = Products_ForReactionRate(reaction_mechanism.Reactions,false);
 
 
 	if(InitialParameters.MechanismAnalysis.MaximumRates ||
@@ -103,10 +103,10 @@ void Integrate_Pressure_Vessel_Liquid_Phase_Intel(
 			InitialParameters.MechanismAnalysis.RatesAnalysisAtTime ||
 			InitialParameters.MechanismAnalysis.RatesOfSpecies)
 	{
-		ProductsForRatesAnalysis = Products_ForReactionRate(Reaction_Mechanism.Reactions,true);
+		ProductsForRatesAnalysis = Products_ForReactionRate(reaction_mechanism.Reactions,true);
 	}
 
-	SpeciesLossAll = PrepareSpecies_ForSpeciesLoss(Reaction_Mechanism.Reactions); // New method of listing species
+	SpeciesLossAll = PrepareSpecies_ForSpeciesLoss(reaction_mechanism.Reactions); // New method of listing species
 
 	// And now it is time to call the solver again... with the right information...
 	// According to Intel initialise ipar array with zeros before the first call to dodesol
@@ -210,7 +210,7 @@ void Integrate_Pressure_Vessel_Liquid_Phase_Intel(
 
 
 	// prepare the jacobian matrix
-	Prepare_Jacobian_Matrix(JacobianMatrix,Reaction_Mechanism.Reactions);
+	Prepare_Jacobian_Matrix(JacobianMatrix,reaction_mechanism.Reactions);
 
 
 	// Get the rate Constants, forward and backwards
@@ -271,17 +271,17 @@ void Integrate_Pressure_Vessel_Liquid_Phase_Intel(
 
 		vector< vector< int > > TempMatrix;
 		vector< int > TempRow;
-		int Temp_Number_Species = (int) Reaction_Mechanism.Species.size();
+		int Temp_Number_Species = (int) reaction_mechanism.Species.size();
 
-		for(tempi=0;tempi<(int)Reaction_Mechanism.Reactions.size();tempi++){
-			TempRow.resize((int)Reaction_Mechanism.Species.size());
+		for(tempi=0;tempi<(int)reaction_mechanism.Reactions.size();tempi++){
+			TempRow.resize((int)reaction_mechanism.Species.size());
 			for(tempj=0;tempj<Temp_Number_Species;tempj++)
 			{
-				if(Reaction_Mechanism.Reactions[tempi].Reactants[tempj] != 0)
+				if(reaction_mechanism.Reactions[tempi].Reactants[tempj] != 0)
 				{
 					TempRow[tempj] = 1;
 				}
-				if(Reaction_Mechanism.Reactions[tempi].Products[tempj] != 0)
+				if(reaction_mechanism.Reactions[tempi].Products[tempj] != 0)
 				{
 					TempRow[tempj] = 1;
 				}
@@ -296,7 +296,7 @@ void Integrate_Pressure_Vessel_Liquid_Phase_Intel(
 		{
 			int SpeciesID = InitialParameters.MechanismAnalysis.SpeciesSelectedForRates[tempj];
 			vector< int > temp;
-			for(tempi=0;tempi<(int)Reaction_Mechanism.Reactions.size();tempi++)
+			for(tempi=0;tempi<(int)reaction_mechanism.Reactions.size();tempi++)
 			{
 				if(TempMatrix[tempi][SpeciesID] !=0 )
 				{
@@ -313,10 +313,10 @@ void Integrate_Pressure_Vessel_Liquid_Phase_Intel(
 				//ReactantsForReactions,
 				InitialParameters.Solver_Parameters.separator,
 				//Rates,
-				Reaction_Mechanism.Species,
+				reaction_mechanism.Species,
 				InitialParameters.MechanismAnalysis.SpeciesSelectedForRates,
 				ReactionsForSpeciesSelectedForRates//,
-				//Reaction_Mechanism.Reactions
+				//reaction_mechanism.Reactions
 		);
 	}
 
@@ -402,8 +402,8 @@ void Integrate_Pressure_Vessel_Liquid_Phase_Intel(
 					ReactantsForReactions,
 					Rates,
 					time_current,
-					Reaction_Mechanism.Species,
-					Reaction_Mechanism.Reactions
+					reaction_mechanism.Species,
+					reaction_mechanism.Reactions
 			);
 
 			RatesAnalysisTimepoint = RatesAnalysisTimepoint + 1;
@@ -420,10 +420,10 @@ void Integrate_Pressure_Vessel_Liquid_Phase_Intel(
 					InitialParameters.Solver_Parameters.separator,
 					Rates,
 					time_current,
-					Reaction_Mechanism.Species,
+					reaction_mechanism.Species,
 					InitialParameters.MechanismAnalysis.SpeciesSelectedForRates,
 					ReactionsForSpeciesSelectedForRates//,
-					//Reaction_Mechanism.Reactions
+					//reaction_mechanism.Reactions
 			);
 		}
 		//*/
@@ -525,7 +525,7 @@ void Integrate_Pressure_Vessel_Liquid_Phase_Intel(
 
 	if(InitialParameters.MechanismAnalysis.MaximumRates)
 	{
-		WriteMaxRatesAnalysis(RatesAnalysisData, Reaction_Mechanism.Species, Reaction_Mechanism.Reactions,OutputFilenames.Prefix);
+		WriteMaxRatesAnalysis(RatesAnalysisData, reaction_mechanism.Species, reaction_mechanism.Reactions,OutputFilenames.Prefix);
 	}
 
 

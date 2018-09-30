@@ -15,9 +15,8 @@
 
 //void Handle_Mechanism_Input(
 bool Handle_Mechanism_Input(
-		string ,
-		string ,
-		MechanismData& ,
+		FileNames , //filenames,
+		Reaction_Mechanism& ,
 		Initial_Data& ,
 		//vector< double >&,
 		PressureVesselCalc&

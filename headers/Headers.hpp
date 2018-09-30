@@ -55,6 +55,7 @@ using std::stod; // for C++ string to double
 #include <structs/mechanism_storage.hpp>
 #include <structs/initial_conditions_parameters.hpp>
 
+#include <Class_Initial_Data.hpp>
 #include <Classes.hpp>
 
 // namespaces with global variables for performance reasons

@@ -5,25 +5,15 @@
 #define _MY_OTHER_FUNCTIONS_
 //*** Define some of my random hard to classify functions ***//
 
-class FileNames {
-public:
-	/*
-	 * This class collects the file names for the
-	 * input files required during a run.
-	 *
-	 * To collate data, output files are equally treated in the
-	 * same class, together together potentially with output flags.
-	 */
-
-	string mechanism;
-	string initial_data;
-	string species_mapping;
-
-};
 
 void Process_User_Input(
 		FileNames& ,
 		vector<string> // User_Inputs
+);
+
+void Get_Mechanism(
+		string , //filename ,
+		Reaction_Mechanism& // reaction_mechanism
 );
 
 vector< double > Get_Delta_N(

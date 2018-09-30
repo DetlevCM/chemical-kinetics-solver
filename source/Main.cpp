@@ -55,7 +55,7 @@ int main(int argc, char* argv[])
 	 * It may include initial data (not essential for lumping only)
 	 * as well as potentially separately dedicated PetroOxy settings.
 	 */
-	MechanismData reaction_mechanism;
+	Reaction_Mechanism reaction_mechanism;
 	Initial_Data initia_parameters; // Initial Conditions/Parameters
 	//vector< double > InitialSpeciesConcentration;
 	PressureVesselCalc PetroOxyDataInitial; // PetroOxy Specific Initial Data
@@ -63,8 +63,7 @@ int main(int argc, char* argv[])
 
 	// Handle All the Data Input - The Arrays Contain the required information
 	bool Mechanism_Read_In = Handle_Mechanism_Input(
-			filenames.mechanism,
-			filenames.initial_data,
+			filenames,
 			reaction_mechanism,
 			initia_parameters,
 			//InitialSpeciesConcentration,
@@ -183,7 +182,7 @@ int main(int argc, char* argv[])
 			vector< SingleReactionData > ReducedReactions;
 			ReducedReactions = ReduceReactionsNew(reaction_mechanism.Species, reaction_mechanism.Reactions, KeyRates);
 
-			MechanismData Reduced_Reaction_Mechanism;
+			Reaction_Mechanism Reduced_Reaction_Mechanism;
 			Reduced_Reaction_Mechanism.Species = reaction_mechanism.Species;
 			Reduced_Reaction_Mechanism.Thermodynamics = reaction_mechanism.Thermodynamics;
 			Reduced_Reaction_Mechanism.Reactions = ReducedReactions;

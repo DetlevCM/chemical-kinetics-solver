@@ -12,7 +12,7 @@
 void Integrate_Liquid_Phase_Odepack_LSODA(
 		Filenames OutputFilenames,
 		vector< double > SpeciesConcentration,
-		MechanismData Reaction_Mechanism,
+		Reaction_Mechanism reaction_mechanism,
 		Initial_Data InitialParameters,
 		vector< double >& KeyRates,
 		vector< vector < str_RatesAnalysis > >& RatesAnalysisData
@@ -26,14 +26,14 @@ void Integrate_Liquid_Phase_Odepack_LSODA(
 	using namespace Jacobian;
 
 
-	Number_Species = (int)Reaction_Mechanism.Species.size();
-	Number_Reactions = (int)Reaction_Mechanism.Reactions.size();
+	Number_Species = (int)reaction_mechanism.Species.size();
+	Number_Reactions = (int)reaction_mechanism.Reactions.size();
 
 	// outputting mechanism size in integration routing so that it is printed every time
 	cout << "The mechanism to be integrated contains " << Number_Species << " species and " << Number_Reactions << " Reactions.\n" << std::flush;
 
 
-	Thermodynamics = Reaction_Mechanism.Thermodynamics; // "Hack" - to fix a regression
+	Thermodynamics = reaction_mechanism.Thermodynamics; // "Hack" - to fix a regression
 
 
 	ofstream ReactionRatesOutput;
@@ -78,15 +78,15 @@ void Integrate_Liquid_Phase_Odepack_LSODA(
 	RTOL = InitialParameters.Solver_Parameters.rtol;
 	ATOL = InitialParameters.Solver_Parameters.atol;
 
-	Delta_N = Get_Delta_N(Reaction_Mechanism.Reactions); // just make sure the Delta_N is current
+	Delta_N = Get_Delta_N(reaction_mechanism.Reactions); // just make sure the Delta_N is current
 	// Reduce the matrix from a sparse matrix to something more manageable and quicker to use
 
 
-	ReactionParameters = Process_Reaction_Parameters(Reaction_Mechanism.Reactions);
+	ReactionParameters = Process_Reaction_Parameters(reaction_mechanism.Reactions);
 
-	ReactantsForReactions = Reactants_ForReactionRate(Reaction_Mechanism.Reactions);
+	ReactantsForReactions = Reactants_ForReactionRate(reaction_mechanism.Reactions);
 
-	ProductsForReactions = Products_ForReactionRate(Reaction_Mechanism.Reactions,false);
+	ProductsForReactions = Products_ForReactionRate(reaction_mechanism.Reactions,false);
 
 
 	if(InitialParameters.MechanismAnalysis.MaximumRates ||
@@ -94,10 +94,10 @@ void Integrate_Liquid_Phase_Odepack_LSODA(
 			InitialParameters.MechanismAnalysis.RatesAnalysisAtTime ||
 			InitialParameters.MechanismAnalysis.RatesOfSpecies)
 	{
-		ProductsForRatesAnalysis = Products_ForReactionRate(Reaction_Mechanism.Reactions,true);
+		ProductsForRatesAnalysis = Products_ForReactionRate(reaction_mechanism.Reactions,true);
 	}
 
-	SpeciesLossAll = PrepareSpecies_ForSpeciesLoss(Reaction_Mechanism.Reactions); // New method of listing species
+	SpeciesLossAll = PrepareSpecies_ForSpeciesLoss(reaction_mechanism.Reactions); // New method of listing species
 
 
 	Concentration.clear(); // ensure the concentrations array is empty
@@ -173,7 +173,7 @@ void Integrate_Liquid_Phase_Odepack_LSODA(
 
 
 	// prepare the jacobian matrix
-	Prepare_Jacobian_Matrix(JacobianMatrix,Reaction_Mechanism.Reactions);
+	Prepare_Jacobian_Matrix(JacobianMatrix,reaction_mechanism.Reactions);
 
 
 	// Get the rate Constants, forward and backwards
@@ -218,17 +218,17 @@ void Integrate_Liquid_Phase_Odepack_LSODA(
 
 		vector< vector< int > > TempMatrix;
 		vector< int > TempRow;
-		int Temp_Number_Species = (int) Reaction_Mechanism.Species.size();
+		int Temp_Number_Species = (int) reaction_mechanism.Species.size();
 
-		for(tempi=0;tempi<(int)Reaction_Mechanism.Reactions.size();tempi++){
-			TempRow.resize((int)Reaction_Mechanism.Species.size());
+		for(tempi=0;tempi<(int)reaction_mechanism.Reactions.size();tempi++){
+			TempRow.resize((int)reaction_mechanism.Species.size());
 			for(tempj=0;tempj<Temp_Number_Species;tempj++)
 			{
-				if(Reaction_Mechanism.Reactions[tempi].Reactants[tempj] != 0)
+				if(reaction_mechanism.Reactions[tempi].Reactants[tempj] != 0)
 				{
 					TempRow[tempj] = 1;
 				}
-				if(Reaction_Mechanism.Reactions[tempi].Products[tempj] != 0)
+				if(reaction_mechanism.Reactions[tempi].Products[tempj] != 0)
 				{
 					TempRow[tempj] = 1;
 				}
@@ -244,7 +244,7 @@ void Integrate_Liquid_Phase_Odepack_LSODA(
 			int SpeciesID = InitialParameters.MechanismAnalysis.SpeciesSelectedForRates[tempj];
 			vector< int > temp;
 
-			for(tempi=0;tempi<(int)Reaction_Mechanism.Reactions.size();tempi++)
+			for(tempi=0;tempi<(int)reaction_mechanism.Reactions.size();tempi++)
 			{
 				if(TempMatrix[tempi][SpeciesID] !=0 )
 				{
@@ -258,7 +258,7 @@ void Integrate_Liquid_Phase_Odepack_LSODA(
 
 		Prepare_Print_Rates_Per_Species(
 				InitialParameters.Solver_Parameters.separator,
-				Reaction_Mechanism.Species,
+				reaction_mechanism.Species,
 				InitialParameters.MechanismAnalysis.SpeciesSelectedForRates,
 				ReactionsForSpeciesSelectedForRates
 		);
@@ -331,8 +331,8 @@ void Integrate_Liquid_Phase_Odepack_LSODA(
 					ReactantsForReactions,
 					Rates,
 					time_current,
-					Reaction_Mechanism.Species,
-					Reaction_Mechanism.Reactions
+					reaction_mechanism.Species,
+					reaction_mechanism.Reactions
 			);
 			RatesAnalysisTimepoint = RatesAnalysisTimepoint + 1;
 		}
@@ -347,10 +347,10 @@ void Integrate_Liquid_Phase_Odepack_LSODA(
 					InitialParameters.Solver_Parameters.separator,
 					Rates,
 					time_current,
-					Reaction_Mechanism.Species,
+					reaction_mechanism.Species,
 					InitialParameters.MechanismAnalysis.SpeciesSelectedForRates,
 					ReactionsForSpeciesSelectedForRates//,
-					//Reaction_Mechanism.Reactions
+					//reaction_mechanism.Reactions
 			);
 		}
 
@@ -432,7 +432,7 @@ void Integrate_Liquid_Phase_Odepack_LSODA(
 
 	if(InitialParameters.MechanismAnalysis.MaximumRates)
 	{
-		WriteMaxRatesAnalysis(RatesAnalysisData, Reaction_Mechanism.Species, Reaction_Mechanism.Reactions,OutputFilenames.Prefix);
+		WriteMaxRatesAnalysis(RatesAnalysisData, reaction_mechanism.Species, reaction_mechanism.Reactions,OutputFilenames.Prefix);
 	}
 
 

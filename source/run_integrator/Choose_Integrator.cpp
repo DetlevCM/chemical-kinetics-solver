@@ -17,7 +17,7 @@
 void Choose_Integrator(
 		Filenames OutputFilenames,
 		//vector< double > InitialSpeciesConcentration,
-		MechanismData Reaction_Mechanism,
+		Reaction_Mechanism reaction_mechanism,
 		Initial_Data InitialParameters,
 		vector< double >& KeyRates,
 		PressureVesselCalc PetroOxyDataInitial,
@@ -33,7 +33,7 @@ void Choose_Integrator(
 			Integrate_Pressure_Vessel_Liquid_Phase_Intel(
 					OutputFilenames,
 					InitialParameters.InitialSpeciesConcentration,
-					Reaction_Mechanism,
+					reaction_mechanism,
 					InitialParameters,
 					KeyRates,
 					PetroOxyDataInitial,
@@ -45,7 +45,7 @@ void Choose_Integrator(
 			Integrate_Liquid_Phase_Intel(
 					OutputFilenames,
 					InitialParameters.InitialSpeciesConcentration,
-					Reaction_Mechanism,
+					reaction_mechanism,
 					InitialParameters,
 					KeyRates,
 					RatesAnalysisData
@@ -61,7 +61,7 @@ void Choose_Integrator(
 			Integrate_Pressure_Vessel_Liquid_Phase_Odepack_LSODA(
 					OutputFilenames,
 					InitialParameters.InitialSpeciesConcentration,
-					Reaction_Mechanism,
+					reaction_mechanism,
 					InitialParameters,
 					KeyRates,
 					PetroOxyDataInitial,
@@ -73,7 +73,7 @@ void Choose_Integrator(
 			Integrate_Liquid_Phase_Odepack_LSODA(
 					OutputFilenames,
 					InitialParameters.InitialSpeciesConcentration,
-					Reaction_Mechanism,
+					reaction_mechanism,
 					InitialParameters,
 					KeyRates,
 					RatesAnalysisData
