@@ -51,8 +51,7 @@ using std::stod; // for C++ string to double
 
 
 // structs definitions
-#include <structs/Structs.hpp>
-#include <structs/initial_conditions_parameters.hpp>
+#include <Structs.hpp>
 
 #include <Class_Initial_Data.hpp>
 #include <Class_Reaction_Mechanism.hpp>

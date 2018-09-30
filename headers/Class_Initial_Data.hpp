@@ -8,6 +8,56 @@
 #ifndef HEADERS_CLASS_INITIAL_DATA_HPP_
 #define HEADERS_CLASS_INITIAL_DATA_HPP_
 
+// Planing to split this into its own struct
+class PressureVesselConfig {
+public:
+	bool IsSet;
+	int GasSpecies;
+	double SampleSize;
+	double InitPressure;
+	double MaxPressure;
+	double GasSolubility;
+	double TemperatureRise;
+	bool HenryLawDiffusionLimitSet;
+	double HenryLawDiffusionLimit;
+	// new addition to allow different vessel sizes
+	double VesselSize;
+};
+
+class PressureVessel {
+public:
+	double Liquid_Sample_Volume;
+	double Gas_Sample_Volume;
+};
+
+
+class mechanism_reduction {
+public:
+	bool UseFastLumping;
+	//bool UseNewLumping;
+	int LumpingType;
+	double ReduceReactions;
+};
+
+class solver_parameters { // structure to store the solver parameters
+public:
+	int SolverType; // 0 = IntelODE, 1 = Odepack
+	bool Use_Stiff_Solver; // for IntelODE
+	bool Use_Analytical_Jacobian;
+	double rtol;
+	double atol;
+	double minimum_stepsize; // hm
+	double initial_stepsize; // h
+	string separator; // separator in text output, e.g. comma delimited
+};
+
+
+// to allow modifying some solver behaviour during the run, for IntelODE only
+class solver_type {
+public:
+	bool Use_Stiff_Solver;
+	bool Use_Analytical_Jacobian;
+};
 
 //struct InitParam {
 class Initial_Data{
