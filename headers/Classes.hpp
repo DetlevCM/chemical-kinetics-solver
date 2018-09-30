@@ -27,30 +27,6 @@ public:
 
 
 
-class SingleReactionData {
-public:
-	//struct SingleReactionData {
-	bool Reversible;
-	bool IsDuplicate;
-	double paramA;
-	double paramN;
-	double paramEa;
-	int ThirdBodyType; // 1: +M  2: (+M)
-	vector<double> ThBd_LOW;
-	vector<double> ThBd_TROE;
-	vector<ThirdBodyParameters> ThBd_param;
-	vector<double> Reactants;
-	vector<double> Products;
-};
-
-
-// a class to store the mechanism
-class Reaction_Mechanism {
-public:
-	vector< string > Species;
-	vector< ThermodynamicData > Thermodynamics;
-	vector< SingleReactionData > Reactions;
-};
 
 
 #endif /* HEADERS_CLASSES_HPP_ */
