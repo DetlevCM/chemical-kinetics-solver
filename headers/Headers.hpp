@@ -75,7 +75,7 @@ using std::stod; // for C++ string to double
 
 
 // and somre more headers...
-#include <Get_Input.hpp>
+#include <Get_Process_Input.hpp>
 #include <Handle_Initial_Conditions.hpp> // new input handling
 #include <Pre-Process.hpp>
 #include <Mechanism_Reduction.hpp>
