@@ -1,0 +1,17 @@
+ 
+The main source code file needs to be improved in terms of structure with 
+clearer inputs and clear functionality selection.
+
+The code should be updated to allow the following choices:
+
+1) Run the solver - default chem.inp and initial.inp files
+
+2) Run the solver specifying either file
+
+3) Run the code to lump species for a reduced mechanism
+
+4) other functionality?
+
+
+ 
+ 
