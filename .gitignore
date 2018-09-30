@@ -5,11 +5,11 @@ libraries/intel/libiode_ia32.lib
 libraries/intel/libiode_ia32.a
 ## odepack must be obtained from LLNL
 libraries/odepack/libodepack.a
-libraries/odepack/opkd-sum
-libraries/odepack/opkda1.f
-libraries/odepack/opkda2.f
-libraries/odepack/opkdmain.f
-libraries/odepack/opkddemos
+#libraries/odepack/opkd-sum
+#libraries/odepack/opkda1.f
+#libraries/odepack/opkda2.f
+#libraries/odepack/opkdmain.f
+#libraries/odepack/opkddemos
 ## exclude source and temp files for documentation
 *.tex
 *.aux

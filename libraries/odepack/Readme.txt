@@ -1,12 +1,21 @@
 
-Subject to determining whether I can actually redistribute the odepack source code, 
-developed by Alan C. Hindmarsh at LLNL and Linda R. Petzold at the University of 
-California, only compile instructions will be supplied for now.
-To the best of my knowledge, this is the official source:
-https://computation.llnl.gov/casc/odepack/
-(Though the code is also mirrored elsewhere.)
+Apparently, the ODEPACK Code is in the public domain based on the license from 
+this repository: https://github.com/jacobwilliams/odepack .
+Thus the files required in this project are mirrored in this repository for 
+convenience and to ensure that the code has fewer external dependencies.
+Please see opkd-sum for a detailed description of the code by the original authors, 
+including litarature references.
+No modifications (!!) to the original source code are required for the use of this 
+library. 
 
-The main source code is written using C++, so Fortran code has no direct usability.
+Originally, the code was developed by Alan C. Hindmarsh at LLNL and Linda R. Petzold
+at the University of California.
+One further repository for the ODEPACK library is the netlib library:
+https://computation.llnl.gov/casc/odepack/
+(Which is the source of the files used in this project.)
+
+The main source code for the chemical kinetics solver is written using C++, 
+so Fortran code has no direct usability.
 The most painless implementation is to compile the Fortran code into a library, to 
 then be able to call the required functionality from the main code.
 
