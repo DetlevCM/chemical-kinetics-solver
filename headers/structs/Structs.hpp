@@ -8,7 +8,12 @@
 #ifndef HEADERS_STRUCTS_H_
 #define HEADERS_STRUCTS_H_
 
-
+struct SpeciesWithCoefficient
+{
+	int SpeciesID;
+	double coefficient;
+	bool ismatched;// = false;
+};
 
 struct Filenames{
 	string Species;

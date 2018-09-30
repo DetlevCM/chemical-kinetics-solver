@@ -52,7 +52,6 @@ using std::stod; // for C++ string to double
 
 // structs definitions
 #include <structs/Structs.hpp>
-#include <structs/mechanism_storage.hpp>
 #include <structs/initial_conditions_parameters.hpp>
 
 #include <Class_Initial_Data.hpp>
