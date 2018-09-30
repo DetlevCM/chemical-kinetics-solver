@@ -30,30 +30,6 @@ bool Handle_Mechanism_Input(
 	int Number_Species, Number_Reactions;
 	int i;
 
-	// Input File via a stream:
-	ifstream DataInputFromFile;
-
-
-	// Initial data files are either default or user given:
-
-	/*
-	// check the existence of the 1st input file - the mechanism
-	DataInputFromFile.open(mechanism_filename.c_str());
-	if (!DataInputFromFile.is_open()) {
-		cout << "Error opening " << mechanism_filename << ".\n";
-		return false;
-	}
-	DataInputFromFile.close();//*/
-
-	/*
-	// check the existence of the 2nd input file - the input data
-	DataInputFromFile.open(initial_conditions_fileaname.c_str());
-	if (!DataInputFromFile.is_open()) {
-		cout << "Error opening " << initial_conditions_fileaname << ".\n";
-		return false;
-	}
-	DataInputFromFile.close();//*/
-
 
 	/* As we now know that the input files exist, let us continue by reading in
 	 * the species list, thermodynamic data and mechanism
@@ -68,6 +44,9 @@ bool Handle_Mechanism_Input(
 	/* Did the user request the removal of species? If yes, remove the
 	 * species on the "kill list" from the mechanism/
 	 */
+	// Input File via a stream:
+	ifstream DataInputFromFile;
+
 	DataInputFromFile.open("kill.txt");
 	if (DataInputFromFile.is_open()) {
 		Reduce_Species_Thermo_Mechanism(
