@@ -26,6 +26,11 @@ C  Quantities which may be altered by the code are:
 C     T, Y(*), YPRIME(*), INFO(1), RTOL, ATOL, IDID, RWORK(*), IWORK(*)
  */
 
+// placeholder functions
+void Jacobian_Matrix_DASKR();
+void PSOL();
+void RT();
+
 void ddaskr_(
 		void* ,   //RES,
 		int* ,    //NEQ,
