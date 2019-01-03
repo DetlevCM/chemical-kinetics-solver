@@ -13,7 +13,7 @@ gfortran -O3 -march=native -mavx2 -ffast-math -c \
 ./preconds/dsparsk.f ./solver/daux.f ./solver/ddaskr.f ./solver/dlinpk.f
 
 
-ar -rcs libdaspk.a \
+ar -rcs libddaskr.a \
 dbanpre.o dilupre.o drbdpre.o drbgpre.o \
 dsparsk.o daux.o ddaskr.o dlinpk.o
 
