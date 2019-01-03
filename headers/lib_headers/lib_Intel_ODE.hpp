@@ -1,5 +1,5 @@
 /*
- * Integrate_Odepack.h
+ * lib_Intel_ODE.hpp
  *
  *  Created on: 18 Sep 2017
  *      Author: detlevcm

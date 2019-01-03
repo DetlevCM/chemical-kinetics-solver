@@ -1,5 +1,5 @@
 /*
- * Integrate_Odepack.h
+ * lib_odepack.hpp
  *
  *  Created on: 18 Sep 2017
  *      Author: detlevcm
