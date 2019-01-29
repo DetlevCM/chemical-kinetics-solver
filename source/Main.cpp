@@ -56,7 +56,7 @@ int main(int argc, char* argv[])
 	 * as well as potentially separately dedicated PetroOxy settings.
 	 */
 	Reaction_Mechanism reaction_mechanism;
-	Initial_Data initia_parameters; // Initial Conditions/Parameters
+	Initial_Data initial_parameters; // Initial Conditions/Parameters
 	//vector< double > InitialSpeciesConcentration;
 	PressureVesselCalc PetroOxyDataInitial; // PetroOxy Specific Initial Data
 
@@ -65,7 +65,7 @@ int main(int argc, char* argv[])
 	bool Mechanism_Read_In = Handle_Mechanism_Input(
 			filenames,
 			reaction_mechanism,
-			initia_parameters,
+			initial_parameters,
 			//InitialSpeciesConcentration,
 			PetroOxyDataInitial
 	);
@@ -82,7 +82,7 @@ int main(int argc, char* argv[])
 	// Mechanism read in correctly, proceed:
 
 	// for someone else's optimisation code, optional output
-	if(initia_parameters.StoichiometryMatrixForOpt)
+	if(initial_parameters.StoichiometryMatrixForOpt)
 	{
 		Write_Stoichiometric_Matrix_For_Opt
 		(
@@ -108,7 +108,7 @@ int main(int argc, char* argv[])
 
 	vector< vector < str_RatesAnalysis > > RatesAnalysisData;
 
-	if(initia_parameters.MechanismAnalysis.MaximumRates)
+	if(initial_parameters.MechanismAnalysis.MaximumRates)
 	{
 		// Initialise array
 		vector < str_RatesAnalysis > temp((int) reaction_mechanism.Reactions.size());
@@ -120,13 +120,13 @@ int main(int argc, char* argv[])
 	}
 
 
-	if(initia_parameters.MechanismAnalysis.StreamRatesAnalysis)
+	if(initial_parameters.MechanismAnalysis.StreamRatesAnalysis)
 	{
 		PrepareStreamRatesAnalysis(reaction_mechanism.Species,"");
 	}
 
 
-	if(!initia_parameters.NoIntegration){
+	if(!initial_parameters.NoIntegration){
 
 		// Define output filenames:
 		Filenames OutputFilenames;
@@ -141,24 +141,24 @@ int main(int argc, char* argv[])
 
 		WriteNewLabelsSpecies(
 				OutputFilenames.Species,
-				initia_parameters.Solver_Parameters.separator,
+				initial_parameters.Solver_Parameters.separator,
 				Number_Species,
 				reaction_mechanism.Species,
-				initia_parameters.GasPhase
+				initial_parameters.GasPhase
 		);
 
-		if(initia_parameters.PrintReacRates)
+		if(initial_parameters.PrintReacRates)
 		{
 			WriteLabelsReactionRates(
 					OutputFilenames.Rates,
-					initia_parameters.Solver_Parameters.separator,
+					initial_parameters.Solver_Parameters.separator,
 					Number_Reactions
 			);
 		}
 
 
 		// only required if the user desires mechanism reduction
-		if(initia_parameters.MechanismReduction.ReduceReactions != 0)
+		if(initial_parameters.MechanismReduction.ReduceReactions != 0)
 		{
 			KeyRates.resize(Number_Reactions);
 		}
@@ -167,17 +167,15 @@ int main(int argc, char* argv[])
 		cout << "\nHanding Mechanism to Integrator\n";
 		Choose_Integrator(
 				OutputFilenames,
-				//InitialSpeciesConcentration,
 				reaction_mechanism,
-				//Species,Thermodynamics,Reactions,
-				initia_parameters,
+				initial_parameters,
 				KeyRates,
 				PetroOxyDataInitial,
 				RatesAnalysisData
 		);
 
 
-		if(initia_parameters.MechanismReduction.ReduceReactions != 0)
+		if(initial_parameters.MechanismReduction.ReduceReactions != 0)
 		{
 			vector< SingleReactionData > ReducedReactions;
 			ReducedReactions = ReduceReactionsNew(reaction_mechanism.Species, reaction_mechanism.Reactions, KeyRates);
@@ -201,9 +199,9 @@ int main(int argc, char* argv[])
 
 				WriteReactions("reduced_scheme.txt", Reduced_Reaction_Mechanism.Species, ReducedReactions);
 
-				initia_parameters.MechanismReduction.ReduceReactions = 0; // switch off reduction...
+				initial_parameters.MechanismReduction.ReduceReactions = 0; // switch off reduction...
 
-				if(initia_parameters.StoichiometryMatrixForOpt)
+				if(initial_parameters.StoichiometryMatrixForOpt)
 				{
 					Write_Stoichiometric_Matrix_For_Opt
 					(
@@ -214,7 +212,7 @@ int main(int argc, char* argv[])
 
 
 				// Option considered experimental, cannot see why it won't work...
-				if(initia_parameters.MechanismAnalysis.MaximumRates)
+				if(initial_parameters.MechanismAnalysis.MaximumRates)
 				{
 					// Initialise array
 					RatesAnalysisData.clear(); // empty for new run
@@ -226,21 +224,21 @@ int main(int argc, char* argv[])
 					// array prepared
 				}
 
-				if(initia_parameters.MechanismAnalysis.StreamRatesAnalysis)
+				if(initial_parameters.MechanismAnalysis.StreamRatesAnalysis)
 				{
 					PrepareStreamRatesAnalysis(Reduced_Reaction_Mechanism.Species,OutputFilenames.Prefix);
 				}
 
 				WriteNewLabelsSpecies(
 						OutputFilenames.Species,
-						initia_parameters.Solver_Parameters.separator,
+						initial_parameters.Solver_Parameters.separator,
 						Number_Species,
 						Reduced_Reaction_Mechanism.Species,
-						initia_parameters.GasPhase
+						initial_parameters.GasPhase
 				);
 				WriteLabelsReactionRates(
 						OutputFilenames.Rates,
-						initia_parameters.Solver_Parameters.separator,
+						initial_parameters.Solver_Parameters.separator,
 						Number_Reactions
 				);
 
@@ -251,7 +249,7 @@ int main(int argc, char* argv[])
 						//InitialSpeciesConcentration,
 						Reduced_Reaction_Mechanism,
 						//Species,Thermodynamics,ReducedReactions,
-						initia_parameters,
+						initial_parameters,
 						KeyRates,
 						PetroOxyDataInitial,
 						RatesAnalysisData
@@ -260,7 +258,7 @@ int main(int argc, char* argv[])
 
 				// Not ideal, should use variables rather than handwritten filenames
 				ReportAccuracy(
-						initia_parameters.Solver_Parameters.separator,
+						initial_parameters.Solver_Parameters.separator,
 						Number_Species,
 						Reduced_Reaction_Mechanism.Species,
 						"reduction_accuracy_report.txt",

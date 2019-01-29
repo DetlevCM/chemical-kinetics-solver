@@ -46,3 +46,7 @@ libodepack.a, together with the gfortran library can now be linked during the co
 Windows was found to be too much hassle, though it may work if you compile with the -static 
 command before building the archive.
 
+
+Note: The opdka1_mod.f file has had a number of functions removed which collided with 
+functions in the daskr library. Whether this implementation will be workable is to be 
+determined. 
