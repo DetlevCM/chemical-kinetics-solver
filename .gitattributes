@@ -52,3 +52,7 @@
 *.exe binary
 *.out binary
 *.app binary
+
+# external source code in Fortran
+*.f linguist-vendored
+*.F linguist-vendored
