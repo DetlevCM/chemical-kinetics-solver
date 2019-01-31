@@ -54,5 +54,5 @@
 *.app binary
 
 # external source code in Fortran
-*.f linguist-vendored=true
-*.F linguist-vendored=true
+libraries/odepack/*.f linguist-vendored
+libraries/daskr/*.f linguist-vendored
