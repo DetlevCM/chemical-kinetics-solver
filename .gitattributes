@@ -55,4 +55,5 @@
 
 # external source code in Fortran
 libraries/odepack/*.f linguist-vendored
-libraries/daskr/*.f linguist-vendored
+libraries/daskr/* linguist-vendored
+libraries/daskr/build-lib.sh linguist-vendored=false
