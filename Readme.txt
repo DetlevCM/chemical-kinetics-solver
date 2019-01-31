@@ -15,7 +15,7 @@ Should the link "go dead", it is advised to search for "Intel ODE solver" with t
 search engine.
 
 A later expansion is seeking to implement the odepack library, developed by Alan C. Hindmarsh 
-and Linda R. Petzold. As of writing this readme, the source code is freely availabl on the 
+and Linda R. Petzold. As of writing this readme, the source code is freely available on the 
 LLNL website. (As well as on other websites.)
 This addition should be considered experimental. 
 Unfortunately, for some reason, the solver is unstable under some conditions.
