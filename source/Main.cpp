@@ -66,7 +66,6 @@ int main(int argc, char* argv[])
 			filenames,
 			reaction_mechanism,
 			initial_parameters,
-			//InitialSpeciesConcentration,
 			PetroOxyDataInitial
 	);
 
@@ -246,9 +245,7 @@ int main(int argc, char* argv[])
 				cout << "\nHanding Reduced Mechanism to Integrator\n" << std::flush;
 				Choose_Integrator(
 						OutputFilenames,
-						//InitialSpeciesConcentration,
 						Reduced_Reaction_Mechanism,
-						//Species,Thermodynamics,ReducedReactions,
 						initial_parameters,
 						KeyRates,
 						PetroOxyDataInitial,

@@ -67,6 +67,8 @@ public:
 
 	bool NoIntegration;
 
+	// initial concentrations are part of the initial conditions
+	vector< double > InitialSpeciesConcentration;
 
 	// Analysis:
 	MechanismAnalysisConfig MechanismAnalysis;
@@ -80,8 +82,7 @@ public:
 	double GasPhaseVolume;
 	double GasPhasePressure;
 
-	// initial concentrations are part of the initial conditions
-	vector< double > InitialSpeciesConcentration;
+
 
 	// Mechanism Reduction:
 	mechanism_reduction MechanismReduction;

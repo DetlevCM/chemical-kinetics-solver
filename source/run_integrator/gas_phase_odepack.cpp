@@ -106,7 +106,6 @@ void Integrate_Gas_Phase_Odepack_LSODA(
 	SpeciesLossAll = PrepareSpecies_ForSpeciesLoss(reaction_mechanism.Reactions); // New method of listing species
 
 	// original old code
-	double* y = &SpeciesConcentration[0];
 	Concentration.clear();
 	Concentration.resize(Number_Species + 1);
 
@@ -293,14 +292,14 @@ void Integrate_Gas_Phase_Odepack_LSODA(
 		if(Use_Analytical_Jacobian)
 		{
 			int JT = 1;
-			dlsoda_((void*) ODE_RHS_Gas_Phase,&n,y,&time_current,&time_step,
+			dlsoda_((void*) ODE_RHS_Gas_Phase,&n,SpeciesConcentration.data(),&time_current,&time_step,
 					&ITOL,&RTOL,&ATOL,&ITASK,&ISTATE,&IOPT,RWORK,&LRW,IWORK,&LIW,
 					(void*) Jacobian_Matrix_Odepack_LSODA,&JT);
 		}
 		else //if(!Use_Analytical_Jacobian)
 		{
 			int JT = 2;
-			dlsoda_((void*) ODE_RHS_Gas_Phase,&n,y,&time_current,&time_step,
+			dlsoda_((void*) ODE_RHS_Gas_Phase,&n,SpeciesConcentration.data(),&time_current,&time_step,
 					&ITOL,&RTOL,&ATOL,&ITASK,&ISTATE,&IOPT,RWORK,&LRW,IWORK,&LIW,
 					(void*) Jacobian_Matrix_Odepack_LSODA,&JT);
 		}

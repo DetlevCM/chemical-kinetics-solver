@@ -16,7 +16,6 @@
 
 void Choose_Integrator(
 		Filenames OutputFilenames,
-		//vector< double > InitialSpeciesConcentration,
 		Reaction_Mechanism reaction_mechanism,
 		Initial_Data InitialParameters,
 		vector< double >& KeyRates,

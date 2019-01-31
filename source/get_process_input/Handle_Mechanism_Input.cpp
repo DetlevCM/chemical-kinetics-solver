@@ -26,10 +26,8 @@ bool Handle_Mechanism_Input(
 		PressureVesselCalc & PetroOxyData
 )
 {
-
-	int Number_Species, Number_Reactions;
+	//int Number_Reactions;
 	int i;
-
 
 	/* As we now know that the input files exist, let us continue by reading in
 	 * the species list, thermodynamic data and mechanism
@@ -39,7 +37,7 @@ bool Handle_Mechanism_Input(
 			filenames.mechanism ,
 			reaction_mechanism
 	);
-
+	int Number_Species = (int)reaction_mechanism.Species.size();
 
 	/* Did the user request the removal of species? If yes, remove the
 	 * species on the "kill list" from the mechanism/
@@ -60,7 +58,7 @@ bool Handle_Mechanism_Input(
 
 		// Update the counter for the species and reactions
 		Number_Species = (int)reaction_mechanism.Species.size();
-		Number_Reactions = (int)reaction_mechanism.Reactions.size();
+		//Number_Reactions = (int)reaction_mechanism.Reactions.size();
 	}
 
 
@@ -81,7 +79,7 @@ bool Handle_Mechanism_Input(
 
 		// Update the counter for the species and reactions
 		Number_Species = (int) reaction_mechanism.Species.size();
-		Number_Reactions = (int) reaction_mechanism.Reactions.size();
+		//Number_Reactions = (int) reaction_mechanism.Reactions.size();
 	}
 
 
@@ -191,6 +189,7 @@ bool Handle_Mechanism_Input(
 	// and the Initial Temperature
 	InitialParameters.InitialSpeciesConcentration[Number_Species] = InitialParameters.temperature; //Input[1][0];
 	cout << "\n";
+
 
 	// Did the user request an irreversible scheme?
 	if (InitialParameters.irrev) // contains true of false
