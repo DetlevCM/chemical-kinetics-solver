@@ -54,5 +54,5 @@
 *.app binary
 
 # external source code in Fortran
-*.f linguist-vendored
-*.F linguist-vendored
+*.f linguist-vendored=true
+*.F linguist-vendored=true
