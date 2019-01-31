@@ -37,7 +37,7 @@ string Strip_Single_Line_Comments(string input , vector<string> tokens)
 		output = p;
 
 		delete[] cstr;
-		delete[] p;
+		//delete[] p;
 	}
 	else
 	{

@@ -23,7 +23,7 @@ vector< double > Tokenise_String_To_Double(string input, string tokens)
 		p=strtok(NULL,tokens.c_str());
 	}
 	delete[] cstr;
-	delete[] p;
+	//delete[] p;
 
 	return output;
 }
