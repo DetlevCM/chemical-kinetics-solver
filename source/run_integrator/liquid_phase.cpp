@@ -264,10 +264,6 @@ void Integrate_Liquid_Phase(
 	// enables reset of Rates Analysis
 	int RatesAnalysisTimepoint = 0;
 
-	// set the solver:
-	bool Use_Analytical_Jacobian;
-	Use_Analytical_Jacobian = InitialParameters.Solver_Parameters.Use_Analytical_Jacobian;
-
 	// start the clock:
 	cpu_time_begin = cpu_time_current = clock();
 
@@ -277,38 +273,45 @@ void Integrate_Liquid_Phase(
 		time_step = time_current + time_step1;
 
 		// https://en.cppreference.com/w/cpp/language/switch
-		switch(InitialParameters.Solver_Parameters.SolverType){
+		switch(InitialParameters.Solver_Parameters.SolverType) // begin ODE Solver switch
+		{
 
-		case 0 : switch(Intel.solver_subsettings)
+		case 0 : // case IntelODE
+
+			switch(Intel.solver_subsettings)
 			{
 
 			case 2 : dodesol_rkm9mka(Intel.vector_ipar.data(), &n, &time_current, &time_step,
-						SpeciesConcentration.data(),(void*) ODE_RHS_Liquid_Phase,
-						(void*) Jacobian_Matrix_Intel, &Intel.h, &Intel.hm, &Intel.ep, &Intel.tr, Intel.vector_dpar.data(), Intel.vector_kd.data(), &Intel.ierr
-				);
+					SpeciesConcentration.data(),(void*) ODE_RHS_Liquid_Phase,
+					(void*) Jacobian_Matrix_Intel, &Intel.h, &Intel.hm, &Intel.ep, &Intel.tr,
+					Intel.vector_dpar.data(), Intel.vector_kd.data(), &Intel.ierr
+			);
 
 			break;
 
 			case 4 : dodesol_mk52lfa(Intel.vector_ipar.data(), &n, &time_current, &time_step,
-						SpeciesConcentration.data(),(void*) ODE_RHS_Liquid_Phase,
-						(void*) Jacobian_Matrix_Intel, &Intel.h, &Intel.hm, &Intel.ep, &Intel.tr, Intel.vector_dpar.data(), Intel.vector_kd.data(), &Intel.ierr
-				);
+					SpeciesConcentration.data(),(void*) ODE_RHS_Liquid_Phase,
+					(void*) Jacobian_Matrix_Intel, &Intel.h, &Intel.hm, &Intel.ep, &Intel.tr,
+					Intel.vector_dpar.data(), Intel.vector_kd.data(), &Intel.ierr
+			);
 
 			break;
 
 			case 3 : dodesol_mk52lfn(Intel.vector_ipar.data(), &n, &time_current, &time_step,
-						SpeciesConcentration.data(),(void*) ODE_RHS_Liquid_Phase,
-						&Intel.h, &Intel.hm, &Intel.ep, &Intel.tr, Intel.vector_dpar.data(), Intel.vector_kd.data(), &Intel.ierr
-				);
+					SpeciesConcentration.data(),(void*) ODE_RHS_Liquid_Phase,
+					&Intel.h, &Intel.hm, &Intel.ep, &Intel.tr,
+					Intel.vector_dpar.data(), Intel.vector_kd.data(), &Intel.ierr
+			);
 
 			break;
 
 			case 1:	dodesol_rkm9mkn(Intel.vector_ipar.data(), &n, &time_current, &time_step,
-						SpeciesConcentration.data(),(void*) ODE_RHS_Liquid_Phase,
-						&Intel.h, &Intel.hm, &Intel.ep, &Intel.tr, Intel.vector_dpar.data(), Intel.vector_kd.data(), &Intel.ierr
-				);
+					SpeciesConcentration.data(),(void*) ODE_RHS_Liquid_Phase,
+					&Intel.h, &Intel.hm, &Intel.ep, &Intel.tr,
+					Intel.vector_dpar.data(), Intel.vector_kd.data(), &Intel.ierr
+			);
 
-			break ;
+			break;
 
 			if (Intel.ierr != 0)
 			{
@@ -318,30 +321,25 @@ void Integrate_Liquid_Phase(
 				exit(1) ; // we abort in case of error
 			}
 			}
-			break;
-			//		}
+			break; // end of IntelODE
 
-			case 1 :
-				//		else if(InitialParameters.Solver_Parameters.SolverType == 1)
-				//		{
-				if(Use_Analytical_Jacobian)
+			case 1 : // use LSODA
+
+				switch (LSODA.JT) // LSODA Jacobian type
 				{
-					int JT = 1;
-					dlsoda_((void*) ODE_RHS_Liquid_Phase,&n,SpeciesConcentration.data(),&time_current,&time_step,
-							&LSODA.ITOL,&LSODA.RTOL,&LSODA.ATOL,
-							&LSODA.ITASK,&LSODA.ISTATE,&LSODA.IOPT,
-							LSODA.vector_RWORK.data(),&LSODA.LRW,LSODA.vector_IWORK.data(),&LSODA.LIW,
-							(void*) Jacobian_Matrix_Odepack_LSODA,&JT);
-				}
-				else //if(!Use_Analytical_Jacobian)
-				{
-					int JT = 2;
-					dlsoda_((void*) ODE_RHS_Liquid_Phase,&n,SpeciesConcentration.data(),&time_current,&time_step,
-							&LSODA.ITOL,&LSODA.RTOL,&LSODA.ATOL,
-							&LSODA.ITASK,&LSODA.ISTATE,&LSODA.IOPT,
-							LSODA.vector_RWORK.data(),&LSODA.LRW,LSODA.vector_IWORK.data(),&LSODA.LIW,
-							(void*) Jacobian_Matrix_Odepack_LSODA,&JT);
-				}
+				case 1 : dlsoda_((void*) ODE_RHS_Liquid_Phase,&n,SpeciesConcentration.data(),&time_current,&time_step,
+						&LSODA.ITOL,&LSODA.RTOL,&LSODA.ATOL,
+						&LSODA.ITASK,&LSODA.ISTATE,&LSODA.IOPT,
+						LSODA.vector_RWORK.data(),&LSODA.LRW,LSODA.vector_IWORK.data(),&LSODA.LIW,
+						(void*) Jacobian_Matrix_Odepack_LSODA,&LSODA.JT);
+				break;
+				case 2 : dlsoda_((void*) ODE_RHS_Liquid_Phase,&n,SpeciesConcentration.data(),&time_current,&time_step,
+						&LSODA.ITOL,&LSODA.RTOL,&LSODA.ATOL,
+						&LSODA.ITASK,&LSODA.ISTATE,&LSODA.IOPT,
+						LSODA.vector_RWORK.data(),&LSODA.LRW,LSODA.vector_IWORK.data(),&LSODA.LIW,
+						(void*) Jacobian_Matrix_Odepack_LSODA,&LSODA.JT);
+				break;
+				} // end of LSODA Jacobian Type
 
 				if (LSODA.ISTATE < 0)
 				{
@@ -349,9 +347,11 @@ void Integrate_Liquid_Phase(
 					// Break means it should leave the do loop which would be fine for an error response as it stops the solver
 					exit(1) ; // we abort in case of error
 				}
-				break;
-				//		}
-		}
+
+				break; // end of LSODA
+
+		} // end of ODE solver switch
+
 		if(InitialParameters.MechanismAnalysis.MaximumRates)
 		{
 			MaxRatesAnalysis(RatesAnalysisData,ProductsForRatesAnalysis,ReactantsForReactions,Rates,time_current);

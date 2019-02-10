@@ -29,7 +29,9 @@ public:
 
 class Settings_LSODA{
 public:
+	int solver_subsettings;
 
+	int JT;
 	// LSODA specific settings
 	int LRW, LIW;
 	int ITOL = 1;

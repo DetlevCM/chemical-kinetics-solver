@@ -67,6 +67,12 @@ void Prepare_Integrator_Settings(
 	}
 	else if(InitialParameters.Solver_Parameters.SolverType == 1) // LSODA Settings
 	{
+		LSODA.JT = 2; // default, no Jacobian provided, i.e. use internal numerical one
+		if(InitialParameters.Solver_Parameters.Use_Analytical_Jacobian)
+		{
+			LSODA.JT = 1; // user provided Jacobian
+		}
+
 		// calculate size of working vectors for LSODA
 		// LRS = 22 + 9*NEQ + NEQ**2           if JT = 1 or 2,
 		if ( (20 + 16 * n) > (22 + 9 * n + n * n) ) {
