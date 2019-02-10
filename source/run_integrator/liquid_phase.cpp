@@ -316,8 +316,6 @@ void Integrate_Liquid_Phase(
 			if (Intel.ierr != 0)
 			{
 				printf("\n dodesol_rkm9mkn routine exited with error code %4d\n",Intel.ierr);
-				//return -1;
-				// Break means it should leave the do loop which would be fine for an error response as it stops the solver
 				exit(1) ; // we abort in case of error
 			}
 			}
@@ -344,13 +342,14 @@ void Integrate_Liquid_Phase(
 				if (LSODA.ISTATE < 0)
 				{
 					printf("\n LSODA routine exited with error code %4d\n",LSODA.ISTATE);
-					// Break means it should leave the do loop which would be fine for an error response as it stops the solver
 					exit(1) ; // we abort in case of error
 				}
 
 				break; // end of LSODA
 
 		} // end of ODE solver switch
+
+
 
 		if(InitialParameters.MechanismAnalysis.MaximumRates)
 		{
@@ -457,6 +456,7 @@ void Integrate_Liquid_Phase(
 
 
 	} while (time_step < time_end);
+	// end of loop from t_zero to t_end
 
 
 	cout << "CPU Time: " << ((double) (clock() - cpu_time_current)) / CLOCKS_PER_SEC << " seconds\n";
