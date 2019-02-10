@@ -25,8 +25,39 @@ public:
 };
 
 
+/* Centralised Integrator Settings */
 
+class Settings_LSODA{
+public:
 
+	// LSODA specific settings
+	int LRW, LIW;
+	int ITOL = 1;
+	int ITASK = 1;
+	int ISTATE = 1;
+	int IOPT = 0;
+
+	// general solver settings
+	double RTOL, ATOL;
+
+	// some vectors for LSODA
+	vector<int> vector_IWORK;
+	vector<double> vector_RWORK;
+};
+
+class Settings_Intel{
+public:
+	int ierr, dpar_size;
+	double h, hm, ep, tr;
+
+	int solver_subsettings;
+
+	vector<int> vector_ipar;
+	vector<int> vector_kd;
+	vector<double> vector_dpar;
+	// set the solver:
+	solver_type Solver_Type;
+};
 
 
 #endif /* HEADERS_CLASSES_HPP_ */

@@ -19,6 +19,23 @@ void Choose_Integrator(
 		vector< vector < str_RatesAnalysis > > &
 );
 
+void Prepare_Integrator_Settings(
+		Initial_Data ,
+		int ,
+		Settings_LSODA& ,
+		Settings_Intel&
+);
+
+// solve based on concentrations using Intel
+void Integrate_Liquid_Phase(
+		Filenames,
+		vector< double >,
+		Reaction_Mechanism ,
+		Initial_Data,
+		vector< double >&,
+		vector< vector < str_RatesAnalysis > > &
+);
+
 // solve based on concentrations using Intel
 void Integrate_Liquid_Phase_Intel(
 		Filenames,

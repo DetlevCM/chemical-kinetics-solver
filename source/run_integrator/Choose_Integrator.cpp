@@ -41,7 +41,8 @@ void Choose_Integrator(
 		}
 		else // it isn't a pressure vessel, i.e. PetroOxy
 		{
-			Integrate_Liquid_Phase_Intel(
+			//Integrate_Liquid_Phase_Intel(
+			Integrate_Liquid_Phase(
 					OutputFilenames,
 					InitialParameters.InitialSpeciesConcentration,
 					reaction_mechanism,
@@ -69,7 +70,8 @@ void Choose_Integrator(
 		}
 		else // it isn't a pressure vessel, i.e. PetroOxy
 		{
-			Integrate_Liquid_Phase_Odepack_LSODA(
+			//Integrate_Liquid_Phase_Odepack_LSODA(
+			Integrate_Liquid_Phase(
 					OutputFilenames,
 					InitialParameters.InitialSpeciesConcentration,
 					reaction_mechanism,
