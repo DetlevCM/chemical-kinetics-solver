@@ -8,7 +8,7 @@
 #include <Headers.hpp>
 
 
-void Prepare_Integrator_Settings(
+int Prepare_Integrator_Settings(
 		Initial_Data InitialParameters,
 		int Number_Species,
 		Settings_LSODA& LSODA,
@@ -16,6 +16,20 @@ void Prepare_Integrator_Settings(
 )
 {
 	int n;
+	int solver_choice = 0;
+
+	/*
+	 * To simplify the model selection, all solvers will be accessible using an integer ID.
+	 * Every solver will be given an ID number starting from 1, followed by three digits to
+	 * specify the exact settings.
+	 *
+	 * So IntelODE will be 1xxx with the first combination 1001.
+	 * ODEPACK will carry on with 2xxx, the first setting being 2001.
+	 *
+	 * This allows up to 999 settings per solver which is excessive while also allowing a technically
+	 * unlimited expansion of the list of supported solvers for future developers.
+	 */
+
 	n = Number_Species + 1;
 	if(InitialParameters.Solver_Parameters.SolverType == 0) // Intel ODE Settings
 	{
@@ -47,29 +61,36 @@ void Prepare_Integrator_Settings(
 		Intel.solver_subsettings = 0;
 
 
+
 		if(!Intel.Solver_Type.Use_Stiff_Solver && !Intel.Solver_Type.Use_Analytical_Jacobian)
 		{
+			solver_choice = 1001;
 			Intel.solver_subsettings = 1; // stiff solver without analytical Jacobian
 		}
 		else if(!Intel.Solver_Type.Use_Stiff_Solver && Intel.Solver_Type.Use_Analytical_Jacobian)
 		{
+			solver_choice = 1002;
 			Intel.solver_subsettings = 2; // stiff solver with analytical Jacobian
 		}
 		else if(Intel.Solver_Type.Use_Stiff_Solver && !Intel.Solver_Type.Use_Analytical_Jacobian)
 		{
+			solver_choice = 1003;
 			Intel.solver_subsettings = 3; // general case without analytical Jacobian
 		}
 		else if(Intel.Solver_Type.Use_Stiff_Solver && Intel.Solver_Type.Use_Analytical_Jacobian)
 		{
+			solver_choice = 1004;
 			Intel.solver_subsettings = 4; // general case with analytical Jacobian
 		}
 
 	}
 	else if(InitialParameters.Solver_Parameters.SolverType == 1) // LSODA Settings
 	{
+		solver_choice = 2002;
 		LSODA.JT = 2; // default, no Jacobian provided, i.e. use internal numerical one
 		if(InitialParameters.Solver_Parameters.Use_Analytical_Jacobian)
 		{
+			solver_choice = 2001;
 			LSODA.JT = 1; // user provided Jacobian
 		}
 
@@ -92,4 +113,6 @@ void Prepare_Integrator_Settings(
 
 
 	}
+
+	return solver_choice;
 }

@@ -55,7 +55,8 @@ void Integrate_Liquid_Phase(
 
 
 	// this function will prepare the required settings. Only the required class is updated.
-	Prepare_Integrator_Settings(
+	int solver_choice = 0;
+	solver_choice = Prepare_Integrator_Settings(
 			InitialParameters,
 			Number_Species,
 			LSODA,Intel
@@ -281,79 +282,66 @@ void Integrate_Liquid_Phase(
 		 */
 
 		// https://en.cppreference.com/w/cpp/language/switch
-		switch(InitialParameters.Solver_Parameters.SolverType) // begin ODE Solver switch
+		switch(solver_choice) // begin ODE Solver switch
 		{
 
-		case 0 : // case IntelODE
 
-			switch(Intel.solver_subsettings)
-			{
-
-			case 2 : dodesol_rkm9mka(Intel.vector_ipar.data(), &n, &time_current, &time_step,
-					SpeciesConcentration.data(),(void*) ODE_RHS_Liquid_Phase,
-					(void*) Jacobian_Matrix_Intel, &Intel.h, &Intel.hm, &Intel.ep, &Intel.tr,
-					Intel.vector_dpar.data(), Intel.vector_kd.data(), &Intel.ierr
-			);
-
-			break;
-
-			case 4 : dodesol_mk52lfa(Intel.vector_ipar.data(), &n, &time_current, &time_step,
-					SpeciesConcentration.data(),(void*) ODE_RHS_Liquid_Phase,
-					(void*) Jacobian_Matrix_Intel, &Intel.h, &Intel.hm, &Intel.ep, &Intel.tr,
-					Intel.vector_dpar.data(), Intel.vector_kd.data(), &Intel.ierr
-			);
-
-			break;
-
-			case 3 : dodesol_mk52lfn(Intel.vector_ipar.data(), &n, &time_current, &time_step,
+		// case IntelODE
+		case 1001:
+			dodesol_rkm9mkn(Intel.vector_ipar.data(), &n, &time_current, &time_step,
 					SpeciesConcentration.data(),(void*) ODE_RHS_Liquid_Phase,
 					&Intel.h, &Intel.hm, &Intel.ep, &Intel.tr,
 					Intel.vector_dpar.data(), Intel.vector_kd.data(), &Intel.ierr
 			);
-
+			if (Intel.ierr!=0){printf("\n dodesol_rkm9mkn routine exited with error code %4d\n",Intel.ierr);exit(1);}
 			break;
 
-			case 1:	dodesol_rkm9mkn(Intel.vector_ipar.data(), &n, &time_current, &time_step,
+		case 1002 :
+			dodesol_rkm9mka(Intel.vector_ipar.data(), &n, &time_current, &time_step,
+					SpeciesConcentration.data(),(void*) ODE_RHS_Liquid_Phase,
+					(void*) Jacobian_Matrix_Intel, &Intel.h, &Intel.hm, &Intel.ep, &Intel.tr,
+					Intel.vector_dpar.data(), Intel.vector_kd.data(), &Intel.ierr
+			);
+			if (Intel.ierr!=0){printf("\n dodesol_rkm9mkn routine exited with error code %4d\n",Intel.ierr);exit(1);}
+			break;
+
+		case 1003 :
+			dodesol_mk52lfn(Intel.vector_ipar.data(), &n, &time_current, &time_step,
 					SpeciesConcentration.data(),(void*) ODE_RHS_Liquid_Phase,
 					&Intel.h, &Intel.hm, &Intel.ep, &Intel.tr,
 					Intel.vector_dpar.data(), Intel.vector_kd.data(), &Intel.ierr
 			);
-
+			if (Intel.ierr!=0){printf("\n dodesol_rkm9mkn routine exited with error code %4d\n",Intel.ierr);exit(1);}
 			break;
 
-			if (Intel.ierr != 0)
-			{
-				printf("\n dodesol_rkm9mkn routine exited with error code %4d\n",Intel.ierr);
-				exit(1) ; // we abort in case of error
-			}
-			}
-			break; // end of IntelODE
+		case 1004 :
+			dodesol_mk52lfa(Intel.vector_ipar.data(), &n, &time_current, &time_step,
+					SpeciesConcentration.data(),(void*) ODE_RHS_Liquid_Phase,
+					(void*) Jacobian_Matrix_Intel, &Intel.h, &Intel.hm, &Intel.ep, &Intel.tr,
+					Intel.vector_dpar.data(), Intel.vector_kd.data(), &Intel.ierr
+			);
+			if (Intel.ierr!=0){printf("\n dodesol_rkm9mkn routine exited with error code %4d\n",Intel.ierr);exit(1);}
+			break;
 
-			case 1 : // use LSODA
 
-				switch (LSODA.JT) // LSODA Jacobian type
-				{
-				case 1 : dlsoda_((void*) ODE_RHS_Liquid_Phase,&n,SpeciesConcentration.data(),&time_current,&time_step,
-						&LSODA.ITOL,&LSODA.RTOL,&LSODA.ATOL,
-						&LSODA.ITASK,&LSODA.ISTATE,&LSODA.IOPT,
-						LSODA.vector_RWORK.data(),&LSODA.LRW,LSODA.vector_IWORK.data(),&LSODA.LIW,
-						(void*) Jacobian_Matrix_Odepack_LSODA,&LSODA.JT);
-				break;
-				case 2 : dlsoda_((void*) ODE_RHS_Liquid_Phase,&n,SpeciesConcentration.data(),&time_current,&time_step,
-						&LSODA.ITOL,&LSODA.RTOL,&LSODA.ATOL,
-						&LSODA.ITASK,&LSODA.ISTATE,&LSODA.IOPT,
-						LSODA.vector_RWORK.data(),&LSODA.LRW,LSODA.vector_IWORK.data(),&LSODA.LIW,
-						(void*) Jacobian_Matrix_Odepack_LSODA,&LSODA.JT);
-				break;
-				} // end of LSODA Jacobian Type
+			// use LSODA
+		case 2001 :
+			dlsoda_((void*) ODE_RHS_Liquid_Phase,&n,SpeciesConcentration.data(),&time_current,&time_step,
+					&LSODA.ITOL,&LSODA.RTOL,&LSODA.ATOL,
+					&LSODA.ITASK,&LSODA.ISTATE,&LSODA.IOPT,
+					LSODA.vector_RWORK.data(),&LSODA.LRW,LSODA.vector_IWORK.data(),&LSODA.LIW,
+					(void*) Jacobian_Matrix_Odepack_LSODA,&LSODA.JT);
+			if (LSODA.ISTATE<0){printf("\n LSODA routine exited with error code %4d\n",LSODA.ISTATE);exit(1);}
+			break;
+		case 2002 :
+			dlsoda_((void*) ODE_RHS_Liquid_Phase,&n,SpeciesConcentration.data(),&time_current,&time_step,
+					&LSODA.ITOL,&LSODA.RTOL,&LSODA.ATOL,
+					&LSODA.ITASK,&LSODA.ISTATE,&LSODA.IOPT,
+					LSODA.vector_RWORK.data(),&LSODA.LRW,LSODA.vector_IWORK.data(),&LSODA.LIW,
+					(void*) Jacobian_Matrix_Odepack_LSODA,&LSODA.JT);
+			if (LSODA.ISTATE<0){printf("\n LSODA routine exited with error code %4d\n",LSODA.ISTATE);exit(1);}
+			break;
 
-				if (LSODA.ISTATE < 0)
-				{
-					printf("\n LSODA routine exited with error code %4d\n",LSODA.ISTATE);
-					exit(1) ; // we abort in case of error
-				}
-
-				break; // end of LSODA
 
 		} // end of ODE solver switch
 
