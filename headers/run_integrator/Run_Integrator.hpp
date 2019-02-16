@@ -25,7 +25,7 @@ int Prepare_Integrator_Settings(
 		Settings_Intel&
 );
 
-// solve based on concentrations using Intel
+// solve based on concentrations in the liquid phase
 void Integrate_Liquid_Phase(
 		Filenames,
 		vector< double >,
@@ -35,36 +35,6 @@ void Integrate_Liquid_Phase(
 		vector< vector < str_RatesAnalysis > > &
 );
 
-// solve based on concentrations using Intel
-void Integrate_Liquid_Phase_Intel(
-		Filenames,
-		vector< double >,
-		Reaction_Mechanism ,
-		Initial_Data,
-		vector< double >&,
-		vector< vector < str_RatesAnalysis > > &
-);
-
-// solve based on concentrations and consider headspace gas using Intel
-void Integrate_Pressure_Vessel_Liquid_Phase_Intel(
-		Filenames,
-		vector< double >,
-		Reaction_Mechanism ,
-		Initial_Data,
-		vector< double >&,
-		PressureVesselCalc,
-		vector< vector < str_RatesAnalysis > > &
-);
-
-// solve based on concentrations using Odepack LSODA
-void Integrate_Liquid_Phase_Odepack_LSODA(
-		Filenames,
-		vector< double >,
-		Reaction_Mechanism ,
-		Initial_Data,
-		vector< double >&,
-		vector< vector < str_RatesAnalysis > > &
-);
 
 void Integrate_Gas_Phase_Odepack_LSODA(
 		Filenames,
@@ -75,18 +45,8 @@ void Integrate_Gas_Phase_Odepack_LSODA(
 		vector< vector < str_RatesAnalysis > > &
 );
 
-// solve based on concentrations and consider headspace gas using Odepack LSODA
-void Integrate_Pressure_Vessel_Liquid_Phase_Odepack_LSODA(
-		Filenames,
-		vector< double >,
-		Reaction_Mechanism ,
-		Initial_Data,
-		vector< double >&,
-		PressureVesselCalc,
-		vector< vector < str_RatesAnalysis > > &
-);
 
-// solve based on concentrations and consider headspace gas
+// solve based on concentrations in the liquid phase and consider headspace gas
 void Integrate_Pressure_Vessel_Liquid_Phase(
 		Filenames,
 		vector< double >,
