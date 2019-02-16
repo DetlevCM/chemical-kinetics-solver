@@ -29,7 +29,8 @@ void Choose_Integrator(
 		// it is the pressure vessel case
 		if(InitialParameters.PetroOxy.IsSet)
 		{
-			Integrate_Pressure_Vessel_Liquid_Phase_Intel(
+			//Integrate_Pressure_Vessel_Liquid_Phase_Intel(
+			Integrate_Pressure_Vessel_Liquid_Phase(
 					OutputFilenames,
 					InitialParameters.InitialSpeciesConcentration,
 					reaction_mechanism,
@@ -58,7 +59,8 @@ void Choose_Integrator(
 		// it is the pressure vessel case
 		if(InitialParameters.PetroOxy.IsSet)
 		{
-			Integrate_Pressure_Vessel_Liquid_Phase_Odepack_LSODA(
+			//Integrate_Pressure_Vessel_Liquid_Phase_Odepack_LSODA(
+			Integrate_Pressure_Vessel_Liquid_Phase(
 					OutputFilenames,
 					InitialParameters.InitialSpeciesConcentration,
 					reaction_mechanism,
