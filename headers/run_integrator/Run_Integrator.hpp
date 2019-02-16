@@ -11,7 +11,6 @@
 // Function to pick the right integration routine
 void Choose_Integrator(
 		Filenames,
-		//vector< double >,
 		Reaction_Mechanism ,
 		Initial_Data,
 		vector< double >&,
@@ -19,7 +18,7 @@ void Choose_Integrator(
 		vector< vector < str_RatesAnalysis > > &
 );
 
-void Prepare_Integrator_Settings(
+int Prepare_Integrator_Settings(
 		Initial_Data ,
 		int ,
 		Settings_LSODA& ,

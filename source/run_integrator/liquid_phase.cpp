@@ -273,13 +273,6 @@ void Integrate_Liquid_Phase(
 	{
 		time_step = time_current + time_step1;
 
-		/* future to do:
-		 * create a unified naming scheme to use a single switch for all choices.
-		 * Maybe something along the lines of 10 000 to 10 999 for Intel ODE
-		 * Then 20 000 to 20 999 for LSODA
-		 *
-		 * Then there is still a lot of space in case additional jobs are added
-		 */
 
 		// https://en.cppreference.com/w/cpp/language/switch
 		switch(solver_choice) // begin ODE Solver switch
