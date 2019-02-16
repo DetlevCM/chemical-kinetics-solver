@@ -10,6 +10,10 @@ libraries/odepack/libodepack.a
 #libraries/odepack/opkda2.f
 #libraries/odepack/opkdmain.f
 #libraries/odepack/opkddemos
+
+## binary for daskr
+libraries/daskr/libddaskr.a
+
 ## exclude source and temp files for documentation
 *.tex
 *.aux
@@ -36,4 +40,9 @@ Release-Makefile-MinGW/*.exe
 *.d
 *.exe
 Release-Makefile-MinGW/CKS branches.exe
+
+## test files
+chem.inp
+debug
+initial.inp
 
