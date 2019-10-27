@@ -31,16 +31,25 @@ vector< SingleReactionData > Get_Reactions(
 		const vector< string >& Species
 ){
 
-	/* Struct Reaction Matrix
-	 * 1) Vector Ractants
-	 * 2) Vector Reactants
-	 * 3) boolean reversible, doubles for A, n, Ea
+	/* class Reaction_Mechanism {
+	 * public:
+	 * int species;
+	 * int reactions;
+	 *
+	 * vector< string > Species;
+	 * vector< ThermodynamicData > Thermodynamics;
+	 * vector< SingleReactionData > Reactions;
+	 * };
 	 */
 
-	vector<string> Reactions_List; // vector to hold the list of reactions for processing
+	// most mechanisms only have megabyte sizes, thus it is possible to
+	// store the mechanism in memory for easier string processing
+	vector<string> Reactions_List;
 
-	vector< SingleReactionData > Reaction_Matrix;
+	// we prepare the output vector that we will return
+	vector< SingleReactionData > Reaction_Data;
 
+	// we open the file that contains the mechanims data
 	ifstream Mechanism_Data;
 	Mechanism_Data.open (filename.c_str());
 
@@ -49,7 +58,6 @@ vector< SingleReactionData > Get_Reactions(
 
 	int begin_flag = 0, end_flag = 0; // treat as Boolean, true/false
 
-	size_t found;
 
 	int Number_Species = (int)Species.size();
 
@@ -69,21 +77,25 @@ vector< SingleReactionData > Get_Reactions(
 
 			if(begin_flag && !end_flag)
 			{
-				found = line.find("END"); // need to check for end in loop for 4 line blocks
-				if (found!=string::npos && begin_flag)
+				//found = line.find("END"); // need to check for end in loop for 4 line blocks
+				//if(Test_If_Word_Found(line,"END") && begin_flag)
+				if(line.compare(0,3,"END") == 0 || line.compare(0,3,"end") == 0)
+				//if (found!=string::npos && begin_flag)
 				{
+					//cout << "END found\n";
 					end_flag = 1;
 				}
 
-				if(!end_flag && !line.empty() && line.compare(0,1,"!") != 0) // Abort if end reached or initial line is comment
+				if(end_flag == 0 && !line.empty() && line.compare(0,1,"!") != 0) // Abort if end reached or initial line is comment
 				{
 					Reactions_List.push_back(line);
 				}
 			}
 
 			// Moving reaction data check to end of function avoids "REAC" being read in as a name
-			if(Test_If_Word_Found(line,"REAC") && !begin_flag) // only test once... once we found the reactions, its done
+			if(Test_If_Word_Found(line,"REAC") && line.compare(0,1,"!") != 0 && begin_flag == 0) // only test once... once we found the reactions, its done
 			{
+				//cout << "REAC found\n";
 				begin_flag=1;
 				SchemeUnits = Set_Mechanism_Units(line);
 			}
@@ -91,8 +103,11 @@ vector< SingleReactionData > Get_Reactions(
 		Mechanism_Data.close();
 	}
 
+
+	//cout << "mechanism length: " << Reactions_List.size() << "\n";
 	for(int j=0;j<(int)Reactions_List.size();j++)
 	{
+		//cout << "line: " << j << "\n";
 		string line = Reactions_List[j];
 		vector< double > ReactantData; // Reactant Information
 		ReactantData.resize(Number_Species);
@@ -104,8 +119,8 @@ vector< SingleReactionData > Get_Reactions(
 		// Reaction is marked a duplicate (First line cannot be "DUP", else this will crash...)
 		if(line.compare(0,1,"!") != 0  && line.compare(0,1,"/") != 0 && line.compare(0,3,"DUP") == 0)
 		{
-			int position = (int) Reaction_Matrix.size() - 1;
-			Reaction_Matrix[position].IsDuplicate=true;
+			int position = (int) Reaction_Data.size() - 1;
+			Reaction_Data[position].IsDuplicate=true;
 		}
 		// content in here - check if line does not start with a comment, ! or / or DUP
 		else if(
@@ -124,6 +139,7 @@ vector< SingleReactionData > Get_Reactions(
 			line = RemoveComments[0];
 			RemoveComments.clear();
 
+			//cout << "0010" << line << "\n";
 
 			// only continue if the string is not empty or only whitespace or only tab
 			if(!line.empty() && line.find_first_not_of("\t ") != string::npos)
@@ -310,7 +326,7 @@ vector< SingleReactionData > Get_Reactions(
 				temp.Reversible = is_reversible;
 				temp.IsDuplicate = false; // default, not a duplicate
 
-				Reaction_Matrix.push_back(temp);
+				Reaction_Data.push_back(temp);
 
 				ReactantData.clear();
 				ProductData.clear();
@@ -321,7 +337,7 @@ vector< SingleReactionData > Get_Reactions(
 	}
 
 
-	return Reaction_Matrix;
+	return Reaction_Data;
 }
 
 
