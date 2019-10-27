@@ -37,7 +37,7 @@ int main(int argc, char* argv[])
 		user_inputs.push_back(argv[i]);
 	}
 
-	// We create a class for storing neccessary filenames:
+	// We create a class for storing necessary filenames:
 	FileNames filenames;
 
 	Process_User_Input(
@@ -48,9 +48,9 @@ int main(int argc, char* argv[])
 
 
 	/*
-	 * Next we deal with the storage classes for the data tha will
+	 * Next we deal with the storage classes for the data that will
 	 * be read in.
-	 * In any case, this includes a mechanims.
+	 * In any case, this includes a mechanisms.
 	 *
 	 * It may include initial data (not essential for lumping only)
 	 * as well as potentially separately dedicated PetroOxy settings.
@@ -101,6 +101,7 @@ int main(int argc, char* argv[])
 	int Number_Reactions = (int) reaction_mechanism.Reactions.size();
 	vector< double > KeyRates; // for mechanism reduction
 
+	//cout << "test species/reactions: " << Number_Species << " " << Number_Reactions << "\n";
 	// We have now pre-processed all information, time to set up the ODEs and the solver
 	// Let us set up the reactions first for the ODE solver
 
