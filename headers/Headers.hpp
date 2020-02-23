@@ -66,7 +66,6 @@ using std::stod; // for C++ string to double
 // headers for the ode libraries
 #include <lib_headers/lib_Intel_ODE.hpp>
 #include <lib_headers/lib_odepack.hpp>
-#include <lib_headers/lib_daskr.hpp>
 
 
 // run_integrator subfolder
