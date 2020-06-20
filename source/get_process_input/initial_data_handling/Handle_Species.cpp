@@ -7,7 +7,11 @@
 
 #include <Headers.hpp>
 
-vector< InitSpecies > Handle_Species(Initial_Data&  InitialParameters,  vector<string> Input, vector< string > Species)
+vector< InitSpecies > Handle_Species(
+		Initial_Data&  InitialParameters,
+		vector<string> Input,
+		vector< string > Species
+		)
 {
 	int i,j;
 	vector< InitSpecies > SetupSpecies;

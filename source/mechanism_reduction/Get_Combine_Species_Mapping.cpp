@@ -8,7 +8,9 @@
 
 #include <Headers.hpp>
 
-vector< vector< string > > Get_Combine_Species_Mapping(string filename)
+vector< vector< string > > Get_Combine_Species_Mapping(
+		string filename
+		)
 {
 	ifstream Input_Data;
 	Input_Data.open (filename.c_str());

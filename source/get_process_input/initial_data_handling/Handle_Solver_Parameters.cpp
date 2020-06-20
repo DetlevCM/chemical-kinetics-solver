@@ -8,7 +8,10 @@
 #include <Headers.hpp>
 
 
-void Handle_Solver_Parameters(Initial_Data& InitialParameters, vector<string> Input)
+void Handle_Solver_Parameters(
+		Initial_Data& InitialParameters,
+		vector<string> Input
+		)
 {
 	int i;
 	for(i=0;i<(int)Input.size();i++)

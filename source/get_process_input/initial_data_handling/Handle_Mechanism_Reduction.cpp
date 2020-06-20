@@ -8,7 +8,9 @@
 #include <Headers.hpp>
 
 
-mechanism_reduction Handle_Mechanism_Reduction(vector<string> Input)
+mechanism_reduction Handle_Mechanism_Reduction(
+		vector<string> Input
+		)
 {
 	mechanism_reduction Mechanism_Reduction_Output;
 
