@@ -36,6 +36,10 @@ Create the binary files using either of:
 
   gfortran -O3 -march=native -mavx2 -ffast-math -c opkda1.f opkda2.f opkdmain.f
 
+  need to add -std=legacy
+  
+  gfortran -c -std=legacy opkda1.f opkda2.f opkdmain.f
+  
 And use the following to create the archive:
 
   ar -rcs libodepack.a opkda1.o opkda2.o opkdmain.o
