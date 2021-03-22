@@ -20,7 +20,7 @@
  *
  */
 
-#include <Headers.hpp>
+#include "../headers/Headers.hpp"
 
 vector< SingleReactionData > Make_Irreversible(
 		vector< SingleReactionData > Reactions,

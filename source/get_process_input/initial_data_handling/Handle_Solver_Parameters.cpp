@@ -5,8 +5,7 @@
  *      Author: DetlevCM
  */
 
-#include <Headers.hpp>
-
+#include "../headers/Headers.hpp"
 
 void Handle_Solver_Parameters(Initial_Data& InitialParameters, vector<string> Input)
 {

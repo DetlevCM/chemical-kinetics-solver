@@ -6,7 +6,7 @@
  *      Author: DetlevCM
  */
 
-#include <Headers.hpp>
+#include "../headers/Headers.hpp"
 
 vector< vector< string > > Get_Combine_Species_Mapping(string filename)
 {

@@ -5,7 +5,7 @@
  *      Author: DetlevCM
  */
 
-#include <Headers.hpp>
+#include "../headers/Headers.hpp"
 
 
 vector<ClassNaming> GetSpeciesClassesNames(vector< vector< string > > SpeciesMapping)
