@@ -43,9 +43,9 @@ void ODE_RHS_Liquid_Phase(int*n, double*t, double*y, double*f)
 	SpeciesConcentrationChange = SpeciesLossRate(Number_Species, Rates, SpeciesLossAll);
 
 
-	double ctot=0;
-	double qint=0;
-	double qtot=0;
+	double ctot = 0.0;
+	double qint = 0.0;
+	double qtot = 0.0;
 
 
 	for (i = 0; i < Number_Species; i++)

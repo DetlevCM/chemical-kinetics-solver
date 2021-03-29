@@ -14,16 +14,16 @@ double Scale_A(double A_read_in, vector<double> ReactantData, int scaling_type)
 	if(scaling_type == 0) // A is molecules / cm^3
 	{
 		// for moles / dm^3
-		double order = 0;
+		double order = 0.0;
 		for(int i=0;i<(int)ReactantData.size();i++)
 		{
 			order = order + ReactantData[i];
 		}
-		order = fabs(order) - 1; // make sure it is positive
+		order = fabs(order) - 1.0; // make sure it is positive
 
 		// 6.0221e+23 <- molecules per mol
 		double scale = (6.0221e+23); // convert to molecules / cm^(-3)
-		scale = scale * 1000; // convert from cm^3 to dm^3
+		scale = scale * 1000.0; // convert from cm^3 to dm^3
 		A_read_in = A_read_in * pow(scale,(order));
 
 		return A_read_in; // and convert to molecules per liter (dm^3)
@@ -31,14 +31,14 @@ double Scale_A(double A_read_in, vector<double> ReactantData, int scaling_type)
 	else if(scaling_type == 1) // A is in moles / cm^3
 	{
 
-		double order = 0;
+		double order = 0.0;
 		for(int i=0;i<(int)ReactantData.size();i++)
 		{
 			order = order + ReactantData[i];
 		}
-		order = fabs(order) - 1; // make sure it is positive
+		order = fabs(order) - 1.0; // make sure it is positive
 
-		double scale = 1 * 1000; // convert from cm^3 to dm^3
+		double scale = 1.0 * 1000.0; // convert from cm^3 to dm^3
 
 		A_read_in = A_read_in * pow(scale,(order));
 

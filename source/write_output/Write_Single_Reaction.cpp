@@ -88,7 +88,7 @@ string Prepare_Single_Reaction_Output(
 	/*convert << "\t\t" << Reaction.paramA*1000 << "\t" << Reaction.paramN << "\t" << Reaction.paramEa << "\n"; //*/
 
 	// ensure that A is scaled correctly to per cm^3 units depending on the reaction order
-	double prexponential_A = Reaction.paramA * pow(1000,(Reaction_Order-1));
+	double prexponential_A = Reaction.paramA / pow(1000.0,(Reaction_Order-1.0));
 
 	convert << "\t\t" <<
 			prexponential_A << "\t" <<
