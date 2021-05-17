@@ -59,7 +59,7 @@ double Scale_Ea(double Ea_read_in, int scaling_type)
 		return Ea_read_in/1.98709e-3;
 	}
 
-	else if(scaling_type== 2) // Ea is in cal/mol
+	else if(scaling_type == 2) // Ea is in cal/mol
 	{
 		return Ea_read_in/1.98709;
 	}
