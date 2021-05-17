@@ -40,6 +40,11 @@ int Prepare_Integrator_Settings(
 		 */
 
 		Intel.vector_ipar.resize(128);  // vectors initialise to zero, as required by the solver
+		for(int i = 0;i<128;i++)
+		{
+			Intel.vector_ipar[i] = 0; // should be unnecessary, vector initialises to zero
+		}
+
 
 		if (13 * n > (7 + 2 * n) * n) {
 			Intel.dpar_size = 13 * n;
@@ -47,7 +52,7 @@ int Prepare_Integrator_Settings(
 			Intel.dpar_size = (7 + 2 * n) * n;
 		}
 		Intel.vector_dpar.resize(Intel.dpar_size);
-		Intel.vector_kd.resize(n + 1);
+		Intel.vector_kd.resize(n);
 
 		// Some tolerances for the solver:
 		Intel.ep = InitialParameters.Solver_Parameters.rtol ; // relative tolerance. The code cannot guarantee the requested accuracy for ep<1.d-9
