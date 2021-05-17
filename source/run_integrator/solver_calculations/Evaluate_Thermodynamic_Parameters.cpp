@@ -9,7 +9,7 @@ void Evaluate_Thermodynamic_Parameters(
 {
 
 	/* 2002 CODATA values */
-	double R = 8.314472e0;
+	double R = 8.314472e0; // J mol-1 K-1
 	int i;
 
 	int Number_Species = (int)Thermodynamics.size();
@@ -35,7 +35,7 @@ void Evaluate_Thermodynamic_Parameters(
 			CalculatedThermo[i].Hf = R*Temperature*(
 				Thermodynamics[i].NasaLow1 +
 				Thermodynamics[i].NasaLow2*Temperature*0.5 +
-				Thermodynamics[i].NasaLow3*T2/3 +
+				Thermodynamics[i].NasaLow3*T2/3.0 +
 				Thermodynamics[i].NasaLow4*T3*0.25 +
 				Thermodynamics[i].NasaLow5*T4*0.2 +
 				Thermodynamics[i].NasaLow6*InvT);
@@ -56,7 +56,7 @@ void Evaluate_Thermodynamic_Parameters(
 				Thermodynamics[i].NasaLow1*logT +
 				Thermodynamics[i].NasaLow2*Temperature +
 				Thermodynamics[i].NasaLow3*T2*0.5 +
-				Thermodynamics[i].NasaLow4*T3/3 +
+				Thermodynamics[i].NasaLow4*T3/3.0 +
 				Thermodynamics[i].NasaLow5*T4*0.25 +
 				Thermodynamics[i].NasaLow7);
 		}
@@ -66,7 +66,7 @@ void Evaluate_Thermodynamic_Parameters(
 			CalculatedThermo[i].Hf = R*Temperature*(
 				Thermodynamics[i].NasaHigh1+
 				Thermodynamics[i].NasaHigh2*Temperature*0.5 +
-				Thermodynamics[i].NasaHigh3*T2/3 +
+				Thermodynamics[i].NasaHigh3*T2/3.0 +
 				Thermodynamics[i].NasaHigh4*T3*0.25 +
 				Thermodynamics[i].NasaHigh5*T4*0.2 +
 				Thermodynamics[i].NasaHigh6*InvT);
@@ -87,7 +87,7 @@ void Evaluate_Thermodynamic_Parameters(
 				Thermodynamics[i].NasaHigh1*logT +
 				Thermodynamics[i].NasaHigh2*Temperature +
 				Thermodynamics[i].NasaHigh3*T2*0.5 +
-				Thermodynamics[i].NasaHigh4*T3/3 +
+				Thermodynamics[i].NasaHigh4*T3/3.0 +
 				Thermodynamics[i].NasaHigh5*T4*0.25 +
 				Thermodynamics[i].NasaHigh7);
 		} 

@@ -21,7 +21,7 @@ void Calculate_Rate_Constant(
 {
 
 	/* 2002 CODATA values */
-	double R = 8.314472e0;
+	double R = 8.314472e0; // J mol-1 K-1
 	//double Na = 6.0221415e23;
 
 	int Number_Reactions = (int)ReactionParameters.size();
