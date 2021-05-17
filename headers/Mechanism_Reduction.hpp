@@ -19,9 +19,9 @@ void Reduce_Species_Thermo_Mechanism(
 
 void mechanism_picking(
 		string filename,
-		vector< string >& ,
-		vector< ThermodynamicData >& ,
-		vector< SingleReactionData >&
+		vector< string >& Species,
+		vector< ThermodynamicData >& Thermodynamics,
+		vector< SingleReactionData >& Reactions
 );
 
 
@@ -55,9 +55,9 @@ vector< bool > Read_Kill_List(
 );
 
 void ReactionRateImportance(
-		vector< double>& ,
-		const vector< double >& ,
-		double
+		vector< double >& KeyRates,
+		const vector< double >& Rates,
+		double parameter
 );
 
 vector< SingleReactionData > ReduceReactionsNew(
@@ -67,10 +67,10 @@ vector< SingleReactionData > ReduceReactionsNew(
 );
 
 vector< double > Compare_Concentrations(
-		const vector< double >& ,
-		const vector< vector< double > >& ,
-		const vector< double >& ,
-		const vector< vector< double > >&
+		//const vector< double >& OldTimePoints,
+		const vector< vector< double > >& OldConcentrations,
+		//const vector< double >& NewTimePoints,
+		const vector< vector< double > >& NewConcentrations
 );
 
 
@@ -80,7 +80,7 @@ vector< double > Compare_Concentrations(
 /* ***************************************** *///
 
 vector< vector< string > > Get_Combine_Species_Mapping(
-		string
+		string filename
 );
 
 vector<ClassNaming> GetSpeciesClassesNames(
@@ -88,9 +88,9 @@ vector<ClassNaming> GetSpeciesClassesNames(
 );
 
 vector< string > RenameSpecies(
-		vector< string > ,
-		vector<ClassNaming> ,
-		const vector< int > &
+		vector< string > Species,
+		vector<ClassNaming> UserDefinedNames,
+		const vector< int > & SpeciesClassMapping
 );
 
 
@@ -101,8 +101,8 @@ vector< int > Map_Species_Classes(
 
 
 vector< ThermodynamicData > Process_Thermodynamics_Species_Classes(
-		const vector< int >& ,
-		vector< ThermodynamicData >
+		const vector< int >& SpeciesMapping,
+		vector< ThermodynamicData > Thermodynamics
 );
 
 vector< SingleReactionData > Process_Reactions_For_Species_Lumping(

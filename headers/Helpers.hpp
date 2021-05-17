@@ -8,17 +8,34 @@
 #ifndef HEADERS_HELPERS_HPP_
 #define HEADERS_HELPERS_HPP_
 
-string Strip_Single_Line_Comments(string, vector< string >);
+string Strip_Single_Line_Comments(
+		string input ,
+		vector<string> tokens
+		);
 
-vector< string > Tokenise_String_To_String(string , string );
+vector< string > Tokenise_String_To_String(
+		string input,
+		string tokens
+		);
 
-void Tokenise_String_To_String_Append(vector< string > & , string, string);
+void Tokenise_String_To_String_Append(
+		vector< string >& data ,
+		string input, string tokens
+		);
 
-vector< double > Tokenise_String_To_Double(string , string );
+vector< double > Tokenise_String_To_Double(
+		string input,
+		string tokens
+		);
 
-bool Line_Not_Comment_Or_Empty(string);
+bool Line_Not_Comment_Or_Empty(
+		string InputLine
+		);
 
-bool Test_If_Word_Found(string , string );
+bool Test_If_Word_Found(
+		string string_to_search,
+		string search_term
+		);
 
 
 #endif /* HEADERS_HELPERS_HPP_ */

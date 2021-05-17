@@ -12,9 +12,8 @@
 // Jacobian Matrix for plain Arrhenius expressions only
 
 void Prepare_Jacobian_Matrix(
-		vector< JacobianData > &,
-		const vector< SingleReactionData > &//,
-		//vector< string >
+		vector < JacobianData > & JacobianColumnWise,
+		const vector< SingleReactionData > & Reactions
 );
 
 void Jacobian_Matrix_Intel(int*, double*, double*, double*);

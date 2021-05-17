@@ -13,7 +13,11 @@
  */
 
 
-void Handle_PetroOxy(Initial_Data& InitialParameters, vector<string> Input, vector< string > Species)
+void Handle_PetroOxy(
+		Initial_Data& InitialParameters,
+		vector<string> Input,
+		vector< string > Species
+		)
 {
 	bool OxyGasSpeciesDefined = false;
 

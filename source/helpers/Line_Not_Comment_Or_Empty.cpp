@@ -7,7 +7,7 @@
 
 #include "../headers/Headers.hpp"
 
-bool Line_Not_Comment_Or_Empty( string InputLine)
+bool Line_Not_Comment_Or_Empty( string InputLine )
 {
 	vector< string > line_content;
 	line_content = Tokenise_String_To_String(InputLine,"\t "); // split entry

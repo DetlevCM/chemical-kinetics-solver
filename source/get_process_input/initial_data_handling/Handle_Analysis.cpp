@@ -9,7 +9,11 @@
 
 
 
-void Handle_Analysis(Initial_Data& InitialParameters, vector<string> Input, vector<string> Species)
+void Handle_Analysis(
+		Initial_Data& InitialParameters,
+		vector<string> Input,
+		vector<string> Species
+		)
 {
 	int i, j;
 	vector< string > line_content;

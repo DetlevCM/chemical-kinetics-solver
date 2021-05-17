@@ -9,7 +9,11 @@
 
 
 
-double Scale_A(double A_read_in, vector<double> ReactantData, int scaling_type)
+double Scale_A(
+		double A_read_in,
+		vector<double> ReactantData,
+		int scaling_type
+		)
 {
 	if(scaling_type == 0) // A is molecules / cm^3
 	{
@@ -52,7 +56,10 @@ double Scale_A(double A_read_in, vector<double> ReactantData, int scaling_type)
 }
 
 // Ea needs to be in Kelvin for the remainder of the calculations
-double Scale_Ea(double Ea_read_in, int scaling_type)
+double Scale_Ea(
+		double Ea_read_in,
+		int scaling_type
+		)
 {
 	if(scaling_type == 1) // Ea is in kcal/mol
 	{

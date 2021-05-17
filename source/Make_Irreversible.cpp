@@ -26,7 +26,7 @@ vector< SingleReactionData > Make_Irreversible(
 		vector< SingleReactionData > Reactions,
 		const vector< ThermodynamicData > Thermodynamics,
 		double Initial_Temperature, /// use initial temperature from initial data
-		double Range // specify +/- rang around initial temperature
+		double Range // specify +/- range around initial temperature
 )
 {
 	/* 2002 CODATA values */
