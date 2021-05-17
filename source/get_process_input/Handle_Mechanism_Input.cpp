@@ -27,7 +27,7 @@ bool Handle_Mechanism_Input(
 )
 {
 	//int Number_Reactions;
-	int i;
+	size_t i;
 
 	/* As we now know that the input files exist, let us continue by reading in
 	 * the species list, thermodynamic data and mechanism
@@ -37,7 +37,7 @@ bool Handle_Mechanism_Input(
 			filenames.mechanism ,
 			reaction_mechanism
 	);
-	int Number_Species = (int)reaction_mechanism.Species.size();
+	size_t Number_Species = reaction_mechanism.Species.size();
 
 	/* Did the user request the removal of species? If yes, remove the
 	 * species on the "kill list" from the mechanism/
@@ -57,7 +57,7 @@ bool Handle_Mechanism_Input(
 		WriteReactions("Reactions_After_Species_Removal.txt", reaction_mechanism.Species, reaction_mechanism.Reactions);
 
 		// Update the counter for the species and reactions
-		Number_Species = (int)reaction_mechanism.Species.size();
+		Number_Species = reaction_mechanism.Species.size();
 		//Number_Reactions = (int)reaction_mechanism.Reactions.size();
 	}
 
@@ -78,7 +78,7 @@ bool Handle_Mechanism_Input(
 		WriteSpecies("Species_Picked_Species.txt", reaction_mechanism.Species);
 
 		// Update the counter for the species and reactions
-		Number_Species = (int) reaction_mechanism.Species.size();
+		Number_Species = reaction_mechanism.Species.size();
 		//Number_Reactions = (int) reaction_mechanism.Reactions.size();
 	}
 
@@ -136,7 +136,7 @@ bool Handle_Mechanism_Input(
 
 		vector< double > temp(Number_Species);
 
-		for (i = 0; i < (int) InitialParameters.InitialLiquidSpecies.size(); i++)
+		for (i = 0; i < InitialParameters.InitialLiquidSpecies.size(); i++)
 		{
 			temp[InitialParameters.InitialLiquidSpecies[i].SpecID] =
 					InitialParameters.InitialLiquidSpecies[i].SpecConc;
@@ -178,7 +178,7 @@ bool Handle_Mechanism_Input(
 	}
 	else
 	{
-		for (i = 0; i < (int) InitialParameters.InitialLiquidSpecies.size(); i++)
+		for (i = 0; i < InitialParameters.InitialLiquidSpecies.size(); i++)
 		{
 			InitialParameters.InitialSpeciesConcentration[InitialParameters.InitialLiquidSpecies[i].SpecID] =
 					InitialParameters.InitialLiquidSpecies[i].SpecConc;
@@ -221,10 +221,10 @@ bool Handle_Mechanism_Input(
 			WriteReactions("irreversible_scheme_for_mapping.txt", reaction_mechanism.Species, reaction_mechanism.Reactions);
 		}
 
-		int Number_Species_Classes = 0;
+		size_t Number_Species_Classes = 0;
 
 		vector<vector<string> > SpeciesMapping; // user input
-		vector<int> SpeciesClassMapping; // remapping key
+		vector<size_t> SpeciesClassMapping; // remapping key
 
 		/* Handle Input In here if it exists */
 		SpeciesMapping = Get_Combine_Species_Mapping("species_mapping.txt");
@@ -239,7 +239,7 @@ bool Handle_Mechanism_Input(
 		vector<ClassNaming> UserDefinedNames;
 		UserDefinedNames = GetSpeciesClassesNames(SpeciesMapping);
 		reaction_mechanism.Species = RenameSpecies(reaction_mechanism.Species, UserDefinedNames, SpeciesClassMapping); // Update Species Names
-		Number_Species_Classes = (int)reaction_mechanism.Species.size(); // need to resize species count a bit later
+		Number_Species_Classes = reaction_mechanism.Species.size(); // need to resize species count a bit later
 
 		reaction_mechanism.Thermodynamics = Process_Thermodynamics_Species_Classes(SpeciesClassMapping, reaction_mechanism.Thermodynamics); // create new thermodynamics
 
@@ -263,7 +263,7 @@ bool Handle_Mechanism_Input(
 
 		for (i = 0; i < Number_Species; i++)
 		{
-			int SpeciesID = SpeciesClassMapping[i];
+			size_t SpeciesID = SpeciesClassMapping[i];
 			temp[SpeciesID] = temp[SpeciesID] + InitialParameters.InitialSpeciesConcentration[i];
 		}
 		temp[Number_Species_Classes] = InitialParameters.InitialSpeciesConcentration[Number_Species]; // reassign initial temperature

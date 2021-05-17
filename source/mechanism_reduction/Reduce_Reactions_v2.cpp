@@ -16,13 +16,13 @@ void ReactionRateImportance(
 )
 {
 
-	int i;
+	size_t i;
 
 	// I can now process the rates to get an idea as to which reactions I can remove
 
 	double maxrate = 0;
 
-	for(i=0;i<(int)Rates.size();i++)
+	for(i=0;i<Rates.size();i++)
 	{
 		if(maxrate<Rates[i])
 		{
@@ -34,7 +34,7 @@ void ReactionRateImportance(
 	double threshhold = maxrate*pow(10,-parameter);// / (exp(10.0,parameter));
 	//cout << parameter << " " << maxrate << " " << threshhold << "\n";
 
-	for(i=0;i<(int)Rates.size();i++)
+	for(i=0;i<Rates.size();i++)
 	{
 		if(Rates[i] >= threshhold)
 		{
@@ -53,12 +53,12 @@ vector< SingleReactionData > ReduceReactionsNew(
 )
 {
 
-	int i;
+	size_t i;
 
 	vector < SingleReactionData > ReducedReactions ;
 	vector < SingleReactionData > ReducedReactionsRemoved ;
 
-	for(i=0;i<(int)SelectedReactions.size();i++)
+	for(i=0;i<SelectedReactions.size();i++)
 	{
 		//cout << i << "\n";
 		if(SelectedReactions[i]>0)

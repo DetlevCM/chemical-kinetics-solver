@@ -23,7 +23,7 @@ void Jacobian_Matrix_Odepack_LSODA(int*n,double*t,double*y,double*ML,double*MU,d
 
 	using namespace Jacobian_ODE_RHS;
 	using namespace Jacobian;
-	int i,j;
+	size_t i,j;
 
 	// enable force stability?
 	/*
@@ -50,7 +50,7 @@ void Jacobian_Matrix_Odepack_LSODA(int*n,double*t,double*y,double*ML,double*MU,d
 	Evaluate_Thermodynamic_Parameters(CalculatedThermo, Thermodynamics, Concentration[Number_Species]);
 	Calculate_Rate_Constant(Kf, Kr, Concentration[Number_Species],ReactionParameters, CalculatedThermo, SpeciesLossAll, Delta_N);
 
-	for(i=0;i<(int) JacobianMatrix.size();i++)
+	for(i=0;i< JacobianMatrix.size();i++)
 	{
 		double temp;
 
@@ -79,7 +79,7 @@ void Jacobian_Matrix_Odepack_LSODA(int*n,double*t,double*y,double*ML,double*MU,d
 		}
 
 
-		for(j=0;j<(int) JacobianMatrix[i].Species.size();j++)
+		for(j=0;j< JacobianMatrix[i].Species.size();j++)
 		{
 			if(JacobianMatrix[i].Species[j].power != 0) // power 0 = *1
 			{
@@ -100,7 +100,7 @@ void Jacobian_Matrix_Odepack_LSODA(int*n,double*t,double*y,double*ML,double*MU,d
 				JacobeanColumnWise[JacobianMatrix[i].ColumnWiseArrayPosition] + temp;
 	}
 
-	for (i = 0; i <= (int) JacobeanColumnWise.size() ; i++)
+	for (i = 0; i <= JacobeanColumnWise.size() ; i++)
 	{
 		a[i] = JacobeanColumnWise[i];
 	}

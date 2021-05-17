@@ -19,7 +19,7 @@ double Scale_A(
 	{
 		// for moles / dm^3
 		double order = 0.0;
-		for(int i=0;i<(int)ReactantData.size();i++)
+		for(size_t i=0;i<ReactantData.size();i++)
 		{
 			order = order + ReactantData[i];
 		}
@@ -36,7 +36,7 @@ double Scale_A(
 	{
 
 		double order = 0.0;
-		for(int i=0;i<(int)ReactantData.size();i++)
+		for(size_t i=0;i<ReactantData.size();i++)
 		{
 			order = order + ReactantData[i];
 		}

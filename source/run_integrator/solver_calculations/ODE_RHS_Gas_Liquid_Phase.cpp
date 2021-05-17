@@ -22,7 +22,7 @@ void ODE_RHS_Gas_Liquid_Phase(int*n, double*time_current, double*y, double*f)
 	using namespace ODE_RHS_Pressure_Vessel_Variables;
 	using namespace Jacobian_ODE_RHS;
 
-	int i;
+	size_t i;
 
 	/*/ I will need these values globally I think
 	int number_liquid_reactions;
@@ -67,9 +67,9 @@ void ODE_RHS_Gas_Liquid_Phase(int*n, double*time_current, double*y, double*f)
 
 	//vector< Sync_ID > Sync_IDs, // this vector will need to include a map: liquid species <-> gas species
 	// alternatively I can re-arrange species at the beginning, this might be better for performance
-	int number_synchronized_species = 0;
-	int liquid_species_count = 0;
-	int gas_species_count = 0; // gas and liquid counts so I know where concentration entries belong to
+	size_t number_synchronized_species = 0;
+	size_t liquid_species_count = 0;
+	size_t gas_species_count = 0; // gas and liquid counts so I know where concentration entries belong to
 	//double* y, // concentrations (&temperature) from the ODE solver
 	double Vliq_div_Vgas = 0;
 	vector< double > Henry_Constants; // need to line up with species IDs

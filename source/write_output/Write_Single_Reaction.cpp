@@ -9,12 +9,12 @@
 
 
 string Prepare_Single_Reaction_Output(
-		int Number_Species,
+		size_t Number_Species,
 		const vector< string >& Species,
 		const SingleReactionData& Reaction
 )
 {
-	int i;
+	size_t i;
 	bool check;
 
 	ostringstream convert;

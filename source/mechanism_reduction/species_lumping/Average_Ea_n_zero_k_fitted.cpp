@@ -11,7 +11,7 @@
 ReactionParameter Average_Ea_n_zero_k_fitted(
 		vector< SingleReactionData >& temp_reactions3,
 		double temperature,
-		int Reaction_Group_Size
+		size_t Reaction_Group_Size
 )
 {
 
@@ -25,7 +25,7 @@ ReactionParameter Average_Ea_n_zero_k_fitted(
 
 	//cout << "Slow Parameter Calculation Function \n";
 	ReactionParameter ParameterOutput;
-	int j;
+	size_t j;
 
 	vector <double> Group_k(41);
 	double fitted_Ea = 0;
@@ -34,8 +34,8 @@ ReactionParameter Average_Ea_n_zero_k_fitted(
 	for(j=0;j<Reaction_Group_Size;j++)
 	{
 		// work out k over all reactions
-		for(int k=0;k<41;k++){
-			double temp_mod = k - 20;
+		for(size_t k=0;k<41;k++){
+			double temp_mod = (double)k - 20.0;
 
 			Group_k[k] =
 					Group_k[k] +
@@ -57,8 +57,8 @@ ReactionParameter Average_Ea_n_zero_k_fitted(
 	// now we need an Ea gradient as well as ln(T) gradient
 	vector <double> Ea_for_gradient(41);
 	vector <double> lnT_for_gradient(41);
-	for(int k=0;k<41;k++){
-		double temp_mod = k - 20;
+	for(size_t k=0;k<41;k++){
+		double temp_mod = (double)k - 20.0;
 		// we do not need R as the internal Ea is in Kelvins
 		Ea_for_gradient[k] = -fitted_Ea/((temperature + temp_mod));
 		lnT_for_gradient[k] = log(temperature + temp_mod);

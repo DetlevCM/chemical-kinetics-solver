@@ -10,9 +10,9 @@ void Evaluate_Thermodynamic_Parameters(
 
 	/* 2002 CODATA values */
 	double R = 8.314472e0; // J mol-1 K-1
-	int i;
+	size_t i;
 
-	int Number_Species = (int)Thermodynamics.size();
+	size_t Number_Species = Thermodynamics.size();
 
 	// reduce computational steps -> Is it a bit quicker?
 	double T2 = Temperature*Temperature;

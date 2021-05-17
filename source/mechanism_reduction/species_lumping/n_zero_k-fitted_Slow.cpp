@@ -11,19 +11,19 @@
 ReactionParameter n_zero_CalculateNewParametersSlow(
 		vector< SingleReactionData >& Reactions,
 		double temperature,
-		int Reaction_Group_Size
+		size_t Reaction_Group_Size
 )
 {
 	ReactionParameter ParameterOutput;
-	int j, k;
+	size_t j, k;
 
 	vector <double> Group_k(41);
 
 	for(j=0;j<Reaction_Group_Size;j++)
 	{
 		// work out k over all reactions
-		for(int k=0;k<41;k++){
-			double temp_mod = k - 20;
+		for(k=0;k<41;k++){
+			double temp_mod = (double)k - 20.0;
 
 			Group_k[k] =
 					Group_k[k] +

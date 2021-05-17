@@ -21,8 +21,8 @@ void Handle_PetroOxy(
 {
 	bool OxyGasSpeciesDefined = false;
 
-	int i;
-	for(i=0;i<(int)Input.size();i++)
+	size_t i;
+	for(i=0;i<Input.size();i++)
 	{
 		vector< string > line_content;
 
@@ -82,7 +82,7 @@ void Handle_PetroOxy(
 		{
 			line_content = Tokenise_String_To_String(Input[i],"=");
 
-			for(int i = 0;i<(int)Species.size();i++)
+			for(size_t i = 0;i<Species.size();i++)
 			{
 				if(strcmp(line_content[1].c_str(),Species[i].c_str()) == 0){
 					InitialParameters.PetroOxy.GasSpecies = i;

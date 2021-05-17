@@ -14,7 +14,7 @@ void ODE_RHS_Gas_Phase(int*n, double*time_current, double*y, double*f)
 	using namespace ODE_RHS;
 	using namespace Jacobian_ODE_RHS;
 
-	int i;
+	size_t i;
 
 
 	/* 2002 CODATA values */

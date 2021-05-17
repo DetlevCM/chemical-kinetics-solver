@@ -12,7 +12,7 @@
 class PressureVesselConfig {
 public:
 	bool IsSet;
-	int GasSpecies;
+	size_t GasSpecies;
 	double SampleSize;
 	double InitPressure;
 	double MaxPressure;
@@ -107,7 +107,7 @@ public:
 	/* Constant concentration option */
 	/* Single vector, to switch rates of specified species to zero */
 	bool ConstantConcentration;
-	vector< int > ConstantSpecies;
+	vector< size_t > ConstantSpecies;
 
 	// extra parameters for a TGA case
 	bool TGA_used;

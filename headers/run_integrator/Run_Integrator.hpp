@@ -20,7 +20,7 @@ void Choose_Integrator(
 
 int Prepare_Integrator_Settings(
 		Initial_Data ,
-		int ,
+		size_t ,
 		Settings_LSODA& ,
 		Settings_Intel&
 );

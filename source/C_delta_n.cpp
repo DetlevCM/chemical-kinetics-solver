@@ -4,9 +4,9 @@ vector< double > Get_Delta_N(
 		const vector< SingleReactionData >& Reactions
 		)
 {
-	int i,j;
-	int number_species = (int)Reactions[0].Reactants.size();
-	int number_reactions = (int)Reactions.size();
+	size_t i,j;
+	size_t number_species = Reactions[0].Reactants.size();
+	size_t number_reactions = Reactions.size();
 
 	vector< double > temp_delta_n;
 

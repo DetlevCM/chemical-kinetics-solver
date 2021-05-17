@@ -10,7 +10,7 @@
 
 int Prepare_Integrator_Settings(
 		Initial_Data InitialParameters,
-		int Number_Species,
+		size_t Number_Species,
 		Settings_LSODA& LSODA,
 		Settings_Intel& Intel
 )
@@ -30,7 +30,7 @@ int Prepare_Integrator_Settings(
 	 * unlimited expansion of the list of supported solvers for future developers.
 	 */
 
-	n = Number_Species + 1;
+	n = (int) Number_Species + 1;
 	if(InitialParameters.Solver_Parameters.SolverType == 0) // Intel ODE Settings
 	{
 		/* Because we do not know the size of kd and dpar in advance we need to be clever - or at least act as we are.
@@ -40,7 +40,7 @@ int Prepare_Integrator_Settings(
 		 */
 
 		Intel.vector_ipar.resize(128);  // vectors initialise to zero, as required by the solver
-		for(int i = 0;i<128;i++)
+		for(size_t i = 0;i<128;i++)
 		{
 			Intel.vector_ipar[i] = 0; // should be unnecessary, vector initialises to zero
 		}

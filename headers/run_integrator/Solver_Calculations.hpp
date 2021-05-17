@@ -56,7 +56,7 @@ void Evaluate_Thermodynamic_Parameters(
 
 
 vector< double > SpeciesLossRate(
-		int Number_Species,
+		size_t Number_Species,
 		const vector< double >& Combined_Rates,
 		const vector< TrackSpecies >& SpeciesLossList
 );

@@ -10,7 +10,7 @@
 
 struct SpeciesWithCoefficient
 {
-	int SpeciesID;
+	size_t SpeciesID;
 	double coefficient;
 	bool ismatched;// = false;
 };
@@ -23,21 +23,21 @@ struct Filenames{
 };
 
 struct ThirdBodyParameters{
-	int SpeciesID;
+	size_t SpeciesID;
 	double value;
 };
 
 
 struct JacobianSpecies{
-	int SpeciesID;
+	size_t SpeciesID;
 	double power;
 };
 
 struct JacobianData {
 	bool IsForward;
 	bool IsProduction;
-	int ColumnWiseArrayPosition;
-	int ReactionID;
+	size_t ColumnWiseArrayPosition;
+	size_t ReactionID;
 	double coefficient;
 	vector< JacobianSpecies > Species;
 };
@@ -56,19 +56,19 @@ struct ReactionParameter {
 
 
 struct TrackSpecies {
-	int SpeciesID;
-	int ReactionID;
+	size_t SpeciesID;
+	size_t ReactionID;
 	double coefficient;
 };
 
 
 struct SpeciesPicking {
 	bool Choice;
-	int SpcClass;
+	size_t SpcClass;
 };
 
 struct InitSpecies {
-	int SpecID;
+	size_t SpecID;
 	double SpecConc;
 };
 
@@ -122,9 +122,9 @@ struct MechanismAnalysisConfig {
 
 	// integer array to identify the species or which we want rate of production analysis
 	bool RatesOfSpecies;
-	vector< int > SpeciesSelectedForRates;
-	vector< vector< int > > ReactionsForSpeciesConsAnalysis;
-	vector< vector< int > > ReactionsForSpeciesProdAnalysis;
+	vector< size_t > SpeciesSelectedForRates;
+	vector< vector< size_t > > ReactionsForSpeciesConsAnalysis;
+	vector< vector< size_t > > ReactionsForSpeciesProdAnalysis;
 
 };
 
@@ -145,7 +145,7 @@ struct str_RatesAnalysis
 struct ClassNaming
 {
 	bool IsNamed;
-	int ClassID;
+	size_t ClassID;
 	string Name;
 };
 

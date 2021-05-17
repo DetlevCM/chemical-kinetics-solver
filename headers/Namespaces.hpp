@@ -27,7 +27,7 @@ extern vector< TrackSpecies > ProductsForRatesAnalysis;
 namespace Jacobian_ODE_RHS
 {
 //// constant (i.e. set once) ////
-extern int Number_Species;
+extern size_t Number_Species;
 extern vector< double > Delta_N;
 extern vector< ThermodynamicData > Thermodynamics;
 extern vector< ReactionParameter > ReactionParameters; // tidier than reactions vector
@@ -44,7 +44,7 @@ extern vector< double > Kr;
 namespace ODE_RHS
 {
 //// constant (i.e. set once) ////
-extern int Number_Reactions;
+extern size_t Number_Reactions;
 extern ConstantInitRHSODE InitialDataConstants;
 extern vector< TrackSpecies > ReactantsForReactions;
 extern vector< TrackSpecies > ProductsForReactions;
@@ -60,7 +60,7 @@ extern vector< double > SpeciesConcentrationChange;
 
 namespace ODE_RHS_Pressure_Vessel_Variables
 {
-extern int OxyGasSpeciesID;
+extern size_t OxyGasSpeciesID;
 extern PressureVesselCalc PetroOxyData;
 //for limited Oxy
 extern double time_previous;

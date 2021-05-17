@@ -11,8 +11,8 @@
 #include "../headers/Headers.hpp"
 
 void Synchronize_Gas_Liquid_Model(
-		int number_synchronized_species,
-		int liquid_species_count, int gas_species_count, // gas and liquid counts so I know where concentration entries belong to
+		size_t number_synchronized_species,
+		size_t liquid_species_count, size_t gas_species_count, // gas and liquid counts so I know where concentration entries belong to
 		double *y, // concentrations (&temperature) from the ODE solver
 		double Vliq_div_Vgas,
 		vector< double > Henry_Constants // need to line up with species IDs
@@ -42,7 +42,7 @@ void Synchronize_Gas_Liquid_Model(
 	 */
 
 	// now in vector format:
-	int i;
+	size_t i;
 
 	double gas_temperature = y[liquid_species_count + gas_species_count + 1];
 

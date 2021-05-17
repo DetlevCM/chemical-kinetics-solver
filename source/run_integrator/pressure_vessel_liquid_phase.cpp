@@ -30,8 +30,8 @@ void Integrate_Pressure_Vessel_Liquid_Phase(
 	using namespace ODE_RHS_Pressure_Vessel_Variables;
 	using namespace Jacobian;
 
-	Number_Species = (int)reaction_mechanism.Species.size();
-	Number_Reactions = (int)reaction_mechanism.Reactions.size();
+	Number_Species = reaction_mechanism.Species.size();
+	Number_Reactions = reaction_mechanism.Reactions.size();
 
 	// outputting mechanism size in integration routing so that it is printed every time
 	cout << "The mechanism to be integrated contains " << Number_Species << " species and " << Number_Reactions << " Reactions.\n" << std::flush;
@@ -56,9 +56,11 @@ void Integrate_Pressure_Vessel_Liquid_Phase(
 	Settings_Intel Intel;
 
 	// general variables
-	int i, n;
+	size_t i;
 
-	n = Number_Species + 1;
+	// intel ODE needs an interger
+	int n;
+	n = (int) Number_Species + 1;
 
 
 	// this function will prepare the required settings. Only the required class is updated.
@@ -112,14 +114,14 @@ void Integrate_Pressure_Vessel_Liquid_Phase(
 	time_current = 0;// -> Solver is designed for t_0 = 0
 	time_step1 = InitialParameters.TimeStep[0];
 	time_end = InitialParameters.TimeEnd[0];
-	int TimeChanges = (int) InitialParameters.TimeStep.size();
-	int tracker = 0;
+	size_t TimeChanges = InitialParameters.TimeStep.size();
+	size_t tracker = 0;
 
 	//cout << "\nEnd Time: " << time_end << " Time Step: " << time_step1 << "\n";
 
 	/* -- Initial values at t = 0 -- */
 
-	Number_Reactions = (int) ReactionParameters.size();
+	Number_Reactions = ReactionParameters.size();
 
 	CalculatedThermo.resize(Number_Species);
 
@@ -144,7 +146,7 @@ void Integrate_Pressure_Vessel_Liquid_Phase(
 			InitialDataConstants.ConstantSpecies[i] = 0;
 		}
 
-		for(i=0;i<(int)InitialParameters.ConstantSpecies.size();i++)
+		for(i=0;i<InitialParameters.ConstantSpecies.size();i++)
 		{// fix initial concentrations
 			InitialDataConstants.ConstantSpecies[InitialParameters.ConstantSpecies[i]] =
 					SpeciesConcentration[InitialParameters.ConstantSpecies[i]];
@@ -244,18 +246,18 @@ void Integrate_Pressure_Vessel_Liquid_Phase(
 	}
 
 	// not happy with this more widely available, needs a cleanup...
-	vector< vector< int > > ReactionsForSpeciesSelectedForRates;
+	vector< vector< size_t > > ReactionsForSpeciesSelectedForRates;
 	// Not the betst place to put it, but OK for now:
 	if(InitialParameters.MechanismAnalysis.RatesOfSpecies)
 	{
-		int tempi, tempj;
+		size_t tempi, tempj;
 
-		vector< vector< int > > TempMatrix;
-		vector< int > TempRow;
-		int Temp_Number_Species = (int) reaction_mechanism.Species.size();
+		vector< vector< size_t > > TempMatrix;
+		vector< size_t > TempRow;
+		size_t Temp_Number_Species = reaction_mechanism.Species.size();
 
-		for(tempi=0;tempi<(int)reaction_mechanism.Reactions.size();tempi++){
-			TempRow.resize((int)reaction_mechanism.Species.size());
+		for(tempi=0;tempi<reaction_mechanism.Reactions.size();tempi++){
+			TempRow.resize(reaction_mechanism.Species.size());
 			for(tempj=0;tempj<Temp_Number_Species;tempj++)
 			{
 				if(reaction_mechanism.Reactions[tempi].Reactants[tempj] != 0)
@@ -271,13 +273,13 @@ void Integrate_Pressure_Vessel_Liquid_Phase(
 			TempRow.clear();
 		}
 
-		int Number_Of_Selected_Species_Temp = (int) InitialParameters.MechanismAnalysis.SpeciesSelectedForRates.size();
+		size_t Number_Of_Selected_Species_Temp = InitialParameters.MechanismAnalysis.SpeciesSelectedForRates.size();
 
 		for(tempj=0;tempj<Number_Of_Selected_Species_Temp;tempj++)
 		{
-			int SpeciesID = InitialParameters.MechanismAnalysis.SpeciesSelectedForRates[tempj];
-			vector< int > temp;
-			for(tempi=0;tempi<(int)reaction_mechanism.Reactions.size();tempi++)
+			size_t SpeciesID = InitialParameters.MechanismAnalysis.SpeciesSelectedForRates[tempj];
+			vector< size_t > temp;
+			for(tempi=0;tempi<reaction_mechanism.Reactions.size();tempi++)
 			{
 				if(TempMatrix[tempi][SpeciesID] !=0 )
 				{

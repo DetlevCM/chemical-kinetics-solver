@@ -8,18 +8,18 @@
 #include "../headers/Headers.hpp"
 
 
-vector< int > Map_Species_Classes(
+vector< size_t > Map_Species_Classes(
 		const vector< vector< string > >& SpeciesMapping,
 		const vector< string >& Species
 		)
 {
-	int Number_Species = (int)Species.size();
+	size_t Number_Species = Species.size();
 	/* The Species Mapping is right now chaotic, so maybe sort that out */
-	int Species_Mapping_Source_Vector = (int)SpeciesMapping.size();
+	size_t Species_Mapping_Source_Vector = SpeciesMapping.size();
 	vector< int > OrderedSpeciesMapping;
 	OrderedSpeciesMapping.resize(Number_Species); // Needs enough space for all species
 
-	int i,j;
+	size_t i,j;
 
 	for(i=0;i<Species_Mapping_Source_Vector;i++)
 	{
@@ -45,7 +45,7 @@ vector< int > Map_Species_Classes(
 
 	/* We also need a count of the number of species classes assigned by the user.
 	 * Species in class 0 are considered unclassed */
-	int NumberOfClasses = 0;
+	size_t NumberOfClasses = 0;
 	int CountUnmappedSpecies = 0;
 	int BiggestClass = 0; // assume no assigned classes
 
@@ -62,7 +62,7 @@ vector< int > Map_Species_Classes(
 			BiggestClass = OrderedSpeciesMapping[i];
 		}
 	}
-	NumberOfClasses = CountUnmappedSpecies + BiggestClass; // sum of unmapped species and the number of classes
+	NumberOfClasses = size_t(CountUnmappedSpecies + BiggestClass); // sum of unmapped species and the number of classes
 
 	cout << "The Mapping consists of " << CountUnmappedSpecies << " unmapped Species, and "
 		 << BiggestClass << " dedicated class mappings, resulting in " << NumberOfClasses
@@ -81,9 +81,12 @@ vector< int > Map_Species_Classes(
 		}
 	}
 
+	vector<size_t> OrderedSpeciesMapping_Output(Number_Species);
 	for(i=0;i<Number_Species;i++)
 	{
-		OrderedSpeciesMapping[i]= abs(OrderedSpeciesMapping[i])-1; // correct to use zero based array and turn negative to positive
+		//OrderedSpeciesMapping[i] = abs(OrderedSpeciesMapping[i])-1; // correct to use zero based array and turn negative to positive
+		OrderedSpeciesMapping_Output[i] = (size_t) abs(OrderedSpeciesMapping[i])-1; // correct to use zero based array and turn negative to positive
 	}
-	return OrderedSpeciesMapping;
+	//return OrderedSpeciesMapping;
+	return OrderedSpeciesMapping_Output;
 }

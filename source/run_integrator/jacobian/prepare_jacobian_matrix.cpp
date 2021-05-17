@@ -20,7 +20,7 @@ void Prepare_Jacobian_Matrix(
 {
 	JacobianColumnWise.clear();
 
-	int Number_Species = (int) Reactions[0].Reactants.size(); // Consider that temperature is included
+	size_t Number_Species = Reactions[0].Reactants.size(); // Consider that temperature is included
 
 	// 11 12
 	// 21 22
@@ -53,7 +53,7 @@ void Prepare_Jacobian_Matrix(
 	// Column wise order means we first have to check if the species we differentiate with respect to is present
 	// then we check if the row species is present and if yes build the input
 
-	int i, j,k,m;
+	size_t i, j,k,m;
 
 
 	for(i=0;i<Number_Species;i++) // column
@@ -66,7 +66,7 @@ void Prepare_Jacobian_Matrix(
 			JacobianSpecies temp2;
 
 			// Now check every reaction
-			for(k=0;k<(int)Reactions.size();k++)
+			for(k=0;k<Reactions.size();k++)
 			{
 				vector< JacobianSpecies > SpeciesList;
 

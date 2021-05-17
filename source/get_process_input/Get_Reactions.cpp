@@ -59,7 +59,7 @@ vector< SingleReactionData > Get_Reactions(
 	int begin_flag = 0, end_flag = 0; // treat as Boolean, true/false
 
 
-	int Number_Species = (int)Species.size();
+	size_t Number_Species = Species.size();
 
 	/*
 	 * New implementation:
@@ -105,7 +105,7 @@ vector< SingleReactionData > Get_Reactions(
 
 
 	//cout << "mechanism length: " << Reactions_List.size() << "\n";
-	for(int j=0;j<(int)Reactions_List.size();j++)
+	for(size_t j=0;j<Reactions_List.size();j++)
 	{
 		//cout << "line: " << j << "\n";
 		string line = Reactions_List[j];
@@ -119,7 +119,7 @@ vector< SingleReactionData > Get_Reactions(
 		// Reaction is marked a duplicate (First line cannot be "DUP", else this will crash...)
 		if(line.compare(0,1,"!") != 0  && line.compare(0,1,"/") != 0 && line.compare(0,3,"DUP") == 0)
 		{
-			int position = (int) Reaction_Data.size() - 1;
+			size_t position = Reaction_Data.size() - 1;
 			Reaction_Data[position].IsDuplicate=true;
 		}
 		// content in here - check if line does not start with a comment, ! or / or DUP
@@ -169,13 +169,13 @@ vector< SingleReactionData > Get_Reactions(
 				SplitLineRight = Tokenise_String_To_String(SplitLineIn[1],"\t +");
 
 
-				int SplitLineLeftSize, SplitLineRightSize;
-				SplitLineLeftSize = (int)SplitLineLeft.size();
-				SplitLineRightSize = (int)SplitLineRight.size() - 3; //(last 3 entries are Arrhenius Parameters
+				size_t SplitLineLeftSize, SplitLineRightSize;
+				SplitLineLeftSize = SplitLineLeft.size();
+				SplitLineRightSize = SplitLineRight.size() - 3; //(last 3 entries are Arrhenius Parameters
 
 				//cout << SplitLineLeftSize << " " << SplitLineRightSize << "\n";
 
-				for(int i = 0;i<SplitLineLeftSize;i++) // process all entries on left hand side
+				for(size_t i = 0;i<SplitLineLeftSize;i++) // process all entries on left hand side
 				{
 					SpeciesWithCoefficient SpeciesAndCoefficient;
 					SpeciesAndCoefficient = Return_Species_With_Coefficient(SplitLineLeft[i], Species);
@@ -189,7 +189,7 @@ vector< SingleReactionData > Get_Reactions(
 
 
 
-				for(int i = 0;i<SplitLineRightSize;i++) // process all entries on right hand side
+				for(size_t i = 0;i<SplitLineRightSize;i++) // process all entries on right hand side
 				{
 
 					SpeciesWithCoefficient SpeciesAndCoefficient;
@@ -210,7 +210,7 @@ vector< SingleReactionData > Get_Reactions(
 				double step;
 
 				SplitLine = Tokenise_String_To_String(line,"\t ");
-				int SplitLineSize = (int)SplitLine.size();
+				size_t SplitLineSize = SplitLine.size();
 				step = (strtod(SplitLine[SplitLineSize - 3].c_str(),NULL)); // A as read in
 				ReactionData[0] = Scale_A(step, ReactantData, SchemeUnits[0]); // A in adjusted units for calc.
 
@@ -234,7 +234,7 @@ vector< SingleReactionData > Get_Reactions(
 				}
 				// if there is a third body reaction, we need to read in the parameters...
 				if(temp.ThirdBodyType == 1 &&
-						j + 1 < (int)Reactions_List.size() // we need a minimum of one extra line
+						j + 1 < Reactions_List.size() // we need a minimum of one extra line
 				)
 				{
 					// a common feature of the pressure dependency parameters is the
@@ -252,10 +252,10 @@ vector< SingleReactionData > Get_Reactions(
 
 						for(int k=0;k<((int)PdepTerms.size()/2);k++) // this WILL fail if the number of elements does not divide by 2
 						{
-							for(int m=0;m<Number_Species;m++)
+							for(size_t m=0;m<Number_Species;m++)
 							{
 								if(Test_If_Word_Found(Species[m],PdepTerms[2*k]) &&
-										(int)Species[m].size() - (int)PdepTerms[2*k].size() == 0) // test for same length
+										Species[m].size() - PdepTerms[2*k].size() == 0) // test for same length
 								{
 									tmp_ThBd_param.SpeciesID = m;
 									tmp_ThBd_param.value = stod(PdepTerms[2*k+1],NULL);
@@ -268,7 +268,7 @@ vector< SingleReactionData > Get_Reactions(
 				}
 				else if(
 						temp.ThirdBodyType == 2 &&
-						j + 3 < (int)Reactions_List.size() // we need a minimum of 3 extra lines
+						j + 3 < Reactions_List.size() // we need a minimum of 3 extra lines
 				)
 				{
 					// LOW/TROE parameters
@@ -297,12 +297,12 @@ vector< SingleReactionData > Get_Reactions(
 							// the length should be a multiple of two
 							ThirdBodyParameters tmp_ThBd_param;
 
-							for(int k=0;k<((int)PdepTerms.size()/2);k++) // this WILL fail if the number of elements does not divide by 2
+							for(size_t k=0;k<(PdepTerms.size()/2);k++) // this WILL fail if the number of elements does not divide by 2
 							{
-								for(int m=0;m<Number_Species;m++)
+								for(size_t m=0;m<Number_Species;m++)
 								{
 									if(Test_If_Word_Found(Species[m],PdepTerms[2*k]) &&
-											(int)Species[m].size() - (int)PdepTerms[2*k].size() == 0) // test for same length
+											Species[m].size() - PdepTerms[2*k].size() == 0) // test for same length
 									{
 										tmp_ThBd_param.SpeciesID = m;
 										tmp_ThBd_param.value = stod(PdepTerms[2*k+1],NULL);
@@ -349,8 +349,8 @@ SpeciesWithCoefficient Return_Species_With_Coefficient(
 		const vector< string > Species
 )
 {
-	int i,j;
-	int Number_Species = (int)Species.size();
+	size_t i,j;
+	size_t Number_Species = Species.size();
 	SpeciesWithCoefficient SpeciesAndCoefficient;
 	SpeciesAndCoefficient.ismatched = false; // default, defined here not globally
 
@@ -360,7 +360,7 @@ SpeciesWithCoefficient Return_Species_With_Coefficient(
 	// work through every character of the string checking whether it is alphabetic
 	// if the character is alphabetic, we have reached the species name
 	// if it is not alphabetic we have the coefficient
-	while(!isalpha(InputToSplit[i]) && i < (int) InputToSplit.size())
+	while(!isalpha(InputToSplit[i]) && i < InputToSplit.size())
 	{
 		i++;
 	}

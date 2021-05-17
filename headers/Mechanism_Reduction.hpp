@@ -42,7 +42,7 @@ void handle_reactions_with_chosen_species(
 
 void ReportAccuracy(
 		string,
-		int,
+		size_t,
 		vector< string > ,
 		string,
 		string,
@@ -90,24 +90,24 @@ vector<ClassNaming> GetSpeciesClassesNames(
 vector< string > RenameSpecies(
 		vector< string > Species,
 		vector<ClassNaming> UserDefinedNames,
-		const vector< int > & SpeciesClassMapping
+		const vector< size_t > & SpeciesClassMapping
 );
 
 
-vector< int > Map_Species_Classes(
+vector< size_t > Map_Species_Classes(
 		const vector< vector< string > >& ,
 		const vector< string >&
 );
 
 
 vector< ThermodynamicData > Process_Thermodynamics_Species_Classes(
-		const vector< int >& SpeciesMapping,
+		const vector< size_t >& SpeciesMapping,
 		vector< ThermodynamicData > Thermodynamics
 );
 
 vector< SingleReactionData > Process_Reactions_For_Species_Lumping(
-		int ,
-		const vector< int >& ,
+		size_t ,
+		const vector< size_t >& ,
 		vector< SingleReactionData >,
 		double ,
 		//bool,
@@ -119,32 +119,32 @@ vector< SingleReactionData > Process_Reactions_For_Species_Lumping(
 ReactionParameter Average_Ea_CalculateNewParametersFast(
 		vector< SingleReactionData >& ,
 		double ,
-		int
+		size_t
 );
 
 ReactionParameter Average_Ea_CalculateNewParametersSlow(
 		vector< SingleReactionData >& ,
 		double ,
-		int
+		size_t
 );
 
 // Some helpers for the reduction:
 ReactionParameter n_zero_CalculateNewParametersFast(
 		vector< SingleReactionData >& ,
 		double ,
-		int
+		size_t
 );
 
 ReactionParameter n_zero_CalculateNewParametersSlow(
 		vector< SingleReactionData >& ,
 		double ,
-		int
+		size_t
 );
 
 ReactionParameter Average_Ea_n_zero_k_fitted(
 		vector< SingleReactionData >& ,
 		double ,
-		int
+		size_t
 );
 
 #endif /* HEADERS_MECHANISM_REDUCTION_HPP_ */

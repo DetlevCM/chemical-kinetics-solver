@@ -8,7 +8,7 @@
 
 
 vector< ThermodynamicData > Process_Thermodynamics_Species_Classes(
-		const vector< int >& SpeciesMapping,
+		const vector< size_t >& SpeciesMapping,
 		vector< ThermodynamicData > Thermodynamics
 )
 {
@@ -23,9 +23,9 @@ vector< ThermodynamicData > Process_Thermodynamics_Species_Classes(
 	vector< double > SingleClassEntry;
 
 
-	int i,j;
+	size_t i,j;
 
-	int Number_Species = (int)Thermodynamics.size();
+	size_t Number_Species = Thermodynamics.size();
 
 
 	// Convert Thermodynamics for Mechanims Modification
@@ -61,7 +61,7 @@ vector< ThermodynamicData > Process_Thermodynamics_Species_Classes(
 	}//*/
 
 
-	int Number_Species_Classes = 0;
+	size_t Number_Species_Classes = 0;
 	// use abs() to get the absolute value
 	for(i=0;i<Number_Species;i++)
 	{
@@ -85,7 +85,7 @@ vector< ThermodynamicData > Process_Thermodynamics_Species_Classes(
 	/* remember that we have lost class 0 and species class 1 is in position 1 not 0
 	 * which adds one array position. Then for some reason we need yet one extra position,
 	 * therefore + 2 */
-	int Number_New_Thermo_Positions = Number_Species_Classes;// + 2;
+	size_t Number_New_Thermo_Positions = Number_Species_Classes;// + 2;
 
 	new_thermo.resize(Number_New_Thermo_Positions);
 	SingleClassEntry.resize(18);
@@ -105,7 +105,7 @@ vector< ThermodynamicData > Process_Thermodynamics_Species_Classes(
 
 	for(i=0;i<Number_Species;i++)
 	{
-		int ClassID = SpeciesMapping[i]; // abs() is important, includes negative values...
+		size_t ClassID = SpeciesMapping[i]; // abs() is important, includes negative values...
 		//printf("%i %i \n",i,ClassID);
 		SingleClassEntry.resize(18); // 1 extra position for number of species
 

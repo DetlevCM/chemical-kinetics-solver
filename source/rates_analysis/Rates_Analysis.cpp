@@ -19,10 +19,10 @@ void MaxRatesAnalysis(
 		const double current_time
 )
 {
-	int i;
+	size_t i;
 
 	// collects the maximum rate per reaction, per species
-	for(i = 0;i< (int) ProductsForRates.size();i++){
+	for(i = 0;i< ProductsForRates.size();i++){
 
 		if(RatesAnalysisData[ProductsForRates[i].SpeciesID][ProductsForRates[i].ReactionID].productionrate < Rates[ProductsForRates[i].ReactionID])
 		{
@@ -33,7 +33,7 @@ void MaxRatesAnalysis(
 		}
 	}
 
-	for(i = 0;i< (int) ReactantsForRates.size();i++){
+	for(i = 0;i< ReactantsForRates.size();i++){
 		if(RatesAnalysisData[ReactantsForRates[i].SpeciesID][ReactantsForRates[i].ReactionID].consumptionrate < Rates[ReactantsForRates[i].ReactionID])
 		{
 			RatesAnalysisData[ReactantsForRates[i].SpeciesID][ReactantsForRates[i].ReactionID].consumptionrate =
@@ -59,9 +59,9 @@ void WriteMaxRatesAnalysis(
 )
 {
 
-	int Number_Species = (int)RatesAnalysisData.size();
-	int Number_Reactions = (int)RatesAnalysisData[0].size();
-	int i,j;
+	size_t Number_Species = RatesAnalysisData.size();
+	size_t Number_Reactions = RatesAnalysisData[0].size();
+	size_t i,j;
 
 	i = 0; j = 0;
 	ofstream Outfile;
@@ -142,8 +142,8 @@ void PrepareStreamRatesAnalysis(
 )
 {
 
-	int i;
-	int Number_Species = (int) Species.size() - 1;
+	size_t i;
+	size_t Number_Species = Species.size() - 1;
 	ofstream Outfile;
 
 	string filename;
@@ -185,21 +185,21 @@ void StreamRatesAnalysis(
 		const vector< TrackSpecies > & ReactantsForRates,
 		const vector< double > & Rates,
 		const double current_time,
-		const int Number_Species
+		const size_t Number_Species
 )
 {
-	int i;
+	size_t i;
 
 	vector< str_RatesAnalysis > RatesAnalysisData(Number_Species);
 
 	// Sum the rates for all species - I'm not intereste in recording which reactions take part
-	for(i = 0;i< (int) ProductsForRates.size();i++){
+	for(i = 0;i< ProductsForRates.size();i++){
 		RatesAnalysisData[ProductsForRates[i].SpeciesID].productionrate =
 				RatesAnalysisData[ProductsForRates[i].SpeciesID].productionrate +
 				Rates[ProductsForRates[i].ReactionID];
 	}
 
-	for(i = 0;i< (int) ReactantsForRates.size();i++){
+	for(i = 0;i< ReactantsForRates.size();i++){
 		RatesAnalysisData[ReactantsForRates[i].SpeciesID].consumptionrate =
 				RatesAnalysisData[ReactantsForRates[i].SpeciesID].consumptionrate +
 				Rates[ReactantsForRates[i].ReactionID];
@@ -258,12 +258,12 @@ void RatesAnalysisAtTimes(
 		const vector< SingleReactionData >& Reactions
 )
 {
-	int i,j;
+	size_t i,j;
 
 	i = 0; j = 0;
 
-	int Number_Species = (int)Species.size();
-	int Number_Reactions = (int)Reactions.size();
+	size_t Number_Species = Species.size();
+	size_t Number_Reactions = Reactions.size();
 
 
 	vector< vector < str_RatesAnalysis > > RatesAnalysisData;
@@ -278,7 +278,7 @@ void RatesAnalysisAtTimes(
 	ofstream Outfile;
 
 
-	for(i = 0;i< (int) ProductsForRates.size();i++){
+	for(i = 0;i< ProductsForRates.size();i++){
 		RatesAnalysisData[ProductsForRates[i].SpeciesID][ProductsForRates[i].ReactionID].productionrate =
 				Rates[ProductsForRates[i].ReactionID];
 		RatesAnalysisData[ProductsForRates[i].SpeciesID][ProductsForRates[i].ReactionID].prod_time = current_time;
@@ -288,7 +288,7 @@ void RatesAnalysisAtTimes(
 				Rates[ProductsForRates[i].ReactionID];
 	}
 
-	for(i = 0;i< (int) ReactantsForRates.size();i++){
+	for(i = 0;i< ReactantsForRates.size();i++){
 		RatesAnalysisData[ReactantsForRates[i].SpeciesID][ReactantsForRates[i].ReactionID].consumptionrate =
 				Rates[ReactantsForRates[i].ReactionID];
 		RatesAnalysisData[ReactantsForRates[i].SpeciesID][ReactantsForRates[i].ReactionID].cons_time = current_time;

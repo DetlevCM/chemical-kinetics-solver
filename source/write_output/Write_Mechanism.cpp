@@ -13,15 +13,15 @@ void WriteReactions(
 		const vector< SingleReactionData >& Reactions
 )
 {
-	int i;
+	size_t i;
 	ofstream ReactionsOutput (filename.c_str(),ios::out);
 
 	if (ReactionsOutput.is_open())
 	{
-		int Number_Reactions = 0;
-		Number_Reactions = (int)Reactions.size();
-		int Number_Species = 0;
-		Number_Species = (int)Reactions[0].Reactants.size();
+		size_t Number_Reactions = 0;
+		Number_Reactions = Reactions.size();
+		size_t Number_Species = 0;
+		Number_Species = Reactions[0].Reactants.size();
 
 		//ReactionsOutput << "REACTIONS	KELVINS	MOLES 	\n";
 		ReactionsOutput << "REACTIONS 	KCAL/MOL 	MOLES 	\n";
