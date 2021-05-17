@@ -94,6 +94,7 @@ void Integrate_Liquid_Phase(
 	Concentration.clear(); // ensure the concentrations array is empty
 	Concentration = SpeciesConcentration; // set it to the initial values, also ensures it has the right length
 	//double* y = SpeciesConcentration.data();
+	//cout << SpeciesConcentration.size() << " " << Number_Species << " " << n << "\n";
 
 	double time_current, time_step, time_step1, time_end;
 
