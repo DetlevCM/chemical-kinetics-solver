@@ -61,7 +61,11 @@ void CalculateReactionRates(
 
 	for(i=0;i< Rates.size();i++){
 		Rates[i] = Forward_Rates[i] - Reverse_Rates[i];
-		//	cout << Rates[i] << "   " << Forward_Rates[i] << "   " << Reverse_Rates[i] << "\r\n";
+		/*
+		if(abs(Rates[i]) > 1.0e6)
+		{
+			cout << i << " " << Rates[i] << "   " << Forward_Rates[i] << "   " << Reverse_Rates[i] << "\r\n";
+		}//*/
 	}
 
 }
