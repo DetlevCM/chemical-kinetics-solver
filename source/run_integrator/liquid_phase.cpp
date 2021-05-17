@@ -22,19 +22,19 @@ void Integrate_Liquid_Phase(
 
 	vector< TrackSpecies > ProductsForRatesAnalysis;
 
-	using namespace Jacobian_ODE_RHS;
-	using namespace ODE_RHS;
+	//using namespace Jacobian_ODE_RHS;
+	//using namespace ODE_RHS;
 	using namespace Jacobian;
 
 
-	Number_Species = (int)reaction_mechanism.Species.size();
-	Number_Reactions = (int)reaction_mechanism.Reactions.size();
+	Jacobian_ODE_RHS::Number_Species = (int)reaction_mechanism.Species.size();
+	ODE_RHS::Number_Reactions = (int)reaction_mechanism.Reactions.size();
 
 	// outputting mechanism size in integration routing so that it is printed every time
-	cout << "The mechanism to be integrated contains " << Number_Species << " species and " << Number_Reactions << " Reactions.\n" << std::flush;
+	cout << "The mechanism to be integrated contains " << Jacobian_ODE_RHS::Number_Species << " species and " << ODE_RHS::Number_Reactions << " Reactions.\n" << std::flush;
 
 
-	Thermodynamics = reaction_mechanism.Thermodynamics; // "Hack" - to fix a regression
+	Jacobian_ODE_RHS::Thermodynamics = reaction_mechanism.Thermodynamics; // "Hack" - to fix a regression
 
 
 	ofstream ReactionRatesOutput;
@@ -51,14 +51,14 @@ void Integrate_Liquid_Phase(
 	// general variables
 	int i, n;
 
-	n = Number_Species + 1;
+	n = Jacobian_ODE_RHS::Number_Species + 1;
 
 
 	// this function will prepare the required settings. Only the required class is updated.
 	int solver_choice = 0;
 	solver_choice = Prepare_Integrator_Settings(
 			InitialParameters,
-			Number_Species,
+			Jacobian_ODE_RHS::Number_Species,
 			LSODA,Intel
 	);
 
@@ -69,15 +69,15 @@ void Integrate_Liquid_Phase(
 
 
 
-	Delta_N = Get_Delta_N(reaction_mechanism.Reactions); // just make sure the Delta_N is current
+	Jacobian_ODE_RHS::Delta_N = Get_Delta_N(reaction_mechanism.Reactions); // just make sure the Delta_N is current
 	// Reduce the matrix from a sparse matrix to something more manageable and quicker to use
 
 
-	ReactionParameters = Process_Reaction_Parameters(reaction_mechanism.Reactions);
+	Jacobian_ODE_RHS::ReactionParameters = Process_Reaction_Parameters(reaction_mechanism.Reactions);
 
-	ReactantsForReactions = Reactants_ForReactionRate(reaction_mechanism.Reactions);
+	ODE_RHS::ReactantsForReactions = Reactants_ForReactionRate(reaction_mechanism.Reactions);
 
-	ProductsForReactions = Products_ForReactionRate(reaction_mechanism.Reactions,false);
+	ODE_RHS::ProductsForReactions = Products_ForReactionRate(reaction_mechanism.Reactions,false);
 
 
 	if(InitialParameters.MechanismAnalysis.MaximumRates ||
@@ -88,12 +88,12 @@ void Integrate_Liquid_Phase(
 		ProductsForRatesAnalysis = Products_ForReactionRate(reaction_mechanism.Reactions,true);
 	}
 
-	SpeciesLossAll = PrepareSpecies_ForSpeciesLoss(reaction_mechanism.Reactions); // New method of listing species
+	Jacobian_ODE_RHS::SpeciesLossAll = PrepareSpecies_ForSpeciesLoss(reaction_mechanism.Reactions); // New method of listing species
 
 
-	Concentration.clear(); // ensure the concentrations array is empty
-	Concentration = SpeciesConcentration; // set it to the initial values, also ensures it has the right length
-	//double* y = SpeciesConcentration.data();
+	Jacobian_ODE_RHS::Concentration.clear(); // ensure the concentrations array is empty
+	Jacobian_ODE_RHS::Concentration = SpeciesConcentration; // set it to the initial values, also ensures it has the right length
+	//double* y = Jacobian_ODE_RHS::Concentration.data(); //SpeciesConcentration.data();
 	//cout << SpeciesConcentration.size() << " " << Number_Species << " " << n << "\n";
 
 	double time_current, time_step, time_step1, time_end;
@@ -108,60 +108,60 @@ void Integrate_Liquid_Phase(
 
 	/* -- Initial values at t = 0 -- */
 
-	Number_Reactions = (int) ReactionParameters.size();
+	ODE_RHS::Number_Reactions = (int) Jacobian_ODE_RHS::ReactionParameters.size();
 
-	CalculatedThermo.resize(Number_Species);
+	Jacobian_ODE_RHS::CalculatedThermo.resize(Jacobian_ODE_RHS::Number_Species);
 
-	InitialDataConstants.EnforceStability = InitialParameters.EnforceStability;
-	InitialDataConstants.temperature = InitialParameters.temperature;
+	ODE_RHS::InitialDataConstants.EnforceStability = InitialParameters.EnforceStability;
+	ODE_RHS::InitialDataConstants.temperature = InitialParameters.temperature;
 
 	// in case we want to simulate a TGA
 	if(InitialParameters.TGA_used)
 	{
-		InitialDataConstants.TGA_used = InitialParameters.TGA_used;
-		InitialDataConstants.TGA_rate = InitialParameters.TGA_rate;
-		InitialDataConstants.TGA_target = InitialParameters.TGA_target;
+		ODE_RHS::InitialDataConstants.TGA_used = InitialParameters.TGA_used;
+		ODE_RHS::InitialDataConstants.TGA_rate = InitialParameters.TGA_rate;
+		ODE_RHS::InitialDataConstants.TGA_target = InitialParameters.TGA_target;
 	}
 
 	// set constant concentration if desired
-	InitialDataConstants.ConstantConcentration = InitialParameters.ConstantConcentration;
+	ODE_RHS::InitialDataConstants.ConstantConcentration = InitialParameters.ConstantConcentration;
 	if(InitialParameters.ConstantConcentration)
 	{
 		cout << "Constant Species desired\n";
 
-		InitialDataConstants.ConstantSpecies.clear();
-		InitialDataConstants.ConstantSpecies.resize(Number_Species);
+		ODE_RHS::InitialDataConstants.ConstantSpecies.clear();
+		ODE_RHS::InitialDataConstants.ConstantSpecies.resize(Jacobian_ODE_RHS::Number_Species);
 
 		// zero just to make sure
-		for(i=0;i<Number_Species;i++)
+		for(i=0;i<Jacobian_ODE_RHS::Number_Species;i++)
 		{
-			InitialDataConstants.ConstantSpecies[i] = 0;
+			ODE_RHS::InitialDataConstants.ConstantSpecies[i] = 0;
 		}
 
 		for(i=0;i<(int)InitialParameters.ConstantSpecies.size();i++)
 		{// fix initial concentrations
-			InitialDataConstants.ConstantSpecies[InitialParameters.ConstantSpecies[i]] =
+			ODE_RHS::InitialDataConstants.ConstantSpecies[InitialParameters.ConstantSpecies[i]] =
 					SpeciesConcentration[InitialParameters.ConstantSpecies[i]];
 		}
 	}
 
-	Evaluate_Thermodynamic_Parameters(CalculatedThermo, Thermodynamics, SpeciesConcentration[Number_Species]);
+	Evaluate_Thermodynamic_Parameters(Jacobian_ODE_RHS::CalculatedThermo, Jacobian_ODE_RHS::Thermodynamics, SpeciesConcentration[Jacobian_ODE_RHS::Number_Species]);
 
 	/*for(i=0;i<Number_Species;i++)
 	{
 	cout << CalculatedThermo[i].Hf << " " << CalculatedThermo[i].Cp << " " << CalculatedThermo[i].S <<"\n";
 	}//*/
 
-	Kf.clear();
-	Kr.clear();
-	Kf.resize(Number_Reactions);
-	Kr.resize(Number_Reactions);
+	Jacobian_ODE_RHS::Kf.clear();
+	Jacobian_ODE_RHS::Kr.clear();
+	Jacobian_ODE_RHS::Kf.resize(ODE_RHS::Number_Reactions);
+	Jacobian_ODE_RHS::Kr.resize(ODE_RHS::Number_Reactions);
 
-	for(i=0;i<Number_Reactions;i++)
+	for(i=0;i<ODE_RHS::Number_Reactions;i++)
 	{
-		Kr[i] = 0;
+		Jacobian_ODE_RHS::Kr[i] = 0;
 	}
-	Rates.resize(Number_Reactions);
+	ODE_RHS::Rates.resize(ODE_RHS::Number_Reactions);
 
 
 	// prepare the jacobian matrix
@@ -169,13 +169,13 @@ void Integrate_Liquid_Phase(
 
 
 	// Get the rate Constants, forward and backwards
-	Calculate_Rate_Constant(Kf, Kr, SpeciesConcentration[Number_Species],ReactionParameters, CalculatedThermo, SpeciesLossAll, Delta_N);
-	CalculateReactionRates(Rates, SpeciesConcentration, Kf, Kr, ReactantsForReactions, ProductsForReactions);
+	Calculate_Rate_Constant(Jacobian_ODE_RHS::Kf, Jacobian_ODE_RHS::Kr, SpeciesConcentration[Jacobian_ODE_RHS::Number_Species],Jacobian_ODE_RHS::ReactionParameters, Jacobian_ODE_RHS::CalculatedThermo, Jacobian_ODE_RHS::SpeciesLossAll, Jacobian_ODE_RHS::Delta_N);
+	CalculateReactionRates(ODE_RHS::Rates, SpeciesConcentration, Jacobian_ODE_RHS::Kf, Jacobian_ODE_RHS::Kr, ODE_RHS::ReactantsForReactions, ODE_RHS::ProductsForReactions);
 
 	// Don't forget Rates Analysis for Mechanism Recution at t=0 - or is this nonsense?
 	if(InitialParameters.MechanismReduction.ReduceReactions != 0)
 	{
-		ReactionRateImportance(KeyRates, Rates, InitialParameters.MechanismReduction.ReduceReactions);
+		ReactionRateImportance(KeyRates, ODE_RHS::Rates, InitialParameters.MechanismReduction.ReduceReactions);
 	}
 
 
@@ -184,7 +184,7 @@ void Integrate_Liquid_Phase(
 			ConcentrationOutput,
 			InitialParameters.Solver_Parameters.separator,
 			InitialParameters.GasPhase,
-			Number_Species,
+			Jacobian_ODE_RHS::Number_Species,
 			time_current,
 			InitialParameters.GasPhasePressure,
 			SpeciesConcentration
@@ -197,7 +197,7 @@ void Integrate_Liquid_Phase(
 				ReactionRatesOutput,
 				InitialParameters.Solver_Parameters.separator,
 				time_current,
-				Rates
+				ODE_RHS::Rates
 		);
 	}
 
@@ -257,7 +257,7 @@ void Integrate_Liquid_Phase(
 	}
 
 
-	vector< double > SpeciesConcentrationChange = SpeciesLossRate(Number_Species, Rates, SpeciesLossAll);
+	vector< double > SpeciesConcentrationChange = SpeciesLossRate(Jacobian_ODE_RHS::Number_Species, ODE_RHS::Rates, Jacobian_ODE_RHS::SpeciesLossAll);
 
 
 	/* -- Got values at t = 0 -- */
@@ -343,7 +343,7 @@ void Integrate_Liquid_Phase(
 
 		if(InitialParameters.MechanismAnalysis.MaximumRates)
 		{
-			MaxRatesAnalysis(RatesAnalysisData,ProductsForRatesAnalysis,ReactantsForReactions,Rates,time_current);
+			MaxRatesAnalysis(RatesAnalysisData,ProductsForRatesAnalysis,ODE_RHS::ReactantsForReactions,ODE_RHS::Rates,time_current);
 		}
 
 
@@ -352,8 +352,8 @@ void Integrate_Liquid_Phase(
 		{
 			RatesAnalysisAtTimes(
 					ProductsForRatesAnalysis,
-					ReactantsForReactions,
-					Rates,
+					ODE_RHS::ReactantsForReactions,
+					ODE_RHS::Rates,
 					time_current,
 					reaction_mechanism.Species,
 					reaction_mechanism.Reactions
@@ -367,9 +367,9 @@ void Integrate_Liquid_Phase(
 		{
 			Print_Rates_Per_Species(
 					ProductsForRatesAnalysis,
-					ReactantsForReactions,
+					ODE_RHS::ReactantsForReactions,
 					InitialParameters.Solver_Parameters.separator,
-					Rates,
+					ODE_RHS::Rates,
 					time_current,
 					reaction_mechanism.Species,
 					InitialParameters.MechanismAnalysis.SpeciesSelectedForRates,
@@ -384,10 +384,10 @@ void Integrate_Liquid_Phase(
 			StreamRatesAnalysis(
 					OutputFilenames.Prefix,
 					ProductsForRatesAnalysis,
-					ReactantsForReactions,
-					Rates,
+					ODE_RHS::ReactantsForReactions,
+					ODE_RHS::Rates,
 					time_current,
-					Number_Species
+					Jacobian_ODE_RHS::Number_Species
 			);
 		}
 
@@ -410,7 +410,7 @@ void Integrate_Liquid_Phase(
 				ConcentrationOutput,
 				InitialParameters.Solver_Parameters.separator,
 				false, //InitialParameters.GasPhase,
-				Number_Species,
+				Jacobian_ODE_RHS::Number_Species,
 				time_current,
 				pressure,
 				SpeciesConcentration
@@ -422,14 +422,14 @@ void Integrate_Liquid_Phase(
 					ReactionRatesOutput,
 					InitialParameters.Solver_Parameters.separator,
 					time_current,
-					Rates
+					ODE_RHS::Rates
 			);
 		}
 
 
 		if(InitialParameters.MechanismReduction.ReduceReactions != 0)
 		{
-			ReactionRateImportance(KeyRates, Rates, InitialParameters.MechanismReduction.ReduceReactions);
+			ReactionRateImportance(KeyRates, ODE_RHS::Rates, InitialParameters.MechanismReduction.ReduceReactions);
 		}
 
 
