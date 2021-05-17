@@ -62,7 +62,7 @@ void Get_Initial_Conditions(
 	/* end default solver settings */
 
 
-
+	InitialParameters.EnforceStability = false; // default setting
 
 	InitialParameters.Solver_Parameters = Default_Solver_Parameters;
 
