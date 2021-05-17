@@ -11,7 +11,7 @@ int main(int argc, char* argv[])
 	 * It is generally convenient to dump information to a logfile.
 	 * However when developing or debugging, it can be simpler to have the information
 	 * output to a terminal instead. The presence of a file named "debug" acts as a
-	 * switch for redicrecting output to the terminal rather than a log.txt file.
+	 * switch for redirecting output to the terminal rather than a log.txt file.
 	 */
 	// http://stackoverflow.com/questions/12774207/fastest-way-to-check-if-a-file-exist-using-standard-c-c11-c
 	ifstream debug_file_exists("debug");
