@@ -70,11 +70,11 @@ void StreamConcentrationsV2(
 		ofstream& ConcentrationOutput,
 		const string separator,
 		double CurrentTime,
-		int Number_Species,
+		size_t Number_Species,
 		double* Concentration
 		)
 {
-	int i;
+	size_t i;
 	ConcentrationOutput << CurrentTime << separator;
 
 	for(i=0;i<Number_Species;i++)

@@ -15,10 +15,10 @@ void Handle_Analysis(
 		vector<string> Species
 		)
 {
-	int i, j;
+	size_t i, j;
 	vector< string > line_content;
 
-	for(i=0;i<(int)Input.size();i++)
+	for(i=0;i<Input.size();i++)
 	{
 
 		if (Test_If_Word_Found(Input[i],"RatesMaxAnalysis"))
@@ -40,7 +40,7 @@ void Handle_Analysis(
 			InitialParameters.MechanismAnalysis.RatesAnalysisAtTime = true; // user wants rates at specified times
 
 			line_content = Tokenise_String_To_String(Input[i]," \t");
-			for(j=1;j<(int)line_content.size();j++) // start at 1, as first position is the keyword
+			for(j=1;j<line_content.size();j++) // start at 1, as first position is the keyword
 			{
 				InitialParameters.MechanismAnalysis.RatesAnalysisAtTimeData.push_back(stod(line_content[j],NULL));
 			}
@@ -58,13 +58,13 @@ void Handle_Analysis(
 		{
 			InitialParameters.MechanismAnalysis.RatesOfSpecies = true; // user wants rates at specified times
 
-			int k;
+			size_t k;
 			line_content = Tokenise_String_To_String(Input[i]," \t");
 
-			for(j=1;j<(int)line_content.size();j++) // start at 1, as first position is the keyword
+			for(j=1;j<line_content.size();j++) // start at 1, as first position is the keyword
 			{
 				// check which species has been named for analysis and store its ID
-				for(k=0;k<(int)Species.size();k++){
+				for(k=0;k<Species.size();k++){
 					if(strcmp(line_content[j].c_str(),Species[k].c_str()) == 0)
 					{
 						InitialParameters.MechanismAnalysis.SpeciesSelectedForRates.push_back(k);

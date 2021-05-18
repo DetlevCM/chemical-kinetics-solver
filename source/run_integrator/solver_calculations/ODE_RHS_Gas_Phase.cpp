@@ -8,7 +8,7 @@
 #include "../headers/Headers.hpp"
 
 
-void ODE_RHS_Gas_Phase(int*n, double*time_current, double*y, double*f)
+void ODE_RHS_Gas_Phase(int*n, double*t, double*y, double*f)
 {
 	// A namespace allows global variables without causing a mess, should be quicker than redefining too
 	using namespace ODE_RHS;
@@ -21,7 +21,7 @@ void ODE_RHS_Gas_Phase(int*n, double*time_current, double*y, double*f)
 	//double R = 8.314472e0;
 	//double Na = 6.0221415e23;
 
-
+cout << n << "\n";
 	// stability hack
 	if(InitialDataConstants.EnforceStability)
 	{

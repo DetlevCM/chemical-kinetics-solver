@@ -103,8 +103,8 @@ void Integrate_Liquid_Phase(
 	time_current = 0; // -> Solver is designed for t_0 = 0
 	time_step1 = InitialParameters.TimeStep[0];
 	time_end = InitialParameters.TimeEnd[0];
-	int TimeChanges = (int) InitialParameters.TimeStep.size();
-	int tracker = 0;
+	size_t TimeChanges = InitialParameters.TimeStep.size();
+	size_t tracker = 0;
 
 	//cout << "\nEnd Time: " << time_end << " Time Step: " << time_step1 << "\n";
 

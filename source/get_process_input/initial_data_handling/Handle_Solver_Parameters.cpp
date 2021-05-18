@@ -12,8 +12,8 @@ void Handle_Solver_Parameters(
 		vector<string> Input
 		)
 {
-	int i;
-	for(i=0;i<(int)Input.size();i++)
+	size_t i;
+	for(i=0;i<Input.size();i++)
 	{
 		// prepare char array with tokenization from the start
 		char * cstr, *p;

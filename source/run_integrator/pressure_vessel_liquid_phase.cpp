@@ -314,7 +314,7 @@ void Integrate_Pressure_Vessel_Liquid_Phase(
 	//Concentration.resize(Number_Species + 1);
 
 	// enables reset of Rates Analysis
-	int RatesAnalysisTimepoint = 0;
+	size_t RatesAnalysisTimepoint = 0;
 
 
 	// set the solver:

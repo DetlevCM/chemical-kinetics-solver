@@ -19,8 +19,8 @@ mechanism_reduction Handle_Mechanism_Reduction(
 	Mechanism_Reduction_Output.LumpingType = 1; // original method, n = 0, A & Ea fitted
 	Mechanism_Reduction_Output.UseFastLumping = true;
 
-	int i;
-	for(i=0;i<(int)Input.size();i++)
+	size_t i;
+	for(i=0;i<Input.size();i++)
 	{
 		if(Test_If_Word_Found(Input[i], "Fast"))
 		{

@@ -15,9 +15,9 @@ string Strip_Single_Line_Comments(string input , vector<string> tokens)
 	Token_Is_Found = false;
 	string AllTokens;
 
-	int i;
+	size_t i;
 
-	for(i=0;i<(int)tokens.size();i++)
+	for(i=0;i<tokens.size();i++)
 	{
 		if(input.find(tokens[i]) != string::npos)
 		{

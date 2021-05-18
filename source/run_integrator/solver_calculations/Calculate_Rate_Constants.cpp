@@ -11,7 +11,7 @@
 void Calculate_Rate_Constant(
 		vector< double >& Kf,
 		vector< double >& Kr,
-		double Temperature,
+		const double Temperature,
 		const vector< ReactionParameter >& ReactionParameters,
 		const vector< CalculatedThermodynamics >& CalculatedThermo,
 		const vector< TrackSpecies >& SpeciesAll,

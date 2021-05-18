@@ -19,8 +19,8 @@ void Handle_Pressure_Vessel(
 
 	PressureVessel Pressure_Vessel;
 
-	int i;
-	for(i=0;i<(int)Input.size();i++)
+	size_t i;
+	for(i=0;i<Input.size();i++)
 	{
 		vector< string > line_content;
 

@@ -14,10 +14,10 @@ void Handle_Initial_Conditions(
 		Global_Solver_Settings
 		)
 {
-	int i ;
+	size_t i ;
 	vector< string > line_content;
 
-	for(i=0;i<(int)Input.size();i++)
+	for(i=0;i<Input.size();i++)
 	{
 		if (Test_If_Word_Found(Input[i], "Temperature"))
 		{

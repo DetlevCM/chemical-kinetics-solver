@@ -250,7 +250,7 @@ vector< SingleReactionData > Get_Reactions(
 						// the length should be a multiple of two
 						ThirdBodyParameters tmp_ThBd_param;
 
-						for(int k=0;k<((int)PdepTerms.size()/2);k++) // this WILL fail if the number of elements does not divide by 2
+						for(size_t k=0;k<(PdepTerms.size()/2);k++) // this WILL fail if the number of elements does not divide by 2
 						{
 							for(size_t m=0;m<Number_Species;m++)
 							{
