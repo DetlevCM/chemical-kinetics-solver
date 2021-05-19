@@ -18,14 +18,19 @@ vector<int> Set_Mechanism_Units(string test_string) // Identify the units
 		Mechanism_Units[0] = 0; // A in molecules cm^(-3)
 	}
 
-	if(Test_If_Word_Found(test_string, "KELVINS"))
-	{
-		Mechanism_Units[1] = 0; // Ea in Kelvins, great :)
-	}
-
 	if(Test_If_Word_Found(test_string, "MOLES"))
 	{
 		Mechanism_Units[0] = 1; // A in moles per cm^3
+	}
+
+	if(Test_If_Word_Found(test_string, "MOLE")) // assuming moles and mol is the same there
+	{
+		Mechanism_Units[0] = 1; // A in moles per cm^3
+	}
+
+	if(Test_If_Word_Found(test_string, "KELVINS"))
+	{
+		Mechanism_Units[1] = 0; // Ea in Kelvins, great :)
 	}
 
 	if(Test_If_Word_Found(test_string, " KCAL/MOL") || Test_If_Word_Found(test_string, "\tKCAL/MOL"))
