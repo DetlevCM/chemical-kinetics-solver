@@ -19,7 +19,7 @@ void Evaluate_Thermodynamic_Parameters(
 	double T3 = T2*Temperature;
 	double T4 = T3*Temperature;
 	double logT = log(Temperature);
-	double InvT = 1/Temperature;
+	double InvT = 1.0/Temperature;
 
 
 	/* Hf, Cp, Cv, S */
