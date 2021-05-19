@@ -15,17 +15,17 @@ vector<int> Set_Mechanism_Units(string test_string) // Identify the units
 
 	if(Test_If_Word_Found(test_string, "MOLECULES")) // enable case independent test
 	{
-		Mechanism_Units[0] = 0; // A in molecules cm^(-3)
+		Mechanism_Units[0] = 1; // A in molecules cm^(-3)
 	}
 
 	if(Test_If_Word_Found(test_string, "MOLES"))
 	{
-		Mechanism_Units[0] = 1; // A in moles per cm^3
+		Mechanism_Units[0] = 2; // A in moles per cm^3
 	}
 
 	if(Test_If_Word_Found(test_string, "MOLE")) // assuming moles and mol is the same there
 	{
-		Mechanism_Units[0] = 1; // A in moles per cm^3
+		Mechanism_Units[0] = 2; // A in moles per cm^3
 	}
 
 	if(Test_If_Word_Found(test_string, "KELVINS"))
