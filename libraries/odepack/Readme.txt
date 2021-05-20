@@ -51,6 +51,11 @@ Windows was found to be too much hassle, though it may work if you compile with 
 command before building the archive.
 
 
+Test Win-Cross-Compile
+
+x86_64-w64-mingw32-gfortran -O2 -c -std=legacy opkda1.f opkda2.f opkdmain.f
+x86_64-w64-mingw32-ar -rcs libodepack.lib opkda1.o opkda2.o opkdmain.o
+
 Note: The opdka1_mod.f file has had a number of functions removed which collided with 
 functions in the daskr library. Whether this implementation will be workable is to be 
 determined. 
