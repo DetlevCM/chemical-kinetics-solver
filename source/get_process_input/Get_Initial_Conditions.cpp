@@ -54,8 +54,8 @@ void Get_Initial_Conditions(
 	Default_Solver_Parameters.SolverType = 1; // 0 = IntelODE, 1 = odepack (default)
 	Default_Solver_Parameters.Use_Stiff_Solver = true; // old setting from IntelODE
 	Default_Solver_Parameters.Use_Analytical_Jacobian = false; // faster with odepack
-	Default_Solver_Parameters.rtol = 1.e-5;
-	Default_Solver_Parameters.atol = 1.e-10;
+	Default_Solver_Parameters.rtol = 1.e-6;
+	Default_Solver_Parameters.atol = 1.e-18;
 	Default_Solver_Parameters.minimum_stepsize = 1.e-12; // for IntelODE
 	Default_Solver_Parameters.initial_stepsize = 1.e-7; // for IntelODE
 	Default_Solver_Parameters.separator = ","; // use comma as a default separator
@@ -324,6 +324,16 @@ void Get_Initial_Conditions(
 	{
 		InitialParameters.irrev = true;
 		cout << "Rates Based Mechanism Reduction requires an irreversible scheme - method set. \n";
+	}
+
+
+
+	// Intel ODE and odepack have very different tolerance handling... So... We assume tolerances are provided
+	// in the common sense way as used by odepack or other code and correct for Intel if Intel is selected as a solver
+
+	if(InitialParameters.Solver_Parameters.SolverType == 0)
+	{
+		InitialParameters.Solver_Parameters.atol = InitialParameters.Solver_Parameters.atol / InitialParameters.Solver_Parameters.rtol;
 	}
 
 
