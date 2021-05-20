@@ -9,13 +9,13 @@
 
 void WriteSpecies(string filename ,const vector< string >& Species)
 {
-	int i;
+	size_t i;
 	ofstream SpeciesOutput (filename.c_str(),ios::out);
 
 	if (SpeciesOutput.is_open())
 	{
-		int Number_Species = 0;
-		Number_Species = (int)Species.size();
+		size_t Number_Species = 0;
+		Number_Species = Species.size();
 		SpeciesOutput << "SPECIES\n";
 		for(i=0;i<Number_Species;i++)
 		{

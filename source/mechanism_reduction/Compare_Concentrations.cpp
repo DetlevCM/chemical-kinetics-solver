@@ -29,17 +29,17 @@ vector< double > Compare_Concentrations(
 
 	vector< double > EvaluationResult(2);
 
-	int Number_OldTimePoints = (int)OldConcentrations.size();
-	int Number_NewTimePoints = (int)NewConcentrations.size();
+	size_t Number_OldTimePoints = OldConcentrations.size();
+	size_t Number_NewTimePoints = NewConcentrations.size();
 
-	int Number_Species = (int)OldConcentrations[0].size(); // Species count MUST be the same in both schemes
+	size_t Number_Species = OldConcentrations[0].size(); // Species count MUST be the same in both schemes
 
-	int i, j, k;
+	size_t i, j, k;
 
 
 	if(Number_OldTimePoints == Number_NewTimePoints) // this is the default in the current code
 	{
-		int large = 0;
+		size_t large = 0;
 		double Sum;
 		double Ratio;
 		vector< double > Average(Number_Species);
@@ -63,7 +63,7 @@ vector< double > Compare_Concentrations(
 
 			if(k != 0)
 			{
-				Average[i] = Sum/k;
+				Average[i] = Sum/((double)k);
 			}
 			else
 			{
@@ -88,8 +88,8 @@ vector< double > Compare_Concentrations(
 
 		}
 
-		EvaluationResult[0] = Sum / (Number_Species-1-large);  // -1 exclude temperature, -large exclude excessive deviation
-		EvaluationResult[1] = large;
+		EvaluationResult[0] = Sum / ((double)(Number_Species-1-large));  // -1 exclude temperature, -large exclude excessive deviation
+		EvaluationResult[1] = (double) large;
 	}
 
 	return EvaluationResult;

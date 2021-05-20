@@ -11,7 +11,7 @@ int main(int argc, char* argv[])
 	 * It is generally convenient to dump information to a logfile.
 	 * However when developing or debugging, it can be simpler to have the information
 	 * output to a terminal instead. The presence of a file named "debug" acts as a
-	 * switch for redicrecting output to the terminal rather than a log.txt file.
+	 * switch for redirecting output to the terminal rather than a log.txt file.
 	 */
 	// http://stackoverflow.com/questions/12774207/fastest-way-to-check-if-a-file-exist-using-standard-c-c11-c
 	ifstream debug_file_exists("debug");
@@ -96,9 +96,9 @@ int main(int argc, char* argv[])
 	}
 
 
-	int i; 	// useful counter
-	int Number_Species = (int) reaction_mechanism.Species.size();
-	int Number_Reactions = (int) reaction_mechanism.Reactions.size();
+	size_t i; 	// useful counter
+	size_t Number_Species = reaction_mechanism.Species.size();
+	size_t Number_Reactions = reaction_mechanism.Reactions.size();
 	vector< double > KeyRates; // for mechanism reduction
 
 	//cout << "test species/reactions: " << Number_Species << " " << Number_Reactions << "\n";
@@ -111,7 +111,7 @@ int main(int argc, char* argv[])
 	if(initial_parameters.MechanismAnalysis.MaximumRates)
 	{
 		// Initialise array
-		vector < str_RatesAnalysis > temp((int) reaction_mechanism.Reactions.size());
+		vector < str_RatesAnalysis > temp(reaction_mechanism.Reactions.size());
 		for(i=0;i<Number_Species;i++)
 		{
 			RatesAnalysisData.push_back(temp);
@@ -187,7 +187,7 @@ int main(int argc, char* argv[])
 
 			// start a second run only if reduced scheme is not empty and has size different
 			// to original scheme
-			if(Number_Reactions > 0 && Number_Reactions != (int) ReducedReactions.size()){
+			if(Number_Reactions > 0 && Number_Reactions != ReducedReactions.size()){
 
 
 				OutputFilenames.Species = "reduced_concentrations.txt";
@@ -195,7 +195,7 @@ int main(int argc, char* argv[])
 				OutputFilenames.PetroOxy = "reduced_PetroOxy-log.txt";
 				OutputFilenames.Prefix = "reduced_";
 
-				Number_Reactions = (int) ReducedReactions.size();
+				Number_Reactions = ReducedReactions.size();
 
 				WriteReactions("reduced_scheme.txt", Reduced_Reaction_Mechanism.Species, ReducedReactions);
 

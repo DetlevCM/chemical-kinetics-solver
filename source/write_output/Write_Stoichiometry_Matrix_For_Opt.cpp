@@ -13,14 +13,14 @@ void Write_Stoichiometric_Matrix_For_Opt
 		const vector< SingleReactionData >& Reactions
 )
 {
-	int i, j;
+	size_t i, j;
 	ofstream Output (filename.c_str(),ios::out);
 	if (Output.is_open())
 	{
-		int Number_Reactions = 0;
-		Number_Reactions = (int)Reactions.size();
-		int Number_Species = 0;
-		Number_Species = (int)Reactions[0].Reactants.size();
+		size_t Number_Reactions = 0;
+		Number_Reactions = Reactions.size();
+		size_t Number_Species = 0;
+		Number_Species = Reactions[0].Reactants.size();
 
 		Output << "   ";
 		for(i=0;i<Number_Species;i++)

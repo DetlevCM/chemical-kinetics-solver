@@ -14,20 +14,20 @@ void Prepare_Print_Rates_Per_Species(
 		string separator,
 		//vector< double > & Rates,
 		vector< string > Species,
-		vector< int > SelectedSpeciesID,
-		vector< vector< int > > ReactionsForSpeciesSelectedForRates//,
+		vector< size_t > SelectedSpeciesID,
+		vector< vector< size_t > > ReactionsForSpeciesSelectedForRates//,
 		//vector< SingleReactionData >& Reactions
 )
 {
 
-	int i;
+	size_t i;
 	//int Number_Species = (int) Species.size();
 	//int Number_Reactions = (int) Rates.size();
 
 	ofstream OutfileProd;
 	ofstream OutfileCons;
 
-	int Number_Selected_Species = (int) SelectedSpeciesID.size();
+	size_t Number_Selected_Species = SelectedSpeciesID.size();
 
 	//for(i=0;i<Number_Species;i++)
 	for(i=0;i<Number_Selected_Species;i++)
@@ -40,9 +40,9 @@ void Prepare_Print_Rates_Per_Species(
 		OutfileProd.open(OutFilenameProd.c_str(),ios::out);
 		OutfileCons.open(OutFilenameCons.c_str(),ios::out);
 
-		int j;
+		size_t j;
 
-		int Number_Of_Selected_Reactions = (int)ReactionsForSpeciesSelectedForRates[i].size();
+		size_t Number_Of_Selected_Reactions = ReactionsForSpeciesSelectedForRates[i].size();
 
 		if(OutfileProd.is_open())
 		{
@@ -102,14 +102,14 @@ void Print_Rates_Per_Species(
 		vector< double > & Rates,
 		double current_time,
 		vector< string > Species,
-		vector< int > SelectedSpeciesID,
-		vector< vector< int > > ReactionsForSpeciesSelectedForRates
+		vector< size_t > SelectedSpeciesID,
+		vector< vector< size_t > > ReactionsForSpeciesSelectedForRates
 )
 {
-	int i;
+	size_t i;
 
-	int Number_Species = (int) Species.size();
-	int Number_Reactions = (int) Rates.size();
+	size_t Number_Species = Species.size();
+	size_t Number_Reactions = Rates.size();
 
 	vector< vector < str_RatesAnalysis > > RatesAnalysisData;
 	vector< str_RatesAnalysis > temp(Number_Reactions);
@@ -120,7 +120,7 @@ void Print_Rates_Per_Species(
 
 	vector< str_RatesAnalysis > RatesAnalysisDataTimeStepTotal(Number_Species);
 
-	for(i = 0;i< (int) ProductsForRates.size();i++){
+	for(i = 0;i< ProductsForRates.size();i++){
 		RatesAnalysisData[ProductsForRates[i].SpeciesID][ProductsForRates[i].ReactionID].productionrate =
 				Rates[ProductsForRates[i].ReactionID];
 		RatesAnalysisData[ProductsForRates[i].SpeciesID][ProductsForRates[i].ReactionID].prod_time = current_time;
@@ -130,7 +130,7 @@ void Print_Rates_Per_Species(
 				Rates[ProductsForRates[i].ReactionID];
 	}
 
-	for(i = 0;i< (int) ReactantsForRates.size();i++){
+	for(i = 0;i< ReactantsForRates.size();i++){
 		RatesAnalysisData[ReactantsForRates[i].SpeciesID][ReactantsForRates[i].ReactionID].consumptionrate =
 				Rates[ReactantsForRates[i].ReactionID];
 		RatesAnalysisData[ReactantsForRates[i].SpeciesID][ReactantsForRates[i].ReactionID].cons_time = current_time;
@@ -143,7 +143,7 @@ void Print_Rates_Per_Species(
 	ofstream OutfileProd;
 	ofstream OutfileCons;
 
-	int Number_Selected_Species = (int) SelectedSpeciesID.size();
+	size_t Number_Selected_Species = SelectedSpeciesID.size();
 
 	for(i=0;i<Number_Selected_Species;i++)
 	{
@@ -156,9 +156,9 @@ void Print_Rates_Per_Species(
 		OutfileProd.open(OutFilenameProd.c_str(),ios::app);
 		OutfileCons.open(OutFilenameCons.c_str(),ios::app);
 
-		int j;
+		size_t j;
 
-		int Number_Of_Selected_Reactions = (int)ReactionsForSpeciesSelectedForRates[i].size();
+		size_t Number_Of_Selected_Reactions = ReactionsForSpeciesSelectedForRates[i].size();
 
 		if(OutfileProd.is_open())
 		{

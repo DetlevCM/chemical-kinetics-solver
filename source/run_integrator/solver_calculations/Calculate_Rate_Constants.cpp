@@ -11,7 +11,7 @@
 void Calculate_Rate_Constant(
 		vector< double >& Kf,
 		vector< double >& Kr,
-		double Temperature,
+		const double Temperature,
 		const vector< ReactionParameter >& ReactionParameters,
 		const vector< CalculatedThermodynamics >& CalculatedThermo,
 		const vector< TrackSpecies >& SpeciesAll,
@@ -21,10 +21,10 @@ void Calculate_Rate_Constant(
 {
 
 	/* 2002 CODATA values */
-	double R = 8.314472e0;
+	double R = 8.314472e0; // J mol-1 K-1
 	//double Na = 6.0221415e23;
 
-	int Number_Reactions = (int)ReactionParameters.size();
+	size_t Number_Reactions = ReactionParameters.size();
 
 	// Pressure Independent Reactions Only
 	/*
@@ -33,7 +33,7 @@ void Calculate_Rate_Constant(
 	k[i] *= pow(T, n1[i]);
 	//*/
 
-	int i;
+	size_t i;
 
 	//Define vectors in the right size right away
 	vector< double > delta_H(Number_Reactions);
@@ -48,7 +48,7 @@ void Calculate_Rate_Constant(
 	// as we have the value of the calculated thermodynamics, we just need to put them together
 	// per reaction, going through every species
 
-	for(i = 0;i<(int) SpeciesAll.size();i++){ // loop over every reaction
+	for(i = 0;i< SpeciesAll.size();i++){ // loop over every reaction
 		delta_H[SpeciesAll[i].ReactionID] =
 				delta_H[SpeciesAll[i].ReactionID] +
 				(CalculatedThermo[SpeciesAll[i].SpeciesID].Hf * SpeciesAll[i].coefficient);

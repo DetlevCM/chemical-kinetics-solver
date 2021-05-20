@@ -9,36 +9,42 @@
 
 
 
-double Scale_A(double A_read_in, vector<double> ReactantData, int scaling_type)
+double Scale_A(
+		double A_read_in,
+		vector<double> ReactantData,
+		int scaling_type
+		)
 {
-	if(scaling_type == 0) // A is molecules / cm^3
+	// should it be * 1000 or / 1000?
+
+	if(scaling_type == 1) // A is molecules / cm^3
 	{
 		// for moles / dm^3
 		double order = 0.0;
-		for(int i=0;i<(int)ReactantData.size();i++)
+		for(size_t i=0;i<ReactantData.size();i++)
 		{
 			order = order + ReactantData[i];
 		}
 		order = fabs(order) - 1.0; // make sure it is positive
 
 		// 6.0221e+23 <- molecules per mol
-		double scale = (6.0221e+23); // convert to molecules / cm^(-3)
-		scale = scale * 1000.0; // convert from cm^3 to dm^3
+		double scale = (6.0221e23); // convert to molecules / cm^(-3)
+		scale = scale / 1000.0; // convert from cm^3 to dm^3
 		A_read_in = A_read_in * pow(scale,(order));
 
 		return A_read_in; // and convert to molecules per liter (dm^3)
 	}
-	else if(scaling_type == 1) // A is in moles / cm^3
+	else if(scaling_type == 2) // A is in moles / cm^3
 	{
 
 		double order = 0.0;
-		for(int i=0;i<(int)ReactantData.size();i++)
+		for(size_t i=0;i<ReactantData.size();i++)
 		{
 			order = order + ReactantData[i];
 		}
 		order = fabs(order) - 1.0; // make sure it is positive
 
-		double scale = 1.0 * 1000.0; // convert from cm^3 to dm^3
+		double scale = 1.0 / 1000.0; // convert from cm^3 to dm^3
 
 		A_read_in = A_read_in * pow(scale,(order));
 
@@ -52,14 +58,17 @@ double Scale_A(double A_read_in, vector<double> ReactantData, int scaling_type)
 }
 
 // Ea needs to be in Kelvin for the remainder of the calculations
-double Scale_Ea(double Ea_read_in, int scaling_type)
+double Scale_Ea(
+		double Ea_read_in,
+		int scaling_type
+		)
 {
 	if(scaling_type == 1) // Ea is in kcal/mol
 	{
 		return Ea_read_in/1.98709e-3;
 	}
 
-	else if(scaling_type== 2) // Ea is in cal/mol
+	else if(scaling_type == 2) // Ea is in cal/mol
 	{
 		return Ea_read_in/1.98709;
 	}

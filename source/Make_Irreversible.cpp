@@ -26,16 +26,16 @@ vector< SingleReactionData > Make_Irreversible(
 		vector< SingleReactionData > Reactions,
 		const vector< ThermodynamicData > Thermodynamics,
 		double Initial_Temperature, /// use initial temperature from initial data
-		double Range // specify +/- rang around initial temperature
+		double Range // specify +/- range around initial temperature
 )
 {
 	/* 2002 CODATA values */
 	//double R = 8.314472e0; // Ea is internally given in Kelvin, therefore R is not needed
 	vector< SingleReactionData > Irreversible_Scheme;
 
-	int i,j,k;
-	int Number_Species = (int)Thermodynamics.size();
-	int Number_Reactions = (int)Reactions.size();
+	size_t i,j,k;
+	size_t Number_Species = Thermodynamics.size();
+	size_t Number_Reactions = Reactions.size();
 	double Temperature;
 
 	vector< double > Local_Delta_N = Get_Delta_N(Reactions);
@@ -47,7 +47,7 @@ vector< SingleReactionData > Make_Irreversible(
 	}
 	if(Range == 0)
 	{
-		Range = 25;
+		Range = 25.0;
 	}
 	// check we don't end up below 0K
 	if(Initial_Temperature - Range <= 0)
@@ -80,12 +80,12 @@ vector< SingleReactionData > Make_Irreversible(
 	// let us use 25 steps in either direction of the temperature
 	for(i=0;i<50;i++)
 	{
-		Temperature = Initial_Temperature - Range + (i*Range/25); // +/- Range, 25 Steps in either direction
+		Temperature = Initial_Temperature - Range + ((double)i*Range/25.0); // +/- Range, 25 Steps in either direction
 
 		Evaluate_Thermodynamic_Parameters(CalculatedThermo, Thermodynamics, Temperature);
 		Calculate_Rate_Constant(Kf, Kr, Temperature,LocalReactionParameters, CalculatedThermo, LocalSpeciesLossAll, Local_Delta_N);
 
-		for(j=0;j<(int)Kr.size();j++)
+		for(j=0;j<Kr.size();j++)
 		{
 			Kr[j] = log(Kr[j]);
 		}
@@ -112,7 +112,7 @@ vector< SingleReactionData > Make_Irreversible(
 
 	for(i=0;i<3;i++)
 	{
-		for(j=0;j<(int)SensitivityMatrix.size();j++)
+		for(j=0;j<SensitivityMatrix.size();j++)
 		{
 			SensitivityMatrixTranspose[i][j] = SensitivityMatrix[j][i];
 		}
@@ -134,7 +134,7 @@ vector< SingleReactionData > Make_Irreversible(
 	{
 		for(j=0;j<3;j++)
 		{
-			for(k=0;k<(int)SensitivityMatrix.size();k++)
+			for(k=0;k<SensitivityMatrix.size();k++)
 			{
 				SMtxSM[i][j] = SMtxSM[i][j] + SensitivityMatrixTranspose[i][k] *  SensitivityMatrix[k][j];
 			}
@@ -206,7 +206,7 @@ vector< SingleReactionData > Make_Irreversible(
 	// matrix mult: row x column
 	for(i=0;i<3;i++)
 	{
-		for(j=0;j<(int)SensitivityMatrix.size();j++)
+		for(j=0;j<SensitivityMatrix.size();j++)
 		{
 			for(k=0;k<3;k++)
 			{
@@ -257,7 +257,7 @@ vector< SingleReactionData > Make_Irreversible(
 
 			for(j=0;j<3;j++)
 			{
-				for(k=0;k<(int)SensitivityMatrix.size();k++)
+				for(k=0;k<SensitivityMatrix.size();k++)
 				{
 					beta[j] = beta[j] + InvMxSM[j][k] * allkreverse[k][i];
 				}

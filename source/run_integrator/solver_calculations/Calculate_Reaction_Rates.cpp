@@ -21,11 +21,11 @@ void CalculateReactionRates(
 )
 {
 
-	int i;
+	size_t i;
 
 
 
-	for(i = 0;i< (int) ReactantsForRates.size();i++){ // Forward Rates determined by the reactants
+	for(i = 0;i< ReactantsForRates.size();i++){ // Forward Rates determined by the reactants
 
 		if(ReactantsForRates[i].coefficient == 1) // this is quicker than raising to the power of 1 - but check with the struct
 		{
@@ -42,7 +42,7 @@ void CalculateReactionRates(
 	}
 
 
-	for(i = 0;i< (int) ProductsForRates.size();i++){ // Reverse Rates determined by the products
+	for(i = 0;i< ProductsForRates.size();i++){ // Reverse Rates determined by the products
 
 		if(ProductsForRates[i].coefficient == 1) // this is quicker than raising to the power of 1 - but check with the struct
 		{
@@ -59,9 +59,13 @@ void CalculateReactionRates(
 	}
 
 
-	for(i=0;i<(int) Rates.size();i++){
+	for(i=0;i< Rates.size();i++){
 		Rates[i] = Forward_Rates[i] - Reverse_Rates[i];
-		//	cout << Rates[i] << "   " << Forward_Rates[i] << "   " << Reverse_Rates[i] << "\r\n";
+		/*
+		if(abs(Rates[i]) > 1.0e6)
+		{
+			cout << i << " " << Rates[i] << "   " << Forward_Rates[i] << "   " << Reverse_Rates[i] << "\r\n";
+		}//*/
 	}
 
 }

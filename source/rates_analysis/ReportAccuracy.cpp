@@ -9,7 +9,7 @@
 
 void ReportAccuracy(
 		string separator,
-		int Number_Species,
+		size_t Number_Species,
 		vector< string > Species,
 		string output_filename,
 		string base_concentrations,
@@ -17,7 +17,7 @@ void ReportAccuracy(
 )
 {
 
-	int i;
+	size_t i;
 
 	ifstream Input_Data_Full;
 	Input_Data_Full.open (base_concentrations.c_str());
@@ -51,7 +51,7 @@ void ReportAccuracy(
 			getline (Input_Data_Full,Line1);
 			getline (Input_Data_Reduced,Line2);
 
-			int i;
+			size_t i;
 
 			char *cstr1, *cstr2, *p;
 
@@ -133,7 +133,7 @@ void ReportAccuracy(
 		ofstream OutputFile;
 
 		OutputFile.open(output_filename.c_str());
-		int i;
+		size_t i;
 
 		OutputFile << "Species Name 	Average Difference in % 	Min Diff in % 	Max Diff in % \n";
 

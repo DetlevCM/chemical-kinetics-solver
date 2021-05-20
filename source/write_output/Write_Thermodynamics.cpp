@@ -14,12 +14,12 @@ void Write_Thermodynamic_Data(
 		const vector< ThermodynamicData >& Thermodynamics
 )
 {
-	int i;
+	size_t i;
 	ofstream ThermodynamicsOutput (filename.c_str(),ios::out);
 
 	if (ThermodynamicsOutput.is_open())
 	{
-		int Number_Species = (int)Thermodynamics.size();
+		size_t Number_Species = Thermodynamics.size();
 		ThermodynamicsOutput << "ThermData \n";
 		for(i=0;i<Number_Species;i++)
 		{

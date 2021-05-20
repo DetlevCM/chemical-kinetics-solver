@@ -11,13 +11,16 @@
  * New input options for the inclusion of a pressure vessel
  */
 
-void Handle_Pressure_Vessel(Initial_Data& InitialParameters, vector<string> Input)
+void Handle_Pressure_Vessel(
+		Initial_Data& InitialParameters,
+		vector<string> Input
+		)
 {
 
 	PressureVessel Pressure_Vessel;
 
-	int i;
-	for(i=0;i<(int)Input.size();i++)
+	size_t i;
+	for(i=0;i<Input.size();i++)
 	{
 		vector< string > line_content;
 

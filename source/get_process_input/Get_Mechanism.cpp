@@ -26,12 +26,12 @@ void Get_Mechanism(
 	 * Report on the progress as the sections are read in.
 	 */
 	reaction_mechanism.Species = Get_Species(filename);
-	int Number_Species = (int)reaction_mechanism.Species.size();
+	size_t Number_Species = reaction_mechanism.Species.size();
 	cout << "The Mechanism contains " << Number_Species <<" Species.\n";
 	reaction_mechanism.Thermodynamics = Get_Thermodynamic_Data(filename, reaction_mechanism.Species);
 	cout << "The Mechanism contains " << reaction_mechanism.Thermodynamics.size() << " Thermodynamic Data Entries.\n";
 	reaction_mechanism.Reactions = Get_Reactions(filename, reaction_mechanism.Species);
-	int Number_Reactions = (int)reaction_mechanism.Reactions.size();
+	size_t Number_Reactions = reaction_mechanism.Reactions.size();
 	cout << "The Mechanism contains " << Number_Reactions << " Reactions.\n";
 }
 

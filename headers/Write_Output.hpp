@@ -19,7 +19,7 @@
 void WriteNewLabelsSpecies(
 		string,
 		string,
-		int ,
+		size_t ,
 		vector< string >,
 		bool
 );
@@ -28,7 +28,7 @@ void StreamConcentrations(
 		ofstream&,
 		const string,
 		bool,
-		int,
+		size_t,
 		double,
 		double,
 		vector< double>&
@@ -38,7 +38,7 @@ void StreamConcentrationsV2(
 		ofstream&,
 		const string,
 		double,
-		int,
+		size_t,
 		double*
 );
 
@@ -46,7 +46,7 @@ void StreamConcentrationsV2(
 void WriteLabelsReactionRates(
 		string ,
 		string ,
-		int
+		size_t
 );
 
 
@@ -90,7 +90,7 @@ void Input_File_For_Ehsan_Opt(
 );
 
 string Prepare_Single_Reaction_Output(
-		int ,
+		size_t ,
 		const vector< string >& ,
 		const SingleReactionData&
 );

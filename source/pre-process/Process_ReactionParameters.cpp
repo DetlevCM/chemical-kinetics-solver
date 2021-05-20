@@ -4,8 +4,8 @@ vector< ReactionParameter > Process_Reaction_Parameters(
 		const vector< SingleReactionData >& Reactions
 		)
 {
-	int i;
-	int Number_Reactions = (int)Reactions.size();
+	size_t i;
+	size_t Number_Reactions = Reactions.size();
 
 	ReactionParameter temp_one_reaction;
 	vector< ReactionParameter > temp_output;

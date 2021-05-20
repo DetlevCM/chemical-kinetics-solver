@@ -17,9 +17,9 @@ vector< TrackSpecies > Reactants_ForReactionRate(
 	// Bassically go through the reactions and accumulate the Relevant species
 
 	TrackSpecies temp;
-	int Number_Reactions = (int)Reactions.size();
-	int Number_Species = (int)Reactions[0].Reactants.size();
-	int i,j;
+	size_t Number_Reactions = Reactions.size();
+	size_t Number_Species = Reactions[0].Reactants.size();
+	size_t i,j;
 
 	// Output per reaction
 	for(i=0;i<Number_Reactions;i++)
@@ -48,10 +48,10 @@ vector< TrackSpecies > Products_ForReactionRate(
 {
 	vector< TrackSpecies > temp_proc_reac;
 	// Bassically go through the reactions and accumulate the Relevant species 
-	int i,j;
+	size_t i,j;
 	TrackSpecies temp;
-	int Number_Reactions = (int)Reactions.size();
-	int Number_Species = (int)Reactions[0].Reactants.size();
+	size_t Number_Reactions = Reactions.size();
+	size_t Number_Species = Reactions[0].Reactants.size();
 
 	if(!SwitchType) // false treat as rates function
 	{

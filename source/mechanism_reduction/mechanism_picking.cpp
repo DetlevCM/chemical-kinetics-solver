@@ -19,13 +19,13 @@ void mechanism_picking(
 	// Input File via a stream:
 	ifstream ReductionData;
 
-	int Number_Species = (int)Species.size();
+	size_t Number_Species = Species.size();
 
 	// Two files I want to open, mechanism data & input data
 	ReductionData.open(filename.c_str());
 	vector< SpeciesPicking > ChosenSpecies(Number_Species);
 
-	int i;
+	size_t i;
 
 	for(i=0;i<Number_Species;i++){
 		ChosenSpecies[i].Choice = false;
@@ -92,7 +92,7 @@ void mechanism_picking(
 						if(RemoveComments.size()>1)
 						{
 							//ChosenSpecies[i].SpcClass = strtod(RemoveComments[1].c_str(),NULL);
-							ChosenSpecies[i].SpcClass = atoi(RemoveComments[1].c_str());
+							ChosenSpecies[i].SpcClass = (size_t)atoi(RemoveComments[1].c_str());
 						}
 						else
 						{
@@ -131,9 +131,9 @@ void handle_reactions_with_chosen_species(
 	// So, I_ need to find all and any reaction that contains a chosen species
 	bool RunLoop;
 
-	int i,j ;
-	int Number_Reactions = (int)Reactions.size();
-	int Number_Species = (int)Species.size();
+	size_t i,j ;
+	size_t Number_Reactions = Reactions.size();
+	size_t Number_Species = Species.size();
 
 	vector< string > PickedSpecies;
 	//vector< vector< double > > PickedThermodynamics;
@@ -195,7 +195,7 @@ void handle_reactions_with_chosen_species(
 		RetainOrNot[i] = false;
 	}
 
-	Number_Reactions = (int)PickedReactions.size();
+	Number_Reactions = PickedReactions.size();
 
 	for(i=0;i<Number_Reactions;i++)
 	{
@@ -222,15 +222,15 @@ void handle_reactions_with_chosen_species(
 	vector< SingleReactionData > RegularReaction;
 	vector< SingleReactionData > RecombinationReaction;
 
-	Number_Reactions = (int)PickedReactions.size();
-	Number_Species = (int)Species.size();
+	Number_Reactions = PickedReactions.size();
+	Number_Species = Species.size();
 
-	int nbr_spc_reac = 0 ;
-	int nbr_spc_prod = 0 ;
-	int k;
+	size_t nbr_spc_reac = 0 ;
+	size_t nbr_spc_prod = 0 ;
+	size_t k;
 
-	int same_spc_reac_prod = 0;
-	int same_spc_class_reac_prod = 0;
+	size_t same_spc_reac_prod = 0;
+	size_t same_spc_class_reac_prod = 0;
 
 	for(i=0;i<Number_Reactions;i++)
 	{
@@ -305,12 +305,12 @@ void handle_reactions_with_chosen_species(
 		WriteReactions("Species_Picked_Reactions_rearrange.txt", Species, RecombinationReaction);
 	}
 
-	for(i=0;i<(int)RegularReaction.size();i++)
+	for(i=0;i<RegularReaction.size();i++)
 	{
 		PickedReactions.push_back(RegularReaction[i]);
 	}
 
-	for(i=0;i<(int)RecombinationReaction.size();i++)
+	for(i=0;i<RecombinationReaction.size();i++)
 	{
 		PickedReactions.push_back(RecombinationReaction[i]);
 	}

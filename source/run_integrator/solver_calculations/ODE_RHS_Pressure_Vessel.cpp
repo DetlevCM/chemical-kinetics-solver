@@ -22,7 +22,7 @@ void ODE_RHS_Pressure_Vessel(int*n, double*time_current, double*y, double*f)
 	using namespace ODE_RHS_Pressure_Vessel_Variables;
 	using namespace Jacobian_ODE_RHS;
 
-	int i;
+	size_t i;
 
 
 	/* 2002 CODATA values */

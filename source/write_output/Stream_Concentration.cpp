@@ -13,12 +13,12 @@
 void WriteNewLabelsSpecies(
 		string filename,
 		string separator,
-		int Number_Species,
+		size_t Number_Species,
 		vector< string > Names,
 		bool GasPhasePressure
 )
 {
-	int i;
+	size_t i;
 	ofstream ConcentrationOutput (filename.c_str(),ios::out);
 
 	if (ConcentrationOutput.is_open())
@@ -46,13 +46,13 @@ void StreamConcentrations(
 		ofstream& ConcentrationOutput,
 		const string separator,
 		bool GasPhasePressure,
-		int Number_Species,
+		size_t Number_Species,
 		double CurrentTime,
 		double Pressure,
 		vector<double >& Concentration
 )
 {
-	int i;
+	size_t i;
 	ConcentrationOutput << CurrentTime;
 		for(i=0;i<=Number_Species;i++)
 		{
@@ -70,11 +70,11 @@ void StreamConcentrationsV2(
 		ofstream& ConcentrationOutput,
 		const string separator,
 		double CurrentTime,
-		int Number_Species,
+		size_t Number_Species,
 		double* Concentration
 		)
 {
-	int i;
+	size_t i;
 	ConcentrationOutput << CurrentTime << separator;
 
 	for(i=0;i<Number_Species;i++)

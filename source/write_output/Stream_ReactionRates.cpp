@@ -10,10 +10,10 @@
 void WriteLabelsReactionRates(
 		string filename,
 		string separator,
-		int Number_Reactons
+		size_t Number_Reactons
 )
 {
-	int i;
+	size_t i;
 	ofstream OutputFile (filename.c_str(),ios::out);
 
 	if (OutputFile.is_open())
@@ -36,10 +36,10 @@ void StreamReactionRates(
 		vector<double >& ReactionRates
 )
 {
-	int i;
+	size_t i;
 	OutputFile << CurrentTime; // time
 
-	for(i=0;i< (int) ReactionRates.size();i++)
+	for(i=0;i< ReactionRates.size();i++)
 	{
 		OutputFile << separator << ReactionRates[i] ;
 	}

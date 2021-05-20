@@ -26,40 +26,39 @@ void ODE_RHS_Pressure_Vessel(int*, double*, double*, double*);
  */
 
 void Calculate_Rate_Constant(
-		vector< double >& ,
-		vector< double >& ,
-		double ,
-		const vector< ReactionParameter >& ,
-		//const vector< vector< double > >& ,
-		const vector< CalculatedThermodynamics >& ,
-		const vector< TrackSpecies >& ,
-		const vector< double >&
+		vector< double >& Kf,
+		vector< double >& Kr,
+		const double Temperature,
+		const vector< ReactionParameter >& ReactionParameters,
+		const vector< CalculatedThermodynamics >& CalculatedThermo,
+		const vector< TrackSpecies >& SpeciesAll,
+		const vector< double >& Delta_N
 );
 
 
 //vector< double >
 void CalculateReactionRates(
-		vector< double >& ,
-		const vector< double >& ,
-		vector< double > ,
-		vector< double > ,
-		const vector< TrackSpecies >& ,
-		const vector< TrackSpecies >&
+		vector< double >& Rates,
+		const vector< double >& SpeciesConcentration,
+		vector< double > Forward_Rates,
+		vector< double > Reverse_Rates,
+		const vector< TrackSpecies >& ReactantsForRates,
+		const vector< TrackSpecies >& ProductsForRates
 );
 
 
 
 void Evaluate_Thermodynamic_Parameters(
-		vector<CalculatedThermodynamics> & ,
-		const vector<ThermodynamicData> & ,
-		double
+		vector< CalculatedThermodynamics > &CalculatedThermo,
+		const vector<ThermodynamicData> &Thermodynamics,
+		const double Temperature
 );
 
 
 vector< double > SpeciesLossRate(
-		int,
-		const vector< double > &,
-		const vector< TrackSpecies > &
+		size_t Number_Species,
+		const vector< double >& Combined_Rates,
+		const vector< TrackSpecies >& SpeciesLossList
 );
 
 

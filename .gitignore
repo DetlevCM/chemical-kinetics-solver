@@ -5,6 +5,7 @@ libraries/intel/libiode_ia32.lib
 libraries/intel/libiode_ia32.a
 ## odepack must be obtained from LLNL
 libraries/odepack/libodepack.a
+libraries/odepack/libodepack.lib
 #libraries/odepack/opkd-sum
 #libraries/odepack/opkda1.f
 #libraries/odepack/opkda2.f
@@ -46,3 +47,4 @@ chem.inp
 debug
 initial.inp
 
+/Release-Win/

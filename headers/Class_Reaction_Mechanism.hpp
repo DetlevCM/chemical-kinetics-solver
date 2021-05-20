@@ -50,8 +50,8 @@ public:
 // a class to store the mechanism
 class Reaction_Mechanism {
 public:
-	int species;
-	int reactions;
+	size_t species;
+	size_t reactions;
 
 	vector< string > Species;
 	vector< ThermodynamicData > Thermodynamics;

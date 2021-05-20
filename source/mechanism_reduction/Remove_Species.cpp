@@ -19,8 +19,8 @@ vector< bool > Read_Kill_List(
 	ifstream InputFile;
 	InputFile.open (filename.c_str());
 
-	int i, j;
-	int Number_Species = (int) Species.size();
+	size_t i, j;
+	size_t Number_Species = Species.size();
 	string line;
 
 	// vector to determine whether a species is retained or not
@@ -47,7 +47,7 @@ vector< bool > Read_Kill_List(
 				Species_Present = Tokenise_String_To_String(Remove_Comments[0],"\t "); // split entry
 
 				// in case more than one species is names on a single line
-				for(i=0;i<(int)Species_Present.size();i++)
+				for(i=0;i<Species_Present.size();i++)
 				{
 					for(j=0;j<Number_Species;j++){
 						// compare the name of the species with the species in the kill list
@@ -78,8 +78,8 @@ void Reduce_Species_Thermo_Mechanism(
 )
 {
 
-	int i, j;
-	int Number_Species = (int) Species.size();
+	size_t i, j;
+	size_t Number_Species = Species.size();
 	vector<string> NewSpecies;
 	//vector< vector< double > >
 	vector< ThermodynamicData > NewThermodynamics;
@@ -96,7 +96,7 @@ void Reduce_Species_Thermo_Mechanism(
 
 	bool kill;
 
-	for(j=0;j<(int)Reactions.size();j++){
+	for(j=0;j<Reactions.size();j++){
 
 		kill = false;
 
@@ -113,7 +113,7 @@ void Reduce_Species_Thermo_Mechanism(
 
 		if(!kill) // if not kill true, retain
 		{
-			int k;
+			size_t k;
 			vector< double > Reactants;
 			vector< double > Products;
 

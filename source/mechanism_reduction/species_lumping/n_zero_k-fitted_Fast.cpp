@@ -11,11 +11,11 @@
 ReactionParameter n_zero_CalculateNewParametersFast(
 		vector< SingleReactionData >& Reactions,
 		double temperature,
-		int Reaction_Group_Size
+		size_t Reaction_Group_Size
 )
 {
 	ReactionParameter ParameterOutput;
-	int j;
+	size_t j;
 
 
 	vector <double> Group_k(3);

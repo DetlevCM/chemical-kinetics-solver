@@ -19,8 +19,8 @@
  */
 
 vector< SingleReactionData > Process_Reactions_For_Species_Lumping(
-		int Number_Species_Classes,
-		const vector< int >& SpeciesClassMapping,
+		size_t Number_Species_Classes,
+		const vector< size_t >& SpeciesClassMapping,
 		vector< SingleReactionData >Reactions,
 		double temperature,
 		bool FastLumping, // this will calculated only 3 points, hence is fast
@@ -28,10 +28,10 @@ vector< SingleReactionData > Process_Reactions_For_Species_Lumping(
 )
 {
 
-	int i,j,k;
+	size_t i,j,k;
 
-	int Number_Species = (int)Reactions[0].Reactants.size();
-	int Number_Reactions = (int)Reactions.size();
+	size_t Number_Species = Reactions[0].Reactants.size();
+	size_t Number_Reactions = Reactions.size();
 
 
 	/*
@@ -51,7 +51,7 @@ vector< SingleReactionData > Process_Reactions_For_Species_Lumping(
 	vector< double > ReactionData; // Reaction parameters such as Arrhenius parameters and whether irreversible or not
 
 
-	vector< int > SpeciesClassesSize;
+	vector< size_t > SpeciesClassesSize;
 	SpeciesClassesSize.resize(Number_Species_Classes);
 
 	for(i = 0;i<Number_Species;i++)
@@ -74,7 +74,7 @@ vector< SingleReactionData > Process_Reactions_For_Species_Lumping(
 
 		for(j = 0;j<Number_Species;j++)
 		{
-			int SpeciesID = SpeciesClassMapping[j]; // get mapping, then re-map
+			size_t SpeciesID = SpeciesClassMapping[j]; // get mapping, then re-map
 
 			// need to make sure that two lumped species can react - e.g. R(1). + R(2). ->
 			// now lumped into R. which would be 2R. ->
@@ -131,7 +131,7 @@ vector< SingleReactionData > Process_Reactions_For_Species_Lumping(
 	vector< SingleReactionData > temp_reactions2(temp_reactions1);
 	vector< SingleReactionData > temp_reactions3;
 
-	vector< int > Reaction_Grouping;
+	vector< size_t > Reaction_Grouping;
 
 	//for(i=0;i<Number_Reactions;i++)
 	do
@@ -154,7 +154,7 @@ vector< SingleReactionData > Process_Reactions_For_Species_Lumping(
 		 */
 		//i = 0;
 
-		int compare_position = (int)temp_reactions3.size();
+		size_t compare_position = temp_reactions3.size();
 		temp_reactions3.push_back(temp_reactions2[0]); // retain the reaction we are testing
 		//temp_reactions2.erase (temp_reactions2.begin() + i); // remove the position i points to, will be first if we started searching, i.e. 0
 		temp_reactions2.erase (temp_reactions2.begin() + 0);
@@ -177,7 +177,7 @@ vector< SingleReactionData > Process_Reactions_For_Species_Lumping(
 			}
 			j = j + 1;
 
-		}while(j < (int) temp_reactions2.size());
+		}while(j < temp_reactions2.size());
 
 		Reaction_Grouping.push_back(k); // retain count of combined vectors
 
@@ -298,7 +298,7 @@ vector< SingleReactionData > Process_Reactions_For_Species_Lumping(
 		ProductData.clear();
 
 		// finally, remove the processed stuff:
-		int delete_positions = Reaction_Grouping[i];
+		size_t delete_positions = Reaction_Grouping[i];
 		Reaction_Grouping.erase (Reaction_Grouping.begin());
 		temp_reactions3.erase (temp_reactions3.begin(), temp_reactions3.begin() + delete_positions);
 
@@ -307,11 +307,11 @@ vector< SingleReactionData > Process_Reactions_For_Species_Lumping(
 
 
 	// for simplicity, rescale A after the fact:
-	for(i=0;i< (int) temp_reactions2.size();i++) // every reaction
+	for(i=0;i< temp_reactions2.size();i++) // every reaction
 	{
 		double Scale_A = 1;
 
-		for(j=0;j< (int) temp_reactions2[i].Reactants.size();j++) // every species class
+		for(j=0;j< temp_reactions2[i].Reactants.size();j++) // every species class
 		{
 			Scale_A = Scale_A*(pow( (double) SpeciesClassesSize[j],temp_reactions2[i].Reactants[j]));
 		}

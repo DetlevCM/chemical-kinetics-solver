@@ -27,12 +27,12 @@ void Process_User_Input(
 
 	// legacy options without keywords:
 	// Case 1: We have the mechanism provided (makes most sense)
-	if((int) User_Inputs.size() == 1 && !Test_If_Word_Found(User_Inputs[1],"mechanism="))
+	if( User_Inputs.size() == 1 && !Test_If_Word_Found(User_Inputs[1],"mechanism="))
 	{
 		filenames.mechanism = User_Inputs[0];
 	}
 	// Case 2: The user supplied the initial conditions (more likely to change)
-	if((int) User_Inputs.size() == 2 && !Test_If_Word_Found(User_Inputs[1],"initial="))
+	if( User_Inputs.size() == 2 && !Test_If_Word_Found(User_Inputs[1],"initial="))
 	{
 		filenames.initial_data = User_Inputs[2];
 	}
@@ -40,7 +40,7 @@ void Process_User_Input(
 
 
 	// assuming the user uses the new format with keywords:
-	for(int i = 0;i<(int)User_Inputs.size();i++)
+	for(size_t i = 0;i<User_Inputs.size();i++)
 	{
 		if(Test_If_Word_Found(User_Inputs[i],"mechanism="))
 		{

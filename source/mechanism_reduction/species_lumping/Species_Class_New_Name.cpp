@@ -10,19 +10,19 @@
 
 vector<ClassNaming> GetSpeciesClassesNames(vector< vector< string > > SpeciesMapping)
 {
-	int i;
-	int MaxClass = 0;
+	size_t i;
+	size_t MaxClass = 0;
 
 	vector< ClassNaming > temp1;
 
-	for(i=0;i<(int)SpeciesMapping.size();i++)
+	for(i=0;i<SpeciesMapping.size();i++)
 	{
 		ClassNaming ClassNamingInput;
 
 		// http://stackoverflow.com/questions/7663709/convert-string-to-int-c
-		int CurrentClass = (int) strtol(SpeciesMapping[i][1].c_str(),NULL,10); // converting String to int
+		size_t CurrentClass = (size_t)strtol(SpeciesMapping[i][1].c_str(),NULL,10); // converting String to int
 
-		if((int) SpeciesMapping[i].size() == 3) // only these have a user defined label
+		if(SpeciesMapping[i].size() == 3) // only these have a user defined label
 		{
 			ClassNamingInput.IsNamed = true;
 			ClassNamingInput.ClassID = CurrentClass;
@@ -43,12 +43,12 @@ vector<ClassNaming> GetSpeciesClassesNames(vector< vector< string > > SpeciesMap
 	vector<ClassNaming> temp2(MaxClass);
 
 	// Insurance - set IsNamed to false first
-	for(i=0;i<(int)temp2.size();i++)
+	for(i=0;i<temp2.size();i++)
 	{
 		temp2[i].IsNamed = false;
 	}
 
-	for(i=0;i<(int)temp1.size();i++){
+	for(i=0;i<temp1.size();i++){
 		temp2[temp1[i].ClassID-1] = temp1[i]; // beware, visible ID is one higher than class ID
 		//cout << temp2[temp1[i].ClassID].Name << " \n"; // works
 	}

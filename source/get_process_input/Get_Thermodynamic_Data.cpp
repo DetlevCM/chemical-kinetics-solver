@@ -21,8 +21,8 @@ vector< ThermodynamicData > Get_Thermodynamic_Data(
 	ifstream Mechanism_Data;
 	Mechanism_Data.open (filename.c_str());
 
-	int Number_Species = (int)Species.size();
-	int i;
+	size_t Number_Species = Species.size();
+	size_t i;
 
 	// Vector to store all data as a struct (more efficient than vector< vector> >
 	vector< ThermodynamicData > read_in_thermodynamics;
@@ -80,7 +80,7 @@ vector< ThermodynamicData > Get_Thermodynamic_Data(
 					// Species Name is now temp_split_line[0]
 					// Now we need to identify the species
 
-					int temp_species_id = 0;
+					size_t temp_species_id = 0;
 
 					for(i=0;i<Number_Species;i++)
 					{
@@ -210,7 +210,7 @@ vector< ThermodynamicData > Get_Thermodynamic_Data(
 					}
 					// End stripping out whitespaces
 
-					int temp_species_id = 0;
+					size_t temp_species_id = 0;
 
 					for(i=0;i<Number_Species;i++)
 					{

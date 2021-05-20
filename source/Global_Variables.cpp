@@ -28,7 +28,7 @@ vector< JacobianData > JacobianMatrix;
 namespace Jacobian_ODE_RHS
 {
 //// constant (i.e. set once) ////
-int Number_Species;
+size_t Number_Species;
 vector< double > Delta_N;
 vector< ThermodynamicData > Thermodynamics;
 vector< ReactionParameter > ReactionParameters; // tidier than reactions vector
@@ -45,7 +45,7 @@ vector< double > Kr;
 namespace ODE_RHS
 {
 //// constant (i.e. set once) ////
-int Number_Reactions;
+size_t Number_Reactions;
 ConstantInitRHSODE InitialDataConstants;
 vector< TrackSpecies > ReactantsForReactions;
 vector< TrackSpecies > ProductsForReactions;
@@ -58,7 +58,7 @@ vector< double > SpeciesConcentrationChange;
 // Split into own namespace for efficiency
 namespace ODE_RHS_Pressure_Vessel_Variables
 {
-int OxyGasSpeciesID;
+size_t OxyGasSpeciesID;
 PressureVesselCalc PetroOxyData;
 //for limited Oxy
 double time_previous;

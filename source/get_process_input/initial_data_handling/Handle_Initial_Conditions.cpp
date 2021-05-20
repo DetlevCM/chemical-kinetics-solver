@@ -7,12 +7,17 @@
 
 #include "../headers/Headers.hpp"
 
-void Handle_Initial_Conditions(Initial_Data& InitialParameters, vector<string> Input, solver_type Global_Solver_Settings)
+void Handle_Initial_Conditions(
+		Initial_Data& InitialParameters,
+		vector<string> Input,
+		solver_type
+		Global_Solver_Settings
+		)
 {
-	int i ;
+	size_t i ;
 	vector< string > line_content;
 
-	for(i=0;i<(int)Input.size();i++)
+	for(i=0;i<Input.size();i++)
 	{
 		if (Test_If_Word_Found(Input[i], "Temperature"))
 		{

@@ -7,12 +7,16 @@
 
 #include "../headers/Headers.hpp"
 
-vector< InitSpecies > Handle_Species(Initial_Data&  InitialParameters,  vector<string> Input, vector< string > Species)
+vector< InitSpecies > Handle_Species(
+		Initial_Data&  InitialParameters,
+		vector<string> Input,
+		vector< string > Species
+		)
 {
-	int i,j;
+	size_t i,j;
 	vector< InitSpecies > SetupSpecies;
 
-	for(i=0;i<(int)Input.size();i++)
+	for(i=0;i<Input.size();i++)
 	{
 		vector< string > line_content;
 		InitSpecies SingleSpeciesInput;
@@ -29,9 +33,9 @@ vector< InitSpecies > Handle_Species(Initial_Data&  InitialParameters,  vector<s
 
 		// Case 1: No Constant concentration, line will contain two entries
 		//if(!Test_If_Word_Found(Input[i],"ConstantConcentration") || !Test_If_Word_Found(Input[i],"Constant Concentration"))
-		if((int)line_content.size()>=2)
+		if(line_content.size()>=2)
 		{
-			for(j=0;j<(int)Species.size();j++){
+			for(j=0;j<Species.size();j++){
 				if(strcmp(line_content[0].c_str(),Species[j].c_str()) == 0)
 				{
 					SingleSpeciesInput.SpecID = j;

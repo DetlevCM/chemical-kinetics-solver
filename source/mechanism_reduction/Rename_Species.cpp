@@ -11,14 +11,14 @@
 vector< string > RenameSpecies(
 		vector< string > Species,
 		vector<ClassNaming> UserDefinedNames,
-		const vector< int > & SpeciesClassMapping
+		const vector< size_t > & SpeciesClassMapping
 		)
 {
-	int i;
-	int Number_Species = (int)Species.size();
+	size_t i;
+	size_t Number_Species = Species.size();
 
 
-	int Number_Species_Classes = 0;
+	size_t Number_Species_Classes = 0;
 	for(i=0;i<Number_Species;i++)
 	{
 		if(Number_Species_Classes < SpeciesClassMapping[i])
@@ -34,7 +34,7 @@ vector< string > RenameSpecies(
 
 	for(i=0;i<Number_Species;i++)
 	{
-		int ClassID = SpeciesClassMapping[i];
+		size_t ClassID = SpeciesClassMapping[i];
 
 		if(temp_species_names[ClassID].empty()) // retain name of species if class empty
 		{

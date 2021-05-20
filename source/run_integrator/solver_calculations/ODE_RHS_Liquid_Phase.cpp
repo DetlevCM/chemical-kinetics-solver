@@ -14,7 +14,7 @@ void ODE_RHS_Liquid_Phase(int*n, double*t, double*y, double*f)
 	using namespace ODE_RHS;
 	using namespace Jacobian_ODE_RHS;
 
-	int i;
+	size_t i;
 
 	// stability hack - but has a performance impact...
 	if(InitialDataConstants.EnforceStability)

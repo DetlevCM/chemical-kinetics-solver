@@ -4,9 +4,9 @@ vector< TrackSpecies > PrepareSpecies_ForSpeciesLoss(
 		const vector< SingleReactionData >& Reactions
 		)
 {
-	int i,j;
-	int Number_Reactions = (int)Reactions.size();
-	int Number_Species = (int)Reactions[0].Reactants.size();
+	size_t i,j;
+	size_t Number_Reactions = Reactions.size();
+	size_t Number_Species = Reactions[0].Reactants.size();
 	vector< TrackSpecies > SpeciesLossAll;
 
 	TrackSpecies temp;
@@ -17,8 +17,8 @@ vector< TrackSpecies > PrepareSpecies_ForSpeciesLoss(
 		{
 			if(Reactions[j].Reactants[i] != 0) // Reactants
 			{
-				temp.SpeciesID = (int) i;
-				temp.ReactionID = (int) j;
+				temp.SpeciesID = i;
+				temp.ReactionID = j;
 				temp.coefficient = Reactions[j].Reactants[i];
 				SpeciesLossAll.push_back(temp);
 			}
@@ -28,8 +28,8 @@ vector< TrackSpecies > PrepareSpecies_ForSpeciesLoss(
 		{
 			if(Reactions[j].Products[i] != 0) // Products
 			{
-				temp.SpeciesID = (int) i;
-				temp.ReactionID = (int) j;
+				temp.SpeciesID = i;
+				temp.ReactionID = j;
 				temp.coefficient = Reactions[j].Products[i];
 				SpeciesLossAll.push_back(temp);
 			}
