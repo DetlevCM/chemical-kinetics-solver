@@ -53,6 +53,7 @@ vector<int> Set_Mechanism_Units(string test_string) // Identify the units
 		Mechanism_Units[1] = 4; // Ea in J/mol
 	}
 
+	//cout << "Mechanism Units are " << Mechanism_Units[0] << " " << Mechanism_Units[1] << "\n";
 	return Mechanism_Units;
 }
 
