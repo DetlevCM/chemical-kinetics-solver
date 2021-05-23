@@ -68,8 +68,8 @@ ReactionParameter Average_Ea_CalculateNewParametersSlow(
 
 	// Individual step would only be needed if the function is no monotonous...
 	//*
-	double gradient_k = 0;
-	double gradient_Ea = 0;
+	double gradient_k = 0.0;
+	double gradient_Ea = 0.0;
 	for(size_t k=1;k<41;k++){
 		gradient_k = gradient_k +
 				(
@@ -82,8 +82,8 @@ ReactionParameter Average_Ea_CalculateNewParametersSlow(
 						// /(temperature-1-temperature) // 1K Steps, so we save us the effort
 				);
 	}
-	gradient_k = gradient_k/40; //40 points I think...
-	gradient_Ea = gradient_Ea/40; //40 points I think...
+	gradient_k = gradient_k/40.0; //40 points I think...
+	gradient_Ea = gradient_Ea/40.0; //40 points I think...
 	//*/
 
 	// Work out Ea component of gradient
@@ -98,7 +98,7 @@ ReactionParameter Average_Ea_CalculateNewParametersSlow(
 	difference_in_gradient = gradient_in_Group_k - gradient_in_Ea;
 	fitted_n = difference_in_gradient / gradient_in_lnT;//*/
 
-	double difference_in_gradient = 0;
+	double difference_in_gradient = 0.0;
 	double fitted_n;
 	//difference_in_gradient = gradient_in_Group_k - gradient_in_Ea;
 	// We can calculate our fitted n now:

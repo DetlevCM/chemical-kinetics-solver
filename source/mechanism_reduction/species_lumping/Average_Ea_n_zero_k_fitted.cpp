@@ -28,7 +28,7 @@ ReactionParameter Average_Ea_n_zero_k_fitted(
 	size_t j;
 
 	vector <double> Group_k(41);
-	double fitted_Ea = 0;
+	double fitted_Ea = 0.0;
 
 	//for(j=0;j<Reaction_Grouping[i];j++)
 	for(j=0;j<Reaction_Group_Size;j++)

@@ -19,9 +19,9 @@ ReactionParameter Average_Ea_CalculateNewParametersFast(
 	size_t j;
 
 	vector <double> Group_k(3);
-	double total_Ea = 0;
+	double total_Ea = 0.0;
 
-	double temperature_endpoints = 20;
+	double temperature_endpoints = 20.0;
 
 	for(j=0;j<Reaction_Group_Size;j++)
 	{
