@@ -27,7 +27,6 @@ ReactionParameter Average_Ea_k_fitted_Slow(
 	vector <double> Group_k(41);
 	double fitted_Ea = 0;
 
-	//for(j=0;j<Reaction_Grouping[i];j++)
 	for(j=0;j<Reaction_Group_Size;j++)
 	{
 		// work out k over all reactions
@@ -45,20 +44,19 @@ ReactionParameter Average_Ea_k_fitted_Slow(
 	}
 
 	// this is the new Ea for our fitted reaction
-	//fitted_Ea = fitted_Ea/( (double) Reaction_Grouping[i]);
 	fitted_Ea = fitted_Ea/( (double) Reaction_Group_Size);
 	//cout << fitted_Ea << " \n";
 
-	// we need the equivlaent of an ln(k) vs T plot for a straight line with a gradient
+	// we need the equivalent of an ln(k) vs T plot for a straight line with a gradient
 	// now we need an Ea gradient as well as ln(T) gradient
 	vector <double> Ea_for_gradient(41);
-	//vector <double> lnT_for_gradient(41);
+	vector <double> lnT_for_gradient(41);
 
 	for(size_t k=0;k<41;k++){
 		double temp_mod = (double)k - 20.0;
 		// we do not need R as the internal Ea is in Kelvins
 		Ea_for_gradient[k] = -fitted_Ea/((temperature + temp_mod));
-		//lnT_for_gradient[k] = log(temperature + temp_mod);
+		lnT_for_gradient[k] = log(temperature + temp_mod);
 		Group_k[k] = log(Group_k[k]);
 	}
 
@@ -70,6 +68,8 @@ ReactionParameter Average_Ea_k_fitted_Slow(
 	//*
 	double gradient_k = 0.0;
 	double gradient_Ea = 0.0;
+	double gradient_lnT = 0.0;
+
 	for(size_t k=1;k<41;k++){
 		gradient_k = gradient_k +
 				(
@@ -81,9 +81,15 @@ ReactionParameter Average_Ea_k_fitted_Slow(
 						(Ea_for_gradient[k-1]-Ea_for_gradient[k])
 						// /(temperature-1-temperature) // 1K Steps, so we save us the effort
 				);
+		gradient_lnT = gradient_lnT +
+				(
+						(lnT_for_gradient[k-1]-lnT_for_gradient[k])
+						// /(temperature-1-temperature) // 1K Steps, so we save us the effort
+				);
 	}
 	gradient_k = gradient_k/40.0; //40 points I think...
 	gradient_Ea = gradient_Ea/40.0; //40 points I think...
+	gradient_lnT = gradient_lnT/40.0;
 	//*/
 
 	// Work out Ea component of gradient
@@ -93,26 +99,26 @@ ReactionParameter Average_Ea_k_fitted_Slow(
 	//gradient_in_Ea = (Ea_for_gradient[41] - Ea_for_gradient[0])/40;
 	//gradient_in_lnT = (lnT_for_gradient[41] - lnT_for_gradient[0])/40;
 
-	/*
-	double difference_in_gradient, fitted_n;
-	difference_in_gradient = gradient_in_Group_k - gradient_in_Ea;
-	fitted_n = difference_in_gradient / gradient_in_lnT;//*/
 
-	double difference_in_gradient = 0.0;
-	double fitted_n;
+	double difference_in_gradient, fitted_n;
+	difference_in_gradient = gradient_k - (gradient_Ea + gradient_lnT);
+	//fitted_n = difference_in_gradient / gradient_in_lnT;//*/
+
+	//double difference_in_gradient = 0.0;
+	//double fitted_n;
 	//difference_in_gradient = gradient_in_Group_k - gradient_in_Ea;
 	// We can calculate our fitted n now:
 	fitted_n = exp(difference_in_gradient);
 
 	// now for the fitted A, using the middle point
-	//double ln_fitted_A, fitted_A;
-	double fitted_A;
+	double ln_fitted_A, fitted_A;
 
-	//ln_fitted_A = Group_k[1] - fitted_n*log(temperature) - (-fitted_Ea/(temperature));
-	//fitted_A = exp(ln_fitted_A);
+	ln_fitted_A = Group_k[20] - fitted_n*log(temperature) - (-fitted_Ea/(temperature));
+	fitted_A = exp(ln_fitted_A);
 
 	// calculate A on the centerpoint
-	fitted_A = Group_k[20] / (pow(temperature,fitted_n)*exp(-fitted_Ea/temperature));
+	//double fitted_A;
+	//fitted_A = Group_k[20] / (pow(temperature,fitted_n)*exp(-fitted_Ea/temperature));
 
 
 	ParameterOutput.Reversible = false;
