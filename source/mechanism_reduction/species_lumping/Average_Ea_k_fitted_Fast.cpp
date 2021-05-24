@@ -8,7 +8,7 @@
 #include "../headers/Headers.hpp"
 
 
-ReactionParameter Average_Ea_CalculateNewParametersFast(
+ReactionParameter Average_Ea_k_fitted_Fast(
 		vector< SingleReactionData >& Reactions,
 		double temperature,
 		size_t Reaction_Group_Size
