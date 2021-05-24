@@ -233,14 +233,14 @@ vector< SingleReactionData > Process_Reactions_For_Species_Lumping(
 			{
 				if(FastLumping)
 				{
-					NewParameters = n_zero_CalculateNewParametersFast(
+					NewParameters = n_zero_k_fitted_Fast(
 							temp_reactions3,
 							temperature,
 							Reaction_Grouping[i]);
 				}
 				else
 				{
-					NewParameters = n_zero_CalculateNewParametersSlow(
+					NewParameters = n_zero_k_fitted_Slow(
 							temp_reactions3,
 							temperature,
 							Reaction_Grouping[i]);

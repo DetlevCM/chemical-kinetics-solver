@@ -129,13 +129,13 @@ ReactionParameter Average_Ea_CalculateNewParametersSlow(
 );
 
 // Some helpers for the reduction:
-ReactionParameter n_zero_CalculateNewParametersFast(
+ReactionParameter n_zero_k_fitted_Fast(
 		vector< SingleReactionData >& ,
 		double ,
 		size_t
 );
 
-ReactionParameter n_zero_CalculateNewParametersSlow(
+ReactionParameter n_zero_k_fitted_Slow(
 		vector< SingleReactionData >& ,
 		double ,
 		size_t
