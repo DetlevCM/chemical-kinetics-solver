@@ -271,7 +271,7 @@ vector< SingleReactionData > Process_Reactions_For_Species_Lumping(
 						Reaction_Grouping[i]);
 			}
 		}
-		else // avoid the mathematicss for reactions that aren't grouped, use previous values
+		else // avoid the mathematics for reactions that aren't grouped, use previous values
 		{
 			NewParameters.Reversible = false; // must be irreversible, else no lumping
 			NewParameters.paramA = temp_reactions3[i].paramA;

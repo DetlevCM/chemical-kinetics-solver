@@ -41,7 +41,7 @@ ReactionParameter n_zero_CalculateNewParametersSlow(
 
 	// average gradient of k vs 1/T
 	double gradient, intercept;
-	gradient = 0; // initialize to zero
+	gradient = 0; // initialise to zero
 
 	/* Individual steps are only really interesting if the function is not
 	 * monotonous... it isn't really necessary, its the original code and
