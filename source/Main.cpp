@@ -139,7 +139,7 @@ int main(int argc, char* argv[])
 		OutputFilenames.Prefix = "";
 
 
-		WriteNewLabelsSpecies(
+		Write_Header_Species_Temperature_Pressure(
 				OutputFilenames.Species,
 				initial_parameters.Solver_Parameters.separator,
 				Number_Species,
@@ -229,7 +229,7 @@ int main(int argc, char* argv[])
 					PrepareStreamRatesAnalysis(Reduced_Reaction_Mechanism.Species,OutputFilenames.Prefix);
 				}
 
-				WriteNewLabelsSpecies(
+				Write_Header_Species_Temperature_Pressure(
 						OutputFilenames.Species,
 						initial_parameters.Solver_Parameters.separator,
 						Number_Species,

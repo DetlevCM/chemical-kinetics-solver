@@ -37,12 +37,12 @@ void Integrate_Liquid_Phase(
 	Jacobian_ODE_RHS::Thermodynamics = reaction_mechanism.Thermodynamics; // "Hack" - to fix a regression
 
 
-	ofstream ReactionRatesOutput;
-	ofstream ConcentrationOutput (OutputFilenames.Species.c_str(),ios::app);
+	ofstream ReactionRates_OFStream;
+	ofstream Concentration_OFStream (OutputFilenames.Species.c_str(),ios::app);
 
 	if(InitialParameters.PrintReacRates)
 	{
-		ReactionRatesOutput.open(OutputFilenames.Rates.c_str(),ios::app);
+		ReactionRates_OFStream.open(OutputFilenames.Rates.c_str(),ios::app);
 	}
 
 	Settings_LSODA LSODA;
@@ -184,7 +184,7 @@ void Integrate_Liquid_Phase(
 
 	// do not forget output at time = 0
 	StreamConcentrations(
-			ConcentrationOutput,
+			Concentration_OFStream,
 			InitialParameters.Solver_Parameters.separator,
 			InitialParameters.GasPhase,
 			Jacobian_ODE_RHS::Number_Species,
@@ -197,7 +197,7 @@ void Integrate_Liquid_Phase(
 	if(InitialParameters.PrintReacRates)
 	{
 		StreamReactionRates(
-				ReactionRatesOutput,
+				ReactionRates_OFStream,
 				InitialParameters.Solver_Parameters.separator,
 				time_current,
 				ODE_RHS::Rates
@@ -410,7 +410,7 @@ void Integrate_Liquid_Phase(
 		}//*/
 
 		StreamConcentrations(
-				ConcentrationOutput,
+				Concentration_OFStream,
 				InitialParameters.Solver_Parameters.separator,
 				false, //InitialParameters.GasPhase,
 				Jacobian_ODE_RHS::Number_Species,
@@ -422,7 +422,7 @@ void Integrate_Liquid_Phase(
 		if(InitialParameters.PrintReacRates)
 		{
 			StreamReactionRates(
-					ReactionRatesOutput,
+					ReactionRates_OFStream,
 					InitialParameters.Solver_Parameters.separator,
 					time_current,
 					ODE_RHS::Rates
@@ -455,8 +455,8 @@ void Integrate_Liquid_Phase(
 	cout << "CPU Time: " << ((double) (clock() - cpu_time_current)) / CLOCKS_PER_SEC << " seconds\n";
 
 	// close output files
-	ConcentrationOutput.close();
-	ReactionRatesOutput.close();
+	Concentration_OFStream.close();
+	ReactionRates_OFStream.close();
 
 	if(InitialParameters.MechanismAnalysis.MaximumRates)
 	{
