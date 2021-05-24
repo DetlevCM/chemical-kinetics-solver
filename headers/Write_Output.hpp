@@ -16,30 +16,30 @@
 
 
 // Write labels for concentrations, then stream output
-void WriteNewLabelsSpecies(
-		string,
-		string,
-		size_t ,
-		vector< string >,
-		bool
+void Write_Header_Species_Temperature_Pressure(
+		string filename,
+		string separator,
+		size_t Number_Species,
+		vector< string > Names,
+		bool GasPhasePressure
 );
 
 void StreamConcentrations(
-		ofstream&,
-		const string,
-		bool,
-		size_t,
-		double,
-		double,
-		vector< double>&
+		ofstream& Concentration_OFStream,
+		const string separator,
+		bool GasPhasePressure,
+		size_t Number_Species,
+		double CurrentTime,
+		double Pressure,
+		const vector<double >& Concentration
 );
 
 void StreamConcentrationsV2(
-		ofstream&,
-		const string,
-		double,
-		size_t,
-		double*
+		ofstream& Concentration_OFStream,
+		const string separator,
+		double CurrentTime,
+		size_t Number_Species,
+		double* Concentration
 );
 
 // write labels for reactions then stream output

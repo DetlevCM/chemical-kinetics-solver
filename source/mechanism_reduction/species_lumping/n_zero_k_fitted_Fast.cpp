@@ -8,7 +8,7 @@
 #include "../headers/Headers.hpp"
 
 
-ReactionParameter n_zero_CalculateNewParametersFast(
+ReactionParameter n_zero_k_fitted_Fast(
 		vector< SingleReactionData >& Reactions,
 		double temperature,
 		size_t Reaction_Group_Size

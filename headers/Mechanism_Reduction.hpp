@@ -116,26 +116,26 @@ vector< SingleReactionData > Process_Reactions_For_Species_Lumping(
 );
 
 // Some helpers for the reduction:
-ReactionParameter Average_Ea_CalculateNewParametersFast(
+ReactionParameter Average_Ea_k_fitted_Fast(
 		vector< SingleReactionData >& ,
 		double ,
 		size_t
 );
 
-ReactionParameter Average_Ea_CalculateNewParametersSlow(
+ReactionParameter Average_Ea_k_fitted_Slow(
 		vector< SingleReactionData >& ,
 		double ,
 		size_t
 );
 
 // Some helpers for the reduction:
-ReactionParameter n_zero_CalculateNewParametersFast(
+ReactionParameter n_zero_k_fitted_Fast(
 		vector< SingleReactionData >& ,
 		double ,
 		size_t
 );
 
-ReactionParameter n_zero_CalculateNewParametersSlow(
+ReactionParameter n_zero_k_fitted_Slow(
 		vector< SingleReactionData >& ,
 		double ,
 		size_t

@@ -8,7 +8,7 @@
 #include "../headers/Headers.hpp"
 
 
-ReactionParameter Average_Ea_CalculateNewParametersFast(
+ReactionParameter Average_Ea_k_fitted_Fast(
 		vector< SingleReactionData >& Reactions,
 		double temperature,
 		size_t Reaction_Group_Size
@@ -19,9 +19,9 @@ ReactionParameter Average_Ea_CalculateNewParametersFast(
 	size_t j;
 
 	vector <double> Group_k(3);
-	double total_Ea = 0;
+	double total_Ea = 0.0;
 
-	double temperature_endpoints = 20;
+	double temperature_endpoints = 20.0;
 
 	for(j=0;j<Reaction_Group_Size;j++)
 	{
@@ -99,25 +99,24 @@ ReactionParameter Average_Ea_CalculateNewParametersFast(
 
 
 	double difference_in_gradient, fitted_n;
-	difference_in_gradient = (gradient_in_Group_k - gradient_in_Ea) / gradient_in_lnT ;
+	difference_in_gradient = gradient_in_Group_k - (gradient_in_Ea + gradient_in_lnT) ;
 
 
 	// We can calculate our fitted n now:
 	fitted_n = exp(difference_in_gradient);
 
-	cout << fitted_Ea * 1.987192 / 1000 << " " << gradient_in_Group_k << " " << gradient_in_Ea << " " << difference_in_gradient << " " << fitted_n << "\n";
+	//cout << fitted_Ea * 1.987192 / 1000 << " " << gradient_in_Group_k << " " << gradient_in_Ea << " " << difference_in_gradient << " " << fitted_n << "\n";
 
-	// now for the fitted A, using the middle point
-	//double ln_fitted_A, fitted_A;
-	double fitted_A;
+	// now for the fitted A, using the center point
+	double ln_fitted_A, fitted_A;
+	ln_fitted_A = Group_k[1] - fitted_n*log(temperature) - (-fitted_Ea/(temperature));
+	fitted_A = exp(ln_fitted_A);
 
-	//ln_fitted_A = Group_k[1] - fitted_n*log(temperature) - (-fitted_Ea/(temperature));
-	//fitted_A = exp(ln_fitted_A);
-
-	// calculate A on the centerpoint
+	// calculate A on the center point
 	//cout << fitted_Ea * 1.987192 / 1000 << "\n";
-	double denominator = pow(temperature,fitted_n)*exp(-fitted_Ea/temperature);
-	fitted_A = Group_k[1] / denominator;
+	//double fitted_A;
+	//double denominator = pow(temperature,fitted_n)*exp(-fitted_Ea/temperature);
+	//fitted_A = Group_k[1] / denominator;
 	//cout << fitted_A << "\n";
 
 	ParameterOutput.Reversible = false; // reactions must be irreversible for lumping, they will come out irreversible

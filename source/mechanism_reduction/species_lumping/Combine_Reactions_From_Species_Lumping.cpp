@@ -233,14 +233,14 @@ vector< SingleReactionData > Process_Reactions_For_Species_Lumping(
 			{
 				if(FastLumping)
 				{
-					NewParameters = n_zero_CalculateNewParametersFast(
+					NewParameters = n_zero_k_fitted_Fast(
 							temp_reactions3,
 							temperature,
 							Reaction_Grouping[i]);
 				}
 				else
 				{
-					NewParameters = n_zero_CalculateNewParametersSlow(
+					NewParameters = n_zero_k_fitted_Slow(
 							temp_reactions3,
 							temperature,
 							Reaction_Grouping[i]);
@@ -250,14 +250,14 @@ vector< SingleReactionData > Process_Reactions_For_Species_Lumping(
 			{
 				if(FastLumping)
 				{
-					NewParameters = Average_Ea_CalculateNewParametersFast(
+					NewParameters = Average_Ea_k_fitted_Fast(
 							temp_reactions3,
 							temperature,
 							Reaction_Grouping[i]);
 				}
 				else
 				{
-					NewParameters = Average_Ea_CalculateNewParametersSlow(
+					NewParameters = Average_Ea_k_fitted_Slow(
 							temp_reactions3,
 							temperature,
 							Reaction_Grouping[i]);
@@ -271,7 +271,7 @@ vector< SingleReactionData > Process_Reactions_For_Species_Lumping(
 						Reaction_Grouping[i]);
 			}
 		}
-		else // avoid the mathematicss for reactions that aren't grouped, use previous values
+		else // avoid the mathematics for reactions that aren't grouped, use previous values
 		{
 			NewParameters.Reversible = false; // must be irreversible, else no lumping
 			NewParameters.paramA = temp_reactions3[i].paramA;

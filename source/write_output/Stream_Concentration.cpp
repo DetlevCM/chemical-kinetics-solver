@@ -10,7 +10,7 @@
 
 
 // output function for species labels, temperature at back
-void WriteNewLabelsSpecies(
+void Write_Header_Species_Temperature_Pressure(
 		string filename,
 		string separator,
 		size_t Number_Species,
@@ -19,22 +19,22 @@ void WriteNewLabelsSpecies(
 )
 {
 	size_t i;
-	ofstream ConcentrationOutput (filename.c_str(),ios::out);
+	ofstream Concentration_OFStream (filename.c_str(),ios::out);
 
-	if (ConcentrationOutput.is_open())
+	if (Concentration_OFStream.is_open())
 	{
-		ConcentrationOutput << "Time";
+		Concentration_OFStream << "Time";
 		for(i=0;i<Number_Species;i++)
 		{
-			ConcentrationOutput << separator << Names[i];
+			Concentration_OFStream << separator << Names[i];
 		}
-		ConcentrationOutput << separator << "Temperature";
+		Concentration_OFStream << separator << "Temperature";
 		if(GasPhasePressure)
 		{
-			ConcentrationOutput << separator << "Pressure";
+			Concentration_OFStream << separator << "Pressure";
 		}
-		ConcentrationOutput << "\n";
-		ConcentrationOutput.close();
+		Concentration_OFStream << "\n";
+		Concentration_OFStream.close();
 	}
 	else cout << "Unable to open file";
 }
@@ -43,31 +43,31 @@ void WriteNewLabelsSpecies(
 
 // Function to stream the concentrations
 void StreamConcentrations(
-		ofstream& ConcentrationOutput,
+		ofstream& Concentration_OFStream,
 		const string separator,
 		bool GasPhasePressure,
 		size_t Number_Species,
 		double CurrentTime,
 		double Pressure,
-		vector<double >& Concentration
+		const vector<double >& Concentration
 )
 {
 	size_t i;
-	ConcentrationOutput << CurrentTime;
+	Concentration_OFStream << CurrentTime;
 		for(i=0;i<=Number_Species;i++)
 		{
-			ConcentrationOutput << separator << Concentration[i] ;
+			Concentration_OFStream << separator << Concentration[i] ;
 		}
 		if(GasPhasePressure)
 		{
-			ConcentrationOutput << separator << Pressure;
+			Concentration_OFStream << separator << Pressure;
 		}
-		ConcentrationOutput << "\n";
+		Concentration_OFStream << "\n";
 }
 
 
 void StreamConcentrationsV2(
-		ofstream& ConcentrationOutput,
+		ofstream& Concentration_OFStream,
 		const string separator,
 		double CurrentTime,
 		size_t Number_Species,
@@ -75,14 +75,14 @@ void StreamConcentrationsV2(
 		)
 {
 	size_t i;
-	ConcentrationOutput << CurrentTime << separator;
+	Concentration_OFStream << CurrentTime << separator;
 
 	for(i=0;i<Number_Species;i++)
 	{
-		ConcentrationOutput << Concentration[i] << separator;
+		Concentration_OFStream << Concentration[i] << separator;
 	}
-	ConcentrationOutput << Concentration[Number_Species] << separator;
-	ConcentrationOutput << "\n";
+	Concentration_OFStream << Concentration[Number_Species] << separator;
+	Concentration_OFStream << "\n";
 }
 
 
