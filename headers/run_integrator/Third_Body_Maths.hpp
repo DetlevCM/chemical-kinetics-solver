@@ -16,13 +16,12 @@ double Calculate_no_LOW_Troe(
 double Calculate_Lindeman_Hinshelwood_Low(
 		const SingleReactionData& ReactionData,
 		const vector<double>& Concentration,
-		double T,double a0, double n0, double e0, double third_body);
+		double T, double third_body);
 
 double Calculate_Lindeman_Hinshelwood_Low_Troe(
 		const SingleReactionData& ReactionData,
 		const vector<double>& Concentration,
 		double T, // current temperature
-		double a0, double n0, double e0, // third body parameters
 		double third_body // sum of third bodies, but which units, original molecules per cm3
 );
 

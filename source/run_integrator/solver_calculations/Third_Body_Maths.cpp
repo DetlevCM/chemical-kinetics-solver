@@ -68,7 +68,7 @@ double Calculate_no_LOW_Troe(
 double Calculate_Lindeman_Hinshelwood_Low(
 		const SingleReactionData& ReactionData,
 		const vector<double>& Concentration,
-		double T,double a0, double n0, double e0, double third_body)
+		double T, double third_body)
 {
 	double inv_T = 1.0/T;
 	double kinf;
@@ -80,6 +80,11 @@ double Calculate_Lindeman_Hinshelwood_Low(
 	double a1 = ReactionData.paramA;
 	double n1 = ReactionData.paramN;
 	double e1 = ReactionData.paramEa;
+
+	double a0 = ReactionData.lowThirdBody.paramA0;
+	double n0 = ReactionData.lowThirdBody.paramN0;
+	double e0 = ReactionData.lowThirdBody.paramEa0;
+
 
 	SRIThirdBody sri = ReactionData.sriThirdBody;
 
@@ -138,7 +143,6 @@ double Calculate_Lindeman_Hinshelwood_Low_Troe(
 		const SingleReactionData& ReactionData,
 		const vector<double>& Concentration,
 		double T, // current temperature
-		double a0, double n0, double e0, // third body parameters
 		double third_body // sum of third bodies, but which units, original molecules per cm3
 )
 {
@@ -153,6 +157,10 @@ double Calculate_Lindeman_Hinshelwood_Low_Troe(
 	double a1 = ReactionData.paramA;
 	double n1 = ReactionData.paramN;
 	double e1 = ReactionData.paramEa;
+
+	double a0 = ReactionData.lowThirdBody.paramA0;
+	double n0 = ReactionData.lowThirdBody.paramN0;
+	double e0 = ReactionData.lowThirdBody.paramEa0;
 
 	TroeThirdBody troe = ReactionData.troeThirdBody;
 	double inv_T1 = 1.0/troe.T1;
