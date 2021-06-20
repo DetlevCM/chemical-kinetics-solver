@@ -125,7 +125,7 @@ void Calculate_Rate_Constant(
 		}//*/
 
 		// all previous logic in the code applies if there is no third body
-		bool ThirdBody = false;
+		//bool ThirdBody = false;
 
 		/*
 		if(ThirdBody)

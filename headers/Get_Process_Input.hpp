@@ -35,6 +35,7 @@ vector< ThermodynamicData > Get_Thermodynamic_Data(
 		const vector< string >& Species
 );
 
+bool Parse_Chemking_Reaction_String(SingleReactionData& result, const vector< int > SchemeUnits, const vector<string> SpeciesNames, string line);
 
 vector< SingleReactionData > Get_Reactions(
 		string filename,

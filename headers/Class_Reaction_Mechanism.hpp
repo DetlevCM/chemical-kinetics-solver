@@ -50,6 +50,13 @@ public:
 	double T3;
 };
 
+class LowThirdBody{
+public:
+	double paramA0;
+	double paramN0;
+	double paramEa0;
+};
+
 class SingleReactionData {
 public:
 	bool Reversible;
@@ -58,11 +65,12 @@ public:
 	double paramN;
 	double paramEa;
 	int ThirdBodyType; // 1: +M  2: (+M) 3: (+H20) etc. not found in GRI Mech...
-	vector<double> ThBd_LOW;
-	vector<double> ThBd_TROE;
+	//vector<double> ThBd_LOW;
+	//vector<double> ThBd_TROE;
 	vector<ThirdBodyParameters> ThBd_param;
 	size_t sri_flag;
 	SRIThirdBody sriThirdBody;
+	LowThirdBody lowThirdBody;
 	TroeThirdBody troeThirdBody;
 	bool collision_efficiency; // for third body reactions
 	vector<double> Reactants;
