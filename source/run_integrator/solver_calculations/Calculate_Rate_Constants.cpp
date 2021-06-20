@@ -73,7 +73,7 @@ void Calculate_Rate_Constant(
 			// maybe it used to and no longer does with a modern compiler/processor/kernel
 			//if(ReactionParameters[i].paramN != 1)
 			//{
-				Kf[i] = Kf[i] * pow(Temperature,ReactionParameters[i].paramN);
+			Kf[i] = Kf[i] * pow(Temperature,ReactionParameters[i].paramN);
 			/*}
 			else
 			{
@@ -101,7 +101,7 @@ void Calculate_Rate_Constant(
 
 			if(Delta_N[i] == 0) // an if check is less expensive than a pow(,)
 			{
-			Kr[i] = Kf[i]/temp_kp;
+				Kr[i] = Kf[i]/temp_kp;
 			}
 			else
 			{
@@ -123,6 +123,18 @@ void Calculate_Rate_Constant(
 		{
 			Kr[i] = 0;
 		}//*/
+
+		// all previous logic in the code applies if there is no third body
+		bool ThirdBody = false;
+
+		if(ThirdBody)
+		{
+			Calculate_no_LOW_Troe();
+
+			Calculate_Lindeman_Hinshelwood_SRI_Low();
+
+			Calculate_Lindeman_Hinshelwood_Low_Troe();
+		}
 	}
 
 
