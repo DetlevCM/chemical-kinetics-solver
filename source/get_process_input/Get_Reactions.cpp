@@ -25,6 +25,22 @@
 SpeciesWithCoefficient Return_Species_With_Coefficient(string  , const vector< string > );
 
 
+// thanks Stackoverflow :)
+// https://stackoverflow.com/questions/1798112/removing-leading-and-trailing-spaces-from-a-string
+
+string trim_string(string str, string whitespace = " \t")
+{
+	const auto strBegin = str.find_first_not_of(whitespace);
+	if (strBegin == string::npos)
+		return ""; // no content
+
+	const auto strEnd = str.find_last_not_of(whitespace);
+	const auto strRange = strEnd - strBegin + 1;
+
+	return str.substr(strBegin, strRange);
+}
+
+
 
 vector< SingleReactionData > Get_Reactions(
 		string filename,
@@ -122,7 +138,11 @@ vector< SingleReactionData > Get_Reactions(
 		// only continue if the string is not empty or only whitespace or only tab
 		if(!line.empty() && line.find_first_not_of("\t ") != string::npos)
 		{
-			// if not, is is a duplicate?
+
+			// trim leading whitespaces to have an easier time handling lines with leading spaces
+			line = trim_string(line);
+
+			// if not, is is a duplicate? - some bad strucutre for how duplicates are enterd...
 			if(Reaction_Data.size() > 0 && line.compare(0,1,"/") != 0 && line.compare(0,3,"DUP") == 0)
 			{
 				size_t position = Reaction_Data.size() - 1;
@@ -163,13 +183,13 @@ vector< SingleReactionData > Get_Reactions(
 			else if(Reaction_Data.size() > 0 && Test_If_Word_Found(line,"/"))
 			{
 				// sepaerated by slashes, so...
-				vector<string> tmp = Tokenise_String_To_String(line, "/");
+				vector<string> tmp = Tokenise_String_To_String(line, "\t /");
 				// we now have species/value pairs in a consecutive order
 
 				for(size_t steps = 0; steps < tmp.size(); steps+=2) // note, steps of 2 !!
 				{
 					// get the species ID:
-					size_t species_ID;
+					size_t species_ID = 0;
 					size_t j = 0;
 					bool is_matched = false;
 					while(j<Species.size() && !is_matched) // just loop until the species is found
@@ -183,14 +203,17 @@ vector< SingleReactionData > Get_Reactions(
 						j = j + 1;
 					}
 
-					ThirdBodyParameters tmp_TB;
+					if(is_matched)
+					{
+						ThirdBodyParameters tmp_TB;
 
-					tmp_TB.SpeciesID = species_ID;
-					tmp_TB.value = strtod(tmp[steps+1].c_str(),NULL);
+						tmp_TB.SpeciesID = species_ID;
+						tmp_TB.value = strtod(tmp[steps+1].c_str(),NULL);
 
-					// belongs to the previous/last entry
-					size_t position = Reaction_Data.size() - 1;
-					Reaction_Data[position].ThBd_param.push_back(tmp_TB);
+						// belongs to the previous/last entry
+						size_t position = Reaction_Data.size() - 1;
+						Reaction_Data[position].ThBd_param.push_back(tmp_TB);
+					}
 				}
 
 			}
