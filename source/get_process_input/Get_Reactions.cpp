@@ -110,9 +110,17 @@ vector< SingleReactionData > Get_Reactions(
 	for(size_t i=0;i<Reactions_List.size();i++)
 	{
 
-		string line = Reactions_List[i];
+		// first, strip comments:
+		vector< string > RemoveComments;
+
+		RemoveComments = Tokenise_String_To_String(Reactions_List[i] , "!" );
+		string line = RemoveComments[0];
+		RemoveComments.clear();
+
 		// is the line a comment? - no, OK let us process it
-		if(line.compare(0,1,"!") != 0)
+		//if(line.compare(0,1,"!") != 0)
+		// only continue if the string is not empty or only whitespace or only tab
+		if(!line.empty() && line.find_first_not_of("\t ") != string::npos)
 		{
 			// if not, is is a duplicate?
 			if(Reaction_Data.size() > 0 && line.compare(0,1,"/") != 0 && line.compare(0,3,"DUP") == 0)
@@ -121,11 +129,6 @@ vector< SingleReactionData > Get_Reactions(
 				Reaction_Data[position].IsDuplicate=true;
 			}
 			// is it a third body configuration?
-			// this will not work for white spaces before the slash...
-			else if(Reaction_Data.size() > 0 && line.compare(0,1,"/") == 0)
-			{
-				// applies to the last reaction in the list
-			}
 			else if(Reaction_Data.size() > 0 && Test_If_Word_Found(line, "LOW") && line.find("=")==string::npos) // LOW term for third bodies line contains no equal
 			{
 				vector<double> tmp =  Tokenise_String_To_Double(line, "lowLOW \t/" );
@@ -137,16 +140,15 @@ vector< SingleReactionData > Get_Reactions(
 					Reaction_Data[position].lowThirdBody.paramN0 = tmp[1];
 					Reaction_Data[position].lowThirdBody.paramEa0 = tmp[2];
 				}
-
 			}
-			else if(Reaction_Data.size() > 0 && Test_If_Word_Found(line, "TROE")&& line.find("=")==string::npos) // TROE term for third bodies line contains no equal
+			else if(Reaction_Data.size() > 0 && Test_If_Word_Found(line, "TROE") && line.find("=")==string::npos) // TROE term for third bodies line contains no equal
 			{
 				vector<double> tmp  = Tokenise_String_To_Double(line, "troeTROE \t/");
 				size_t position = Reaction_Data.size() - 1;
 				//Reaction_Data[position].ThBd_TROE = tmp; // for now, store properly later
 
 				// values are: a, T3, T1, T2
-				if(tmp.size() == 3) // 3 parameter troe
+				if(tmp.size() == 3 || tmp.size() == 4) // at least 3 parameter troe
 				{
 					Reaction_Data[position].troeThirdBody.a = tmp[0];
 					Reaction_Data[position].troeThirdBody.T2 = tmp[1];
@@ -157,16 +159,46 @@ vector< SingleReactionData > Get_Reactions(
 					}
 				}
 			}
+			// we checked for low and troe, still a slash? Another third body config
+			else if(Reaction_Data.size() > 0 && Test_If_Word_Found(line,"/"))
+			{
+				// sepaerated by slashes, so...
+				vector<string> tmp = Tokenise_String_To_String(line, "/");
+				// we now have species/value pairs in a consecutive order
+
+				for(size_t steps = 0; steps < tmp.size(); steps+=2) // note, steps of 2 !!
+				{
+					// get the species ID:
+					size_t species_ID;
+					size_t j = 0;
+					bool is_matched = false;
+					while(j<Species.size() && !is_matched) // just loop until the species is found
+					{
+						string Comparator = Species[j];
+						// Find the appropriate species and its position
+						if(strcmp(Species[j].c_str(),Comparator.c_str()) == 0){
+							species_ID = j;
+							is_matched = true;
+						}
+						j = j + 1;
+					}
+
+					ThirdBodyParameters tmp_TB;
+
+					tmp_TB.SpeciesID = species_ID;
+					tmp_TB.value = strtod(tmp[steps+1].c_str(),NULL);
+
+					// belongs to the previous/last entry
+					size_t position = Reaction_Data.size() - 1;
+					Reaction_Data[position].ThBd_param.push_back(tmp_TB);
+				}
+
+			}
 			else // well, not a comment, not a duplicate, not a third body config -> so must be a reaction
 			{
 				// let us extract the reaction then:
-				SingleReactionData tmp;
-				if(Parse_Chemking_Reaction_String(tmp, SchemeUnits, Species, line)) // only pushback if successful
-				{
-					Reaction_Data.push_back(tmp);
-				}
-
-
+				SingleReactionData tmp = Parse_Chemking_Reaction_String(SchemeUnits, Species, line); // only pushback if successful
+				Reaction_Data.push_back(tmp);
 			}
 		}
 	}
@@ -177,7 +209,7 @@ vector< SingleReactionData > Get_Reactions(
 
 
 // could have a line that is empty after stripping comments, should not happen, but...
-bool Parse_Chemking_Reaction_String(SingleReactionData& result, const vector< int > SchemeUnits, const vector<string> SpeciesNames, string line)
+SingleReactionData Parse_Chemking_Reaction_String(const vector< int > SchemeUnits, const vector<string> SpeciesNames, string line)
 {
 	size_t Number_Species= SpeciesNames.size();
 
@@ -193,136 +225,123 @@ bool Parse_Chemking_Reaction_String(SingleReactionData& result, const vector< in
 
 	// Split by = or => sign
 	vector< string > SplitLineIn;
-	vector< string > RemoveComments;
 
-	RemoveComments = Tokenise_String_To_String(line , "!" );
-	line = RemoveComments[0];
-	RemoveComments.clear();
 
 	//cout << "0010" << line << "\n";
 
-	// only continue if the string is not empty or only whitespace or only tab
-	if(!line.empty() && line.find_first_not_of("\t ") != string::npos)
+
+
+	// Determine if the reaction is irreversible. We assume it is reversible and then correct.
+	// irreversible is indicated using => or ->
+	bool is_reversible = true;
+	if(Test_If_Word_Found(line,"=>") || Test_If_Word_Found(line,"->"))
 	{
-		// Determine if the reaction is irreversible. We assume it is reversible and then correct.
-		// irreversible is indicated using => or ->
-		bool is_reversible = true;
-		if(Test_If_Word_Found(line,"=>") || Test_If_Word_Found(line,"->"))
+		is_reversible = false;
+		// assume the user may write "<=>" or "<=>" which he shouldn't...
+		if(Test_If_Word_Found(line,"<=>") || Test_If_Word_Found(line,"<->"))
 		{
-			is_reversible = false;
-			// assume the user may write "<=>" or "<=>" which he shouldn't...
-			if(Test_If_Word_Found(line,"<=>") || Test_If_Word_Found(line,"<->"))
-			{
-				is_reversible = true;
-			}
+			is_reversible = true;
 		}
-
-		// we have been handling the entire reaction line, lets check for a third body indicator:
-		temp.collision_efficiency = false; // default
-		// check for Third Body Indicator:
-		temp.ThirdBodyType = 0; // no third body, default
-		if(Test_If_Word_Found(line, "+M") || Test_If_Word_Found(line, "+ M")) // first type, set parameter
-		{
-			temp.ThirdBodyType = 1;
-
-			// strip off the +M
-			line = Remove_Substring(line,"+M");
-			line = Remove_Substring(line,"+ M");
-		}
-		if(Test_If_Word_Found(line, "+(M)") || Test_If_Word_Found(line, "(+M)")) // apparently not the first, but the second type
-		{
-			temp.ThirdBodyType = 2;
-
-			// strip off the +M
-			line = Remove_Substring(line,"+ (M)");
-			line = Remove_Substring(line,"+(M)");
-			line = Remove_Substring(line,"(+M)");
-		}
-		// there is also special third body configs for water not yet treated...
-
-		////
-		//// Really should add the +M handling into the reaction processing...
-		////
-
-		SplitLineIn = Tokenise_String_To_String(line, "<=>");
-
-		vector< string > SplitLineLeft;
-		vector< string > SplitLineRight;
-
-		// SplitLineLeft Contains all inputs on the left hand side
-		SplitLineLeft = Tokenise_String_To_String(SplitLineIn[0],"\t +");
-		// SplitLineRight Contains all inputs on the right hand side -> last 3 are parameters
-		SplitLineRight = Tokenise_String_To_String(SplitLineIn[1],"\t +");
-
-
-		size_t SplitLineLeftSize, SplitLineRightSize;
-		SplitLineLeftSize = SplitLineLeft.size();
-		SplitLineRightSize = SplitLineRight.size() - 3; //(last 3 entries are Arrhenius Parameters
-
-		//cout << SplitLineLeftSize << " " << SplitLineRightSize << "\n";
-
-		for(size_t i = 0;i<SplitLineLeftSize;i++) // process all entries on left hand side
-		{
-			SpeciesWithCoefficient SpeciesAndCoefficient;
-			SpeciesAndCoefficient = Return_Species_With_Coefficient(SplitLineLeft[i], SpeciesNames);
-
-			if(SpeciesAndCoefficient.ismatched)
-			{
-				ReactantData[SpeciesAndCoefficient.SpeciesID] =
-						ReactantData[SpeciesAndCoefficient.SpeciesID] - SpeciesAndCoefficient.coefficient;
-			}
-		}
-
-
-
-		for(size_t i = 0;i<SplitLineRightSize;i++) // process all entries on right hand side
-		{
-
-			SpeciesWithCoefficient SpeciesAndCoefficient;
-			SpeciesAndCoefficient = Return_Species_With_Coefficient(SplitLineRight[i], SpeciesNames);
-
-			if(SpeciesAndCoefficient.ismatched)
-			{
-				ProductData[SpeciesAndCoefficient.SpeciesID] =
-						ProductData[SpeciesAndCoefficient.SpeciesID] + SpeciesAndCoefficient.coefficient;
-			}
-		}
-
-
-		// In a next step we need to handle the Arrhenius parameters
-		// Tokenize line, then take last 3 positions - easiest to work on the whole line without comments
-		vector< string > SplitLine;
-
-		double step;
-
-		SplitLine = Tokenise_String_To_String(line,"\t ");
-		size_t SplitLineSize = SplitLine.size();
-		step = (strtod(SplitLine[SplitLineSize - 3].c_str(),NULL)); // A as read in
-		ReactionData[0] = Scale_A(step, ReactantData, SchemeUnits[0]); // A in adjusted units for calc.
-
-		ReactionData[1]=(strtod(SplitLine[SplitLineSize - 2].c_str(),NULL)); // n as read in
-
-		step = (strtod(SplitLine[SplitLineSize - 1].c_str(),NULL)); // Ea as read in
-		ReactionData[2] = Scale_Ea(step,SchemeUnits[1]); // Ea in adjusted units for calc.
-
-
-
-		temp.Reactants = ReactantData;
-		temp.Products = ProductData;
-		temp.paramA = ReactionData[0];
-		temp.paramN = ReactionData[1];
-		temp.paramEa = ReactionData[2];
-		temp.Reversible = is_reversible;
-		temp.IsDuplicate = false; // default, not a duplicate
-
-
-
-		// there was data processing
-		result = temp;
-		return true;
 	}
 
-	return false;
+	// we have been handling the entire reaction line, lets check for a third body indicator:
+	temp.collision_efficiency = false; // default
+	// check for Third Body Indicator:
+	temp.ThirdBodyType = 0; // no third body, default
+	if(Test_If_Word_Found(line, "+M") || Test_If_Word_Found(line, "+ M")) // first type, set parameter
+	{
+		temp.ThirdBodyType = 1;
+
+		// strip off the +M
+		line = Remove_Substring(line,"+M");
+		line = Remove_Substring(line,"+ M");
+	}
+	if(Test_If_Word_Found(line, "+(M)") || Test_If_Word_Found(line, "(+M)")) // apparently not the first, but the second type
+	{
+		temp.ThirdBodyType = 2;
+
+		// strip off the +M
+		line = Remove_Substring(line,"+ (M)");
+		line = Remove_Substring(line,"+(M)");
+		line = Remove_Substring(line,"(+M)");
+	}
+	// there is also special third body configs for water not yet treated...
+
+	////
+	//// Really should add the +M handling into the reaction processing...
+	////
+
+	SplitLineIn = Tokenise_String_To_String(line, "<=>");
+
+	vector< string > SplitLineLeft;
+	vector< string > SplitLineRight;
+
+	// SplitLineLeft Contains all inputs on the left hand side
+	SplitLineLeft = Tokenise_String_To_String(SplitLineIn[0],"\t +");
+	// SplitLineRight Contains all inputs on the right hand side -> last 3 are parameters
+	SplitLineRight = Tokenise_String_To_String(SplitLineIn[1],"\t +");
+
+
+	size_t SplitLineLeftSize, SplitLineRightSize;
+	SplitLineLeftSize = SplitLineLeft.size();
+	SplitLineRightSize = SplitLineRight.size() - 3; //(last 3 entries are Arrhenius Parameters
+
+	//cout << SplitLineLeftSize << " " << SplitLineRightSize << "\n";
+
+	for(size_t i = 0;i<SplitLineLeftSize;i++) // process all entries on left hand side
+	{
+		SpeciesWithCoefficient SpeciesAndCoefficient;
+		SpeciesAndCoefficient = Return_Species_With_Coefficient(SplitLineLeft[i], SpeciesNames);
+
+		if(SpeciesAndCoefficient.ismatched)
+		{
+			ReactantData[SpeciesAndCoefficient.SpeciesID] =
+					ReactantData[SpeciesAndCoefficient.SpeciesID] - SpeciesAndCoefficient.coefficient;
+		}
+	}
+
+
+
+	for(size_t i = 0;i<SplitLineRightSize;i++) // process all entries on right hand side
+	{
+
+		SpeciesWithCoefficient SpeciesAndCoefficient;
+		SpeciesAndCoefficient = Return_Species_With_Coefficient(SplitLineRight[i], SpeciesNames);
+
+		if(SpeciesAndCoefficient.ismatched)
+		{
+			ProductData[SpeciesAndCoefficient.SpeciesID] =
+					ProductData[SpeciesAndCoefficient.SpeciesID] + SpeciesAndCoefficient.coefficient;
+		}
+	}
+
+
+	// In a next step we need to handle the Arrhenius parameters
+	// Tokenize line, then take last 3 positions - easiest to work on the whole line without comments
+	vector< string > SplitLine;
+
+	double step;
+
+	SplitLine = Tokenise_String_To_String(line,"\t ");
+	size_t SplitLineSize = SplitLine.size();
+	step = (strtod(SplitLine[SplitLineSize - 3].c_str(),NULL)); // A as read in
+	ReactionData[0] = Scale_A(step, ReactantData, SchemeUnits[0]); // A in adjusted units for calc.
+
+	ReactionData[1]=(strtod(SplitLine[SplitLineSize - 2].c_str(),NULL)); // n as read in
+
+	step = (strtod(SplitLine[SplitLineSize - 1].c_str(),NULL)); // Ea as read in
+	ReactionData[2] = Scale_Ea(step,SchemeUnits[1]); // Ea in adjusted units for calc.
+
+
+	temp.Reactants = ReactantData;
+	temp.Products = ProductData;
+	temp.paramA = ReactionData[0];
+	temp.paramN = ReactionData[1];
+	temp.paramEa = ReactionData[2];
+	temp.Reversible = is_reversible;
+	temp.IsDuplicate = false; // default, not a duplicate
+
+	return temp;
 }
 
 
