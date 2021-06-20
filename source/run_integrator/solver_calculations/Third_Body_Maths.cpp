@@ -15,7 +15,14 @@
 // a0, n0, e0 are specific parameters for third body reactions
 // inv_T1 and inv_T3 are specific third body parameters
 
-double Calculate_no_LOW_Troe(double a1, double n1, double e1, double T, double third_body)
+////
+//// NOTE: should replace ReactionData with something more compact, will do for now...
+////
+
+double Calculate_no_LOW_Troe(
+		const SingleReactionData& ReactionData,
+		const vector<double>& Concentration,
+		double a1, double n1, double e1, double T, double third_body)
 {
 	double inv_T = 1.0/T;
 	double k; // this is the normal forward K
@@ -25,19 +32,26 @@ double Calculate_no_LOW_Troe(double a1, double n1, double e1, double T, double t
 	// not applicable to a special type with water
 
 	/* no LOW or TROE terms */
-	if (!collision_efficiency_flag) { /* no collision efficiency corrections */
+	if (ReactionData.collision_efficiency) { /* no collision efficiency corrections */
 		k = third_body*a1*exp(-e1*inv_T);
 		if (n1 != 0.0)
 			k *= pow(T, n1);
 	}
 	else { /* collision efficiency corrections required */
 		mod_third_body = third_body;
+
+		// seems like a case of vector<value, speciesID for concentration> to calculate the correction
+		for(size_t i = 0;i<ReactionData.ThBd_param.size();i++)
+		{
+			mod_third_body = mod_third_body + ReactionData.ThBd_param[i].value * Concentration[ReactionData.ThBd_param[i].SpeciesID];
+		}
+		/*
 		correction = coll_eff;
 		while (correction)
 		{
 			mod_third_body += (correction->value)*y[correction->index];
 			correction = correction->next;
-		}
+		}//*/
 		k = mod_third_body*a1*exp(-e1*inv_T);
 		if (n1 != 0.0)
 			k *= pow(T, n1);
@@ -46,13 +60,18 @@ double Calculate_no_LOW_Troe(double a1, double n1, double e1, double T, double t
 	return k;
 }
 
-double Calculate_Lindeman_Hinshelwood_Low(double a1, double n1, double e1, double T,double a0, double n0, double e0, double third_body, size_t sri_flag)
+double Calculate_Lindeman_Hinshelwood_Low(
+		const SingleReactionData& ReactionData,
+		const vector<double>& Concentration,
+		double a1, double n1, double e1, double T,double a0, double n0, double e0, double third_body)
 {
 	double inv_T = 1.0/T;
 	double kinf;
 	double kzero;
 	double F;
 	double k; // the result, Kf
+
+	SRIThirdBody sri = ReactionData.SRITHirdBody;
 
 	double mod_third_body;
 
@@ -72,25 +91,32 @@ double Calculate_Lindeman_Hinshelwood_Low(double a1, double n1, double e1, doubl
 
 	// needs the special treatment for the species concentration as an option for mod_third_body
 	mod_third_body = third_body;
-	if (collision_efficiency_flag)  { /* collision efficiency corrections */
+	if (ReactionData.collision_efficiency)  { /* collision efficiency corrections */
 		mod_third_body = third_body;
+
+		// seems like a case of vector<value, speciesID for concentration> to calculate the correction
+		for(size_t i = 0;i<ReactionData.ThBd_param.size();i++)
+		{
+			mod_third_body = mod_third_body + ReactionData.ThBd_param[i].value * Concentration[ReactionData.ThBd_param[i].SpeciesID];
+		}
+		/*
 		correction = coll_eff;
 		while (correction)
 		{
 			mod_third_body += (correction->value)*y[correction->index];
 			correction = correction->next;
-		}
+		}//*/
 	}
-	switch (sri_flag) {
+	switch (ReactionData.sri_flag) {
 	case 0: /* its Lindeman-Hinshelwood */
 		k=kzero*kinf*mod_third_body/(kzero*mod_third_body+kinf);
 		break;
 	case 1: /* its simple SRI */
-		F = T*pow((sri_a*exp(-sri_b/T)+exp(-T/sri_c)), ((1/(1+pow((log10(kzero*mod_third_body/kinf)), 2)))));
+		F = T*pow((sri.a*exp(-sri.b/T)+exp(-T/sri.c)), ((1.0/(1.0+pow((log10(kzero*mod_third_body/kinf)), 2)))));
 		k = kzero*kinf*mod_third_body*F/(kzero*mod_third_body+kinf);
 		break;
 	case 2: /* It's complex SRI */
-		F = sri_d*pow(T, sri_e)*pow((sri_a*exp(-sri_b/T)+exp(-T/sri_c)), ((1/(1+pow((log10(kzero*mod_third_body/kinf)), 2)))));
+		F = sri.d*pow(T, sri.e)*pow((sri.a*exp(-sri.b/T)+exp(-T/sri.c)), ((1.0/(1.0+pow((log10(kzero*mod_third_body/kinf)), 2)))));
 		k = kzero*kinf*mod_third_body*F/(kzero*mod_third_body+kinf);
 		break;
 	}
@@ -99,6 +125,8 @@ double Calculate_Lindeman_Hinshelwood_Low(double a1, double n1, double e1, doubl
 }
 
 double Calculate_Lindeman_Hinshelwood_Low_Troe(
+		const SingleReactionData& ReactionData,
+		const vector<double>& Concentration,
 		double T, // current temperature
 		double a1, double n1, double e1, //
 		double a0, double n0, double e0, // third body parameters
@@ -118,6 +146,7 @@ double Calculate_Lindeman_Hinshelwood_Low_Troe(
 
 	double mod_third_body;
 
+
 	/* LOW & Troe */
 	kinf = a1*exp(-e1*inv_T);
 	if (n1 != 0.0)
@@ -129,22 +158,29 @@ double Calculate_Lindeman_Hinshelwood_Low_Troe(
 	// needs selector switch
 	{
 		// 3 parameter TROE
-		Fc = (1-a)*exp(-T*inv_T3)+a*exp(-T*inv_T1);
+		Fc = (1-ReactionData.ThirdBody_a)*exp(-T*inv_T3)+ReactionData.ThirdBody_a*exp(-T*inv_T1);
 		// 4 parameter TROE
-		Fc = (1-a)*exp((-T*inv_T3))+a*exp((-T*inv_T1))+exp((-T2*inv_T));
+		Fc = (1-ReactionData.ThirdBody_a)*exp((-T*inv_T3))+ReactionData.ThirdBody_a*exp((-T*inv_T1))+exp((-T2*inv_T));
 	}
 
 	// needs the special treatment for the species concentration as an option for mod_third_body
 	mod_third_body = third_body;
 
-	if (collision_efficiency_flag) { /* collision efficiency corrections */
+	if (ReactionData.collision_efficiency) { /* collision efficiency corrections */
 		mod_third_body = third_body;
+
+		// seems like a case of vector<value, speciesID for concentration> to calculate the correction
+		for(size_t i = 0;i<ReactionData.ThBd_param.size();i++)
+		{
+			mod_third_body = mod_third_body + ReactionData.ThBd_param[i].value * Concentration[ReactionData.ThBd_param[i].SpeciesID];
+		}
+		/*
 		correction = coll_eff;
 		while (correction)
 		{
 			mod_third_body += (correction->value)*y[correction->index];
 			correction = correction->next;
-		}
+		}//*/
 	}
 	kappa = log10(kzero*mod_third_body/kinf) - 0.4 -0.67*log10(Fc);
 	F = pow(10, (log10(Fc)/(1+pow((kappa/(0.75-1.27*log10(Fc)-0.14*kappa)), 2))));

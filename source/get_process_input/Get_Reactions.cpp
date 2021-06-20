@@ -221,14 +221,15 @@ vector< SingleReactionData > Get_Reactions(
 
 				// Make New Input
 				SingleReactionData temp;
+				temp.collision_efficiency = false; // default
 				vector<ThirdBodyParameters> ThBd_param;
 				// check for Third Body Indicator:
 				temp.ThirdBodyType = 0; // no third body, default
-				if(Test_If_Word_Found(line, "+M")) // first type, set parameter
+				if(Test_If_Word_Found(line, "+M") || Test_If_Word_Found(line, "+ M")) // first type, set parameter
 				{
 					temp.ThirdBodyType = 1;
 				}
-				if(Test_If_Word_Found(line, "+(M)")) // apparently not the first, but the second type
+				if(Test_If_Word_Found(line, "+(M)") || Test_If_Word_Found(line, "(+M)")) // apparently not the first, but the second type
 				{
 					temp.ThirdBodyType = 2;
 				}

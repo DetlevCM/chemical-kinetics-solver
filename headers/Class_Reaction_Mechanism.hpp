@@ -32,6 +32,16 @@ public:
 	double NasaHigh7;
 };
 
+
+class SRIThirdBody {
+public:
+	double a;
+	double b;
+	double c;
+	double d = 1; // default
+	double e = 0; // default
+};
+
 class SingleReactionData {
 public:
 	bool Reversible;
@@ -42,7 +52,11 @@ public:
 	int ThirdBodyType; // 1: +M  2: (+M)
 	vector<double> ThBd_LOW;
 	vector<double> ThBd_TROE;
+	double ThirdBody_a; // just to make the compielr happy for now...
 	vector<ThirdBodyParameters> ThBd_param;
+	size_t sri_flag;
+	SRIThirdBody SRITHirdBody;
+	bool collision_efficiency; // for third body reactions
 	vector<double> Reactants;
 	vector<double> Products;
 };

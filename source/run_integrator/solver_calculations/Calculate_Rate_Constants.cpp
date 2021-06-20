@@ -127,6 +127,7 @@ void Calculate_Rate_Constant(
 		// all previous logic in the code applies if there is no third body
 		bool ThirdBody = false;
 
+		/*
 		if(ThirdBody)
 		{
 			Calculate_no_LOW_Troe();
@@ -135,6 +136,7 @@ void Calculate_Rate_Constant(
 
 			Calculate_Lindeman_Hinshelwood_Low_Troe();
 		}
+		//*/
 	}
 
 
