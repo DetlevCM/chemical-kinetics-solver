@@ -172,6 +172,7 @@ vector< SingleReactionData > Get_Reactions(
 				// position 1 is troe
 				if(tmp.size() == 4 || tmp.size() == 5) // at least 3 parameter troe
 				{
+					Reaction_Data[position].troeThirdBody.has_troe = true;
 					Reaction_Data[position].troeThirdBody.a = tmp[1];
 					Reaction_Data[position].troeThirdBody.T2 = tmp[2];
 					Reaction_Data[position].troeThirdBody.T1 = tmp[3];

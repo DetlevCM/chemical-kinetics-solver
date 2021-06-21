@@ -112,8 +112,17 @@ void Calculate_Rate_Constant(
 					third_body_sum
 			);
 		}
-		else if(ReactionParameters[i].ThirdBodyType == 2)
+		else if(ReactionParameters[i].ThirdBodyType == 2 && ReactionParameters[i].troeThirdBody.has_troe == false)
 		{
+			Kf[i] = Calculate_Lindeman_Hinshelwood_SRI(
+					ReactionParameters[i],
+										Concentrations,
+										Temperature,
+										third_body_sum
+								);
+		}
+		else if(ReactionParameters[i].ThirdBodyType == 2 && ReactionParameters[i].troeThirdBody.has_troe)
+				{
 			Kf[i] = Calculate_Lindeman_Hinshelwood_Low_Troe(
 					ReactionParameters[i],
 					Concentrations,

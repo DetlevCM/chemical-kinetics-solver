@@ -50,6 +50,7 @@ public:
 	double T2; // only in 4 parameter troe
 	double T3;
 	bool is_4_param = false; // default
+	bool has_troe = false;
 };
 
 class LowThirdBody{
