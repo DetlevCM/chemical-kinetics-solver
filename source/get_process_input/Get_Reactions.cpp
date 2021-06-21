@@ -151,32 +151,54 @@ vector< SingleReactionData > Get_Reactions(
 			// is it a third body configuration?
 			else if(Reaction_Data.size() > 0 && Test_If_Word_Found(line, "LOW") && line.find("=")==string::npos) // LOW term for third bodies line contains no equal
 			{
-				vector<double> tmp =  Tokenise_String_To_Double(line, "lowLOW \t/" );
+				vector<double> tmp =  Tokenise_String_To_Double(line, " \t/" ); // retain low
 				size_t position = Reaction_Data.size() - 1;
 				//Reaction_Data[position].ThBd_LOW = tmp; // for now, store properly later
-				if(tmp.size() == 3)
+				// position 1 is "low"
+				if(tmp.size() == 4)
 				{
-					Reaction_Data[position].lowThirdBody.paramA0 = tmp[0];
-					Reaction_Data[position].lowThirdBody.paramN0 = tmp[1];
-					Reaction_Data[position].lowThirdBody.paramEa0 = tmp[2];
+					Reaction_Data[position].lowThirdBody.paramA0 = tmp[1];
+					Reaction_Data[position].lowThirdBody.paramN0 = tmp[2];
+					Reaction_Data[position].lowThirdBody.paramEa0 = tmp[3];
 				}
 			}
 			else if(Reaction_Data.size() > 0 && Test_If_Word_Found(line, "TROE") && line.find("=")==string::npos) // TROE term for third bodies line contains no equal
 			{
-				vector<double> tmp  = Tokenise_String_To_Double(line, "troeTROE \t/");
+				vector<double> tmp  = Tokenise_String_To_Double(line, " \t/");
 				size_t position = Reaction_Data.size() - 1;
 				//Reaction_Data[position].ThBd_TROE = tmp; // for now, store properly later
 
 				// values are: a, T3, T1, T2
-				if(tmp.size() == 3 || tmp.size() == 4) // at least 3 parameter troe
+				// position 1 is troe
+				if(tmp.size() == 4 || tmp.size() == 5) // at least 3 parameter troe
 				{
-					Reaction_Data[position].troeThirdBody.a = tmp[0];
-					Reaction_Data[position].troeThirdBody.T2 = tmp[1];
-					Reaction_Data[position].troeThirdBody.T1 = tmp[2];
+					Reaction_Data[position].troeThirdBody.a = tmp[1];
+					Reaction_Data[position].troeThirdBody.T2 = tmp[2];
+					Reaction_Data[position].troeThirdBody.T1 = tmp[3];
 					if(tmp.size() == 4) // 4 parameter troe
 					{
-						Reaction_Data[position].troeThirdBody.T2 = tmp[3];
+						Reaction_Data[position].troeThirdBody.T2 = tmp[4];
 						Reaction_Data[position].troeThirdBody.is_4_param = true;
+					}
+				}
+			}
+			else if(Reaction_Data.size() > 0 && Test_If_Word_Found(line, "SRI") && line.find("=")==string::npos) // SRI term line contains no equal
+			{
+				vector<double> tmp  = Tokenise_String_To_Double(line, " \t/");
+				size_t position = Reaction_Data.size() - 1;
+				//Reaction_Data[position].ThBd_TROE = tmp; // for now, store properly later
+
+				// values are: a, T3, T1, T2
+				if(tmp.size() == 4 || tmp.size() == 6) // at least 3 parameter troe
+				{
+					Reaction_Data[position].sriThirdBody.a = tmp[1];
+					Reaction_Data[position].sriThirdBody.b = tmp[2];
+					Reaction_Data[position].sriThirdBody.c = tmp[3];
+					if(tmp.size() == 4) // 4 parameter troe
+					{
+						Reaction_Data[position].sriThirdBody.d = tmp[4];
+						Reaction_Data[position].sriThirdBody.e = tmp[5];
+						Reaction_Data[position].sriThirdBody.is_5_param = true;;
 					}
 				}
 			}

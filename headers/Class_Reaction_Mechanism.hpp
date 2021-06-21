@@ -40,6 +40,7 @@ public:
 	double c;
 	double d = 1; // default
 	double e = 0; // default
+	bool is_5_param = false;
 };
 
 class TroeThirdBody{
