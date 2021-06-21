@@ -176,6 +176,7 @@ vector< SingleReactionData > Get_Reactions(
 					if(tmp.size() == 4) // 4 parameter troe
 					{
 						Reaction_Data[position].troeThirdBody.T2 = tmp[3];
+						Reaction_Data[position].troeThirdBody.is_4_param = true;
 					}
 				}
 			}

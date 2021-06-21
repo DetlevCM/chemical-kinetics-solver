@@ -48,6 +48,7 @@ public:
 	double T1;
 	double T2; // only in 4 parameter troe
 	double T3;
+	bool is_4_param = false; // default
 };
 
 class LowThirdBody{
