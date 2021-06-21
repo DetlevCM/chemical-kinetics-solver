@@ -18,6 +18,17 @@ vector< ReactionParameter > Process_Reaction_Parameters(
 		temp_one_reaction.paramEa = Reactions[i].paramEa; // Ea
 		temp_one_reaction.Reversible = Reactions[i].Reversible;
 
+
+		// add in third body support...
+		temp_one_reaction.ThirdBodyType = Reactions[i].ThirdBodyType;
+		temp_one_reaction.ThBd_param = Reactions[i].ThBd_param;
+		temp_one_reaction.sri_flag = Reactions[i].sri_flag;
+		temp_one_reaction.collision_efficiency = Reactions[i].collision_efficiency;
+
+		temp_one_reaction.sriThirdBody = Reactions[i].sriThirdBody;
+		temp_one_reaction.lowThirdBody = Reactions[i].lowThirdBody;
+		temp_one_reaction.troeThirdBody = Reactions[i].troeThirdBody;
+
 		temp_output.push_back(temp_one_reaction);
 	}
 

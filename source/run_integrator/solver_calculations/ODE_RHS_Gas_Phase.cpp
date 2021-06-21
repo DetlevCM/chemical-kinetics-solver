@@ -49,7 +49,7 @@ cout << n << "\n";
 	{
 		// Thermodynamic data, Rate Constant, Rates, new Concentrations
 		Evaluate_Thermodynamic_Parameters(CalculatedThermo, Thermodynamics, Concentration[Number_Species]);
-		Calculate_Rate_Constant(Kf, Kr, Concentration[Number_Species],ReactionParameters, CalculatedThermo, SpeciesLossAll, Delta_N);
+		Calculate_Rate_Constant(Kf, Kr, Concentration[Number_Species],Concentration,ReactionParameters, CalculatedThermo, SpeciesLossAll, Delta_N);
 	}
 	CalculateReactionRates(Rates, Concentration, Kf, Kr, ReactantsForReactions, ProductsForReactions);
 	SpeciesConcentrationChange = SpeciesLossRate(Number_Species, Rates, SpeciesLossAll);

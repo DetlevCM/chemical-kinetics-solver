@@ -12,6 +12,7 @@ void Calculate_Rate_Constant(
 		vector< double >& Kf,
 		vector< double >& Kr,
 		const double Temperature,
+		const vector<double>& Concentrations,
 		const vector< ReactionParameter >& ReactionParameters,
 		const vector< CalculatedThermodynamics >& CalculatedThermo,
 		const vector< TrackSpecies >& SpeciesAll,
@@ -47,6 +48,7 @@ void Calculate_Rate_Constant(
 	// Worked out per reaction
 	// as we have the value of the calculated thermodynamics, we just need to put them together
 	// per reaction, going through every species
+	double third_body_sum = 0.0;
 
 	for(i = 0;i< SpeciesAll.size();i++){ // loop over every reaction
 		delta_H[SpeciesAll[i].ReactionID] =
@@ -56,6 +58,7 @@ void Calculate_Rate_Constant(
 		delta_S[SpeciesAll[i].ReactionID] =
 				delta_S[SpeciesAll[i].ReactionID] +
 				(CalculatedThermo[SpeciesAll[i].SpeciesID].S * SpeciesAll[i].coefficient);
+		third_body_sum = third_body_sum + Concentrations[i];
 	}
 
 
@@ -90,6 +93,39 @@ void Calculate_Rate_Constant(
 				ReactionParameters[i].paramEa << " , " <<
 				Kf[i] << "\n";//*/
 
+
+
+		// all previous logic in the code applies if there is no third body
+		//bool ThirdBody = false;
+
+		//*
+
+		// Note: third_body_sum is in mol/L at this point
+
+		//Calculate_Lindeman_Hinshelwood_SRI_Low();
+		if(ReactionParameters[i].ThirdBodyType == 1)
+		{
+			Kf[i] = Calculate_no_LOW_Troe(
+					ReactionParameters[i],
+					Concentrations,
+					Temperature,
+					third_body_sum
+			);
+		}
+		else if(ReactionParameters[i].ThirdBodyType == 2)
+		{
+			Kf[i] = Calculate_Lindeman_Hinshelwood_Low_Troe(
+					ReactionParameters[i],
+					Concentrations,
+					Temperature,
+					third_body_sum
+			);
+		}
+		//*/
+
+
+
+
 		// default, change if reversible - seems a little bit faster...
 		Kr[i] = 0;
 		// then calculate and set the reverse if required
@@ -112,31 +148,17 @@ void Calculate_Rate_Constant(
 
 			// IEEE standards hack to avoid Nan Rate, shouldn't exist in the first place...
 			/*if(Kr[i] != Kr[i])
-			{
-				Kr[i] = 0;
-			}//*/
+					{
+						Kr[i] = 0;
+					}//*/
 		}
 		// if it is set to zero at the start and not touched for irreversible reactions thus this is redundant
 		// Fewer memory allocations should speed things up - or not?
 		/*
-		else
-		{
-			Kr[i] = 0;
-		}//*/
-
-		// all previous logic in the code applies if there is no third body
-		//bool ThirdBody = false;
-
-		/*
-		if(ThirdBody)
-		{
-			Calculate_no_LOW_Troe();
-
-			Calculate_Lindeman_Hinshelwood_SRI_Low();
-
-			Calculate_Lindeman_Hinshelwood_Low_Troe();
-		}
-		//*/
+				else
+				{
+					Kr[i] = 0;
+				}//*/
 	}
 
 
