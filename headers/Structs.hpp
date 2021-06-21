@@ -43,18 +43,6 @@ struct JacobianData {
 };
 
 
-
-
-
-
-struct ReactionParameter {
-	bool Reversible;
-	double paramA;
-	double paramN;
-	double paramEa;
-};
-
-
 struct TrackSpecies {
 	size_t SpeciesID;
 	size_t ReactionID;

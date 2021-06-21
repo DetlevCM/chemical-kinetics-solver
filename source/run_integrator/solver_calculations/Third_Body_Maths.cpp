@@ -20,7 +20,8 @@
 ////
 
 double Calculate_no_LOW_Troe(
-		const SingleReactionData& ReactionData,
+		//const SingleReactionData& ReactionData,
+		const ReactionParameter& ReactionData,
 		const vector<double>& Concentration,
 		double T, double third_body)
 {
@@ -36,13 +37,14 @@ double Calculate_no_LOW_Troe(
 
 	// not applicable to a special type with water
 
-	/* no LOW or TROE terms */
-	if (ReactionData.collision_efficiency) { /* no collision efficiency corrections */
 		k = third_body*a1*exp(-e1*inv_T);
 		if (n1 != 0.0)
 			k *= pow(T, n1);
-	}
-	else { /* collision efficiency corrections required */
+
+		// basically, just a case of collision efficiency
+
+	//else { /* collision efficiency corrections required */
+	if(ReactionData.ThBd_param.size() > 0){
 		mod_third_body = third_body;
 
 		// seems like a case of vector<value, speciesID for concentration> to calculate the correction
@@ -65,8 +67,8 @@ double Calculate_no_LOW_Troe(
 	return k;
 }
 
-double Calculate_Lindeman_Hinshelwood_Low(
-		const SingleReactionData& ReactionData,
+double Calculate_Lindeman_Hinshelwood_SRI(
+		const ReactionParameter& ReactionData,
 		const vector<double>& Concentration,
 		double T, double third_body)
 {
@@ -106,7 +108,8 @@ double Calculate_Lindeman_Hinshelwood_Low(
 
 	// needs the special treatment for the species concentration as an option for mod_third_body
 	mod_third_body = third_body;
-	if (ReactionData.collision_efficiency)  { /* collision efficiency corrections */
+	//if (ReactionData.collision_efficiency)  { /* collision efficiency corrections */
+	if(ReactionData.ThBd_param.size() > 0){
 		mod_third_body = third_body;
 
 		// seems like a case of vector<value, speciesID for concentration> to calculate the correction
@@ -140,7 +143,7 @@ double Calculate_Lindeman_Hinshelwood_Low(
 }
 
 double Calculate_Lindeman_Hinshelwood_Low_Troe(
-		const SingleReactionData& ReactionData,
+		const ReactionParameter& ReactionData,
 		const vector<double>& Concentration,
 		double T, // current temperature
 		double third_body // sum of third bodies, but which units, original molecules per cm3
@@ -177,10 +180,14 @@ double Calculate_Lindeman_Hinshelwood_Low_Troe(
 	if (n0 != 0.0)
 		kzero *= pow(T, n0);
 
-	// needs selector switch
+	// the more common form could be first to have a quicker code...
+	if(ReactionData.troeThirdBody.is_4_param == false)
 	{
 		// 3 parameter TROE takes a, T3, T1
 		Fc = (1-troe.a)*exp(-T*inv_T3)+troe.a*exp(-T*inv_T1);
+	}
+	else // (ReactionData.troeThirdBody.is_4_param == true)
+	{
 		// 4 parameter TROE takes a, T3, T1, T2
 		Fc = (1-troe.a)*exp((-T*inv_T3))+troe.a*exp((-T*inv_T1))+exp((-troe.T2*inv_T));
 	}
@@ -188,7 +195,8 @@ double Calculate_Lindeman_Hinshelwood_Low_Troe(
 	// needs the special treatment for the species concentration as an option for mod_third_body
 	mod_third_body = third_body;
 
-	if (ReactionData.collision_efficiency) { /* collision efficiency corrections */
+	//if (ReactionData.collision_efficiency) { /* collision efficiency corrections */
+	if(ReactionData.ThBd_param.size() > 0){
 		mod_third_body = third_body;
 
 		// seems like a case of vector<value, speciesID for concentration> to calculate the correction
@@ -204,6 +212,9 @@ double Calculate_Lindeman_Hinshelwood_Low_Troe(
 			correction = correction->next;
 		}//*/
 	}
+
+	//double mod_third_body_molecules_cm3 = mod_third_body/1000.0*6.0221e23;
+
 	kappa = log10(kzero*mod_third_body/kinf) - 0.4 -0.67*log10(Fc);
 	F = pow(10, (log10(Fc)/(1+pow((kappa/(0.75-1.27*log10(Fc)-0.14*kappa)), 2))));
 	k = kzero*kinf*mod_third_body*F/(kzero*mod_third_body+kinf);

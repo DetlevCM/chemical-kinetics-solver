@@ -294,14 +294,8 @@ SingleReactionData Parse_Chemking_Reaction_String(const vector< int > SchemeUnit
 	temp.collision_efficiency = false; // default
 	// check for Third Body Indicator:
 	temp.ThirdBodyType = 0; // no third body, default
-	if(Test_If_Word_Found(line, "+M") || Test_If_Word_Found(line, "+ M")) // first type, set parameter
-	{
-		temp.ThirdBodyType = 1;
 
-		// strip off the +M
-		line = Remove_Substring(line,"+M");
-		line = Remove_Substring(line,"+ M");
-	}
+	// need to check for the brackets first, as otherwise (+M) is missed, also options are exclusive
 	if(Test_If_Word_Found(line, "+(M)") || Test_If_Word_Found(line, "(+M)")) // apparently not the first, but the second type
 	{
 		temp.ThirdBodyType = 2;
@@ -311,6 +305,15 @@ SingleReactionData Parse_Chemking_Reaction_String(const vector< int > SchemeUnit
 		line = Remove_Substring(line,"+(M)");
 		line = Remove_Substring(line,"(+M)");
 	}
+	else if(Test_If_Word_Found(line, "+M") || Test_If_Word_Found(line, "+ M")) // first type, set parameter
+	{
+		temp.ThirdBodyType = 1;
+
+		// strip off the +M
+		line = Remove_Substring(line,"+M");
+		line = Remove_Substring(line,"+ M");
+	}
+
 	// there is also special third body configs for water not yet treated...
 
 	////

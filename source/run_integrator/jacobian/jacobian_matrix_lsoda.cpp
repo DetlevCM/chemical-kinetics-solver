@@ -48,7 +48,7 @@ void Jacobian_Matrix_Odepack_LSODA(int*n,double*t,double*y,double*ML,double*MU,d
 	vector< double > JacobeanColumnWise((Number_Species+1)*(Number_Species+1));
 
 	Evaluate_Thermodynamic_Parameters(CalculatedThermo, Thermodynamics, Concentration[Number_Species]);
-	Calculate_Rate_Constant(Kf, Kr, Concentration[Number_Species],ReactionParameters, CalculatedThermo, SpeciesLossAll, Delta_N);
+	Calculate_Rate_Constant(Kf, Kr, Concentration[Number_Species],Concentration,ReactionParameters, CalculatedThermo, SpeciesLossAll, Delta_N);
 
 	for(i=0;i< JacobianMatrix.size();i++)
 	{

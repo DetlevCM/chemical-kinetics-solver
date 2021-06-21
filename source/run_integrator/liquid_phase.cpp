@@ -172,7 +172,7 @@ void Integrate_Liquid_Phase(
 
 
 	// Get the rate Constants, forward and backwards
-	Calculate_Rate_Constant(Jacobian_ODE_RHS::Kf, Jacobian_ODE_RHS::Kr, SpeciesConcentration[Jacobian_ODE_RHS::Number_Species],Jacobian_ODE_RHS::ReactionParameters, Jacobian_ODE_RHS::CalculatedThermo, Jacobian_ODE_RHS::SpeciesLossAll, Jacobian_ODE_RHS::Delta_N);
+	Calculate_Rate_Constant(Jacobian_ODE_RHS::Kf, Jacobian_ODE_RHS::Kr, SpeciesConcentration[Jacobian_ODE_RHS::Number_Species],SpeciesConcentration,Jacobian_ODE_RHS::ReactionParameters, Jacobian_ODE_RHS::CalculatedThermo, Jacobian_ODE_RHS::SpeciesLossAll, Jacobian_ODE_RHS::Delta_N);
 	CalculateReactionRates(ODE_RHS::Rates, SpeciesConcentration, Jacobian_ODE_RHS::Kf, Jacobian_ODE_RHS::Kr, ODE_RHS::ReactantsForReactions, ODE_RHS::ProductsForReactions);
 
 	// Don't forget Rates Analysis for Mechanism Recution at t=0 - or is this nonsense?
