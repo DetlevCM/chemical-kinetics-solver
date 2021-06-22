@@ -52,13 +52,7 @@ double Calculate_no_LOW_Troe(
 		{
 			mod_third_body = mod_third_body + ReactionData.ThBd_param[i].value * Concentration[ReactionData.ThBd_param[i].SpeciesID];
 		}
-		/*
-		correction = coll_eff;
-		while (correction)
-		{
-			mod_third_body += (correction->value)*y[correction->index];
-			correction = correction->next;
-		}//*/
+
 		k = mod_third_body*a1*exp(-e1*inv_T);
 		if (n1 != 0.0)
 			k *= pow(T, n1);
@@ -116,13 +110,6 @@ double Calculate_Lindeman_Hinshelwood_SRI(
 		{
 			mod_third_body = mod_third_body + ReactionData.ThBd_param[i].value * Concentration[ReactionData.ThBd_param[i].SpeciesID];
 		}
-		/*
-		correction = coll_eff;
-		while (correction)
-		{
-			mod_third_body += (correction->value)*y[correction->index];
-			correction = correction->next;
-		}//*/
 	}
 
 	//double mod_third_body_molecules_cm3 = mod_third_body/1000.0*6.0221e23;
@@ -211,13 +198,6 @@ double Calculate_Lindeman_Hinshelwood_Low_Troe(
 		{
 			mod_third_body = mod_third_body + ReactionData.ThBd_param[i].value * Concentration[ReactionData.ThBd_param[i].SpeciesID];
 		}
-		/*
-		correction = coll_eff;
-		while (correction)
-		{
-			mod_third_body += (correction->value)*y[correction->index];
-			correction = correction->next;
-		}//*/
 	}
 
 	//double mod_third_body_molecules_cm3 = mod_third_body/1000.0*6.0221e23;
