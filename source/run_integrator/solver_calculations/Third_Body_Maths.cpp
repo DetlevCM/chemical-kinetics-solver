@@ -37,11 +37,11 @@ double Calculate_no_LOW_Troe(
 
 	// not applicable to a special type with water
 
-		k = third_body*a1*exp(-e1*inv_T);
-		if (n1 != 0.0)
-			k *= pow(T, n1);
+	k = third_body*a1*exp(-e1*inv_T);
+	if (n1 != 0.0)
+		k *= pow(T, n1);
 
-		// basically, just a case of collision efficiency
+	// basically, just a case of collision efficiency
 
 	//else { /* collision efficiency corrections required */
 	if(ReactionData.ThBd_param.size() > 0){
@@ -75,7 +75,6 @@ double Calculate_Lindeman_Hinshelwood_SRI(
 	double inv_T = 1.0/T;
 	double kinf;
 	double kzero;
-	double F;
 	double k; // the result, Kf
 
 	// values at "infinity" - standard Arrhenius values
@@ -125,19 +124,27 @@ double Calculate_Lindeman_Hinshelwood_SRI(
 			correction = correction->next;
 		}//*/
 	}
-	switch (ReactionData.sri_flag) {
-	case 0: /* its Lindeman-Hinshelwood */
-		k=kzero*kinf*mod_third_body/(kzero*mod_third_body+kinf);
-		break;
-	case 1: /* its simple SRI */
-		F = T*pow((sri.a*exp(-sri.b/T)+exp(-T/sri.c)), ((1.0/(1.0+pow((log10(kzero*mod_third_body/kinf)), 2)))));
-		k = kzero*kinf*mod_third_body*F/(kzero*mod_third_body+kinf);
-		break;
-	case 2: /* It's complex SRI */
-		F = sri.d*pow(T, sri.e)*pow((sri.a*exp(-sri.b/T)+exp(-T/sri.c)), ((1.0/(1.0+pow((log10(kzero*mod_third_body/kinf)), 2)))));
-		k = kzero*kinf*mod_third_body*F/(kzero*mod_third_body+kinf);
-		break;
+
+	//double mod_third_body_molecules_cm3 = mod_third_body/1000.0*6.0221e23;
+	double F = 1.0;
+
+	if(ReactionData.sri_flag == 0)
+	{
+	F = 1.0;
 	}
+	else if(ReactionData.sri_flag == 1) /* its simple SRI */
+	{
+		//F = T*pow((sri.a*exp(-sri.b/T)+exp(-T/sri.c)), ((1.0/(1.0+pow((log10(kzero*mod_third_body/kinf)), 2)))));
+		F = T*pow((sri.a*exp(-sri.b/T)+exp(-T/sri.c)), ((1.0/(1.0+pow((log10(kzero*mod_third_body/kinf)), 2)))));
+	}
+	else if(ReactionData.sri_flag == 2) /* It's complex SRI */
+	{
+		//F = sri.d*pow(T, sri.e)*pow((sri.a*exp(-sri.b/T)+exp(-T/sri.c)), ((1.0/(1.0+pow((log10(kzero*mod_third_body/kinf)), 2)))));
+		F = sri.d*pow(T, sri.e)*pow((sri.a*exp(-sri.b/T)+exp(-T/sri.c)), ((1.0/(1.0+pow((log10(kzero*mod_third_body/kinf)), 2)))));
+	}
+
+	/* it is plain Lindeman-Hinshelwood */
+	k=kzero*kinf*mod_third_body*F/(kzero*mod_third_body+kinf);
 
 	return k;
 }
@@ -215,9 +222,11 @@ double Calculate_Lindeman_Hinshelwood_Low_Troe(
 
 	//double mod_third_body_molecules_cm3 = mod_third_body/1000.0*6.0221e23;
 
+	//kappa = log10(kzero*mod_third_body/kinf) - 0.4 -0.67*log10(Fc);
 	kappa = log10(kzero*mod_third_body/kinf) - 0.4 -0.67*log10(Fc);
 	F = pow(10, (log10(Fc)/(1+pow((kappa/(0.75-1.27*log10(Fc)-0.14*kappa)), 2))));
 	k = kzero*kinf*mod_third_body*F/(kzero*mod_third_body+kinf);
 
 	return k;
 }
+
