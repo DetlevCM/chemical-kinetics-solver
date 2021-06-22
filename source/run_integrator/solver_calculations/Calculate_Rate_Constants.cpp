@@ -12,6 +12,7 @@ void Calculate_Rate_Constant(
 		vector< double >& Kf,
 		vector< double >& Kr,
 		const double Temperature,
+		const vector<double>& Concentrations,
 		const vector< ReactionParameter >& ReactionParameters,
 		const vector< CalculatedThermodynamics >& CalculatedThermo,
 		const vector< TrackSpecies >& SpeciesAll,
@@ -47,6 +48,11 @@ void Calculate_Rate_Constant(
 	// Worked out per reaction
 	// as we have the value of the calculated thermodynamics, we just need to put them together
 	// per reaction, going through every species
+	double third_body_sum = 0.0;
+	for(i = 0; i<Concentrations.size() - 1; i++) // last position is temperature
+	{
+		third_body_sum = third_body_sum + Concentrations[i];
+	}
 
 	for(i = 0;i< SpeciesAll.size();i++){ // loop over every reaction
 		delta_H[SpeciesAll[i].ReactionID] =
@@ -56,6 +62,7 @@ void Calculate_Rate_Constant(
 		delta_S[SpeciesAll[i].ReactionID] =
 				delta_S[SpeciesAll[i].ReactionID] +
 				(CalculatedThermo[SpeciesAll[i].SpeciesID].S * SpeciesAll[i].coefficient);
+
 	}
 
 
@@ -73,7 +80,7 @@ void Calculate_Rate_Constant(
 			// maybe it used to and no longer does with a modern compiler/processor/kernel
 			//if(ReactionParameters[i].paramN != 1)
 			//{
-				Kf[i] = Kf[i] * pow(Temperature,ReactionParameters[i].paramN);
+			Kf[i] = Kf[i] * pow(Temperature,ReactionParameters[i].paramN);
 			/*}
 			else
 			{
@@ -90,6 +97,48 @@ void Calculate_Rate_Constant(
 				ReactionParameters[i].paramEa << " , " <<
 				Kf[i] << "\n";//*/
 
+
+
+		// all previous logic in the code applies if there is no third body
+		//bool ThirdBody = false;
+
+		//*
+
+		// Note: third_body_sum is in mol/L at this point
+
+		//Calculate_Lindeman_Hinshelwood_SRI_Low();
+		if(ReactionParameters[i].ThirdBodyType == 1)
+		{
+			Kf[i] = Calculate_no_LOW_Troe(
+					ReactionParameters[i],
+					Concentrations,
+					Temperature,
+					third_body_sum
+			);
+		}
+		else if(ReactionParameters[i].ThirdBodyType == 2 && ReactionParameters[i].troeThirdBody.has_troe == false)
+		{
+			Kf[i] = Calculate_Lindeman_Hinshelwood_SRI(
+					ReactionParameters[i],
+										Concentrations,
+										Temperature,
+										third_body_sum
+								);
+		}
+		else if(ReactionParameters[i].ThirdBodyType == 2 && ReactionParameters[i].troeThirdBody.has_troe)
+				{
+			Kf[i] = Calculate_Lindeman_Hinshelwood_Low_Troe(
+					ReactionParameters[i],
+					Concentrations,
+					Temperature,
+					third_body_sum
+			);
+		}
+		//*/
+
+
+
+
 		// default, change if reversible - seems a little bit faster...
 		Kr[i] = 0;
 		// then calculate and set the reverse if required
@@ -101,7 +150,7 @@ void Calculate_Rate_Constant(
 
 			if(Delta_N[i] == 0) // an if check is less expensive than a pow(,)
 			{
-			Kr[i] = Kf[i]/temp_kp;
+				Kr[i] = Kf[i]/temp_kp;
 			}
 			else
 			{
@@ -112,17 +161,17 @@ void Calculate_Rate_Constant(
 
 			// IEEE standards hack to avoid Nan Rate, shouldn't exist in the first place...
 			/*if(Kr[i] != Kr[i])
-			{
-				Kr[i] = 0;
-			}//*/
+					{
+						Kr[i] = 0;
+					}//*/
 		}
 		// if it is set to zero at the start and not touched for irreversible reactions thus this is redundant
 		// Fewer memory allocations should speed things up - or not?
 		/*
-		else
-		{
-			Kr[i] = 0;
-		}//*/
+				else
+				{
+					Kr[i] = 0;
+				}//*/
 	}
 
 

@@ -77,13 +77,15 @@ vector< SingleReactionData > Make_Irreversible(
 	vector< double > Kf(Number_Reactions) ;
 	vector< double > Kr(Number_Reactions) ;
 
+	vector<double> Concentrations(Number_Species+1,0); // for adjusted rate-coeff function with third body support
+
 	// let us use 25 steps in either direction of the temperature
 	for(i=0;i<50;i++)
 	{
 		Temperature = Initial_Temperature - Range + ((double)i*Range/25.0); // +/- Range, 25 Steps in either direction
 
 		Evaluate_Thermodynamic_Parameters(CalculatedThermo, Thermodynamics, Temperature);
-		Calculate_Rate_Constant(Kf, Kr, Temperature,LocalReactionParameters, CalculatedThermo, LocalSpeciesLossAll, Local_Delta_N);
+		Calculate_Rate_Constant(Kf, Kr, Temperature,Concentrations,LocalReactionParameters, CalculatedThermo, LocalSpeciesLossAll, Local_Delta_N);
 
 		for(j=0;j<Kr.size();j++)
 		{

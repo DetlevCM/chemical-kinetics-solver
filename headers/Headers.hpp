@@ -72,7 +72,7 @@ using std::stod; // for C++ string to double
 #include "run_integrator/Jacobian.hpp"
 #include "run_integrator/Run_Integrator.hpp"
 #include "run_integrator/Solver_Calculations.hpp"
-
+#include "run_integrator/Third_Body_Maths.hpp"
 
 // and somre more headers...
 #include "Get_Process_Input.hpp"

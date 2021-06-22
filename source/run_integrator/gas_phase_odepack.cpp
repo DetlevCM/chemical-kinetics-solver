@@ -177,7 +177,7 @@ void Integrate_Gas_Phase_Odepack_LSODA(
 
 
 	// Get the rate Constants, forward and backwards
-	Calculate_Rate_Constant(Kf, Kr, SpeciesConcentration[Number_Species],ReactionParameters, CalculatedThermo, SpeciesLossAll, Delta_N);
+	Calculate_Rate_Constant(Kf, Kr, SpeciesConcentration[Number_Species],SpeciesConcentration,ReactionParameters, CalculatedThermo, SpeciesLossAll, Delta_N);
 	CalculateReactionRates(Rates, SpeciesConcentration, Kf, Kr, ReactantsForReactions, ProductsForReactions);
 
 	// Don't forget Rates Analysis for Mechanism Recution at t=0 - or is this nonsense?

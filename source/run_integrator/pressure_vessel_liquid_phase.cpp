@@ -197,7 +197,7 @@ void Integrate_Pressure_Vessel_Liquid_Phase(
 
 
 	// Get the rate Constants, forward and backwards
-	Calculate_Rate_Constant(Kf, Kr, SpeciesConcentration[Number_Species],ReactionParameters, CalculatedThermo, SpeciesLossAll, Delta_N);
+	Calculate_Rate_Constant(Kf, Kr, SpeciesConcentration[Number_Species],Concentration,ReactionParameters, CalculatedThermo, SpeciesLossAll, Delta_N);
 	CalculateReactionRates(Rates, SpeciesConcentration, Kf, Kr, ReactantsForReactions, ProductsForReactions);
 
 	// Don't forget Rates Analysis for Mechanism Recution at t=0 - or is this nonsense?

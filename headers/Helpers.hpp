@@ -13,6 +13,11 @@ string Strip_Single_Line_Comments(
 		vector<string> tokens
 		);
 
+string Remove_Substring(
+		string line,
+		string to_remove
+		);
+
 vector< string > Tokenise_String_To_String(
 		string input,
 		string tokens
