@@ -157,9 +157,11 @@ vector< SingleReactionData > Get_Reactions(
 				// position 1 is "low"
 				if(tmp.size() == 4)
 				{
-					Reaction_Data[position].lowThirdBody.paramA0 = tmp[1];
+					//Reaction_Data[position].lowThirdBody.paramA0 = tmp[1];
+					Reaction_Data[position].lowThirdBody.paramA0 = Scale_A(tmp[1], Reaction_Data[position].Reactants, SchemeUnits[0]);
 					Reaction_Data[position].lowThirdBody.paramN0 = tmp[2];
-					Reaction_Data[position].lowThirdBody.paramEa0 = tmp[3];
+					//Reaction_Data[position].lowThirdBody.paramEa0 = tmp[3];
+					Reaction_Data[position].lowThirdBody.paramEa0 = Scale_Ea(tmp[3], SchemeUnits[1]);
 				}
 			}
 			else if(Reaction_Data.size() > 0 && Test_If_Word_Found(line, "TROE") && line.find("=")==string::npos) // TROE term for third bodies line contains no equal
