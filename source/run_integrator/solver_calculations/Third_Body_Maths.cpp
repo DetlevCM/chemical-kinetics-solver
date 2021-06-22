@@ -200,6 +200,12 @@ double Calculate_Lindeman_Hinshelwood_Low_Troe(
 		}
 	}
 
+	// kappa fails if third body is 0, due to log10 of 0 ...
+	if(mod_third_body < 1.0e-30)
+	{
+		mod_third_body = 1.0e-30;
+	}
+
 	//double mod_third_body_molecules_cm3 = mod_third_body/1000.0*6.0221e23;
 
 	//kappa = log10(kzero*mod_third_body/kinf) - 0.4 -0.67*log10(Fc);
