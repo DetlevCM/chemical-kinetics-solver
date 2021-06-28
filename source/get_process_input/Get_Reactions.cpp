@@ -119,7 +119,7 @@ vector< SingleReactionData > Get_Reactions(
 		Mechanism_Data.close();
 	}
 
-
+	//cout << Reactions_List.size() << "\n";
 
 	// even the largest mechanisms will be on a MB scale, so we can read all and store it in memory.
 	// next we need to process it line for line:
@@ -141,6 +141,7 @@ vector< SingleReactionData > Get_Reactions(
 
 			// trim leading whitespaces to have an easier time handling lines with leading spaces
 			line = trim_string(line);
+			//cout << line << "\n";
 
 			// if not, is is a duplicate? - some bad strucutre for how duplicates are enterd...
 			if(Reaction_Data.size() > 0 && line.compare(0,1,"/") != 0 && line.compare(0,3,"DUP") == 0)
