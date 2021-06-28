@@ -93,16 +93,14 @@ vector< SingleReactionData > Get_Reactions(
 
 			if(begin_flag && !end_flag)
 			{
-				//found = line.find("END"); // need to check for end in loop for 4 line blocks
-				//if(Test_If_Word_Found(line,"END") && begin_flag)
 				if(line.compare(0,3,"END") == 0 || line.compare(0,3,"end") == 0)
-					//if (found!=string::npos && begin_flag)
 				{
 					//cout << "END found\n";
 					end_flag = 1;
 				}
 
-				if(end_flag == 0 && !line.empty() && line.compare(0,1,"!") != 0) // Abort if end reached or initial line is comment
+				if(end_flag == 0 && !line.empty() && line.compare(0,1,"!") != 0) // dont't keep an empty line or comment
+					//if(end_flag == 0 && Line_Not_Comment_Or_Empty(line))
 				{
 					Reactions_List.push_back(line);
 				}
@@ -133,14 +131,15 @@ vector< SingleReactionData > Get_Reactions(
 		string line = RemoveComments[0];
 		RemoveComments.clear();
 
+		// trim leading whitespaces to have an easier time handling lines with leading spaces
+		line = trim_string(line);
+
 		// is the line a comment? - no, OK let us process it
 		//if(line.compare(0,1,"!") != 0)
 		// only continue if the string is not empty or only whitespace or only tab
 		if(!line.empty() && line.find_first_not_of("\t ") != string::npos)
 		{
 
-			// trim leading whitespaces to have an easier time handling lines with leading spaces
-			line = trim_string(line);
 			//cout << line << "\n";
 
 			// if not, is is a duplicate? - some bad strucutre for how duplicates are enterd...
