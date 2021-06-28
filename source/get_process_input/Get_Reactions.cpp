@@ -148,6 +148,21 @@ vector< SingleReactionData > Get_Reactions(
 				size_t position = Reaction_Data.size() - 1;
 				Reaction_Data[position].IsDuplicate=true;
 			}
+			// it is an explicit reverse reaction?
+			else if(Reaction_Data.size() > 0 && Test_If_Word_Found(line, "REV") && line.find("=")==string::npos)
+			{
+				// bool explicit_rev = false;
+				// double rev_paramA;
+				// double rev_paramN;
+				// double rev_paramEa;
+
+				vector<double> tmp =  Tokenise_String_To_Double(line, " \t/" );
+				size_t position = Reaction_Data.size() - 1;
+				Reaction_Data[position].explicit_rev = true;
+				Reaction_Data[position].rev_paramA = Scale_A(tmp[1], Reaction_Data[position].Reactants, SchemeUnits[0]);
+				Reaction_Data[position].rev_paramN = tmp[2];
+				Reaction_Data[position].rev_paramEa = Scale_Ea(tmp[3], SchemeUnits[1]);
+			}
 			// is it a third body configuration?
 			else if(Reaction_Data.size() > 0 && Test_If_Word_Found(line, "LOW") && line.find("=")==string::npos) // LOW term for third bodies line contains no equal
 			{

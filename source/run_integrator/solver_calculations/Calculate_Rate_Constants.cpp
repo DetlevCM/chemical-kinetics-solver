@@ -142,7 +142,7 @@ void Calculate_Rate_Constant(
 		// default, change if reversible - seems a little bit faster...
 		Kr[i] = 0;
 		// then calculate and set the reverse if required
-		if(ReactionParameters[i].Reversible)
+		if(ReactionParameters[i].Reversible && ReactionParameters[i].explicit_rev == false)
 		{
 			double  temp_kp, temp_kc;
 			delta_G[i] = delta_H[i] - Temperature*delta_S[i];
@@ -165,6 +165,22 @@ void Calculate_Rate_Constant(
 						Kr[i] = 0;
 					}//*/
 		}
+		else if(ReactionParameters[i].Reversible && ReactionParameters[i].explicit_rev == true)
+		{
+			// can explicit reversible reactions also be suject to third body terms? Not supported here...
+
+			Kr[i] = ReactionParameters[i].rev_paramA *
+							exp(-ReactionParameters[i].rev_paramEa/Temperature); // do NOT forget the - !!!
+
+					//* Speedup by only raising temperature to power where needed: improvement is large :)
+					if(ReactionParameters[i].rev_paramN != 0) // raising to power 0 has no effect, so only if not 0
+					{
+						// unsure if this check really gives a performance improvement...
+						// maybe it used to and no longer does with a modern compiler/processor/kernel
+						Kr[i] = Kr[i] * pow(Temperature,ReactionParameters[i].rev_paramN);
+					}
+		}
+
 		// if it is set to zero at the start and not touched for irreversible reactions thus this is redundant
 		// Fewer memory allocations should speed things up - or not?
 		/*

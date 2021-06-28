@@ -67,6 +67,13 @@ public:
 	double paramA;
 	double paramN;
 	double paramEa;
+
+	// for cases where an explicit reverse reaction is specified
+	bool explicit_rev = false;
+	double rev_paramA;
+	double rev_paramN;
+	double rev_paramEa;
+
 	int ThirdBodyType; // 1: +M  2: (+M) 3: (+H20) etc. not found in GRI Mech...
 	//vector<double> ThBd_LOW;
 	//vector<double> ThBd_TROE;
@@ -97,6 +104,12 @@ public:
 	double paramA;
 	double paramN;
 	double paramEa;
+
+	// for cases where an explicit reverse reaction is specified
+	bool explicit_rev = false;
+	double rev_paramA;
+	double rev_paramN;
+	double rev_paramEa;
 
 	// add in third body support...
 	int ThirdBodyType; // 1: +M  2: (+M) 3: (+H20) etc. not found in GRI Mech...

@@ -18,6 +18,11 @@ vector< ReactionParameter > Process_Reaction_Parameters(
 		temp_one_reaction.paramEa = Reactions[i].paramEa; // Ea
 		temp_one_reaction.Reversible = Reactions[i].Reversible;
 
+		// for cases where an explicit reverse reaction is specified
+		temp_one_reaction.explicit_rev = Reactions[i].explicit_rev;
+		temp_one_reaction.rev_paramA = Reactions[i].rev_paramA;
+		temp_one_reaction.rev_paramN = Reactions[i].rev_paramN;
+		temp_one_reaction.rev_paramEa = Reactions[i].rev_paramEa;
 
 		// add in third body support...
 		temp_one_reaction.ThirdBodyType = Reactions[i].ThirdBodyType;
