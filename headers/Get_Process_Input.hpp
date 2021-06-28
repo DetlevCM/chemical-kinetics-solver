@@ -35,6 +35,18 @@ vector< ThermodynamicData > Get_Thermodynamic_Data(
 		const vector< string >& Species
 );
 
+void Process_Chemkin_Thermo_Format(
+		vector< ThermodynamicData >& read_in_thermodynamics,
+		const vector<string>& Species,
+		const vector<string>& Thermodynamics_List
+);
+
+void Process_Internal_Thermo_Format(
+		vector< ThermodynamicData >& read_in_thermodynamics,
+		const vector<string>& Species,
+		const vector<string>& Thermodynamics_List
+);
+
 SingleReactionData Parse_Chemking_Reaction_String(const vector< int > SchemeUnits, const vector<string> SpeciesNames, string line);
 
 vector< SingleReactionData > Get_Reactions(
