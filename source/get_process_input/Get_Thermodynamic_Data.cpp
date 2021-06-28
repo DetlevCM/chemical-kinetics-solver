@@ -208,7 +208,7 @@ void Process_Chemkin_Thermo_Format(
 		string line2 = Thermodynamics_List[i+1];
 		string line3 = Thermodynamics_List[i+2];
 		string line4 = Thermodynamics_List[i+3];
-		cout << line1 << "\n" <<line2 << "\n" << line3 << "\n" << line4 << "\n";
+		//cout << line1 << "\n" <<line2 << "\n" << line3 << "\n" << line4 << "\n";
 
 		string species_name, change_Temps;
 
