@@ -89,9 +89,9 @@ vector< SingleReactionData > Process_Reactions_For_Species_Lumping(
 		SingleReactionData.Reactants = ReactantData;
 		SingleReactionData.Products = ProductData;
 
-		SingleReactionData.paramA = Reactions[i].paramA;
-		SingleReactionData.paramN = Reactions[i].paramN;
-		SingleReactionData.paramEa = Reactions[i].paramEa;
+		SingleReactionData.param_forward.A = Reactions[i].param_forward.A;
+		SingleReactionData.param_forward.n = Reactions[i].param_forward.n;
+		SingleReactionData.param_forward.Ea = Reactions[i].param_forward.Ea;
 		SingleReactionData.Reversible = Reactions[i].Reversible;
 
 		//SingleReactionData.push_back(ReactionData);
@@ -223,9 +223,9 @@ vector< SingleReactionData > Process_Reactions_For_Species_Lumping(
 
 		ReactionParameter NewParameters; // create working variable and initialise
 		NewParameters.Reversible = true;
-		NewParameters.paramA = 0;
-		NewParameters.paramN = 0;
-		NewParameters.paramEa = 0;
+		NewParameters.param_forward.A = 0;
+		NewParameters.param_forward.n = 0;
+		NewParameters.param_forward.Ea = 0;
 
 		if(Reaction_Grouping[i] > 1)
 		{
@@ -274,9 +274,9 @@ vector< SingleReactionData > Process_Reactions_For_Species_Lumping(
 		else // avoid the mathematics for reactions that aren't grouped, use previous values
 		{
 			NewParameters.Reversible = false; // must be irreversible, else no lumping
-			NewParameters.paramA = temp_reactions3[i].paramA;
-			NewParameters.paramN = temp_reactions3[i].paramN;
-			NewParameters.paramEa = temp_reactions3[i].paramEa;
+			NewParameters.param_forward.A = temp_reactions3[i].param_forward.A;
+			NewParameters.param_forward.n = temp_reactions3[i].param_forward.n;
+			NewParameters.param_forward.Ea = temp_reactions3[i].param_forward.Ea;
 		}
 
 
@@ -284,9 +284,9 @@ vector< SingleReactionData > Process_Reactions_For_Species_Lumping(
 		SingleReaction.Reactants = ReactantData;
 		SingleReaction.Products = ProductData;
 
-		SingleReaction.paramA = NewParameters.paramA;
-		SingleReaction.paramN = NewParameters.paramN;
-		SingleReaction.paramEa = NewParameters.paramEa;
+		SingleReaction.param_forward.A = NewParameters.param_forward.A;
+		SingleReaction.param_forward.n = NewParameters.param_forward.n;
+		SingleReaction.param_forward.Ea = NewParameters.param_forward.Ea;
 
 		SingleReaction.Reversible = NewParameters.Reversible;
 		//SingleReaction.Reversible = false; // lumping only works on irreversible scheme
@@ -316,7 +316,7 @@ vector< SingleReactionData > Process_Reactions_For_Species_Lumping(
 			Scale_A = Scale_A*(pow( (double) SpeciesClassesSize[j],temp_reactions2[i].Reactants[j]));
 		}
 
-		temp_reactions2[i].paramA = (double) temp_reactions2[i].paramA * Scale_A;
+		temp_reactions2[i].param_forward.A = (double) temp_reactions2[i].param_forward.A * Scale_A;
 	}
 
 	return temp_reactions2;

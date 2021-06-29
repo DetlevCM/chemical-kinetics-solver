@@ -70,17 +70,17 @@ void Calculate_Rate_Constant(
 
 	for(i=0;i<Number_Reactions;i++) // Straightforward Arrhenius Expression/Equation
 	{
-		Kf[i] = ReactionParameters[i].paramA *
-				exp(-ReactionParameters[i].paramEa/Temperature); // do NOT forget the - !!!
+		Kf[i] = ReactionParameters[i].param_forward.A *
+				exp(-ReactionParameters[i].param_forward.Ea/Temperature); // do NOT forget the - !!!
 
 		//* Speedup by only raising temperature to power where needed: improvement is large :)
-		if(ReactionParameters[i].paramN != 0) // raising to power 0 has no effect, so only if not 0
+		if(ReactionParameters[i].param_forward.n != 0) // raising to power 0 has no effect, so only if not 0
 		{
 			// unsure if this check really gives a performance improvement...
 			// maybe it used to and no longer does with a modern compiler/processor/kernel
 			//if(ReactionParameters[i].paramN != 1)
 			//{
-			Kf[i] = Kf[i] * pow(Temperature,ReactionParameters[i].paramN);
+			Kf[i] = Kf[i] * pow(Temperature,ReactionParameters[i].param_forward.n);
 			/*}
 			else
 			{
@@ -169,15 +169,15 @@ void Calculate_Rate_Constant(
 		{
 			// can explicit reversible reactions also be suject to third body terms? Not supported here...
 
-			Kr[i] = ReactionParameters[i].rev_paramA *
-							exp(-ReactionParameters[i].rev_paramEa/Temperature); // do NOT forget the - !!!
+			Kr[i] = ReactionParameters[i].param_reverse.A *
+							exp(-ReactionParameters[i].param_reverse.Ea/Temperature); // do NOT forget the - !!!
 
 					//* Speedup by only raising temperature to power where needed: improvement is large :)
-					if(ReactionParameters[i].rev_paramN != 0) // raising to power 0 has no effect, so only if not 0
+					if(ReactionParameters[i].param_reverse.n != 0) // raising to power 0 has no effect, so only if not 0
 					{
 						// unsure if this check really gives a performance improvement...
 						// maybe it used to and no longer does with a modern compiler/processor/kernel
-						Kr[i] = Kr[i] * pow(Temperature,ReactionParameters[i].rev_paramN);
+						Kr[i] = Kr[i] * pow(Temperature,ReactionParameters[i].param_reverse.n);
 					}
 		}
 

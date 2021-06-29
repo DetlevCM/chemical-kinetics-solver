@@ -74,9 +74,9 @@ void Input_File_For_Ehsan_Opt
 			}
 
 			// followed by reaction parameters in the right units
-			Output << Reactions[i].paramA*1000  << "\t"
-					<< Reactions[i].paramN << "\t"
-					<< Reactions[i].paramEa/1000*1.98709;
+			Output << Reactions[i].param_forward.A*1000  << "\t"
+					<< Reactions[i].param_forward.n << "\t"
+					<< Reactions[i].param_forward.Ea/1000*1.98709;
 
 			Output << "\n";
 		}

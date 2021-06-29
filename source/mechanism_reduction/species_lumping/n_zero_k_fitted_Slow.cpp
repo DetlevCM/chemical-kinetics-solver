@@ -27,9 +27,9 @@ ReactionParameter n_zero_k_fitted_Slow(
 
 			Group_k[k] =
 					Group_k[k] +
-					Reactions[j].paramA *
-					pow((temperature + temp_mod),Reactions[j].paramN) *
-					exp(-Reactions[j].paramEa/(temperature + temp_mod));
+					Reactions[j].param_forward.A *
+					pow((temperature + temp_mod),Reactions[j].param_forward.n) *
+					exp(-Reactions[j].param_forward.Ea/(temperature + temp_mod));
 		}
 	}
 
@@ -62,9 +62,9 @@ ReactionParameter n_zero_k_fitted_Slow(
 
 
 	ParameterOutput.Reversible = false;
-	ParameterOutput.paramA = exp(intercept);
-	ParameterOutput.paramN = 0;
-	ParameterOutput.paramEa = gradient;
+	ParameterOutput.param_forward.A = exp(intercept);
+	ParameterOutput.param_forward.n = 0;
+	ParameterOutput.param_forward.Ea = gradient;
 
 
 	return ParameterOutput;

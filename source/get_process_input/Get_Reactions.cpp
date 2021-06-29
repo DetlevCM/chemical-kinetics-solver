@@ -151,17 +151,12 @@ vector< SingleReactionData > Get_Reactions(
 			// it is an explicit reverse reaction?
 			else if(Reaction_Data.size() > 0 && Test_If_Word_Found(line, "REV") && line.find("=")==string::npos)
 			{
-				// bool explicit_rev = false;
-				// double rev_paramA;
-				// double rev_paramN;
-				// double rev_paramEa;
-
 				vector<double> tmp =  Tokenise_String_To_Double(line, " \t/" );
 				size_t position = Reaction_Data.size() - 1;
 				Reaction_Data[position].explicit_rev = true;
-				Reaction_Data[position].rev_paramA = Scale_A(tmp[1], Reaction_Data[position].Reactants, SchemeUnits[0]);
-				Reaction_Data[position].rev_paramN = tmp[2];
-				Reaction_Data[position].rev_paramEa = Scale_Ea(tmp[3], SchemeUnits[1]);
+				Reaction_Data[position].param_reverse.A = Scale_A(tmp[1], Reaction_Data[position].Reactants, SchemeUnits[0]);
+				Reaction_Data[position].param_reverse.n = tmp[2];
+				Reaction_Data[position].param_reverse.Ea = Scale_Ea(tmp[3], SchemeUnits[1]);
 			}
 			// is it a third body configuration?
 			else if(Reaction_Data.size() > 0 && Test_If_Word_Found(line, "LOW") && line.find("=")==string::npos) // LOW term for third bodies line contains no equal
@@ -173,10 +168,10 @@ vector< SingleReactionData > Get_Reactions(
 				if(tmp.size() == 4)
 				{
 					//Reaction_Data[position].lowThirdBody.paramA0 = tmp[1];
-					Reaction_Data[position].lowThirdBody.paramA0 = Scale_A(tmp[1], Reaction_Data[position].Reactants, SchemeUnits[0]);
-					Reaction_Data[position].lowThirdBody.paramN0 = tmp[2];
+					Reaction_Data[position].param_TB_low.A = Scale_A(tmp[1], Reaction_Data[position].Reactants, SchemeUnits[0]);
+					Reaction_Data[position].param_TB_low.n = tmp[2];
 					//Reaction_Data[position].lowThirdBody.paramEa0 = tmp[3];
-					Reaction_Data[position].lowThirdBody.paramEa0 = Scale_Ea(tmp[3], SchemeUnits[1]);
+					Reaction_Data[position].param_TB_low.Ea = Scale_Ea(tmp[3], SchemeUnits[1]);
 				}
 			}
 			else if(Reaction_Data.size() > 0 && Test_If_Word_Found(line, "TROE") && line.find("=")==string::npos) // TROE term for third bodies line contains no equal
@@ -402,9 +397,9 @@ SingleReactionData Parse_Chemking_Reaction_String(const vector< int > SchemeUnit
 
 	temp.Reactants = ReactantData;
 	temp.Products = ProductData;
-	temp.paramA = ReactionData[0];
-	temp.paramN = ReactionData[1];
-	temp.paramEa = ReactionData[2];
+	temp.param_forward.A = ReactionData[0];
+	temp.param_forward.n = ReactionData[1];
+	temp.param_forward.Ea = ReactionData[2];
 	temp.Reversible = is_reversible;
 	temp.IsDuplicate = false; // default, not a duplicate
 

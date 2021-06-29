@@ -88,13 +88,13 @@ string Prepare_Single_Reaction_Output(
 	/*convert << "\t\t" << Reaction.paramA*1000 << "\t" << Reaction.paramN << "\t" << Reaction.paramEa << "\n"; //*/
 
 	// ensure that A is scaled correctly to per cm^3 units depending on the reaction order
-	double prexponential_A = Reaction.paramA * pow(1000.0,(Reaction_Order-1.0));
+	double prexponential_A = Reaction.param_forward.A * pow(1000.0,(Reaction_Order-1.0));
 
 	convert << "\t\t" <<
 			prexponential_A << "\t" <<
-			//Reaction.paramA*1000 << "\t" << // mol / cm^3
-			Reaction.paramN << "\t" <<
-			(Reaction.paramEa/1000*1.98709) << "\n"; // correct for kcal/mol
+			//Reaction.param_forward.A*1000 << "\t" << // mol / cm^3
+			Reaction.param_forward.n << "\t" <<
+			(Reaction.param_forward.Ea/1000*1.98709) << "\n"; // correct for kcal/mol
 
 	return convert.str();
 }

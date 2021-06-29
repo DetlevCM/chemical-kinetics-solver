@@ -235,9 +235,9 @@ vector< SingleReactionData > Make_Irreversible(
 
 		SingleReaction.Reactants = Reactions[i].Reactants;
 		SingleReaction.Products = Reactions[i].Products;
-		SingleReaction.paramA = Reactions[i].paramA;
-		SingleReaction.paramN = Reactions[i].paramN;
-		SingleReaction.paramEa = Reactions[i].paramEa;
+		SingleReaction.param_forward.A = Reactions[i].param_forward.A;
+		SingleReaction.param_forward.n = Reactions[i].param_forward.n;
+		SingleReaction.param_forward.Ea = Reactions[i].param_forward.Ea;
 		// switch reaction to irreversible:
 		SingleReaction.Reversible = false;
 		SingleReaction.IsDuplicate = Reactions[i].IsDuplicate;
@@ -276,9 +276,9 @@ vector< SingleReactionData > Make_Irreversible(
 
 			SingleReaction.Reactants = ReactantData;
 			SingleReaction.Products = ProductData;
-			SingleReaction.paramA = exp(beta[0]);
-			SingleReaction.paramN = beta[1];
-			SingleReaction.paramEa = -beta[2];
+			SingleReaction.param_forward.A = exp(beta[0]);
+			SingleReaction.param_forward.n = beta[1];
+			SingleReaction.param_forward.Ea = -beta[2];
 			// retain reaction as irreversible:
 			SingleReaction.Reversible = false;
 			SingleReaction.IsDuplicate = Reactions[i].IsDuplicate;

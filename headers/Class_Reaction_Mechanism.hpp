@@ -53,34 +53,31 @@ public:
 	bool has_troe = false;
 };
 
-class LowThirdBody{
+
+// given that we have k0, kinf/kf and explicit kr
+class param_Arrhenius{
 public:
-	double paramA0;
-	double paramN0;
-	double paramEa0;
+	double A;
+	double n;
+	double Ea;
 };
 
 class SingleReactionData {
 public:
 	bool Reversible;
 	bool IsDuplicate;
-	double paramA;
-	double paramN;
-	double paramEa;
+
+	param_Arrhenius param_forward;
+	param_Arrhenius param_reverse;
+	param_Arrhenius param_TB_low;
 
 	// for cases where an explicit reverse reaction is specified
 	bool explicit_rev = false;
-	double rev_paramA;
-	double rev_paramN;
-	double rev_paramEa;
 
 	int ThirdBodyType; // 1: +M  2: (+M) 3: (+H20) etc. not found in GRI Mech...
-	//vector<double> ThBd_LOW;
-	//vector<double> ThBd_TROE;
 	vector<ThirdBodyParameters> ThBd_param;
 	size_t sri_flag = 0; // default
 	SRIThirdBody sriThirdBody;
-	LowThirdBody lowThirdBody;
 	TroeThirdBody troeThirdBody;
 	bool collision_efficiency; // for third body reactions
 	vector<double> Reactants;
@@ -101,22 +98,19 @@ public:
 class ReactionParameter {
 public:
 	bool Reversible;
-	double paramA;
-	double paramN;
-	double paramEa;
+
+	param_Arrhenius param_forward;
+	param_Arrhenius param_reverse;
+	param_Arrhenius param_TB_low;
 
 	// for cases where an explicit reverse reaction is specified
 	bool explicit_rev = false;
-	double rev_paramA;
-	double rev_paramN;
-	double rev_paramEa;
 
 	// add in third body support...
 	int ThirdBodyType; // 1: +M  2: (+M) 3: (+H20) etc. not found in GRI Mech...
 	vector<ThirdBodyParameters> ThBd_param;
 	size_t sri_flag;
 	SRIThirdBody sriThirdBody;
-	LowThirdBody lowThirdBody;
 	TroeThirdBody troeThirdBody;
 	bool collision_efficiency; // for third body reactions
 };

@@ -35,12 +35,12 @@ ReactionParameter Average_Ea_k_fitted_Slow(
 
 			Group_k[k] =
 					Group_k[k] +
-					temp_reactions3[j].paramA *
-					pow((temperature + temp_mod),temp_reactions3[j].paramN) *
-					exp(-temp_reactions3[j].paramEa/(temperature + temp_mod));
+					temp_reactions3[j].param_forward.A *
+					pow((temperature + temp_mod),temp_reactions3[j].param_forward.n) *
+					exp(-temp_reactions3[j].param_forward.Ea/(temperature + temp_mod));
 		}
 		// get average Ea
-		fitted_Ea = fitted_Ea + temp_reactions3[j].paramEa;
+		fitted_Ea = fitted_Ea + temp_reactions3[j].param_forward.Ea;
 	}
 
 	// this is the new Ea for our fitted reaction
@@ -122,9 +122,9 @@ ReactionParameter Average_Ea_k_fitted_Slow(
 
 
 	ParameterOutput.Reversible = false;
-	ParameterOutput.paramA = fitted_A;
-	ParameterOutput.paramN = fitted_n;
-	ParameterOutput.paramEa = fitted_Ea;
+	ParameterOutput.param_forward.A = fitted_A;
+	ParameterOutput.param_forward.n = fitted_n;
+	ParameterOutput.param_forward.Ea = fitted_Ea;
 
 	return ParameterOutput;
 }

@@ -29,26 +29,26 @@ ReactionParameter Average_Ea_k_fitted_Fast(
 		// lower temperature point
 		Group_k[0] =
 				Group_k[0] +
-				Reactions[j].paramA *
-				pow((temperature - temperature_endpoints),Reactions[j].paramN) *
-				exp(-Reactions[j].paramEa/(temperature - temperature_endpoints));
+				Reactions[j].param_forward.A *
+				pow((temperature - temperature_endpoints),Reactions[j].param_forward.n) *
+				exp(-Reactions[j].param_forward.Ea/(temperature - temperature_endpoints));
 
 		// middle temperature point
 		Group_k[1] =
 				Group_k[1] +
-				Reactions[j].paramA *
-				pow((temperature),Reactions[j].paramN) *
-				exp(-Reactions[j].paramEa/(temperature));
+				Reactions[j].param_forward.A *
+				pow((temperature),Reactions[j].param_forward.n) *
+				exp(-Reactions[j].param_forward.Ea/(temperature));
 
 		// upper temperature point
 		Group_k[2] =
 				Group_k[2] +
-				Reactions[j].paramA *
-				pow((temperature + temperature_endpoints),Reactions[j].paramN) *
-				exp(-Reactions[j].paramEa/(temperature + temperature_endpoints));
+				Reactions[j].param_forward.A *
+				pow((temperature + temperature_endpoints),Reactions[j].param_forward.n) *
+				exp(-Reactions[j].param_forward.Ea/(temperature + temperature_endpoints));
 
 		// Total Ea to get an average Ea
-		total_Ea = total_Ea + Reactions[j].paramEa;
+		total_Ea = total_Ea + Reactions[j].param_forward.Ea;
 	}
 
 
@@ -120,9 +120,9 @@ ReactionParameter Average_Ea_k_fitted_Fast(
 	//cout << fitted_A << "\n";
 
 	ParameterOutput.Reversible = false; // reactions must be irreversible for lumping, they will come out irreversible
-	ParameterOutput.paramA = fitted_A;
-	ParameterOutput.paramN = fitted_n;
-	ParameterOutput.paramEa = fitted_Ea;
+	ParameterOutput.param_forward.A = fitted_A;
+	ParameterOutput.param_forward.n = fitted_n;
+	ParameterOutput.param_forward.Ea = fitted_Ea;
 
 	return ParameterOutput;
 }

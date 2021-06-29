@@ -29,9 +29,9 @@ double Calculate_no_LOW_Troe(
 	double k; // this is the normal forward K
 
 	// values at "infinity" - standard Arrhenius values
-	double a1 = ReactionData.paramA;
-	double n1 = ReactionData.paramN;
-	double e1 = ReactionData.paramEa;
+	double a1 = ReactionData.param_forward.A;
+	double n1 = ReactionData.param_forward.n;
+	double e1 = ReactionData.param_forward.Ea;
 
 	double mod_third_body;
 
@@ -72,13 +72,13 @@ double Calculate_Lindeman_Hinshelwood_SRI(
 	double k; // the result, Kf
 
 	// values at "infinity" - standard Arrhenius values
-	double a1 = ReactionData.paramA;
-	double n1 = ReactionData.paramN;
-	double e1 = ReactionData.paramEa;
+	double a1 = ReactionData.param_forward.A;
+	double n1 = ReactionData.param_forward.n;
+	double e1 = ReactionData.param_forward.Ea;
 
-	double a0 = ReactionData.lowThirdBody.paramA0;
-	double n0 = ReactionData.lowThirdBody.paramN0;
-	double e0 = ReactionData.lowThirdBody.paramEa0;
+	double a0 = ReactionData.param_TB_low.A;
+	double n0 = ReactionData.param_TB_low.n;
+	double e0 = ReactionData.param_TB_low.Ea;
 
 
 	SRIThirdBody sri = ReactionData.sriThirdBody;
@@ -151,13 +151,13 @@ double Calculate_Lindeman_Hinshelwood_Low_Troe(
 	double k; // the result, Kf
 
 	// values at "infinity" - standard Arrhenius values
-	double a1 = ReactionData.paramA;
-	double n1 = ReactionData.paramN;
-	double e1 = ReactionData.paramEa;
+	double a1 = ReactionData.param_forward.A;
+	double n1 = ReactionData.param_forward.n;
+	double e1 = ReactionData.param_forward.Ea;
 
-	double a0 = ReactionData.lowThirdBody.paramA0;
-	double n0 = ReactionData.lowThirdBody.paramN0;
-	double e0 = ReactionData.lowThirdBody.paramEa0;
+	double a0 = ReactionData.param_TB_low.A;
+	double n0 = ReactionData.param_TB_low.n;
+	double e0 = ReactionData.param_TB_low.Ea;
 
 	TroeThirdBody troe = ReactionData.troeThirdBody;
 	double inv_T1 = 1.0/troe.T1;

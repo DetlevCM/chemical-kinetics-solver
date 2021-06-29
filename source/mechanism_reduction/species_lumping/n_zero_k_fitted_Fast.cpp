@@ -26,23 +26,23 @@ ReactionParameter n_zero_k_fitted_Fast(
 		// lower temperature point
 		Group_k[0] =
 				Group_k[0] +
-				Reactions[j].paramA *
-				pow((temperature - temperature_endpoints),Reactions[j].paramN) *
-				exp(-Reactions[j].paramEa/(temperature - temperature_endpoints));
+				Reactions[j].param_forward.A *
+				pow((temperature - temperature_endpoints),Reactions[j].param_forward.n) *
+				exp(-Reactions[j].param_forward.Ea/(temperature - temperature_endpoints));
 
 		// middle temperature point
 		Group_k[1] =
 				Group_k[1] +
-				Reactions[j].paramA *
-				pow((temperature),Reactions[j].paramN) *
-				exp(-Reactions[j].paramEa/(temperature ));
+				Reactions[j].param_forward.A *
+				pow((temperature),Reactions[j].param_forward.n) *
+				exp(-Reactions[j].param_forward.Ea/(temperature ));
 
 		// upper temperature point
 		Group_k[2] =
 				Group_k[2] +
-				Reactions[j].paramA *
-				pow((temperature + temperature_endpoints),Reactions[j].paramN) *
-				exp(-Reactions[j].paramEa/(temperature + temperature_endpoints));
+				Reactions[j].param_forward.A *
+				pow((temperature + temperature_endpoints),Reactions[j].param_forward.n) *
+				exp(-Reactions[j].param_forward.Ea/(temperature + temperature_endpoints));
 	}
 
 	// Fit new A and Ea with n = 0 - I have k over a temperature range of 40K
@@ -63,9 +63,9 @@ ReactionParameter n_zero_k_fitted_Fast(
 	intercept  = Group_k[1] + (1/temperature)*gradient;
 
 	ParameterOutput.Reversible = false;
-	ParameterOutput.paramA = exp(intercept);
-	ParameterOutput.paramN = 0;
-	ParameterOutput.paramEa = gradient;
+	ParameterOutput.param_forward.A = exp(intercept);
+	ParameterOutput.param_forward.n = 0;
+	ParameterOutput.param_forward.Ea = gradient;
 
 
 	return ParameterOutput;

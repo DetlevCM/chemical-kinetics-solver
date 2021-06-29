@@ -13,16 +13,15 @@ vector< ReactionParameter > Process_Reaction_Parameters(
 	// Output per reaction
 	for(i=0;i<Number_Reactions;i++)
 	{
-		temp_one_reaction.paramA = Reactions[i].paramA; // A
-		temp_one_reaction.paramN = Reactions[i].paramN; // n
-		temp_one_reaction.paramEa = Reactions[i].paramEa; // Ea
+		// the three cases in which Arrhenius parameters are provided:
+		temp_one_reaction.param_forward = Reactions[i].param_forward;
+		temp_one_reaction.param_reverse = Reactions[i].param_reverse;
+		temp_one_reaction.param_TB_low = Reactions[i].param_TB_low;
+
 		temp_one_reaction.Reversible = Reactions[i].Reversible;
 
 		// for cases where an explicit reverse reaction is specified
 		temp_one_reaction.explicit_rev = Reactions[i].explicit_rev;
-		temp_one_reaction.rev_paramA = Reactions[i].rev_paramA;
-		temp_one_reaction.rev_paramN = Reactions[i].rev_paramN;
-		temp_one_reaction.rev_paramEa = Reactions[i].rev_paramEa;
 
 		// add in third body support...
 		temp_one_reaction.ThirdBodyType = Reactions[i].ThirdBodyType;
@@ -31,7 +30,6 @@ vector< ReactionParameter > Process_Reaction_Parameters(
 		temp_one_reaction.collision_efficiency = Reactions[i].collision_efficiency;
 
 		temp_one_reaction.sriThirdBody = Reactions[i].sriThirdBody;
-		temp_one_reaction.lowThirdBody = Reactions[i].lowThirdBody;
 		temp_one_reaction.troeThirdBody = Reactions[i].troeThirdBody;
 
 		temp_output.push_back(temp_one_reaction);
