@@ -47,15 +47,11 @@ vector< SingleReactionData > Get_Reactions(
 		const vector< string >& Species
 ){
 
-	/* class Reaction_Mechanism {
-	 * public:
-	 * int species;
-	 * int reactions;
-	 *
-	 * vector< string > Species;
-	 * vector< ThermodynamicData > Thermodynamics;
-	 * vector< SingleReactionData > Reactions;
-	 * };
+
+	/*
+	 * Implementation:
+	 * 1: read the entire mechanism into a vector (this needs more RAM)
+	 * 2: process the reactions into the mechanism for the solver
 	 */
 
 	// read the reactions block
@@ -69,69 +65,6 @@ vector< SingleReactionData > Get_Reactions(
 
 	vector< SingleReactionData > Reaction_Data;
 
-
-	/*
-	// most mechanisms only have megabyte sizes, thus it is possible to
-	// store the mechanism in memory for easier string processing
-	vector<string> Reactions_List;
-
-	// we prepare the output vector that we will return
-
-
-	// we open the file that contains the mechanims data
-	ifstream Mechanism_Data;
-	Mechanism_Data.open (filename.c_str());
-
-	vector< int > SchemeUnits(2); // identifiers for units of A and Ea
-	vector< int > mapping;
-
-	int begin_flag = 0, end_flag = 0; // treat as Boolean, true/false
-
-
-	//size_t Number_Species = Species.size();
-	 *//*/
-	 */
-
-	/*
-	 * New implementation:
-	 * 1: read the entire mechanism into a vector (this needs more RAM)
-	 * 2: process the reactions into the mechanism for the solver
-	 */
-
-	/*
-
-	if (Mechanism_Data.is_open())
-	{
-		string line;
-		while (Mechanism_Data.good())
-		{
-			getline (Mechanism_Data,line);
-
-			if(begin_flag && !end_flag)
-			{
-				if(line.compare(0,3,"END") == 0 || line.compare(0,3,"end") == 0)
-				{
-					//cout << "END found\n";
-					end_flag = 1;
-				}
-
-				if(end_flag == 0 && !line.empty() && line.compare(0,1,"!") != 0) // dont't keep an empty line or comment
-					//if(end_flag == 0 && Line_Not_Comment_Or_Empty(line))
-				{
-					Reactions_List.push_back(line);
-				}
-			}
-
-			// Moving reaction data check to end of function avoids "REAC" being read in as a name
-			if(Test_If_Word_Found(line,"REAC") && line.compare(0,1,"!") != 0 && begin_flag == 0) // only test once... once we found the reactions, its done
-			{
-				//cout << "REAC found\n";
-				begin_flag=1;
-				SchemeUnits = Set_Mechanism_Units(line);
-			}
-		}
-		Mechanism_Data.close();
-	}//*/
 
 	//cout << Reactions_List.size() << "\n";
 

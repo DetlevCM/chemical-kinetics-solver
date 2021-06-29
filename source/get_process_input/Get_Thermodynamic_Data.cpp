@@ -30,58 +30,7 @@ vector< ThermodynamicData > Get_Thermodynamic_Data(
 		Thermodynamics_List = Read_Chemkin_Block(filename, "THERM");
 	}
 
-	/*
-	ifstream Mechanism_Data;
-	Mechanism_Data.open (filename.c_str());
 
-
-
-	// Thermodynamic data should be read as a block and processed in a second step as this is more
-	// robust. This is the same approach as is used for the reactions.
-	vector<string> Thermodynamics_List;
-
-	int thermo_type = 0; // 0 = standard Chemkin NASA-7, 1 = different internal format
-
-	if (Mechanism_Data.is_open())
-	{
-		bool begin_flag = false;
-		bool end_flag = false;
-
-		string line;
-		while (Mechanism_Data.good())
-		{
-			getline (Mechanism_Data,line);
-
-			if(begin_flag && !end_flag)
-			{
-				if(line.compare(0,3,"END") == 0 || line.compare(0,3,"end") == 0)
-				{
-					//cout << "END found\n";
-					end_flag = true;
-				}
-
-				// filter out empty lines and comments
-				if(end_flag == false && !line.empty() && line.compare(0,1,"!") != 0) // Abort if end reached or initial line is comment
-				{
-					Thermodynamics_List.push_back(line);
-				}
-			}
-
-			if(Test_If_Word_Found(line,"THERM") && line.compare(0,1,"!") != 0 && begin_flag == 0) // only test once... once we found the end its done
-			{
-				/// cout << "start found\n";
-				begin_flag = true;
-			}
-			if(Test_If_Word_Found(line,"ThermData") && line.compare(0,1,"!") != 0 && begin_flag == 0) // only test once... once we found the end its done
-			{
-				/// cout << "start found\n";
-				begin_flag = true;
-				thermo_type = 1;
-			}
-		}
-		Mechanism_Data.close();
-	}
-//*/
 
 	if(Test_If_Word_Found(Thermodynamics_List[0],"ThermData"))
 	{
