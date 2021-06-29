@@ -67,19 +67,25 @@ public:
 	bool Reversible;
 	bool IsDuplicate;
 
-	param_Arrhenius param_forward;
-	param_Arrhenius param_reverse;
+	param_Arrhenius param_forward; // standard forward Arrhenius parameters
+
+	bool explicit_rev = false;     // a case where an explicit reverse reaction is specified
+	param_Arrhenius param_reverse; // in case of explicit reverse parameters
+
+
+	// third body parameters
+	int ThirdBodyType = 0; // 0: no third body 1: +M  2: (+M) 3: (+H20) etc. not found in GRI Mech...
+	bool collision_efficiency = false; // for third body reactions
+
 	param_Arrhenius param_TB_low;
 
-	// for cases where an explicit reverse reaction is specified
-	bool explicit_rev = false;
-
-	int ThirdBodyType; // 1: +M  2: (+M) 3: (+H20) etc. not found in GRI Mech...
-	vector<ThirdBodyParameters> ThBd_param;
 	size_t sri_flag = 0; // default
 	SRIThirdBody sriThirdBody;
 	TroeThirdBody troeThirdBody;
-	bool collision_efficiency; // for third body reactions
+
+	vector<ThirdBodyParameters> ThBd_param;
+
+	// reactants and products
 	vector<double> Reactants;
 	vector<double> Products;
 };
