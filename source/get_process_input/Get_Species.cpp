@@ -2,59 +2,45 @@
 
 vector< string > Get_Species(string filename)
 {
-	ifstream Mechanism_Data;
-	Mechanism_Data.open (filename.c_str());
 
-	vector<string> temp_species;
+	// should follow the pattern used for thermodynamic data and reactions
 
-	int spec_flag = 0, end_flag = 0; // treat as Boolean, true/false
+	vector<string> Species_List = Read_Chemkin_Block(filename, "SPEC");
 
+	// assuming the list has been read in correctly:
 
-	if (Mechanism_Data.is_open())
+	vector<string> All_Species;
+
+	for(size_t i=1;i<Species_List.size();i++)
 	{
-		string line;
-		while (Mechanism_Data.good())
+		string line = Species_List[i];
+		vector< string > Remove_Comments;
+		if(line.find("!")!=string::npos) // contains comments, so remove comments
 		{
-			getline (Mechanism_Data,line);
-			if(spec_flag && !end_flag)
-			{
-				if (line.find("END")!=string::npos && spec_flag)
-				{
-					end_flag = 1;
-				}
-				if(!end_flag){
+			Remove_Comments = Tokenise_String_To_String(line , "!" );
+			line = Remove_Comments[0];
+		}
+		Remove_Comments.clear();
 
-					vector< string > Remove_Comments;
-					if(line.find("!")!=string::npos) // contains comments, so remove comments
+		if(!line.empty())
+		{
+			if(line.find(" ")!=string::npos || line.find("\t")!=string::npos) // contains spaces or tabs, so tokenize
+			{
+				vector<string> tmp = Tokenise_String_To_String(line , " \t" );
+				for(size_t j=0;j<tmp.size();j++)
+				{
+					if(!tmp[j].empty())
 					{
-						Remove_Comments = Tokenise_String_To_String(line , "!" );
-						line = Remove_Comments[0];
-					}
-					Remove_Comments.clear();
-					if(line.find(" ")!=string::npos || line.find("\t")!=string::npos) // contains spaces or tabs, so tokenize
-					{
-						Tokenise_String_To_String_Append(temp_species , line , " \t" ); // this is really weird, but a " ! " string is required after a species name
-					}
-					else
-					{
-						temp_species.push_back(line);
+						All_Species.push_back(tmp[j]);
 					}
 				}
 			}
-			// Moving species check to end of function avoids "SPECIES" being read in as a name
-			if (line.find("SPEC")!=string::npos && !end_flag)
+			else
 			{
-				spec_flag=1;
+				All_Species.push_back(line);
 			}
 		}
-		Mechanism_Data.close();
 	}
 
-	/*
-	for(int i=0;i<(int)temp_species.size();i++)
-	{
-		cout << temp_species[i] << "\n";
-	}//*/
-
-	return temp_species;
+	return All_Species;
 }
