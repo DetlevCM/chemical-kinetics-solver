@@ -11,10 +11,10 @@ vector<int> Set_Mechanism_Units(string test_string) // Identify the units
 {
 	vector<int> Mechanism_Units(2);
 	// default for A:  mol/cm^3 (I think...)
-	// default for Ea: kcal/mol
+	// default for Ea: cal/mol
 	// So set default:
-	Mechanism_Units[0] = 1;
-	Mechanism_Units[1] = 1;
+	Mechanism_Units[0] = 2;
+	Mechanism_Units[1] = 2;
 
 	// then explicitly react to possible options
 
@@ -45,7 +45,7 @@ vector<int> Set_Mechanism_Units(string test_string) // Identify the units
 
 	if(Test_If_Word_Found(test_string, " CAL/MOL") || Test_If_Word_Found(test_string, "\tCAL/MOL"))
 	{
-		Mechanism_Units[1] = 2; // Ea in kcal/mol
+		Mechanism_Units[1] = 2; // Ea in cal/mol
 	}
 
 	if(Test_If_Word_Found(test_string, " kJ/MOL") || Test_If_Word_Found(test_string, "\tkJ/MOL"))

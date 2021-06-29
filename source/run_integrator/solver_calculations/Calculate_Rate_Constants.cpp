@@ -160,10 +160,11 @@ void Calculate_Rate_Constant(
 			}
 
 			// IEEE standards hack to avoid Nan Rate, shouldn't exist in the first place...
-			/*if(Kr[i] != Kr[i])
-					{
-						Kr[i] = 0;
-					}//*/
+			/*
+			if(Kr[i] != Kr[i])
+			{
+				Kr[i] = 0;
+			}//*/
 		}
 		//else if(ReactionParameters[i].Reversible && ReactionParameters[i].explicit_rev == true)
 		else if(ReactionParameters[i].explicit_rev == true) // a reaction with explicit reverse parameters must be reversible
