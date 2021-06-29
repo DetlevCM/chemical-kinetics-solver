@@ -12,6 +12,11 @@ vector<int> Set_Mechanism_Units(string test_string) // Identify the units
 	vector<int> Mechanism_Units(2);
 	// default for A:  mol/cm^3 (I think...)
 	// default for Ea: kcal/mol
+	// So set default:
+	Mechanism_Units[0] = 1;
+	Mechanism_Units[1] = 1;
+
+	// then explicitly react to possible options
 
 	if(Test_If_Word_Found(test_string, "MOLECULES")) // enable case independent test
 	{
