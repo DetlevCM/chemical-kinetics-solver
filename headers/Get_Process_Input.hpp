@@ -25,6 +25,11 @@ bool Handle_Mechanism_Input(
 vector<int> Set_Mechanism_Units(string );
 
 
+vector<string> Read_Chemkin_Block(
+		string filename,
+		string blockname
+);
+
 vector< string > Get_Species(
 		string filename
 );

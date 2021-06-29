@@ -17,15 +17,24 @@ vector< ThermodynamicData > Get_Thermodynamic_Data(
 	 * 1 line high values
 	 */
 
-
-	ifstream Mechanism_Data;
-	Mechanism_Data.open (filename.c_str());
-
 	size_t Number_Species = Species.size();
 
 	// Vector to store all data as a struct (more efficient than vector< vector> >
 	vector< ThermodynamicData > read_in_thermodynamics;
 	read_in_thermodynamics.resize(Number_Species);
+
+	vector<string> Thermodynamics_List = Read_Chemkin_Block(filename, "ThermData");
+
+	if(Thermodynamics_List.size() == 0)
+	{
+		Thermodynamics_List = Read_Chemkin_Block(filename, "THERM");
+	}
+
+	/*
+	ifstream Mechanism_Data;
+	Mechanism_Data.open (filename.c_str());
+
+
 
 	// Thermodynamic data should be read as a block and processed in a second step as this is more
 	// robust. This is the same approach as is used for the reactions.
@@ -72,24 +81,23 @@ vector< ThermodynamicData > Get_Thermodynamic_Data(
 		}
 		Mechanism_Data.close();
 	}
+//*/
 
-
-	if(thermo_type == 0) // standard chemkin thermo format
+	if(Test_If_Word_Found(Thermodynamics_List[0],"ThermData"))
+	{
+		Process_Internal_Thermo_Format(
+						read_in_thermodynamics,
+						Species,
+						Thermodynamics_List
+				);
+	}
+	else // if(thermo_type == 1) // internal thermo format
 	{
 		Process_Chemkin_Thermo_Format(
 				read_in_thermodynamics,
 				Species,
 				Thermodynamics_List
 		);
-	}
-	else // if(thermo_type == 1) // internal thermo format
-	{
-		Process_Internal_Thermo_Format(
-				read_in_thermodynamics,
-				Species,
-				Thermodynamics_List
-		);
-
 	}
 
 	return read_in_thermodynamics;
@@ -103,7 +111,7 @@ void Process_Internal_Thermo_Format(
 )
 {
 
-	for(size_t i = 0;i<Thermodynamics_List.size()-2;i++) // we need 3 lines per species
+	for(size_t i = 1;i<Thermodynamics_List.size()-2;i++) // we need 3 lines per species
 	{
 
 		size_t Number_Species = Species.size();
@@ -191,7 +199,7 @@ void Process_Chemkin_Thermo_Format(
 )
 {
 	// start from the second line, the first line contains three temperatures...
-	for(size_t i = 1;i<Thermodynamics_List.size()-3;i++) // we use 4 lines per species
+	for(size_t i = 2;i<Thermodynamics_List.size()-3;i++) // we use 4 lines per species
 	{
 		ThermodynamicData temp_read_in_single_species;
 

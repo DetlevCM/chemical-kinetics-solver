@@ -58,12 +58,25 @@ vector< SingleReactionData > Get_Reactions(
 	 * };
 	 */
 
+	// read the reactions block
+	vector<string> Reactions_List = Read_Chemkin_Block(filename, "REAC");
+
+	// if Reactions_List is empty, we have an error...
+
+	// set mechanism units:
+	vector< int > SchemeUnits(2); // identifiers for units of A and Ea
+	SchemeUnits = Set_Mechanism_Units(Reactions_List[0]);
+
+	vector< SingleReactionData > Reaction_Data;
+
+
+	/*
 	// most mechanisms only have megabyte sizes, thus it is possible to
 	// store the mechanism in memory for easier string processing
 	vector<string> Reactions_List;
 
 	// we prepare the output vector that we will return
-	vector< SingleReactionData > Reaction_Data;
+
 
 	// we open the file that contains the mechanims data
 	ifstream Mechanism_Data;
@@ -76,6 +89,8 @@ vector< SingleReactionData > Get_Reactions(
 
 
 	//size_t Number_Species = Species.size();
+	 *//*/
+	 */
 
 	/*
 	 * New implementation:
@@ -83,6 +98,7 @@ vector< SingleReactionData > Get_Reactions(
 	 * 2: process the reactions into the mechanism for the solver
 	 */
 
+	/*
 
 	if (Mechanism_Data.is_open())
 	{
@@ -115,13 +131,13 @@ vector< SingleReactionData > Get_Reactions(
 			}
 		}
 		Mechanism_Data.close();
-	}
+	}//*/
 
 	//cout << Reactions_List.size() << "\n";
 
 	// even the largest mechanisms will be on a MB scale, so we can read all and store it in memory.
 	// next we need to process it line for line:
-	for(size_t i=0;i<Reactions_List.size();i++)
+	for(size_t i=1;i<Reactions_List.size();i++)
 	{
 
 		// first, strip comments:
