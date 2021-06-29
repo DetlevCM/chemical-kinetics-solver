@@ -120,13 +120,13 @@ void Calculate_Rate_Constant(
 		{
 			Kf[i] = Calculate_Lindeman_Hinshelwood_SRI(
 					ReactionParameters[i],
-										Concentrations,
-										Temperature,
-										third_body_sum
-								);
+					Concentrations,
+					Temperature,
+					third_body_sum
+			);
 		}
 		else if(ReactionParameters[i].ThirdBodyType == 2 && ReactionParameters[i].troeThirdBody.has_troe)
-				{
+		{
 			Kf[i] = Calculate_Lindeman_Hinshelwood_Low_Troe(
 					ReactionParameters[i],
 					Concentrations,
@@ -165,20 +165,21 @@ void Calculate_Rate_Constant(
 						Kr[i] = 0;
 					}//*/
 		}
-		else if(ReactionParameters[i].Reversible && ReactionParameters[i].explicit_rev == true)
+		//else if(ReactionParameters[i].Reversible && ReactionParameters[i].explicit_rev == true)
+		else if(ReactionParameters[i].explicit_rev == true) // a reaction with explicit reverse parameters must be reversible
 		{
 			// can explicit reversible reactions also be suject to third body terms? Not supported here...
 
 			Kr[i] = ReactionParameters[i].param_reverse.A *
-							exp(-ReactionParameters[i].param_reverse.Ea/Temperature); // do NOT forget the - !!!
+					exp(-ReactionParameters[i].param_reverse.Ea/Temperature); // do NOT forget the - !!!
 
-					//* Speedup by only raising temperature to power where needed: improvement is large :)
-					if(ReactionParameters[i].param_reverse.n != 0) // raising to power 0 has no effect, so only if not 0
-					{
-						// unsure if this check really gives a performance improvement...
-						// maybe it used to and no longer does with a modern compiler/processor/kernel
-						Kr[i] = Kr[i] * pow(Temperature,ReactionParameters[i].param_reverse.n);
-					}
+			//* Speedup by only raising temperature to power where needed: improvement is large :)
+			if(ReactionParameters[i].param_reverse.n != 0) // raising to power 0 has no effect, so only if not 0
+			{
+				// unsure if this check really gives a performance improvement...
+				// maybe it used to and no longer does with a modern compiler/processor/kernel
+				Kr[i] = Kr[i] * pow(Temperature,ReactionParameters[i].param_reverse.n);
+			}
 		}
 
 		// if it is set to zero at the start and not touched for irreversible reactions thus this is redundant

@@ -16,7 +16,6 @@ vector< ReactionParameter > Process_Reaction_Parameters(
 		// the three cases in which Arrhenius parameters are provided:
 		temp_one_reaction.param_forward = Reactions[i].param_forward;
 		temp_one_reaction.param_reverse = Reactions[i].param_reverse;
-		temp_one_reaction.param_TB_low = Reactions[i].param_TB_low;
 
 		temp_one_reaction.Reversible = Reactions[i].Reversible;
 
@@ -25,6 +24,7 @@ vector< ReactionParameter > Process_Reaction_Parameters(
 
 		// add in third body support...
 		temp_one_reaction.ThirdBodyType = Reactions[i].ThirdBodyType;
+		temp_one_reaction.param_TB_low = Reactions[i].param_TB_low;
 		temp_one_reaction.ThBd_param = Reactions[i].ThBd_param;
 		temp_one_reaction.sri_flag = Reactions[i].sri_flag;
 		temp_one_reaction.collision_efficiency = Reactions[i].collision_efficiency;

@@ -60,8 +60,7 @@ vector< SingleReactionData > Get_Reactions(
 	// if Reactions_List is empty, we have an error...
 
 	// set mechanism units:
-	vector< int > SchemeUnits(2); // identifiers for units of A and Ea
-	SchemeUnits = Set_Mechanism_Units(Reactions_List[0]);
+	vector< int > SchemeUnits = Set_Mechanism_Units(Reactions_List[0]); // identifiers for units of A and Ea
 
 	vector< SingleReactionData > Reaction_Data;
 
