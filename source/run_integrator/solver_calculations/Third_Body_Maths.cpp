@@ -115,17 +115,29 @@ double Calculate_Lindeman_Hinshelwood_SRI(
 	//double mod_third_body_molecules_cm3 = mod_third_body/1000.0*6.0221e23;
 	double F = 1.0;
 
+
+
 	if(ReactionData.sri_flag == 0)
 	{
-	F = 1.0;
+		F = 1.0;
 	}
 	else if(ReactionData.sri_flag == 1) /* its simple SRI */
 	{
+		// log is not possible for 0
+		if(mod_third_body < 1.0e-30)
+		{
+			mod_third_body = 1.0e-30;
+		}
 		//F = T*pow((sri.a*exp(-sri.b/T)+exp(-T/sri.c)), ((1.0/(1.0+pow((log10(kzero*mod_third_body/kinf)), 2)))));
 		F = T*pow((sri.a*exp(-sri.b/T)+exp(-T/sri.c)), ((1.0/(1.0+pow((log10(kzero*mod_third_body/kinf)), 2)))));
 	}
 	else if(ReactionData.sri_flag == 2) /* It's complex SRI */
 	{
+		// log is not possible for 0
+		if(mod_third_body < 1.0e-30)
+		{
+			mod_third_body = 1.0e-30;
+		}
 		//F = sri.d*pow(T, sri.e)*pow((sri.a*exp(-sri.b/T)+exp(-T/sri.c)), ((1.0/(1.0+pow((log10(kzero*mod_third_body/kinf)), 2)))));
 		F = sri.d*pow(T, sri.e)*pow((sri.a*exp(-sri.b/T)+exp(-T/sri.c)), ((1.0/(1.0+pow((log10(kzero*mod_third_body/kinf)), 2)))));
 	}
@@ -178,12 +190,12 @@ double Calculate_Lindeman_Hinshelwood_Low_Troe(
 	if(ReactionData.troeThirdBody.is_4_param == false)
 	{
 		// 3 parameter TROE takes a, T3, T1
-		Fc = (1-troe.a)*exp(-T*inv_T3)+troe.a*exp(-T*inv_T1);
+		Fc = (1.0-troe.a)*exp(-T*inv_T3)+troe.a*exp(-T*inv_T1);
 	}
 	else // (ReactionData.troeThirdBody.is_4_param == true)
 	{
 		// 4 parameter TROE takes a, T3, T1, T2
-		Fc = (1-troe.a)*exp((-T*inv_T3))+troe.a*exp((-T*inv_T1))+exp((-troe.T2*inv_T));
+		Fc = (1.0-troe.a)*exp((-T*inv_T3))+troe.a*exp((-T*inv_T1))+exp((-troe.T2*inv_T));
 	}
 
 	// needs the special treatment for the species concentration as an option for mod_third_body

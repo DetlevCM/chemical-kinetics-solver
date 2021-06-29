@@ -135,9 +135,9 @@ vector< SingleReactionData > Get_Reactions(
 				{
 					Reaction_Data[position].troeThirdBody.has_troe = true;
 					Reaction_Data[position].troeThirdBody.a = tmp[1];
-					Reaction_Data[position].troeThirdBody.T2 = tmp[2];
+					Reaction_Data[position].troeThirdBody.T3 = tmp[2];
 					Reaction_Data[position].troeThirdBody.T1 = tmp[3];
-					if(tmp.size() == 4) // 4 parameter troe
+					if(tmp.size() == 5) // 4 parameter troe -> first string is TROE/
 					{
 						Reaction_Data[position].troeThirdBody.T2 = tmp[4];
 						Reaction_Data[position].troeThirdBody.is_4_param = true;
