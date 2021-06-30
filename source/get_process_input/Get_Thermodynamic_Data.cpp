@@ -66,7 +66,7 @@ void Process_Internal_Thermo_Format(
 		vector< string > temp_split_line;
 		vector< double > temp_split_line_double;
 
-		temp_split_line = Tokenise_String_To_String(Thermodynamics_List[i] , " 	" );
+		temp_split_line = Tokenise_String_To_String(Thermodynamics_List[i] , " \t" );
 
 		// for now we just want the species name, that is the initial input
 		// Species Name is now temp_split_line[0]
@@ -94,7 +94,7 @@ void Process_Internal_Thermo_Format(
 			// now the 3 temperature readings
 			//getline (Mechanism_Data,line1);
 			string line1 = Thermodynamics_List[i];
-			temp_split_line_double = Tokenise_String_To_Double(line1 , " 	");
+			temp_split_line_double = Tokenise_String_To_Double(line1 , " \t");
 			temp_read_in_single_species.TLow = temp_split_line_double[0];
 			temp_read_in_single_species.THigh = temp_split_line_double[1];
 			temp_read_in_single_species.TChange = temp_split_line_double[2];
@@ -104,7 +104,7 @@ void Process_Internal_Thermo_Format(
 			//getline (Mechanism_Data,line1);
 			string line2 = Thermodynamics_List[i+1];
 
-			temp_split_line_double = Tokenise_String_To_Double(line2 , " 	");
+			temp_split_line_double = Tokenise_String_To_Double(line2 , " \t");
 			temp_read_in_single_species.NasaLow1 = temp_split_line_double[0];
 			temp_read_in_single_species.NasaLow2 = temp_split_line_double[1];
 			temp_read_in_single_species.NasaLow3 = temp_split_line_double[2];
@@ -118,7 +118,7 @@ void Process_Internal_Thermo_Format(
 			//getline (Mechanism_Data,line1);
 			string line3 = Thermodynamics_List[i+2];
 
-			temp_split_line_double = Tokenise_String_To_Double(line3 , " 	");
+			temp_split_line_double = Tokenise_String_To_Double(line3 , " \t");
 			temp_read_in_single_species.NasaHigh1 = temp_split_line_double[0];
 			temp_read_in_single_species.NasaHigh2 = temp_split_line_double[1];
 			temp_read_in_single_species.NasaHigh3 = temp_split_line_double[2];
