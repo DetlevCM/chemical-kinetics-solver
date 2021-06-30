@@ -115,10 +115,8 @@ vector< SingleReactionData > Get_Reactions(
 				// position 1 is "low"
 				if(tmp.size() == 4)
 				{
-					//Reaction_Data[position].lowThirdBody.paramA0 = tmp[1];
 					Reaction_Data[position].param_TB_low.A = Scale_A(tmp[1], Reaction_Data[position].Reactants, SchemeUnits[0]);
 					Reaction_Data[position].param_TB_low.n = tmp[2];
-					//Reaction_Data[position].lowThirdBody.paramEa0 = tmp[3];
 					Reaction_Data[position].param_TB_low.Ea = Scale_Ea(tmp[3], SchemeUnits[1]);
 				}
 			}
@@ -225,7 +223,6 @@ SingleReactionData Parse_Chemking_Reaction_String(const vector< int > SchemeUnit
 	vector< double > ProductData; // Product Information
 	ProductData.resize(Number_Species);
 	vector< double > ReactionData; // Reaction parameters such as Arrhenius parameters and whether irreversible or not
-	ReactionData.resize(4); // A, n, Ea and whether reversible or irreversible
 
 	// Make New Input
 	SingleReactionData temp;
@@ -240,7 +237,7 @@ SingleReactionData Parse_Chemking_Reaction_String(const vector< int > SchemeUnit
 
 	// Determine if the reaction is irreversible. We assume it is reversible and then correct.
 	// irreversible is indicated using => or ->
-	bool is_reversible = true;
+	bool is_reversible = true; // this is the default hypothesis
 	if(Test_If_Word_Found(line,"=>") || Test_If_Word_Found(line,"->"))
 	{
 		is_reversible = false;
@@ -330,24 +327,22 @@ SingleReactionData Parse_Chemking_Reaction_String(const vector< int > SchemeUnit
 	// Tokenize line, then take last 3 positions - easiest to work on the whole line without comments
 	vector< string > SplitLine;
 
-	double step;
+	double step =0.0;
 
 	SplitLine = Tokenise_String_To_String(line,"\t ");
 	size_t SplitLineSize = SplitLine.size();
-	step = (strtod(SplitLine[SplitLineSize - 3].c_str(),NULL)); // A as read in
-	ReactionData[0] = Scale_A(step, ReactantData, SchemeUnits[0]); // A in adjusted units for calc.
 
-	ReactionData[1]=(strtod(SplitLine[SplitLineSize - 2].c_str(),NULL)); // n as read in
+	step = (strtod(SplitLine[SplitLineSize - 3].c_str(),NULL)); // A as read in
+	temp.param_forward.A = Scale_A(step, ReactantData, SchemeUnits[0]); // A in adjusted units for calc.
+
+	temp.param_forward.n = (strtod(SplitLine[SplitLineSize - 2].c_str(),NULL)); // n as read in
 
 	step = (strtod(SplitLine[SplitLineSize - 1].c_str(),NULL)); // Ea as read in
-	ReactionData[2] = Scale_Ea(step,SchemeUnits[1]); // Ea in adjusted units for calc.
+	temp.param_forward.Ea = Scale_Ea(step,SchemeUnits[1]); // Ea in adjusted units for calc.
 
 
 	temp.Reactants = ReactantData;
 	temp.Products = ProductData;
-	temp.param_forward.A = ReactionData[0];
-	temp.param_forward.n = ReactionData[1];
-	temp.param_forward.Ea = ReactionData[2];
 	temp.Reversible = is_reversible;
 	temp.IsDuplicate = false; // default, not a duplicate
 
