@@ -35,20 +35,20 @@ public:
 
 class SRIThirdBody {
 public:
-	double a;
-	double b;
-	double c;
-	double d = 1; // default
-	double e = 0; // default
+	double a = 0.0;
+	double b = 0.0;
+	double c = 0.0;
+	double d = 1.0; // default
+	double e = 0.0; // default
 	bool is_5_param = false;
 };
 
 class TroeThirdBody{
 public:
-	double a;
-	double T1;
-	double T2; // only in 4 parameter troe
-	double T3;
+	double a = 0.0;
+	double T1 = 0.0;
+	double T2 = 0.0; // only in 4 parameter troe
+	double T3 = 0.0;
 	bool is_4_param = false; // default
 	bool has_troe = false;
 };
@@ -57,15 +57,15 @@ public:
 // given that we have k0, kinf/kf and explicit kr
 class param_Arrhenius{
 public:
-	double A;
-	double n;
-	double Ea;
+	double A = 0.0;
+	double n = 0.0;
+	double Ea = 0.0;
 };
 
 class SingleReactionData {
 public:
-	bool Reversible;
-	bool IsDuplicate;
+	bool Reversible = false;
+	bool IsDuplicate = false;
 
 	param_Arrhenius param_forward; // standard forward Arrhenius parameters
 
