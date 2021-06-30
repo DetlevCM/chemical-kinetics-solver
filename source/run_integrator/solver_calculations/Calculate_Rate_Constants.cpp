@@ -73,19 +73,12 @@ void Calculate_Rate_Constant(
 		Kf[i] = ReactionParameters[i].param_forward.A *
 				exp(-ReactionParameters[i].param_forward.Ea/Temperature); // do NOT forget the - !!!
 
-		//* Speedup by only raising temperature to power where needed: improvement is large :)
+		// Speedup by only raising temperature to power where needed: improvement is large :)
 		if(ReactionParameters[i].param_forward.n != 0) // raising to power 0 has no effect, so only if not 0
 		{
 			// unsure if this check really gives a performance improvement...
 			// maybe it used to and no longer does with a modern compiler/processor/kernel
-			//if(ReactionParameters[i].paramN != 1)
-			//{
 			Kf[i] = Kf[i] * pow(Temperature,ReactionParameters[i].param_forward.n);
-			/*}
-			else
-			{
-				Kf[i] = Kf[i] * Temperature; // raise temp^1 = temp
-			}//*/
 		}
 
 		/*
@@ -137,8 +130,6 @@ void Calculate_Rate_Constant(
 		//*/
 
 
-
-
 		// default, change if reversible - seems a little bit faster...
 		Kr[i] = 0;
 		// then calculate and set the reverse if required
@@ -158,13 +149,6 @@ void Calculate_Rate_Constant(
 				//temp_kc = temp_kp*pow((1.3624659e-22*Temperature),(-Delta_N[i])); // for molecules cm^(-3)
 				Kr[i] = Kf[i]/temp_kc;
 			}
-
-			// IEEE standards hack to avoid Nan Rate, shouldn't exist in the first place...
-			/*
-			if(Kr[i] != Kr[i])
-			{
-				Kr[i] = 0;
-			}//*/
 		}
 		//else if(ReactionParameters[i].Reversible && ReactionParameters[i].explicit_rev == true)
 		else if(ReactionParameters[i].explicit_rev == true) // a reaction with explicit reverse parameters must be reversible
@@ -174,23 +158,18 @@ void Calculate_Rate_Constant(
 			Kr[i] = ReactionParameters[i].param_reverse.A *
 					exp(-ReactionParameters[i].param_reverse.Ea/Temperature); // do NOT forget the - !!!
 
-			//* Speedup by only raising temperature to power where needed: improvement is large :)
+			// Speedup by only raising temperature to power where needed: improvement is large :)
 			if(ReactionParameters[i].param_reverse.n != 0) // raising to power 0 has no effect, so only if not 0
 			{
-				// unsure if this check really gives a performance improvement...
-				// maybe it used to and no longer does with a modern compiler/processor/kernel
 				Kr[i] = Kr[i] * pow(Temperature,ReactionParameters[i].param_reverse.n);
 			}
 		}
 
-		// if it is set to zero at the start and not touched for irreversible reactions thus this is redundant
-		// Fewer memory allocations should speed things up - or not?
+		// IEEE standards hack to avoid Nan Rate, shouldn't exist in the first place...
 		/*
-				else
-				{
-					Kr[i] = 0;
-				}//*/
+		if(Kr[i] != Kr[i])
+		{
+			Kr[i] = 0;
+		}//*/
 	}
-
-
 }
