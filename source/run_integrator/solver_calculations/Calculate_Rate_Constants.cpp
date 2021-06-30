@@ -43,18 +43,13 @@ void Calculate_Rate_Constant(
 
 
 
-
-
 	// Worked out per reaction
 	// as we have the value of the calculated thermodynamics, we just need to put them together
 	// per reaction, going through every species
 	double third_body_sum = 0.0;
-	for(i = 0; i<Concentrations.size() - 1; i++) // last position is temperature
-	{
-		third_body_sum = third_body_sum + Concentrations[i];
-	}
 
-	for(i = 0;i< SpeciesAll.size();i++){ // loop over every reaction
+	for(i = 0;i< SpeciesAll.size();i++)// loop over every species
+	{
 		delta_H[SpeciesAll[i].ReactionID] =
 				delta_H[SpeciesAll[i].ReactionID] +
 				(CalculatedThermo[SpeciesAll[i].SpeciesID].Hf * SpeciesAll[i].coefficient);
@@ -63,6 +58,8 @@ void Calculate_Rate_Constant(
 				delta_S[SpeciesAll[i].ReactionID] +
 				(CalculatedThermo[SpeciesAll[i].SpeciesID].S * SpeciesAll[i].coefficient);
 
+		// summing concentrations for third bodies
+		third_body_sum = third_body_sum + Concentrations[i];
 	}
 
 
