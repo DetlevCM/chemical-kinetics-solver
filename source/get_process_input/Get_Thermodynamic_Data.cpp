@@ -148,7 +148,7 @@ void Process_Chemkin_Thermo_Format(
 )
 {
 	// start from the second line, the first line contains three temperatures...
-	for(size_t i = 2;i<Thermodynamics_List.size()-3;i++) // we use 4 lines per species
+	for(size_t i = 2;i<Thermodynamics_List.size()-3;i+=4) // we use 4 lines per species
 	{
 		ThermodynamicData temp_read_in_single_species;
 
