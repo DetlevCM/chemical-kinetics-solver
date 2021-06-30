@@ -54,7 +54,7 @@ void Process_Internal_Thermo_Format(
 )
 {
 
-	for(size_t i = 1;i<Thermodynamics_List.size()-2;i++) // we need 3 lines per species
+	for(size_t i = 1;i<Thermodynamics_List.size()-2;i+=3) // we need 3 lines per species
 	{
 
 		size_t Number_Species = Species.size();
