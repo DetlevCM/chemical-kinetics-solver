@@ -23,24 +23,18 @@ vector< ThermodynamicData > Get_Thermodynamic_Data(
 	vector< ThermodynamicData > read_in_thermodynamics;
 	read_in_thermodynamics.resize(Number_Species);
 
-	vector<string> Thermodynamics_List = Read_Chemkin_Block(filename, "ThermData");
-
-	if(Thermodynamics_List.size() == 0)
-	{
-		Thermodynamics_List = Read_Chemkin_Block(filename, "THERM");
-	}
-
+	vector<string> Thermodynamics_List = Read_Chemkin_Block(filename, "THERM");
 
 
 	if(Test_If_Word_Found(Thermodynamics_List[0],"ThermData"))
 	{
 		Process_Internal_Thermo_Format(
-						read_in_thermodynamics,
-						Species,
-						Thermodynamics_List
-				);
+				read_in_thermodynamics,
+				Species,
+				Thermodynamics_List
+		);
 	}
-	else // if(thermo_type == 1) // internal thermo format
+	else
 	{
 		Process_Chemkin_Thermo_Format(
 				read_in_thermodynamics,
