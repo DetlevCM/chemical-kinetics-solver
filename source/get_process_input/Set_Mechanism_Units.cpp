@@ -18,20 +18,22 @@ vector<int> Set_Mechanism_Units(string test_string) // Identify the units
 
 	// then explicitly react to possible options
 
+	if(Test_If_Word_Found(test_string, "KEEPA")) // special keep word to retain unit of A
+	{
+		Mechanism_Units[0] = 0; // A in moles per cm^3
+	}
+	// assuming moles and mol is the same there, keep both for clarity of permitted terms
+	if(Test_If_Word_Found(test_string, "MOLE") || Test_If_Word_Found(test_string, "MOLES"))
+	{
+		Mechanism_Units[0] = 2; // A in moles per cm^3
+	}
+	// need to test for the longest keyword last
 	if(Test_If_Word_Found(test_string, "MOLECULES")) // enable case independent test
 	{
 		Mechanism_Units[0] = 1; // A in molecules cm^(-3)
 	}
 
-	if(Test_If_Word_Found(test_string, "MOLES"))
-	{
-		Mechanism_Units[0] = 2; // A in moles per cm^3
-	}
-
-	if(Test_If_Word_Found(test_string, "MOLE")) // assuming moles and mol is the same there
-	{
-		Mechanism_Units[0] = 2; // A in moles per cm^3
-	}
+	// note space before KCAL or CAL to avoid overwriting of units
 
 	if(Test_If_Word_Found(test_string, "KELVINS"))
 	{
