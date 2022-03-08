@@ -23,7 +23,9 @@ vector<int> Set_Mechanism_Units(string test_string) // Identify the units
 		Mechanism_Units[0] = 0;
 	}
 	// assuming moles and mol is the same there, keep both for clarity of permitted terms
-	if(Test_If_Word_Found(test_string, "MOLE") || Test_If_Word_Found(test_string, "MOLES"))
+	if(Test_If_Word_Found(test_string, " MOLE") || Test_If_Word_Found(test_string, " MOLES")
+			||
+			Test_If_Word_Found(test_string, "\tMOLE") || Test_If_Word_Found(test_string, "\tMOLES"))
 	{
 		Mechanism_Units[0] = 2; // A in moles per cm^3
 	}
