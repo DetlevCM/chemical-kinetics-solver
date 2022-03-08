@@ -20,7 +20,7 @@ vector<int> Set_Mechanism_Units(string test_string) // Identify the units
 
 	if(Test_If_Word_Found(test_string, "KEEPA")) // special keep word to retain unit of A
 	{
-		Mechanism_Units[0] = 0; // A in moles per cm^3
+		Mechanism_Units[0] = 0;
 	}
 	// assuming moles and mol is the same there, keep both for clarity of permitted terms
 	if(Test_If_Word_Found(test_string, "MOLE") || Test_If_Word_Found(test_string, "MOLES"))
