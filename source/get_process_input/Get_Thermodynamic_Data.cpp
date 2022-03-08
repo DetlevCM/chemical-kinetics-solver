@@ -25,6 +25,12 @@ vector< ThermodynamicData > Get_Thermodynamic_Data(
 
 	vector<string> Thermodynamics_List = Read_Chemkin_Block(filename, "THERM");
 
+	// it is possible that there is no thermo block:
+	if(Thermodynamics_List.size() == 0)
+	{
+		// so return early
+		return read_in_thermodynamics;
+	}
 
 	if(Test_If_Word_Found(Thermodynamics_List[0],"ThermData"))
 	{

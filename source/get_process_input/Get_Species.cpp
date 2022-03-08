@@ -32,12 +32,14 @@ vector< string > Get_Species(string filename)
 					if(!tmp[j].empty())
 					{
 						All_Species.push_back(tmp[j]);
+						//cout << tmp[j] << "\n";
 					}
 				}
 			}
 			else
 			{
 				All_Species.push_back(line);
+				//cout << line << "\n";
 			}
 		}
 	}
