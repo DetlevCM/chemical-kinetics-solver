@@ -17,17 +17,17 @@ c
 c then compile as usual and only use LSODA in the software during execution
 c
 
-
       subroutine dodesol_mk52lfa(
      $           in1,in2,db1,db2,db3,ext1,ext2,
      $           db4,db5,db6,db7,db8,in3,in4)
-      
+     $ bind(C)
+
       use iso_c_binding, only: C_CHAR, c_null_char
-      implicit none
+c      implicit none
       
       integer in1, in2, in3, in4
       double precision db1, db2, db3, db4, db5, db6, db7, db8
-      external ext1, ext2
+c      external ext1, ext2
       
       in1 = in2
       
@@ -37,13 +37,14 @@ c
       subroutine dodesol_rkm9mka(
      $           in1,in2,db1,db2,db3,ext1,ext2,
      $           db4,db5,db6,db7,db8,in3,in4)
-      
+     $ bind(C)
+
       use iso_c_binding, only: C_CHAR, c_null_char
-      implicit none
+c      implicit none
       
       integer in1, in2, in3, in4
       double precision db1, db2, db3, db4, db5, db6, db7, db8
-      external ext1, ext2
+c      external ext1, ext2
       
       in1 = in2
 
@@ -52,13 +53,14 @@ c
       subroutine dodesol_mk52lfn(
      $           in1,in2,db1,db2,db3,ext1,ext2,
      $           db4,db5,db6,db7,db8,in3,in4)
-      
+     $ bind(C)
+
       use iso_c_binding, only: C_CHAR, c_null_char
-      implicit none
+c      implicit none
       
       integer in1, in2, in3, in4
       double precision db1, db2, db3, db4, db5, db6, db7, db8
-      external ext1, ext2
+c      external ext1, ext2
       
       in1 = in2
       
@@ -67,13 +69,14 @@ c
       subroutine dodesol_rkm9mkn(
      $           in1,in2,db1,db2,db3,ext1,ext2,
      $           db4,db5,db6,db7,db8,in3,in4)
-      
+     $ bind(C)
+
       use iso_c_binding, only: C_CHAR, c_null_char
-      implicit none
+c      implicit none
       
       integer in1, in2, in3, in4
       double precision db1, db2, db3, db4, db5, db6, db7, db8
-      external ext1, ext2
+c      external ext1, ext2
       
       in1 = in2
       

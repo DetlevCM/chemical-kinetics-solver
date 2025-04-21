@@ -7,7 +7,7 @@ lib_intel:
 
 lib_odepack:
 	gfortran -c -std=legacy lib/odepack/opkda1.f  -o lib/odepack/opkda1.o
-	gfortran -c -std=legacy lib/odepack/opkda2.f -o lib/odepack/opkda2.o 
+	gfortran -c -std=legacy lib/odepack/opkda2.f -o lib/odepack/opkda2.o
 	gfortran -c -std=legacy lib/odepack/opkdmain.f -o lib/odepack/opkdmain.o
 	ar -rcs lib/odepack/libodepack.a lib/odepack/opkda1.o lib/odepack/opkda2.o lib/odepack/opkdmain.o
 
