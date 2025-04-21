@@ -5,7 +5,7 @@
  *      Author: detlevcm
  */
 
-#include "../headers/Headers.hpp"
+#include "../include/Headers.hpp"
 
 
 /* It seems a limited number of global variables cannot be avoided.

@@ -14,8 +14,9 @@ c
 c And use the following to create the archive:
 c ar -rcs libiode_intel64.a if_you_do_not_have_the_library.o
 c
-c then compile as usualm and only use LSODA in the software during execution
+c then compile as usual and only use LSODA in the software during execution
 c
+
 
       subroutine dodesol_mk52lfa(
      $           in1,in2,db1,db2,db3,ext1,ext2,

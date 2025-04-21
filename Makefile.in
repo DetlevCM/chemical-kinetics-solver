@@ -1,0 +1,61 @@
+
+
+lib_intel:
+	gfortran -c lib/intel/if_you_do_not_have_the_library.f -o lib/intel/if_you_do_not_have_the_library.o
+	ar -rcs lib/intel/libiode_intel64.a lib/intel/if_you_do_not_have_the_library.o
+
+
+lib_odepack:
+	gfortran -c -std=legacy lib/odepack/opkda1.f  -o lib/odepack/opkda1.o
+	gfortran -c -std=legacy lib/odepack/opkda2.f -o lib/odepack/opkda2.o 
+	gfortran -c -std=legacy lib/odepack/opkdmain.f -o lib/odepack/opkdmain.o
+	ar -rcs lib/odepack/libodepack.a lib/odepack/opkda1.o lib/odepack/opkda2.o lib/odepack/opkdmain.o
+
+
+
+CC=g++
+CFLAGS=-O2 -Wall
+
+INCLUDES = -Iinclude
+
+SOURCES := $(wildcard src/*.cpp)
+SOURCES += $(wildcard src/*/*.cpp)
+SOURCES += $(wildcard src/*/*/*.cpp)
+
+show: 
+	echo $(SOURCES)
+
+LFLAGS =  -Llib/intel -Llib/odepack
+
+# gfortran must be linked for the fortran ODE libraries
+LIBS = -liode_intel64 -lodepack -lm -lgfortran
+
+OBJS = $(SOURCES:.cpp=.o)
+
+# legacy name...
+MAIN = CKS.exe
+
+# $(addprefix $(OBJ)/, $(notdir $(SRC: .cpp=.o)))
+# $(MAIN)
+
+code:  
+#	$(MAIN): $(OBJS) 
+	$(foreach SOURCE, $(SOURCES), $(CC) -c $(CFLAGS) $(INCLUDES) $(SOURCE) -o $(SOURCE:.cpp=.o) $(LFLAGS) $(LIBS);)
+	$(CC) -o $(MAIN) $(INCLUDES) $(OBJS) $(LFLAGS) $(LIBS)
+
+clean_libs:
+	$(RM) lib/intel/if_you_do_not_have_the_library.o
+	$(RM) lib/intel/libiode_intel64.a
+
+	$(RM) lib/odepack/opkda1.o
+	$(RM) lib/odepack/opkda2.o 
+	$(RM) lib/odepack/opkdmain.o
+	$(RM) lib/odepack/libodepack.a
+
+clean_code:
+	$(RM) count src/*.o *~
+	$(RM) count src/*/*.o *~
+	$(RM) count src/*/*/*.o *~
+
+clean_all:
+	clean_libs clean_code

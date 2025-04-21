@@ -1,19 +1,26 @@
 ### Intel ODE library must be obtained from Intel
-libraries/intel/libiode_intel64.lib
-libraries/intel/libiode_intel64.a
-libraries/intel/libiode_ia32.lib
-libraries/intel/libiode_ia32.a
+lib/intel/libiode_intel64.lib
+lib/intel/libiode_intel64.a
+libiode_intel64.*
+lib/intel/libiode_ia32.lib
+lib/intel/libiode_ia32.a
 ## odepack must be obtained from LLNL
-libraries/odepack/libodepack.a
-libraries/odepack/libodepack.lib
+lib/odepack/libodepack.a
+lib/odepack/libodepack.lib
 #libraries/odepack/opkd-sum
 #libraries/odepack/opkda1.f
 #libraries/odepack/opkda2.f
 #libraries/odepack/opkdmain.f
 #libraries/odepack/opkddemos
 
+##temporary files
+*~
+
 ## binary for daskr
 libraries/daskr/libddaskr.a
+
+## autoconf tool
+autom4te.cache/
 
 ## exclude source and temp files for documentation
 *.tex

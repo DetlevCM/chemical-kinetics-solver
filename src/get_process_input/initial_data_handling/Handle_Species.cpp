@@ -5,7 +5,7 @@
  *      Author: DetlevCM
  */
 
-#include "../headers/Headers.hpp"
+#include "../include/Headers.hpp"
 
 vector< InitSpecies > Handle_Species(
 		Initial_Data&  InitialParameters,

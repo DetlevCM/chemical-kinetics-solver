@@ -5,7 +5,7 @@
  *      Author: DetlevCM
  */
 
-#include "../headers/Headers.hpp"
+#include "../include/Headers.hpp"
 
 // from odepack
 //SUBROUTINE JAC (NEQ, T, Y, ML, MU, PD, NROWPD)

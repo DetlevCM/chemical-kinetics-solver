@@ -4,7 +4,7 @@
  *  Created on: 26.10.2017
  *      Author: DetlevCM
  */
-#include "../headers/Headers.hpp"
+#include "../include/Headers.hpp"
 
 // initially this is the same as the liquid phase solver
 // in the long term, this function will need to get third body support etc. IF it is actively developed...

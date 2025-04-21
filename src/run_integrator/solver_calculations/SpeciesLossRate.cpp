@@ -1,4 +1,4 @@
-#include "../headers/Headers.hpp"
+#include "../include/Headers.hpp"
 
 /* This function determines the species loss rate by combining the species
  * coefficients from the reactions with the reaction rate for each reaction.

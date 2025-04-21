@@ -5,7 +5,7 @@
  *      Author: DetlevCM
  */
 
-#include "../headers/Headers.hpp"
+#include "../include/Headers.hpp"
 
 /*
  * The more solvers and models are implemented, the messier the code becomes...
