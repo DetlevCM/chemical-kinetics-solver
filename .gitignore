@@ -16,6 +16,14 @@ lib/odepack/libodepack.lib
 ##temporary files
 *~
 
+## generated files
+autoscan.log
+config.log
+config.status
+configure.scan
+Makefile
+
+
 ## binary for daskr
 libraries/daskr/libddaskr.a
 
