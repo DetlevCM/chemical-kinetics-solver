@@ -1,5 +1,6 @@
 
 
+# this builds a placeholder for the intel ODE library, as it is no longer available unless you already have it
 lib_intel:
 	gfortran -c lib/intel/if_you_do_not_have_the_library.f -o lib/intel/if_you_do_not_have_the_library.o
 	ar -rcs lib/intel/libiode_intel64.a lib/intel/if_you_do_not_have_the_library.o
@@ -43,6 +44,11 @@ code:
 	$(foreach SOURCE, $(SOURCES), $(CC) -c $(CFLAGS) $(INCLUDES) $(SOURCE) -o $(SOURCE:.cpp=.o) $(LFLAGS) $(LIBS);)
 	$(CC) -o $(MAIN) $(INCLUDES) $(OBJS) $(LFLAGS) $(LIBS)
 
+all:
+	$(MAKE) lib_odepack 
+	$(MAKE) lib_intel
+	$(MAKE) code
+
 clean_libs:
 	$(RM) lib/intel/if_you_do_not_have_the_library.o
 	$(RM) lib/intel/libiode_intel64.a
@@ -58,4 +64,5 @@ clean_code:
 	$(RM) count src/*/*/*.o *~
 
 clean_all:
-	clean_libs clean_code
+	$(MAKE) clean_libs
+	$(MAKE) clean_code
