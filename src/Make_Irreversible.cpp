@@ -30,8 +30,6 @@ vector< SingleReactionData > Make_Irreversible(
 		double Range // specify +/- range around initial temperature
 )
 {
-	/* 2002 CODATA values */
-	//double R = 8.314472e0; // Ea is internally given in Kelvin, therefore R is not needed
 	vector< SingleReactionData > Irreversible_Scheme;
 
 	size_t i,j,k;

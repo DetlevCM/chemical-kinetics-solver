@@ -6,7 +6,7 @@
  */
 
 
-
+#include "../global_const.h"
 #include "../Headers.hpp"
 
 // we know the volume of the PetroOxy Dish
@@ -39,11 +39,6 @@ void AdjustGasConcentration(
 		PressureVesselCalc & PetroOxyData
 )
 {
-	/* 2002 CODATA values */
-	double R = 8.314472e0; // J K^-1 mol^-1 (use with Pa and m^3)
-	//double Na = 6.0221415e23;
-	// Pa -> atm *9.86923267e-6
-
 
 	// cout << time_difference << "\n"; // checked, it is non-zero
 
@@ -132,10 +127,6 @@ void Adjust_Gas_Concentration_Initial(
 		PressureVesselCalc & PetroOxyData
 )
 {
-	/* 2002 CODATA values */
-	double R = 8.314472e0; // J K^-1 mol^-1 (use with Pa and m^3)
-	//double Na = 6.0221415e23;
-	// Pa -> atm *9.86923267e-6
 
 	double targetconcentration =
 			(

@@ -35,9 +35,7 @@ void ODE_RHS_Gas_Liquid_Phase(int*n, double*time_current, double*y, double*f)
 	 * species individually. Regularly the concentrations will need to be synchronised.
 	 */
 
-	/* 2002 CODATA values */
-	//double R = 8.314472e0;
-	//double Na = 6.0221415e23;
+
 
 	// stability hack
 	if(InitialDataConstants.EnforceStability)

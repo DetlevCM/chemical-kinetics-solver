@@ -26,10 +26,6 @@ void ODE_RHS_Pressure_Vessel(int*n, double*time_current, double*y, double*f)
 	size_t i;
 
 
-	/* 2002 CODATA values */
-	//double R = 8.314472e0;
-	//double Na = 6.0221415e23;
-
 	// stability hack
 	if(InitialDataConstants.EnforceStability)
 	{

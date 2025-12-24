@@ -18,10 +18,6 @@ void ODE_RHS_Gas_Phase(int*n, double*t, double*y, double*f)
 	size_t i;
 
 
-	/* 2002 CODATA values */
-	//double R = 8.314472e0;
-	//double Na = 6.0221415e23;
-
 cout << n << "\n";
 	// stability hack
 	if(InitialDataConstants.EnforceStability)

@@ -1,4 +1,5 @@
 
+#include "../../global_const.h"
 #include "../../Headers.hpp"
 
 
@@ -9,8 +10,6 @@ void Evaluate_Thermodynamic_Parameters(
 		)
 {
 
-	/* 2002 CODATA values */
-	double R = 8.314472e0; // J mol-1 K-1
 	size_t i;
 
 	size_t Number_Species = Thermodynamics.size();

@@ -8,7 +8,7 @@
 // I should ensure I have a synch list from the pre-processing
 
 
-
+#include "../../global_const.h"
 #include "../../Headers.hpp"
 
 void Synchronize_Gas_Liquid_Model(
@@ -19,11 +19,6 @@ void Synchronize_Gas_Liquid_Model(
 		vector< double > Henry_Constants // need to line up with species IDs
 )
 {
-
-	/* 2002 CODATA values */
-	double R = 8.314472e0; // J K^-1 mol^-1 (use with Pa and m^3)
-	//double Na = 6.0221415e23;
-	// Pa -> atm *9.86923267e-6
 
 
 	/* From my PhD Thesis

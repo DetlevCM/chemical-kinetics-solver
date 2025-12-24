@@ -5,8 +5,8 @@
  *      Author: DetlevCM
  */
 
+#include "../global_const.h"
 #include "../Headers.hpp"
-
 
 
 /* This void needs to supply
@@ -292,9 +292,6 @@ bool Handle_Mechanism_Input(
 	if(InitialParameters.PetroOxy.IsSet)
 	{
 		// adjust old array
-		/* 2002 CODATA values */
-		double R = 8.314472e0;
-		//double Na = 6.0221415e23;
 
 		// not ideal, but avoids the potentia for any issues
 		if(InitialParameters.PetroOxy.SampleSize >= InitialParameters.PetroOxy.VesselSize){
