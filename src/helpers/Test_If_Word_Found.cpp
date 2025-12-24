@@ -5,7 +5,8 @@
  *      Author: DetlevCM
  */
 
-#include "../include/Headers.hpp"
+
+#include "../Headers.hpp"
 
 // from reading on the web, this approach is slow - but for the input file will do
 bool Test_If_Word_Found(string string_to_search, string search_term)

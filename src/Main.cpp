@@ -1,6 +1,7 @@
 
 // Central header file that collates all header, functions etc.
-#include "../include/Headers.hpp"
+
+#include "Headers.hpp"
 
 // http://stackoverflow.com/questions/13600204/checking-if-argvi-exists-c
 // arcg = number of arguments

@@ -30,6 +30,9 @@ public:
 	double NasaHigh5;
 	double NasaHigh6;
 	double NasaHigh7;
+
+
+	
 };
 
 class SingleReactionData {

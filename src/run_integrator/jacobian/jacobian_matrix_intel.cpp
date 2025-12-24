@@ -5,7 +5,8 @@
  *      Author: DetlevCM
  */
 
-#include "../include/Headers.hpp"
+
+#include "../../Headers.hpp"
 
 
 void Jacobian_Matrix_Intel(int*n,double*t,double*y,double*a) {

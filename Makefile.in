@@ -17,7 +17,8 @@ lib_odepack:
 CC=g++
 CFLAGS=-O2 -Wall
 
-INCLUDES = -Iinclude
+#INCLUDES = -Iinclude
+INCLUDES = -Isrc
 
 SOURCES := $(wildcard src/*.cpp)
 SOURCES += $(wildcard src/*/*.cpp)

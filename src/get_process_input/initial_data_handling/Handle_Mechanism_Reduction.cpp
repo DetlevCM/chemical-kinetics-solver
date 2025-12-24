@@ -5,7 +5,8 @@
  *      Author: DetlevCM
  */
 
-#include "../include/Headers.hpp"
+
+#include "../../Headers.hpp"
 
 
 mechanism_reduction Handle_Mechanism_Reduction(
