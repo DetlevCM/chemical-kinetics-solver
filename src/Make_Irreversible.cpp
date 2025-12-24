@@ -1,5 +1,5 @@
 /*
- * Make_Irreversilbe.cpp
+ * Make_Irreversible.cpp
  *
  *  Created on: 19.12.2012
  *  Revised on: 20.10.2017
@@ -241,8 +241,8 @@ vector< SingleReactionData > Make_Irreversible(
 
 		/*
 		printf("Reaction %u Forward: %.3e %.3e %.3e %.3e || ",i,
-				ReactionParamaters[0],ReactionParamaters[1],
-				ReactionParamaters[2],ReactionParamaters[3]); // Works :) */
+				ReactionParameters[0],ReactionParameters[1],
+				ReactionParameters[2],ReactionParameters[3]); // Works :) */
 
 		Irreversible_Scheme.push_back(SingleReaction);
 
@@ -282,8 +282,8 @@ vector< SingleReactionData > Make_Irreversible(
 
 			/*
 			printf("Reverse %.3e %.3e %.3e %.3e \n",
-					ReactionParamaters[0],ReactionParamaters[1],
-					ReactionParamaters[2],ReactionParamaters[3]); // Works :) */
+					ReactionParameters[0],ReactionParameters[1],
+					ReactionParameters[2],ReactionParameters[3]); // Works :) */
 
 			Irreversible_Scheme.push_back(SingleReaction);
 		}
