@@ -5,6 +5,9 @@
  *      Author: DetlevCM
  */
 
+#include "lib_headers/lib_Intel_ODE.hpp"
+#include "lib_headers/lib_odepack.hpp"
+
 #include "../Headers.hpp"
 
 
@@ -168,7 +171,7 @@ void Integrate_Liquid_Phase(
 	ODE_RHS::Rates.resize(ODE_RHS::Number_Reactions);
 
 
-	// prepare the jacobian matrix
+	// prepare the Jacobian matrix
 	Prepare_Jacobian_Matrix(JacobianMatrix,reaction_mechanism.Reactions);
 
 
@@ -176,7 +179,7 @@ void Integrate_Liquid_Phase(
 	Calculate_Rate_Constant(Jacobian_ODE_RHS::Kf, Jacobian_ODE_RHS::Kr, SpeciesConcentration[Jacobian_ODE_RHS::Number_Species],Jacobian_ODE_RHS::ReactionParameters, Jacobian_ODE_RHS::CalculatedThermo, Jacobian_ODE_RHS::SpeciesLossAll, Jacobian_ODE_RHS::Delta_N);
 	CalculateReactionRates(ODE_RHS::Rates, SpeciesConcentration, Jacobian_ODE_RHS::Kf, Jacobian_ODE_RHS::Kr, ODE_RHS::ReactantsForReactions, ODE_RHS::ProductsForReactions);
 
-	// Don't forget Rates Analysis for Mechanism Recution at t=0 - or is this nonsense?
+	// Don't forget Rates Analysis for Mechanism Reduction at t=0 - or is this nonsense?
 	if(InitialParameters.MechanismReduction.ReduceReactions != 0)
 	{
 		ReactionRateImportance(KeyRates, ODE_RHS::Rates, InitialParameters.MechanismReduction.ReduceReactions);

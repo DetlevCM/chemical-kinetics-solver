@@ -64,8 +64,8 @@ using std::stod; // for C++ string to double
 #include "Helpers.hpp"
 
 // headers for the ode libraries
-#include "lib_headers/lib_Intel_ODE.hpp"
-#include "lib_headers/lib_odepack.hpp"
+//#include "lib_headers/lib_Intel_ODE.hpp"
+//#include "lib_headers/lib_odepack.hpp"
 
 
 // run_integrator subfolder
@@ -74,7 +74,7 @@ using std::stod; // for C++ string to double
 #include "run_integrator/Solver_Calculations.hpp"
 
 
-// and somre more headers...
+// and some more headers...
 #include "Get_Process_Input.hpp"
 #include "Handle_Initial_Conditions.hpp" // new input handling
 #include "Pre-Process.hpp"

@@ -5,6 +5,8 @@
  *      Author: DetlevCM
  */
 
+#include "lib_headers/lib_Intel_ODE.hpp"
+#include "lib_headers/lib_odepack.hpp"
 
 #include "../Headers.hpp"
 
@@ -193,7 +195,7 @@ void Integrate_Pressure_Vessel_Liquid_Phase(
 	Rates.resize(Number_Reactions);
 
 
-	// prepare the jacobian matrix
+	// prepare the Jacobian matrix
 	Prepare_Jacobian_Matrix(JacobianMatrix,reaction_mechanism.Reactions);
 
 
@@ -201,7 +203,7 @@ void Integrate_Pressure_Vessel_Liquid_Phase(
 	Calculate_Rate_Constant(Kf, Kr, SpeciesConcentration[Number_Species],ReactionParameters, CalculatedThermo, SpeciesLossAll, Delta_N);
 	CalculateReactionRates(Rates, SpeciesConcentration, Kf, Kr, ReactantsForReactions, ProductsForReactions);
 
-	// Don't forget Rates Analysis for Mechanism Recution at t=0 - or is this nonsense?
+	// Don't forget Rates Analysis for Mechanism Reduction at t=0 - or is this nonsense?
 	if(InitialParameters.MechanismReduction.ReduceReactions != 0)
 	{
 		ReactionRateImportance(KeyRates, Rates, InitialParameters.MechanismReduction.ReduceReactions);
@@ -248,7 +250,7 @@ void Integrate_Pressure_Vessel_Liquid_Phase(
 
 	// not happy with this more widely available, needs a cleanup...
 	vector< vector< size_t > > ReactionsForSpeciesSelectedForRates;
-	// Not the betst place to put it, but OK for now:
+	// Not the best place to put it, but OK for now:
 	if(InitialParameters.MechanismAnalysis.RatesOfSpecies)
 	{
 		size_t tempi, tempj;
