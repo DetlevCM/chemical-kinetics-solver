@@ -1,20 +1,25 @@
 {
     "cSpell.words": [
+        "Chemkin",
+        "CODATA",
         "detlevcm",
-        "dlsoda",
-        "dodesol",
-        "dpar",
-        "ipar",
+        "Ehsan",
         "irrev",
-        "ITOL",
-        "LSODA",
+        "ismatched",
+        "maxrate",
         "nasahigh",
         "nasalow",
         "odepack",
-        "RTOL",
-        "RWORK",
-        "Sebastien",
-        "Simmie",
-        "tempj"
+        "pmdcm",
+        "reac",
+        "REAC",
+        "REACTIONMECHANISM",
+        "rtol",
+        "thermo",
+        "thermodynamicdata",
+        "tlow",
+        "troe",
+        "TROE",
+        "unclassed"
     ]
 }
