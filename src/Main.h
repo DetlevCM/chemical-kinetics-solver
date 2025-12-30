@@ -64,6 +64,13 @@ struct Filenames{
 	string mechanism;
 	string initial_data;
 	string species_mapping;
+
+
+	// this a mess, there is an overlap... 
+	string Species;
+	string Rates;
+	string PetroOxy;
+	string Prefix;
 };
 
 

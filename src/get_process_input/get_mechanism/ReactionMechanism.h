@@ -78,6 +78,11 @@ vector< SingleReactionData > reactions;
 
 public:
 
+size_t reactions_size()
+{
+	return reactions.size();
+}
+
 void Set_Reactions(const vector< SingleReactionData >& set_reactions);
 
 static void get_mechanism(

@@ -36,15 +36,15 @@ class WriteOutput
 
 
 // Write labels for concentrations, then stream output
-void Write_Header_Species_Temperature_Pressure(
+static void Write_Header_Species_Temperature_Pressure(
 		string filename,
 		string separator,
 		size_t Number_Species,
-		vector< string > Names,
+		vector< Species > species,
 		bool GasPhasePressure
 );
 
-void StreamConcentrations(
+static void StreamConcentrations(
 		ofstream& Concentration_OFStream,
 		const string separator,
 		bool GasPhasePressure,
@@ -54,7 +54,7 @@ void StreamConcentrations(
 		const vector<double >& Concentration
 );
 
-void StreamConcentrationsV2(
+static void StreamConcentrationsV2(
 		ofstream& Concentration_OFStream,
 		const string separator,
 		double CurrentTime,
@@ -63,14 +63,14 @@ void StreamConcentrationsV2(
 );
 
 // write labels for reactions then stream output
-void WriteLabelsReactionRates(
+static void WriteLabelsReactionRates(
 		string ,
 		string ,
 		size_t
 );
 
 
-void StreamReactionRates(
+static void StreamReactionRates(
 		ofstream&,
 		const string,
 		double,
@@ -82,23 +82,23 @@ void StreamReactionRates(
 // output of input files
 
 
-void Write_Stoichiometric_Matrix_For_Opt(
+static void Write_Stoichiometric_Matrix_For_Opt(
 		string ,
 		//		const vector< string >& ,
 		const vector< SingleReactionData >&
 );
-void Input_File_For_Ehsan_Opt(
+static void Input_File_For_Ehsan_Opt(
 		string ,
 		const vector< SingleReactionData >&
 );
 
 
-void PetroOxyOutputHeader(
+static void PetroOxyOutputHeader(
 		string
 );
 
 
-void PetroOxyOutputStream(
+static void PetroOxyOutputStream(
 		string,
 		const PressureVesselCalc &,
 		double

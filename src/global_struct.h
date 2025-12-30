@@ -18,5 +18,12 @@ struct PressureVesselCalc {
 	double HenryLawDiffusionLimit;
 };
 
+struct str_RatesAnalysis
+{
+	double productionrate;
+	double consumptionrate;
+	double prod_time;
+	double cons_time;
+};
 
 #endif

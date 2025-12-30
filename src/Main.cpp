@@ -3,10 +3,14 @@
 
 #include "Main.h"
 
+#include "global_struct.h"
 
+#include "./write_output/write_output.h"
+
+#include "./run_integrator/run_integrator.h"
 
 // http://stackoverflow.com/questions/13600204/checking-if-argvi-exists-c
-// arcg = number of arguments
+// argc = number of arguments
 // argv[] arguments
 int main(int argc, char* argv[])
 {
@@ -60,7 +64,7 @@ int main(int argc, char* argv[])
 	 */
 	ReactionMechanism reaction_mechanism;
 	Initial_Data initial_parameters; // Initial Conditions/Parameters
-//	PressureVesselCalc PetroOxyDataInitial; // PetroOxy Specific Initial Data
+	PressureVesselCalc PetroOxyDataInitial; // PetroOxy Specific Initial Data
 
 
 	
@@ -81,7 +85,9 @@ int main(int argc, char* argv[])
 		std::cout.rdbuf(coutbuf); // reassign buffer to avoid crash
 		exit(1); // terminate the code here
 	}
-/*
+
+//// TODO: Update this stuff 
+	/*
 	// Mechanism read in correctly, proceed:
 
 	// for someone else's optimisation code, optional output
@@ -100,10 +106,10 @@ int main(int argc, char* argv[])
 	}
 //*/
 
-/*
+
 	size_t i; 	// useful counter
-	size_t Number_Species = reaction_mechanism.Species.size();
-	size_t Number_Reactions = reaction_mechanism.Reactions.size();
+	size_t Number_Species = reaction_mechanism.species_size();
+	size_t Number_Reactions = reaction_mechanism.reactions_size();
 	vector< double > KeyRates; // for mechanism reduction
 
 	//cout << "test species/reactions: " << Number_Species << " " << Number_Reactions << "\n";
@@ -113,6 +119,8 @@ int main(int argc, char* argv[])
 
 	vector< vector < str_RatesAnalysis > > RatesAnalysisData;
 
+	//// TODO: return the rates analysis code
+/*
 	if(initial_parameters.MechanismAnalysis.MaximumRates)
 	{
 		// Initialise array
@@ -124,17 +132,19 @@ int main(int argc, char* argv[])
 		// array prepared
 	}
 
-
 	if(initial_parameters.MechanismAnalysis.StreamRatesAnalysis)
 	{
 		PrepareStreamRatesAnalysis(reaction_mechanism.Species,"");
 	}
 
+//*/
+
+
 
 	if(!initial_parameters.NoIntegration){
 
 		// Define output filenames:
-		Filenames OutputFilenames;
+		Main::Filenames OutputFilenames;
 
 		OutputFilenames.Species = "concentrations.txt";
 		OutputFilenames.Rates = "reaction_rates.txt";
@@ -144,17 +154,17 @@ int main(int argc, char* argv[])
 		OutputFilenames.Prefix = "";
 
 
-		Write_Header_Species_Temperature_Pressure(
+		WriteOutput::Write_Header_Species_Temperature_Pressure(
 				OutputFilenames.Species,
 				initial_parameters.Solver_Parameters.separator,
 				Number_Species,
-				reaction_mechanism.Species,
+				reaction_mechanism.species,
 				initial_parameters.GasPhase
 		);
 
 		if(initial_parameters.PrintReacRates)
 		{
-			WriteLabelsReactionRates(
+			WriteOutput::WriteLabelsReactionRates(
 					OutputFilenames.Rates,
 					initial_parameters.Solver_Parameters.separator,
 					Number_Reactions
@@ -170,7 +180,7 @@ int main(int argc, char* argv[])
 
 
 		cout << "\nHanding Mechanism to Integrator\n";
-		Choose_Integrator(
+		RunIntegrator::Choose_Integrator(
 				OutputFilenames,
 				reaction_mechanism,
 				initial_parameters,
@@ -180,6 +190,8 @@ int main(int argc, char* argv[])
 		);
 
 
+
+		/*
 		if(initial_parameters.MechanismReduction.ReduceReactions != 0)
 		{
 			vector< SingleReactionData > ReducedReactions;
@@ -278,7 +290,7 @@ int main(int argc, char* argv[])
 			};
 
 		}
-
+//*/
 
 	}
 	//*/

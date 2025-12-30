@@ -15,7 +15,7 @@ void WriteOutput::Write_Header_Species_Temperature_Pressure(
 		string filename,
 		string separator,
 		size_t Number_Species,
-		vector< string > Names,
+		vector< Species > species,
 		bool GasPhasePressure
 )
 {
@@ -27,7 +27,7 @@ void WriteOutput::Write_Header_Species_Temperature_Pressure(
 		Concentration_OFStream << "Time";
 		for(i=0;i<Number_Species;i++)
 		{
-			Concentration_OFStream << separator << Names[i];
+			Concentration_OFStream << separator << species[i].Name;
 		}
 		Concentration_OFStream << separator << "Temperature";
 		if(GasPhasePressure)
