@@ -1,5 +1,5 @@
 
-#include "../Headers.hpp"
+#include "./write_output.h"
 
 /* This function write out the time, temperature and concentrations in the
  * species concentration file. It does NOT clear the file should it exist
@@ -11,7 +11,7 @@
 
 
 // output function for species labels, temperature at back
-void Write_Header_Species_Temperature_Pressure(
+void WriteOutput::Write_Header_Species_Temperature_Pressure(
 		string filename,
 		string separator,
 		size_t Number_Species,

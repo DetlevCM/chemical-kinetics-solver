@@ -5,10 +5,10 @@
  *      Author: DetlevCM
  */
 
-#include "../Headers.hpp"
+#include "./write_output.h"
 
 
-void Input_File_For_Ehsan_Opt
+void WriteOutput::Input_File_For_Ehsan_Opt
 (
 		string filename ,
 		const vector< SingleReactionData >& Reactions

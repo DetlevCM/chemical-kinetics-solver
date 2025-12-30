@@ -1,5 +1,5 @@
 
-#include "../Headers.hpp"
+#include "./write_output.h"
 
 /* This function write out the time, temperature and concentrations in the
  * species concentration file. It does NOT clear the file should it exist
@@ -8,10 +8,10 @@
 
 
 // output function for species labels, temperature at back
-void WriteLabelsReactionRates(
+void WriteOutput::WriteLabelsReactionRates(
 		string filename,
 		string separator,
-		size_t Number_Reactons
+		size_t Number_Reactions
 )
 {
 	size_t i;
@@ -20,7 +20,7 @@ void WriteLabelsReactionRates(
 	if (OutputFile.is_open())
 	{
 		OutputFile << "Time";
-		for(i=0;i<Number_Reactons;i++)
+		for(i=0;i<Number_Reactions;i++)
 		{
 			OutputFile << separator << "Reaction(" << i << ")";
 		}

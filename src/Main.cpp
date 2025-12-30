@@ -1,7 +1,9 @@
 
 // Central header file that collates all header, functions etc.
 
-#include "Headers.hpp"
+#include "Main.h"
+
+
 
 // http://stackoverflow.com/questions/13600204/checking-if-argvi-exists-c
 // arcg = number of arguments
@@ -39,7 +41,7 @@ int main(int argc, char* argv[])
 	}
 
 	// We create a class for storing necessary filenames:
-	FileNames filenames;
+	Main::Filenames filenames;
 
 	Process_User_Input(
 			filenames,
@@ -56,19 +58,20 @@ int main(int argc, char* argv[])
 	 * It may include initial data (not essential for lumping only)
 	 * as well as potentially separately dedicated PetroOxy settings.
 	 */
-	Reaction_Mechanism reaction_mechanism;
+	ReactionMechanism reaction_mechanism;
 	Initial_Data initial_parameters; // Initial Conditions/Parameters
-	//vector< double > InitialSpeciesConcentration;
-	PressureVesselCalc PetroOxyDataInitial; // PetroOxy Specific Initial Data
+//	PressureVesselCalc PetroOxyDataInitial; // PetroOxy Specific Initial Data
 
 
+	
 	// Handle All the Data Input - The Arrays Contain the required information
 	bool Mechanism_Read_In = Handle_Mechanism_Input(
 			filenames,
 			reaction_mechanism,
-			initial_parameters,
-			PetroOxyDataInitial
+			initial_parameters//,
+//			PetroOxyDataInitial
 	);
+
 
 
 	if(!Mechanism_Read_In) // Mechanism failed to read in correctly
@@ -78,7 +81,7 @@ int main(int argc, char* argv[])
 		std::cout.rdbuf(coutbuf); // reassign buffer to avoid crash
 		exit(1); // terminate the code here
 	}
-
+/*
 	// Mechanism read in correctly, proceed:
 
 	// for someone else's optimisation code, optional output
@@ -95,8 +98,9 @@ int main(int argc, char* argv[])
 				reaction_mechanism.Reactions
 		);
 	}
+//*/
 
-
+/*
 	size_t i; 	// useful counter
 	size_t Number_Species = reaction_mechanism.Species.size();
 	size_t Number_Reactions = reaction_mechanism.Reactions.size();
@@ -277,6 +281,7 @@ int main(int argc, char* argv[])
 
 
 	}
+	//*/
 
 	out.close(); // close output stream
 	std::cout.rdbuf(coutbuf); // reassign buffer to avoid crash

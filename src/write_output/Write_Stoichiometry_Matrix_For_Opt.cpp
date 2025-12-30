@@ -5,10 +5,10 @@
  *      Author: DetlevCM
  */
 
-#include "../Headers.hpp"
+#include "./write_output.h"
 
 
-void Write_Stoichiometric_Matrix_For_Opt
+void WriteOutput::Write_Stoichiometric_Matrix_For_Opt
 (
 		string filename ,
 		const vector< SingleReactionData >& Reactions
