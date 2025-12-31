@@ -69,8 +69,6 @@ int main(int argc, char* argv[])
 	ReactionMechanism reaction_mechanism;
 	Initial_Data initial_parameters; // Initial Conditions/Parameters
 	PressureVesselCalc PetroOxyDataInitial; // PetroOxy Specific Initial Data
-
-
 	
 	// Handle All the Data Input - The Arrays Contain the required information
 	bool Mechanism_Read_In = Handle_Mechanism_Input(

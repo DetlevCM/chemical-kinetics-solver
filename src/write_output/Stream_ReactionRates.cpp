@@ -30,7 +30,7 @@ void WriteOutput::WriteLabelsReactionRates(
 	else cout << "Unable to open file";
 }
 
-void StreamReactionRates(
+void WriteOutput::StreamReactionRates(
 		ofstream& OutputFile,
 		const string separator,
 		double CurrentTime,

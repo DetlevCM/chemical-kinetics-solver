@@ -1,7 +1,7 @@
 
 #include "./run_integrator.h"
 
-vector< double > Get_Delta_N(
+vector< double > RunIntegrator::Get_Delta_N(
 		const vector< SingleReactionData > Reactions
 		)
 {

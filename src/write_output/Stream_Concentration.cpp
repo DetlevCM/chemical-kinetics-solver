@@ -43,7 +43,7 @@ void WriteOutput::Write_Header_Species_Temperature_Pressure(
 
 
 // Function to stream the concentrations
-void StreamConcentrations(
+void WriteOutput::StreamConcentrations(
 		ofstream& Concentration_OFStream,
 		const string separator,
 		bool GasPhasePressure,
@@ -67,7 +67,7 @@ void StreamConcentrations(
 }
 
 
-void StreamConcentrationsV2(
+void WriteOutput::StreamConcentrationsV2(
 		ofstream& Concentration_OFStream,
 		const string separator,
 		double CurrentTime,
