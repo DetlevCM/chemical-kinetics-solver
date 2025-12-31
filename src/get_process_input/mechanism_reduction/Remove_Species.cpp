@@ -14,14 +14,14 @@
 
 vector< bool > MechanismReduction::Read_Kill_List(
 		string filename,
-		vector< string > Species
+		vector< Species > species
 )
 {
 	ifstream InputFile;
 	InputFile.open (filename.c_str());
 
 	size_t i, j;
-	size_t Number_Species = Species.size();
+	size_t Number_Species = species.size();
 	string line;
 
 	// vector to determine whether a species is retained or not
@@ -52,7 +52,7 @@ vector< bool > MechanismReduction::Read_Kill_List(
 				{
 					for(j=0;j<Number_Species;j++){
 						// compare the name of the species with the species in the kill list
-						if(strcmp(Species[j].c_str(),Species_Present[i].c_str()) == 0){
+						if(strcmp(species[j].Name.c_str(),Species_Present[i].c_str()) == 0){
 							RetainOrNot[j] = false;
 						}
 					}
@@ -74,7 +74,7 @@ void MechanismReduction::Reduce_Species_Thermo_Mechanism(
 		vector< bool > RetainOrNot,
 		vector<Species>& species,
 		//vector< vector< double > >& Thermodynamics,
-		vector< Species::ThermodynamicData > & Thermodynamics,
+		//vector< Species::ThermodynamicData > & Thermodynamics,
 		vector< SingleReactionData >& Reactions
 )
 {
@@ -90,7 +90,7 @@ void MechanismReduction::Reduce_Species_Thermo_Mechanism(
 	for(i=0;i<Number_Species;i++){
 		if(RetainOrNot[i]){ // if we retain the species, write it to the new vector
 			NewSpecies.push_back(species[i]);
-			NewThermodynamics.push_back(Thermodynamics[i]);
+			NewThermodynamics.push_back(species[i].thermodynamicdata);
 		}
 	}
 
@@ -144,7 +144,7 @@ void MechanismReduction::Reduce_Species_Thermo_Mechanism(
 	// clear out the old arrays
 	species.clear();
 	Reactions.clear();
-	Thermodynamics.clear();
+	//Thermodynamics.clear();
 
 
 	cout << "\nAfter species removal, the scheme contains the following counts:\n" <<
@@ -155,7 +155,7 @@ void MechanismReduction::Reduce_Species_Thermo_Mechanism(
 
 	// assign new arrays
 	species = NewSpecies;
-	Thermodynamics = NewThermodynamics;
+	//Thermodynamics = NewThermodynamics;
 	Reactions = NewReactions;
 }
 

@@ -2,8 +2,16 @@
 #ifndef _MAIN
 #define _MAIN
 
-#include "global_const.h"
-#include "helpers/Helpers.h"
+
+
+
+#include "./write_output/write_output.h"
+
+#include "./rates_analysis/Rates-Analysis.h"
+
+#include "./get_process_input/mechanism_reduction/Mechanism_Reduction.h"
+
+#include "./run_integrator/run_integrator.h"
 
 #include "./get_process_input/get_initial_data/Initial_Data.h"
 #include "./get_process_input/get_mechanism/Species.h"
@@ -53,41 +61,23 @@ using std::stod; // for C++ string to double
 class Main {
 
 public:
-struct Filenames{
-	/*
-	 * This strcut collects the file names for the
-	 * input files required during a run.
-	 *
-	 * To collate data, output files are equally treated in the
-	 * same strcut, together together potentially with output flags.
-	 */
-
-	string mechanism;
-	string initial_data;
-	string species_mapping;
 
 
-	// this a mess, there is an overlap... 
-	string Species;
-	string Rates;
-	string PetroOxy;
-	string Prefix;
-};
 
 
 };
 
 //void Handle_Mechanism_Input(
 bool Handle_Mechanism_Input(
-		Main::Filenames filenames,
+		Filenames filenames,
 		ReactionMechanism & reactions_mechanism ,
-		Initial_Data& //,
+		Initial_Data& ,
 		//vector< double >&,
-//		PressureVesselCalc&
+		PressureVesselCalc&
 );
 
 void Process_User_Input(
-		Main::Filenames& filenames,
+		Filenames& filenames,
 		vector<string> User_Inputs
 );
 

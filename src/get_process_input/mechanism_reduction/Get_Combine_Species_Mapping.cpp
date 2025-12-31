@@ -9,7 +9,7 @@
 
 #include "Mechanism_Reduction.h"
 
-vector< vector< string > > Get_Combine_Species_Mapping(
+vector< vector< string > > MechanismReduction::Get_Combine_Species_Mapping(
 		string filename
 		)
 {

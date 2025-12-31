@@ -11,10 +11,10 @@
 
 vector< size_t > Map_Species_Classes(
 		const vector< vector< string > >& SpeciesMapping,
-		const vector< string >& Species
+		const vector< Species >& species
 		)
 {
-	size_t Number_Species = Species.size();
+	size_t Number_Species = species.size();
 	/* The Species Mapping is right now chaotic, so maybe sort that out */
 	size_t Species_Mapping_Source_Vector = SpeciesMapping.size();
 	vector< int > OrderedSpeciesMapping;
@@ -28,7 +28,7 @@ vector< size_t > Map_Species_Classes(
 		/* Now need to go through the mapping vector, step by step... */
 		for(j=0;j<Number_Species;j++)
 		{
-			string Comparator = Species[j];
+			string Comparator = species[j].Name;
 			if(strcmp(Species_Name.c_str(),Comparator.c_str()) == 0){
 				// http://ubuntuforums.org/showthread.php?t=396479
 

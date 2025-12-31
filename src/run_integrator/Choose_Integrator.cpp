@@ -16,7 +16,7 @@
 
 
 void RunIntegrator::Choose_Integrator(
-		Main::Filenames OutputFilenames,
+		Filenames OutputFilenames,
 		ReactionMechanism reaction_mechanism,
 		Initial_Data InitialParameters,
 		vector< double >& KeyRates,

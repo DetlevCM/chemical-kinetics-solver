@@ -8,7 +8,7 @@
 #include "./Species.h"
 
 
-void Species::WriteSpecies(string filename ,const vector< string >& Species)
+void Species::WriteSpecies(string filename ,const vector< Species >& species)
 {
 	size_t i;
 	ofstream SpeciesOutput (filename.c_str(),ios::out);
@@ -16,12 +16,12 @@ void Species::WriteSpecies(string filename ,const vector< string >& Species)
 	if (SpeciesOutput.is_open())
 	{
 		size_t Number_Species = 0;
-		Number_Species = Species.size();
+		Number_Species = species.size();
 		SpeciesOutput << "SPECIES\n";
 		for(i=0;i<Number_Species;i++)
 		{
 
-			SpeciesOutput << "\t" << Species[i] << "\n";
+			SpeciesOutput << "\t" << species[i].Name << "\n";
 		}
 		SpeciesOutput << "END\n";
 		SpeciesOutput.close();

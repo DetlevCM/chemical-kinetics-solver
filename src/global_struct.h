@@ -6,8 +6,31 @@
 #define _GLOBAL_STRUCT
 
 #include <cstddef>
+#include <string>
+using std::string;
 
 //// TODO: See that these are kept to a minimum
+
+struct Filenames{
+	/*
+	 * This strcut collects the file names for the
+	 * input files required during a run.
+	 *
+	 * To collate data, output files are equally treated in the
+	 * same strcut, together together potentially with output flags.
+	 */
+
+	string mechanism;
+	string initial_data;
+	string species_mapping;
+
+
+	// this a mess, there is an overlap... 
+	string Species;
+	string Rates;
+	string PetroOxy;
+	string Prefix;
+};
 
 struct PressureVesselCalc {
 	bool HenryLawDiffusionLimitSet;

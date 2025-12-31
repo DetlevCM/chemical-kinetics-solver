@@ -14,7 +14,7 @@
 
 // Not a perfect solution, but stick integrator into its own void with global variables via a namespace
 void RunIntegrator::Integrate_Pressure_Vessel_Liquid_Phase(
-		Main::Filenames OutputFilenames,
+		Filenames OutputFilenames,
 		vector< double > SpeciesConcentration,
 		ReactionMechanism reaction_mechanism,
 		//vector< string > Species,vector< ThermodynamicData > Thermo,vector< SingleReactionData >& Reactions,

@@ -13,7 +13,7 @@ using std::vector;
 
 #include "../global_struct.h"
 
-#include "../Main.h"
+#include "../main.h"
 
 #include "../get_process_input/get_initial_data/Initial_Data.h"
 
@@ -125,7 +125,7 @@ struct Settings_Intel{
 
 // Function to pick the right integration routine
 static void Choose_Integrator(
-		Main::Filenames,
+		Filenames,
 		ReactionMechanism ,
 		Initial_Data,
 		vector< double >&,
@@ -144,7 +144,7 @@ static vector< double > Get_Delta_N(const vector< SingleReactionData > Reactions
 
 // solve based on concentrations in the liquid phase
 static void Integrate_Liquid_Phase(
-		Main::Filenames,
+		Filenames,
 		vector< double >,
 		ReactionMechanism ,
 		Initial_Data,
@@ -154,7 +154,7 @@ static void Integrate_Liquid_Phase(
 
 
 static void Integrate_Gas_Phase_Odepack_LSODA(
-		Main::Filenames,
+		Filenames,
 		vector< double >,
 		ReactionMechanism ,
 		Initial_Data,
@@ -165,7 +165,7 @@ static void Integrate_Gas_Phase_Odepack_LSODA(
 
 // solve based on concentrations in the liquid phase and consider headspace gas
 static void Integrate_Pressure_Vessel_Liquid_Phase(
-		Main::Filenames,
+		Filenames,
 		vector< double >,
 		ReactionMechanism ,
 		Initial_Data,

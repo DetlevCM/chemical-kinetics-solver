@@ -6,10 +6,10 @@
  */
 
 
-#include "../../Headers.hpp"
+#include "../Mechanism_Reduction.h"
 
 
-vector<ClassNaming> GetSpeciesClassesNames(vector< vector< string > > SpeciesMapping)
+vector<MechanismReduction::ClassNaming> MechanismReduction::GetSpeciesClassesNames(vector< vector< string > > SpeciesMapping)
 {
 	size_t i;
 	size_t MaxClass = 0;

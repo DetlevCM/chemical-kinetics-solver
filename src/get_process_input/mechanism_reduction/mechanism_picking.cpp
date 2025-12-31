@@ -12,7 +12,7 @@
 void MechanismReduction::mechanism_picking(
 		string filename,
 		vector< Species >& species,
-		vector< Species::ThermodynamicData >& Thermodynamics,
+		//vector< Species::ThermodynamicData >& Thermodynamics,
 		vector< SingleReactionData >& Reactions
 )
 {
@@ -111,7 +111,7 @@ void MechanismReduction::mechanism_picking(
 			line1,
 			ChosenSpecies,
 			species,
-			Thermodynamics,
+			//Thermodynamics,
 			Reactions
 	);
 }
@@ -124,7 +124,7 @@ void MechanismReduction::handle_reactions_with_chosen_species(
 		string type,
 		vector< SpeciesPicking >& ChosenSpecies,
 		vector< Species >& species,
-		vector< Species::ThermodynamicData >& Thermodynamics,
+		//vector< Species::ThermodynamicData >& Thermodynamics,
 		vector< SingleReactionData >& Reactions
 )
 {
@@ -326,7 +326,7 @@ void MechanismReduction::handle_reactions_with_chosen_species(
 	Reduce_Species_Thermo_Mechanism(
 			RetainOrNot,
 			species,
-			Thermodynamics,
+			//Thermodynamics,
 			PickedReactions
 	);
 

@@ -1,17 +1,13 @@
 
 // Central header file that collates all header, functions etc.
 
-#include "Main.h"
-
+#include "global_const.h"
 #include "global_struct.h"
+#include "helpers/Helpers.h"
 
-#include "./write_output/write_output.h"
+#include "./main.h"
 
-#include "./rates_analysis/Rates-Analysis.h"
 
-#include "./get_process_input/mechanism_reduction/Mechanism_Reduction.h"
-
-#include "./run_integrator/run_integrator.h"
 
 // http://stackoverflow.com/questions/13600204/checking-if-argvi-exists-c
 // argc = number of arguments
@@ -49,7 +45,7 @@ int main(int argc, char* argv[])
 	}
 
 	// We create a class for storing necessary filenames:
-	Main::Filenames filenames;
+	Filenames filenames;
 
 	Process_User_Input(
 			filenames,
@@ -74,8 +70,8 @@ int main(int argc, char* argv[])
 	bool Mechanism_Read_In = Handle_Mechanism_Input(
 			filenames,
 			reaction_mechanism,
-			initial_parameters//,
-//			PetroOxyDataInitial
+			initial_parameters,
+			PetroOxyDataInitial
 	);
 
 
@@ -146,7 +142,7 @@ int main(int argc, char* argv[])
 	if(!initial_parameters.NoIntegration){
 
 		// Define output filenames:
-		Main::Filenames OutputFilenames;
+		Filenames OutputFilenames;
 
 		OutputFilenames.Species = "concentrations.txt";
 		OutputFilenames.Rates = "reaction_rates.txt";

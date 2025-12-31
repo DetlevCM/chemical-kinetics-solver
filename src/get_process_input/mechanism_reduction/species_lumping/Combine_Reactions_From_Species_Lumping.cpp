@@ -7,7 +7,7 @@
 
 
 
-#include "../../Headers.hpp"
+#include "../Mechanism_Reduction.h"
 
 
 /*
@@ -19,7 +19,7 @@
  * Ea as estimated by RMG (or as used in the supplied mechanism).
  */
 
-vector< SingleReactionData > Process_Reactions_For_Species_Lumping(
+vector< SingleReactionData > MechanismReduction::Process_Reactions_For_Species_Lumping(
 		size_t Number_Species_Classes,
 		const vector< size_t >& SpeciesClassMapping,
 		vector< SingleReactionData >Reactions,
@@ -209,7 +209,7 @@ vector< SingleReactionData > Process_Reactions_For_Species_Lumping(
 	 *
 	 * For a known Ea and k/ln(k) to calculate n and A
 	 */
-	// parameter fitting occcurs here:
+	// parameter fitting occurs here:
 
 	// always starts at the start of the vector and then removes the entry, so no stepping through i
 

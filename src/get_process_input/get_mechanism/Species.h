@@ -143,9 +143,9 @@ static void Write_Thermodynamic_Data(
 
 ThermodynamicData thermodynamicdata;
 
-void WriteSpecies(
+static void WriteSpecies(
 		string ,
-		const vector< string >&
+		const vector< Species >&
 );
 
 

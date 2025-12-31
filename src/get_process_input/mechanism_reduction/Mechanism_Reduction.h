@@ -36,7 +36,7 @@ struct ClassNaming
 static void Reduce_Species_Thermo_Mechanism(
 		vector< bool > ,
 		vector<Species>& species ,
-		vector< Species::ThermodynamicData >& ,
+		//vector< Species::ThermodynamicData >& ,
 		vector< SingleReactionData >&
 );
 
@@ -44,7 +44,7 @@ static void Reduce_Species_Thermo_Mechanism(
 static void mechanism_picking(
 		string filename,
 		vector< Species >& species,
-		vector< Species::ThermodynamicData >& ,
+		//vector< Species::ThermodynamicData >& ,
 		vector< SingleReactionData >&
 );
 
@@ -53,7 +53,7 @@ static void handle_reactions_with_chosen_species(
 		string ,
 		vector< SpeciesPicking >& ,
 		vector< Species >& species,
-		vector< Species::ThermodynamicData >& ,
+		//vector< Species::ThermodynamicData >& ,
 		vector< SingleReactionData >&
 );
 
@@ -75,7 +75,7 @@ static void ReportAccuracy(
 
 static vector< bool > Read_Kill_List(
 		string filename,
-		vector< string > Species
+		vector< Species > species
 );
 
 static void ReactionRateImportance(
@@ -111,8 +111,8 @@ static vector<ClassNaming> GetSpeciesClassesNames(
 		vector< vector< string > >
 );
 
-static vector< string > RenameSpecies(
-		vector< string > Species,
+static vector< Species > RenameSpecies(
+		vector< Species > species,
 		vector<ClassNaming> UserDefinedNames,
 		const vector< size_t > & SpeciesClassMapping
 );
@@ -120,7 +120,7 @@ static vector< string > RenameSpecies(
 
 static vector< size_t > Map_Species_Classes(
 		const vector< vector< string > >& ,
-		const vector< string >&
+		const vector< Species >&
 );
 
 

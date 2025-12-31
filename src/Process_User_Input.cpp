@@ -6,7 +6,7 @@
  */
 
 //#include "../Headers.hpp"
-#include "Main.h"
+#include "main.h"
 
 /*
  * This function deals with handling the command line
@@ -15,7 +15,7 @@
  */
 
 void Process_User_Input(
-		Main::Filenames& filenames,
+		Filenames& filenames,
 		vector<string> User_Inputs
 )
 {

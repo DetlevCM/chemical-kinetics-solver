@@ -21,7 +21,7 @@
  */
 
 
-#include "./Main.h"
+#include "./main.h"
 
 #include "./run_integrator/run_integrator.h"
 #include "./run_integrator/solver_calculations/solver_calculations.h"

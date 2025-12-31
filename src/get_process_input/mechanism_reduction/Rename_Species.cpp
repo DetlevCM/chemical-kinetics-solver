@@ -9,14 +9,14 @@
 #include "Mechanism_Reduction.h"
 
 
-vector< string > MechanismReduction::RenameSpecies(
-		vector< string > Species,
+vector< Species > MechanismReduction::RenameSpecies(
+		vector< Species > species,
 		vector<ClassNaming> UserDefinedNames,
 		const vector< size_t > & SpeciesClassMapping
 		)
 {
 	size_t i;
-	size_t Number_Species = Species.size();
+	size_t Number_Species = species.size();
 
 
 	size_t Number_Species_Classes = 0;
@@ -29,17 +29,17 @@ vector< string > MechanismReduction::RenameSpecies(
 	}
 	Number_Species_Classes = Number_Species_Classes + 1; // class 0 needs 1 position
 
-	vector< string > temp_species_names;
+	vector< Species > temp_species_names;
 	temp_species_names.resize(Number_Species_Classes);
 
-
+//// TODO: verify this doesn't remove the thermodynamic data... Would be a problem
 	for(i=0;i<Number_Species;i++)
 	{
 		size_t ClassID = SpeciesClassMapping[i];
 
-		if(temp_species_names[ClassID].empty()) // retain name of species if class empty
+		if(temp_species_names[ClassID].Name.empty()) // retain name of species if class empty
 		{
-			temp_species_names[ClassID] = Species[i];
+			temp_species_names[ClassID] = species[i];
 		}
 		else
 		{
@@ -47,12 +47,12 @@ vector< string > MechanismReduction::RenameSpecies(
 			if(UserDefinedNames[ClassID].IsNamed) // has user defined name
 			{
 				ClassName << UserDefinedNames[ClassID].Name;
-				temp_species_names[ClassID] = ClassName.str(); // otherwise assign Class Name
+				temp_species_names[ClassID].Name = ClassName.str(); // otherwise assign Class Name
 			}
 			else
 			{
 			ClassName << "Class(" << ClassID+1 << ")"; // uses generic name
-			temp_species_names[ClassID] = ClassName.str(); // otherwise assign Class Name
+			temp_species_names[ClassID].Name = ClassName.str(); // otherwise assign Class Name
 			}
 		}
 	}
