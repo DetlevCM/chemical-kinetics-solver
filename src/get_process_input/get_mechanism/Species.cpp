@@ -11,7 +11,7 @@ vector<Species> Species::VectorClass(vector<string> species)
 	vector<Species> new_species_vec;
 	new_species_vec.reserve(species.size());
 
-for(size_t i=0; species.size(); i++)
+for(size_t i=0; i<species.size(); i++)
 {
 	Species new_species;
 	new_species.Name = species[i];
