@@ -6,7 +6,7 @@
  */
 
 
-#include "../../Headers.hpp"
+#include "./Mechanism_Reduction.h"
 
 
 ReactionParameter n_zero_k_fitted_Fast(

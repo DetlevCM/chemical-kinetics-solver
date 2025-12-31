@@ -131,10 +131,9 @@ static vector< Species > Process_Thermodynamics_Species_Classes(
 
 static vector< SingleReactionData > Process_Reactions_For_Species_Lumping(
 		size_t ,
-		const vector< size_t >& ,
+		const vector< size_t > ,
 		vector< SingleReactionData >,
 		double ,
-		//bool,
 		bool,
 		int
 );

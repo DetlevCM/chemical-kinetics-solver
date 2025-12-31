@@ -6,7 +6,7 @@
  */
 
 
-#include "../Mechanism_Reduction.h"
+#include "./Mechanism_Reduction.h"
 
 
 vector<MechanismReduction::ClassNaming> MechanismReduction::GetSpeciesClassesNames(vector< vector< string > > SpeciesMapping)

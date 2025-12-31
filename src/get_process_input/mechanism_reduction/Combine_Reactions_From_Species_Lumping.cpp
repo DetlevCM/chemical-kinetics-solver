@@ -7,7 +7,7 @@
 
 
 
-#include "../Mechanism_Reduction.h"
+#include "./Mechanism_Reduction.h"
 
 
 /*
@@ -21,7 +21,7 @@
 
 vector< SingleReactionData > MechanismReduction::Process_Reactions_For_Species_Lumping(
 		size_t Number_Species_Classes,
-		const vector< size_t >& SpeciesClassMapping,
+		const vector< size_t > SpeciesClassMapping,
 		vector< SingleReactionData >Reactions,
 		double temperature,
 		bool FastLumping, // this will calculated only 3 points, hence is fast

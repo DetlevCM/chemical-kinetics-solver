@@ -6,7 +6,7 @@
  */
 
 
-#include "../../Headers.hpp"
+#include "./Mechanism_Reduction.h"
 
 
 ReactionParameter Average_Ea_n_zero_k_fitted(
@@ -54,7 +54,7 @@ ReactionParameter Average_Ea_n_zero_k_fitted(
 	fitted_Ea = fitted_Ea/( (double) Reaction_Group_Size);
 	cout << fitted_Ea << " \n";
 
-	// we need the equivlaent of an ln(k) vs T plot for a straight line with a gradient
+	// we need the equivalent of an ln(k) vs T plot for a straight line with a gradient
 	// now we need an Ea gradient as well as ln(T) gradient
 	vector <double> Ea_for_gradient(41);
 	vector <double> lnT_for_gradient(41);
