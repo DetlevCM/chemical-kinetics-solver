@@ -130,12 +130,12 @@ static vector< Species > Process_Thermodynamics_Species_Classes(
 );
 
 static vector< SingleReactionData > Process_Reactions_For_Species_Lumping(
-		size_t ,
-		const vector< size_t > ,
-		vector< SingleReactionData >,
-		double ,
-		bool,
-		int
+		size_t Number_Species_Classes,
+		const vector< size_t > SpeciesClassMapping,
+		vector< SingleReactionData >Reactions,
+		double temperature,
+		bool FastLumping, // this will calculated only 3 points, hence is fast
+		int LumpingType
 );
 
 // Some helpers for the reduction:

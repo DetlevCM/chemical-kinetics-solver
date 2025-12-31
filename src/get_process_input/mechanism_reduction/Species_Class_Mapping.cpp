@@ -9,7 +9,7 @@
 #include "./Mechanism_Reduction.h"
 
 
-vector< size_t > Map_Species_Classes(
+vector< size_t > MechanismReduction::Map_Species_Classes(
 		const vector< vector< string > >& SpeciesMapping,
 		const vector< Species >& species
 		)

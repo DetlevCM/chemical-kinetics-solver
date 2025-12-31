@@ -9,7 +9,7 @@
 #include "./Mechanism_Reduction.h"
 
 
-ReactionParameter n_zero_k_fitted_Fast(
+ReactionParameter MechanismReduction::n_zero_k_fitted_Fast(
 		vector< SingleReactionData >& Reactions,
 		double temperature,
 		size_t Reaction_Group_Size

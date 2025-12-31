@@ -9,7 +9,7 @@
 #include "./Mechanism_Reduction.h"
 
 
-ReactionParameter Average_Ea_n_zero_k_fitted(
+ReactionParameter MechanismReduction::Average_Ea_n_zero_k_fitted(
 		vector< SingleReactionData >& temp_reactions3,
 		double temperature,
 		size_t Reaction_Group_Size
