@@ -37,6 +37,13 @@ struct SingleReactionData {
 	vector<double> Products;
 };
 
+struct ReactionParameter {
+	bool Reversible;
+	double paramA;
+	double paramN;
+	double paramEa;
+};
+
 string Prepare_Single_Reaction_Output(
 		size_t ,
 		const vector< string >& ,

@@ -95,12 +95,43 @@ public:
 
 public:
 
+class ThermoT {
+public:
+double T1;
+double T2;
+double T3;
+double T4;
+double logT;
+double InvT;
+
+ThermoT(double temperature)
+{
+	double T1 = temperature;
+	double T2 = temperature*temperature;
+	double T3 = T2*temperature;
+	double T4 = T3*temperature;
+	double logT = log(temperature);
+	double InvT = 1.0/temperature;
+};
+};
+
+
+struct CalculatedThermodynamics {
+	double Hf;
+	double Cp;
+	double Cv;
+	double S;
+};
+
 void SetNasa(double tlow,double thigh,double tchange,vector<double> nasalow, vector<double> nasahigh);
 
-double calculate_Hf_at_T(const double temperature);
-double calculate_Cp_at_T(const double temperature);
-double calculate_Cv_at_T(const double temperature);
-double calculate_S_at_T(const double temperature);
+double calculate_Hf_at_T(const ThermoT T);
+double calculate_Cp_at_T(const ThermoT T);
+double calculate_Cv_at_T(const ThermoT T);
+double calculate_S_at_T(const ThermoT T);
+
+
+CalculatedThermodynamics calculate_thermodynamics(const ThermoT T);
 
 static void Write_Thermodynamic_Data(
 		string filename,

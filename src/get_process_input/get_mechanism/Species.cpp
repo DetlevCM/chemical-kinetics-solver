@@ -54,96 +54,90 @@ void Species::ThermodynamicData::SetNasa(
 	NasaHigh7 = nasahigh[6];
 }
 
-
-
-double Species::ThermodynamicData::calculate_Hf_at_T(const double temperature)
+double Species::ThermodynamicData::calculate_Hf_at_T(const ThermoT T)
 {
-    double T2 = temperature*temperature;
-	double T3 = T2*temperature;
-	double T4 = T3*temperature;
-	double logT = log(temperature);
-	double InvT = 1.0/temperature;
-
-    if (temperature <= TChange) {
-
-    return R*temperature*(
+	if (T.T1 <= TChange) {
+	    return R*T.T1*(
 				NasaLow1 +
-				NasaLow2*temperature*0.5 +
-				NasaLow3*T2/3.0 +
-				NasaLow4*T3*0.25 +
-				NasaLow5*T4*0.2 +
-				NasaLow6*InvT);
+				NasaLow2*T.T1*0.5 +
+				NasaLow3*T.T2/3.0 +
+				NasaLow4*T.T3*0.25 +
+				NasaLow5*T.T4*0.2 +
+				NasaLow6*T.InvT);
     }
     else
     {
-        return R*temperature*(
+        return R*T.T1*(
 				NasaHigh1+
-				NasaHigh2*temperature*0.5 +
-				NasaHigh3*T2/3.0 +
-				NasaHigh4*T3*0.25 +
-				NasaHigh5*T4*0.2 +
-				NasaHigh6*InvT);
+				NasaHigh2*T.T1*0.5 +
+				NasaHigh3*T.T2/3.0 +
+				NasaHigh4*T.T3*0.25 +
+				NasaHigh5*T.T4*0.2 +
+				NasaHigh6*T.InvT);
     }
 }
 
-double Species::ThermodynamicData::calculate_Cp_at_T(const double temperature)
+double Species::ThermodynamicData::calculate_Cp_at_T(const const ThermoT T)
 {
-    double T2 = temperature*temperature;
-	double T3 = T2*temperature;
-	double T4 = T3*temperature;
-	double logT = log(temperature);
-	double InvT = 1.0/temperature;
-
-    if (temperature <= TChange) {
+    if (T.T1 <= TChange) {
         			return R*(
 				NasaLow1+
-				NasaLow2*temperature +
-				NasaLow3*T2 +
-				NasaLow4*T3 +
-				NasaLow5*T4);
+				NasaLow2*T.T1 +
+				NasaLow3*T.T2 +
+				NasaLow4*T.T3 +
+				NasaLow5*T.T4);
                     }
                     else
                     {
 			return R*(
 				NasaHigh1+
-				NasaHigh2*temperature +
-				NasaHigh3*T2 +
-				NasaHigh4*T3 +
-				NasaHigh5*T4);
+				NasaHigh2*T.T1 +
+				NasaHigh3*T.T2 +
+				NasaHigh4*T.T3 +
+				NasaHigh5*T.T4);
                     };
 }
 
 
-double Species::ThermodynamicData::calculate_Cv_at_T(const double temperature)
+double Species::ThermodynamicData::calculate_Cv_at_T(const ThermoT T)
 {
-    return ThermodynamicData::calculate_Cp_at_T(temperature) - R;
+	// skip ThermoT T(temperature); // temperatures -> T.T1
+    return ThermodynamicData::calculate_Cp_at_T(T.T1) - R;
 }
 
-double Species::ThermodynamicData::calculate_S_at_T(const double temperature)
+double Species::ThermodynamicData::calculate_S_at_T(const const ThermoT T)
 {
-    double T2 = temperature*temperature;
-	double T3 = T2*temperature;
-	double T4 = T3*temperature;
-	double logT = log(temperature);
-	double InvT = 1.0/temperature;
-
-    if (temperature <= TChange) {
+    if (T.T1 <= TChange) {
         return  R*(
-				NasaLow1*logT +
-				NasaLow2*temperature +
-				NasaLow3*T2*0.5 +
-				NasaLow4*T3/3.0 +
-				NasaLow5*T4*0.25 +
+				NasaLow1*T.logT +
+				NasaLow2*T.T1 +
+				NasaLow3*T.T2*0.5 +
+				NasaLow4*T.T3/3.0 +
+				NasaLow5*T.T4*0.25 +
 				NasaLow7);
     }
     else
     {
         return R*(
-				NasaHigh1*logT +
-				NasaHigh2*temperature +
-				NasaHigh3*T2*0.5 +
-				NasaHigh4*T3/3.0 +
-				NasaHigh5*T4*0.25 +
+				NasaHigh1*T.logT +
+				NasaHigh2*T.T1 +
+				NasaHigh3*T.T2*0.5 +
+				NasaHigh4*T.T3/3.0 +
+				NasaHigh5*T.T4*0.25 +
 				NasaHigh7);
     };
 }
+
+Species::ThermodynamicData::CalculatedThermodynamics Species::ThermodynamicData::calculate_thermodynamics(const ThermoT T)
+{
+
+	CalculatedThermodynamics output;
+
+	output.Hf = calculate_Hf_at_T(T);
+	output.Cp = calculate_Cp_at_T(T);
+	output.Cv = calculate_Cv_at_T(T);
+	output.S = calculate_S_at_T(T);
+
+	return output;
+}
+

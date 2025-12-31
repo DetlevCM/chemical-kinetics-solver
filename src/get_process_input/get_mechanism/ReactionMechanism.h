@@ -37,12 +37,14 @@ size_t species_size()
 	return species.size();
 }
 
+/*
 struct ReactionParameter {
 	bool Reversible;
 	double paramA;
 	double paramN;
 	double paramEa;
 };
+//*/
 
 //// NOTE: Vector of Single Reaction Data is what we want to work with
 /*
@@ -73,10 +75,12 @@ struct SingleReactionData {
 //};
 
 private:
-vector< SingleReactionData > reactions; 
+
 
 
 public:
+
+vector< SingleReactionData > reactions; 
 
 size_t reactions_size()
 {
