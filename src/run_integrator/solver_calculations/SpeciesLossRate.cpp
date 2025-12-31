@@ -1,12 +1,13 @@
 
-#include "../../Headers.hpp"
+
+#include "./solver_calculations.h"
 
 /* This function determines the species loss rate by combining the species
  * coefficients from the reactions with the reaction rate for each reaction.
  * The output from this function is the rate of change of the concentration for
  * every species in the system. */
 
-vector< double > SpeciesLossRate(
+vector< double > SolverCalculation::SpeciesLossRate(
 		size_t Number_Species,
 		const vector< double >& Combined_Rates,
 		const vector< TrackSpecies >& SpeciesLossList

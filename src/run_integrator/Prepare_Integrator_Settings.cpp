@@ -6,10 +6,10 @@
  */
 
 
-#include "../Headers.hpp"
+#include "run_integrator.h"
 
 
-int Prepare_Integrator_Settings(
+int RunIntegrator::Prepare_Integrator_Settings(
 		Initial_Data InitialParameters,
 		size_t Number_Species,
 		Settings_LSODA& LSODA,

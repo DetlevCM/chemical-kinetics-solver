@@ -1,5 +1,5 @@
 
-#include "../Headers.hpp"
+//#include "../Headers.hpp"
 
 /*
 struct ReactionRate{
@@ -9,8 +9,9 @@ struct ReactionRate{
 	double coefficient;
 };//*/
 
+#include "../run_integrator.h"
 
-vector< TrackSpecies > Reactants_ForReactionRate(
+vector< TrackSpecies > RunIntegrator::Reactants_ForReactionRate(
 		const vector< SingleReactionData >& Reactions
 )
 {
@@ -42,7 +43,7 @@ vector< TrackSpecies > Reactants_ForReactionRate(
 
 
 
-vector< TrackSpecies > Products_ForReactionRate(
+vector< TrackSpecies > RunIntegrator::Products_ForReactionRate(
 		const vector< SingleReactionData >& Reactions,
 		bool SwitchType
 )

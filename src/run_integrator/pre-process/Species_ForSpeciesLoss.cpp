@@ -1,7 +1,8 @@
 
-#include "../Headers.hpp"
 
-vector< TrackSpecies > PrepareSpecies_ForSpeciesLoss(
+#include "../run_integrator.h"
+
+vector< TrackSpecies > RunIntegrator::PrepareSpecies_ForSpeciesLoss(
 		const vector< SingleReactionData >& Reactions
 		)
 {

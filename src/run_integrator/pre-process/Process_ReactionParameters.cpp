@@ -1,7 +1,7 @@
 
-#include "../Headers.hpp"
+#include "../run_integrator.h"
 
-vector< ReactionParameter > Process_Reaction_Parameters(
+vector< ReactionParameter > RunIntegrator::Process_Reaction_Parameters(
 		const vector< SingleReactionData >& Reactions
 		)
 {

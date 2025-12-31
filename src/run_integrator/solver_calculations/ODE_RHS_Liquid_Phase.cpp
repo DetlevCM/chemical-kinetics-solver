@@ -6,14 +6,14 @@
  */
 
 
-#include "../../Headers.hpp"
+#include "./solver_calculations.h"
 
 
-void ODE_RHS_Liquid_Phase(int*n, double*t, double*y, double*f)
+void SolverCalculation::ODE_RHS_Liquid_Phase(int*n, double*t, double*y, double*f)
 {
 	// A namespace allows global variables without causing a mess, should be quicker than redefining too
-	using namespace ODE_RHS;
-	using namespace Jacobian_ODE_RHS;
+	//using namespace ODE_RHS;
+	//using namespace Jacobian_ODE_RHS;
 
 	size_t i;
 
@@ -38,8 +38,8 @@ void ODE_RHS_Liquid_Phase(int*n, double*t, double*y, double*f)
 		}
 	}
 
-	Evaluate_Thermodynamic_Parameters(CalculatedThermo, Thermodynamics, Concentration[Number_Species]);
-	Calculate_Rate_Constant(Kf, Kr, Concentration[Number_Species],ReactionParameters, CalculatedThermo, SpeciesLossAll, Delta_N);
+	Evaluate_Thermodynamic_Parameters(CalculatedThermo, species, Concentration[Number_Species]);
+	Calculate_Rate_Constant(Kf, Kr, Concentration[Number_Species],ReactionParameters, CalculatedThermo, SpeciesLossAll, delta_n);
 	CalculateReactionRates(Rates, Concentration, Kf, Kr, ReactantsForReactions, ProductsForReactions);
 	SpeciesConcentrationChange = SpeciesLossRate(Number_Species, Rates, SpeciesLossAll);
 
@@ -59,7 +59,7 @@ void ODE_RHS_Liquid_Phase(int*n, double*t, double*y, double*f)
 
 	for (i = 0; i < Number_Reactions; i++)
 	{
-		qint = qint + Delta_N[i] * Rates[i];
+		qint = qint + delta_n[i] * Rates[i];
 	}
 	qtot = -qint / (ctot);//*1000); // scale l to ml and Na not needed for moles/l * Na); //*/
 

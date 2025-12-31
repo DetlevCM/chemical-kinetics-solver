@@ -9,9 +9,11 @@
 
 
 #include "../../global_const.h"
-#include "../../Headers.hpp"
 
-void Synchronize_Gas_Liquid_Model(
+#include "./solver_calculations.h"
+
+
+void SolverCalculation::Synchronize_Gas_Liquid_Model(
 		size_t number_synchronized_species,
 		size_t liquid_species_count, size_t gas_species_count, // gas and liquid counts so I know where concentration entries belong to
 		double *y, // concentrations (&temperature) from the ODE solver

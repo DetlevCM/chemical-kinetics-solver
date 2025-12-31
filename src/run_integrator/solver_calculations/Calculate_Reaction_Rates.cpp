@@ -7,12 +7,12 @@
 
 
 
-#include "../../Headers.hpp"
+#include "./solver_calculations.h"
 
 // NOTE: This function modifies Kf and Kr - input as Forward_Rates and Reverse_Rates
 
 //vector< double > CalculateReactionRates(
-void CalculateReactionRates(
+void SolverCalculation::CalculateReactionRates(
 		vector< double >& Rates,
 		const vector< double >& SpeciesConcentration,
 		vector< double > Forward_Rates,

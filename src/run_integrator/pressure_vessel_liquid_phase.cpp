@@ -5,18 +5,18 @@
  *      Author: DetlevCM
  */
 
-#include "lib_headers/lib_Intel_ODE.hpp"
-#include "lib_headers/lib_odepack.hpp"
+#include "../../lib/headers/lib_Intel_ODE.hpp"
+#include "../../lib/headers/lib_odepack.hpp"
 
-#include "../Headers.hpp"
+#include "run_integrator.h"
 
 
 
 // Not a perfect solution, but stick integrator into its own void with global variables via a namespace
-void Integrate_Pressure_Vessel_Liquid_Phase(
-		Filenames OutputFilenames,
+void RunIntegrator::Integrate_Pressure_Vessel_Liquid_Phase(
+		Main::Filenames OutputFilenames,
 		vector< double > SpeciesConcentration,
-		Reaction_Mechanism reaction_mechanism,
+		ReactionMechanism reaction_mechanism,
 		//vector< string > Species,vector< ThermodynamicData > Thermo,vector< SingleReactionData >& Reactions,
 		Initial_Data InitialParameters,
 		vector< double >& KeyRates,

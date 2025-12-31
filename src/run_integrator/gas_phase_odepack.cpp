@@ -5,8 +5,8 @@
  *      Author: DetlevCM
  */
 
-#include "lib_headers/lib_Intel_ODE.hpp"
-#include "lib_headers/lib_odepack.hpp"
+#include "../../lib/headers/lib_Intel_ODE.hpp"
+#include "../../lib/headers/lib_odepack.hpp"
 
 #include "../Headers.hpp"
 

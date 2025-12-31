@@ -6,7 +6,7 @@
  */
 
 
-#include "../Headers.hpp"
+#include "./run_integrator.h"
 
 /*
  * The more solvers and models are implemented, the messier the code becomes...
@@ -15,9 +15,9 @@
 
 
 
-void Choose_Integrator(
-		Filenames OutputFilenames,
-		Reaction_Mechanism reaction_mechanism,
+void RunIntegrator::Choose_Integrator(
+		Main::Filenames OutputFilenames,
+		ReactionMechanism reaction_mechanism,
 		Initial_Data InitialParameters,
 		vector< double >& KeyRates,
 		PressureVesselCalc PetroOxyDataInitial,

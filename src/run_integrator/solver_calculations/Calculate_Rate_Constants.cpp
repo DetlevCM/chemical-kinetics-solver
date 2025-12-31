@@ -7,15 +7,16 @@
 
 
 #include "../../global_const.h"
-#include "../../Headers.hpp"
+
+#include "./solver_calculations.h"
 
 
-void Calculate_Rate_Constant(
+void SolverCalculation::Calculate_Rate_Constant(
 		vector< double >& Kf,
 		vector< double >& Kr,
 		const double Temperature,
-		const vector< ReactionParameter >& ReactionParameters,
-		const vector< CalculatedThermodynamics >& CalculatedThermo,
+		const vector< Reaction::ReactionParameter >& ReactionParameters,
+		const vector< Species::ThermodynamicData::CalculatedThermodynamics >& CalculatedThermo,
 		const vector< TrackSpecies >& SpeciesAll,
 		const vector< double >& Delta_N
 )
