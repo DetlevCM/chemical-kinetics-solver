@@ -11,6 +11,7 @@
 #include "../../Main.h"
 #include "../get_initial_data/Initial_Data.h"
 #include "./ReactionMechanism.h"
+#include "./run_integrator/solver_calculations/solver_calculations.h"
 
 /* This void needs to supply
  * 1) Species
@@ -206,11 +207,11 @@ bool Handle_Mechanism_Input(
 
 
 
-	// /*
-	//  * If I am to map species to reduce their number, this needs to be applied
-	//  * to the reaction matrix, so check if the user has supplied a mapping and if yes,
-	//  * handle further. Otherwise ignore the remapping logic
-	//  */
+	 /*
+	  * If I am to map species to reduce their number, this needs to be applied
+	  * to the reaction matrix, so check if the user has supplied a mapping and if yes,
+	 * handle further. Otherwise ignore the remapping logic
+	  */
 
 	// DataInputFromFile.open("species_mapping.txt");
 	// if (DataInputFromFile.is_open() && InitialParameters.MechanismReduction.LumpingType > 0)
@@ -291,47 +292,51 @@ bool Handle_Mechanism_Input(
 
 
 
-	// // did the user request a PetroOxy modification?
+//// TODO: PetroOxy only available once solver class is constructed
+/*
 
-	// if(InitialParameters.PetroOxy.IsSet)
-	// {
-	// 	// adjust old array
+	 // did the user request a PetroOxy modification?
 
-	// 	// not ideal, but avoids the potentia for any issues
-	// 	if(InitialParameters.PetroOxy.SampleSize >= InitialParameters.PetroOxy.VesselSize){
-	// 		cout << "Pressure vessel is to small, smaller than or equal to the sample size. \n"
-	// 				"Vessel Size is set to 110% of sample size.\n";
-	// 		InitialParameters.PetroOxy.VesselSize = 1.1 * InitialParameters.PetroOxy.SampleSize;
-	// 		cout << "Adjusted Pressure Vessel Size: " << InitialParameters.PetroOxy.VesselSize << "\n";
-	// 	}
+	 if(InitialParameters.PetroOxy.IsSet)
+	 {
+	 	// adjust old array
 
-	// 	PetroOxyData.SampleSize = InitialParameters.PetroOxy.SampleSize;
+	 	// not ideal, but avoids the potentia for any issues
+	 	if(InitialParameters.PetroOxy.SampleSize >= InitialParameters.PetroOxy.VesselSize){
+	 		cout << "Pressure vessel is to small, smaller than or equal to the sample size. \n"
+	 				"Vessel Size is set to 110% of sample size.\n";
+	 		InitialParameters.PetroOxy.VesselSize = 1.1 * InitialParameters.PetroOxy.SampleSize;
+	 		cout << "Adjusted Pressure Vessel Size: " << InitialParameters.PetroOxy.VesselSize << "\n";
+	 	}
 
-	// 	// Gas Phase Volume
-	// 	PetroOxyData.HeadSpaceGas = InitialParameters.PetroOxy.VesselSize - PetroOxyData.SampleSize;
+	 	PetroOxyData.SampleSize = InitialParameters.PetroOxy.SampleSize;
 
-	// 	// Initial pressure is at 25 degrees Celsius
-	// 	// n = pV/R/T
-	// 	PetroOxyData.HeadSpaceGasMol =
-	// 			InitialParameters.PetroOxy.InitPressure*PetroOxyData.HeadSpaceGas/R/298;
-	// 	// p = nRT/V
-	// 	PetroOxyData.HeadSpaceGasPressure = PetroOxyData.HeadSpaceGasMol*R*InitialParameters.temperature/PetroOxyData.HeadSpaceGas;
+	 	// Gas Phase Volume
+	 	PetroOxyData.HeadSpaceGas = InitialParameters.PetroOxy.VesselSize - PetroOxyData.SampleSize;
 
-	// 	// Solvent Component of Pressure
-	// 	PetroOxyData.HeadSpaceSolventComponentPressure = InitialParameters.PetroOxy.MaxPressure-PetroOxyData.HeadSpaceGasPressure;
+	 	// Initial pressure is at 25 degrees Celsius
+	 	// n = pV/R/T
+	 	PetroOxyData.HeadSpaceGasMol =
+	 			InitialParameters.PetroOxy.InitPressure*PetroOxyData.HeadSpaceGas/R/298;
+	 	// p = nRT/V
+	 	PetroOxyData.HeadSpaceGasPressure = PetroOxyData.HeadSpaceGasMol*R*InitialParameters.temperature/PetroOxyData.HeadSpaceGas;
 
-
-	// 	// the user is asked to input mol / L at 1atm
-	// 	// 100% oxygen assumed - mol/L to mol/m^3 * 1000 - not Done
-	// 	// atm to Pa - *101325
-	// 	PetroOxyData.HenryConstantk = 101325/InitialParameters.PetroOxy.GasSolubility;
-	// 	// k is now Pa mol / L
+	 	// Solvent Component of Pressure
+	 	PetroOxyData.HeadSpaceSolventComponentPressure = InitialParameters.PetroOxy.MaxPressure-PetroOxyData.HeadSpaceGasPressure;
 
 
-	// 	// Mod for limited diffusion
-	// 	PetroOxyData.HenryLawDiffusionLimitSet = InitialParameters.PetroOxy.HenryLawDiffusionLimitSet;
-	// 	PetroOxyData.HenryLawDiffusionLimit = InitialParameters.PetroOxy.HenryLawDiffusionLimit;
-	// }
+	 	// the user is asked to input mol / L at 1atm
+	 	// 100% oxygen assumed - mol/L to mol/m^3 * 1000 - not Done
+	 	// atm to Pa - *101325
+	 	PetroOxyData.HenryConstantk = 101325/InitialParameters.PetroOxy.GasSolubility;
+	 	// k is now Pa mol / L
+
+
+	 	// Mod for limited diffusion
+	 	PetroOxyData.HenryLawDiffusionLimitSet = InitialParameters.PetroOxy.HenryLawDiffusionLimitSet;
+	 	PetroOxyData.HenryLawDiffusionLimit = InitialParameters.PetroOxy.HenryLawDiffusionLimit;
+	 }
+		//*/
 
 	return true;
 }
