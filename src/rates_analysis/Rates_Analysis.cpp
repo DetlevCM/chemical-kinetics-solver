@@ -138,13 +138,13 @@ void RatesAnalysis::WriteMaxRatesAnalysis(
 // Rates Analysis - stream
 
 void RatesAnalysis::PrepareStreamRatesAnalysis(
-		const vector< string >& Species,
+		const vector< Species >& species,
 		string rates_analysis_stream_filename
 )
 {
 
 	size_t i;
-	size_t Number_Species = Species.size() - 1;
+	size_t Number_Species = species.size() - 1;
 	ofstream Outfile;
 
 	string filename;
@@ -158,7 +158,7 @@ void RatesAnalysis::PrepareStreamRatesAnalysis(
 		Outfile << "Time 	";
 		for(i=0;i<Number_Species;i++)
 		{
-			Outfile << Species[i] << " 	";
+			Outfile << species[i].Name << " 	";
 		}
 		Outfile << "\n";
 	};
@@ -172,7 +172,7 @@ void RatesAnalysis::PrepareStreamRatesAnalysis(
 		Outfile << "Time 	";
 		for(i=0;i<Number_Species;i++)
 		{
-			Outfile << Species[i] << " 	";
+			Outfile << species[i].Name << " 	";
 		}
 		Outfile << "\n";
 	};

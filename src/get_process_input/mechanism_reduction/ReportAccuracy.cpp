@@ -11,7 +11,7 @@
 void MechanismReduction::ReportAccuracy(
 		string separator,
 		size_t Number_Species,
-		vector< string > Species,
+		vector< Species > species,
 		string output_filename,
 		string base_concentrations,
 		string reduced_concentrations
@@ -141,7 +141,7 @@ void MechanismReduction::ReportAccuracy(
 		for(i=1;i<=Number_Species;i++)
 		{
 			OutputFile <<
-					Species[i-1] << " 	" <<
+					species[i-1].Name << " 	" <<
 					OutputReview[i] << " 	" <<
 					MinDiff[i] << " 	" <<
 					MaxDiff[i] << " 	" <<

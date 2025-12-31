@@ -98,7 +98,7 @@ void RunIntegrator::Integrate_Gas_Phase_Odepack_LSODA(
 	ATOL = InitialParameters.Solver_Parameters.atol;
 
 	//Delta_N = Get_Delta_N(reaction_mechanism.Reactions); // just make sure the Delta_N is current
-	vector<double> prep_delta_n = SolverCalculation::Get_Delta_N(reaction_mechanism.reactions);
+	vector<double> prep_delta_n = Get_Delta_N(reaction_mechanism.reactions);
 	// Reduce the matrix from a sparse matrix to something more manageable and quicker to use
 
 

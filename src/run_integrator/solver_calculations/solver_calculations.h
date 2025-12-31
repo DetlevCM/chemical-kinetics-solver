@@ -132,7 +132,7 @@ void ODE_RHS_Pressure_Vessel(int*, double*, double*, double*);
 
 
 
-static vector< double > Get_Delta_N(const vector< SingleReactionData >& Reactions);
+
 
 
 /*

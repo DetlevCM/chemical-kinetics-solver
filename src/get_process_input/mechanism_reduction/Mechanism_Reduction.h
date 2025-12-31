@@ -67,7 +67,7 @@ static void handle_reactions_with_chosen_species(
 static void ReportAccuracy(
 		string,
 		size_t,
-		vector< string > ,
+		vector< Species > species,
 		string,
 		string,
 		string

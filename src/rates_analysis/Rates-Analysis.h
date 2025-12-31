@@ -59,7 +59,7 @@ static void WriteMaxRatesAnalysis(
 );
 
 static void PrepareStreamRatesAnalysis(
-		const vector< string >&,
+		const vector< Species >& species,
 		string
 		);
 

@@ -15,12 +15,13 @@ using std::ofstream;
 using std::string;
 
 #include <vector>
-
 using std::vector;
+
+
+#include "../global_struct.h"
 
 #include "../get_process_input/get_mechanism/ReactionMechanism.h"
 
-#include "../global_struct.h"
 
 class WriteOutput
 {

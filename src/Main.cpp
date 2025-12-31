@@ -7,6 +7,10 @@
 
 #include "./write_output/write_output.h"
 
+#include "./rates_analysis/Rates-Analysis.h"
+
+#include "./get_process_input/mechanism_reduction/Mechanism_Reduction.h"
+
 #include "./run_integrator/run_integrator.h"
 
 // http://stackoverflow.com/questions/13600204/checking-if-argvi-exists-c
@@ -107,7 +111,7 @@ int main(int argc, char* argv[])
 //*/
 
 
-	//size_t i; 	// useful counter
+	size_t i; 	// useful counter
 	size_t Number_Species = reaction_mechanism.species_size();
 	size_t Number_Reactions = reaction_mechanism.reactions_size();
 	vector< double > KeyRates; // for mechanism reduction
@@ -120,11 +124,11 @@ int main(int argc, char* argv[])
 	vector< vector < str_RatesAnalysis > > RatesAnalysisData;
 
 	//// TODO: return the rates analysis code
-/*
+//*
 	if(initial_parameters.MechanismAnalysis.MaximumRates)
 	{
 		// Initialise array
-		vector < str_RatesAnalysis > temp(reaction_mechanism.Reactions.size());
+		vector < str_RatesAnalysis > temp(reaction_mechanism.reactions.size());
 		for(i=0;i<Number_Species;i++)
 		{
 			RatesAnalysisData.push_back(temp);
@@ -134,7 +138,7 @@ int main(int argc, char* argv[])
 
 	if(initial_parameters.MechanismAnalysis.StreamRatesAnalysis)
 	{
-		PrepareStreamRatesAnalysis(reaction_mechanism.Species,"");
+		 RatesAnalysis::PrepareStreamRatesAnalysis(reaction_mechanism.species,"");
 	}
 
 //*/
@@ -191,16 +195,16 @@ int main(int argc, char* argv[])
 
 
 
-		/*
+		//*
 		if(initial_parameters.MechanismReduction.ReduceReactions != 0)
 		{
 			vector< SingleReactionData > ReducedReactions;
-			ReducedReactions = ReduceReactionsNew(reaction_mechanism.Species, reaction_mechanism.Reactions, KeyRates);
+			ReducedReactions = MechanismReduction::ReduceReactionsNew(reaction_mechanism.species, reaction_mechanism.reactions, KeyRates);
 
-			Reaction_Mechanism Reduced_Reaction_Mechanism;
-			Reduced_Reaction_Mechanism.Species = reaction_mechanism.Species;
-			Reduced_Reaction_Mechanism.Thermodynamics = reaction_mechanism.Thermodynamics;
-			Reduced_Reaction_Mechanism.Reactions = ReducedReactions;
+			ReactionMechanism Reduced_Reaction_Mechanism;
+			Reduced_Reaction_Mechanism.species = reaction_mechanism.species;
+			//Reduced_Reaction_Mechanism.Thermodynamics = reaction_mechanism.Thermodynamics;
+			Reduced_Reaction_Mechanism.reactions = ReducedReactions;
 
 			// start a second run only if reduced scheme is not empty and has size different
 			// to original scheme
@@ -214,13 +218,13 @@ int main(int argc, char* argv[])
 
 				Number_Reactions = ReducedReactions.size();
 
-				WriteReactions("reduced_scheme.txt", Reduced_Reaction_Mechanism.Species, ReducedReactions);
+				WriteReactions("reduced_scheme.txt", Reduced_Reaction_Mechanism.species, ReducedReactions);
 
 				initial_parameters.MechanismReduction.ReduceReactions = 0; // switch off reduction...
 
 				if(initial_parameters.StoichiometryMatrixForOpt)
 				{
-					Write_Stoichiometric_Matrix_For_Opt
+					WriteOutput::Write_Stoichiometric_Matrix_For_Opt
 					(
 							"reduced_stoichiometry_matrix.txt" ,
 							ReducedReactions
@@ -243,17 +247,17 @@ int main(int argc, char* argv[])
 
 				if(initial_parameters.MechanismAnalysis.StreamRatesAnalysis)
 				{
-					PrepareStreamRatesAnalysis(Reduced_Reaction_Mechanism.Species,OutputFilenames.Prefix);
+					RatesAnalysis::PrepareStreamRatesAnalysis(Reduced_Reaction_Mechanism.species,OutputFilenames.Prefix);
 				}
 
-				Write_Header_Species_Temperature_Pressure(
+				WriteOutput::Write_Header_Species_Temperature_Pressure(
 						OutputFilenames.Species,
 						initial_parameters.Solver_Parameters.separator,
 						Number_Species,
-						Reduced_Reaction_Mechanism.Species,
+						Reduced_Reaction_Mechanism.species,
 						initial_parameters.GasPhase
 				);
-				WriteLabelsReactionRates(
+				WriteOutput::WriteLabelsReactionRates(
 						OutputFilenames.Rates,
 						initial_parameters.Solver_Parameters.separator,
 						Number_Reactions
@@ -261,7 +265,7 @@ int main(int argc, char* argv[])
 
 
 				cout << "\nHanding Reduced Mechanism to Integrator\n" << std::flush;
-				Choose_Integrator(
+				RunIntegrator::Choose_Integrator(
 						OutputFilenames,
 						Reduced_Reaction_Mechanism,
 						initial_parameters,
@@ -272,10 +276,10 @@ int main(int argc, char* argv[])
 
 
 				// Not ideal, should use variables rather than handwritten filenames
-				ReportAccuracy(
+				MechanismReduction::ReportAccuracy(
 						initial_parameters.Solver_Parameters.separator,
 						Number_Species,
-						Reduced_Reaction_Mechanism.Species,
+						Reduced_Reaction_Mechanism.species,
 						"reduction_accuracy_report.txt",
 						"concentrations.txt",
 						"reduced_concentrations.txt"

@@ -6,7 +6,7 @@
  */
 
 
-#include "../global_const.h"
+#include "../../global_const.h"
 #include "./solver_calculations.h"
 
 // we know the volume of the PetroOxy Dish

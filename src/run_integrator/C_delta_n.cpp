@@ -1,5 +1,5 @@
 
-#include "./solver_calculations.h"
+#include "./run_integrator.h"
 
 vector< double > Get_Delta_N(
 		const vector< SingleReactionData >& Reactions

@@ -20,7 +20,7 @@
  * pmax - 3) Maximum Pressure
  * 4) O2 space in PetroOxy <- m^3
  * 5) Gas Species
- * 6) mol of gas species at 25 degree celsius
+ * 6) mol of gas species at 25 degree Celsius
  * 7) O2 derived pressure
  * 8) Vapour Pressure solvent component
  * 9) solubility of gas at 298K, 1atm mol/L
