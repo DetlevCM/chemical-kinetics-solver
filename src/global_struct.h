@@ -26,4 +26,10 @@ struct str_RatesAnalysis
 	double cons_time;
 };
 
+struct TrackSpecies {
+	size_t SpeciesID;
+	size_t ReactionID;
+	double coefficient;
+};
+
 #endif
