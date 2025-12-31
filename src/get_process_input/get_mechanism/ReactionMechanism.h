@@ -16,8 +16,7 @@ using std::string;
 #include <vector>
 using std::vector ;
 
-
-
+using std::cout;
 
 
 class ReactionMechanism {

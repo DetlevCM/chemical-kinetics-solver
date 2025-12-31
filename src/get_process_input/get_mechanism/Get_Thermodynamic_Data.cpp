@@ -49,7 +49,6 @@ void Species::Get_Thermodynamic_Data(
 				end_flag = true;
 			}
 
-
 			if(begin_flag && !end_flag)
 			{
 				//  Check that the End has not been reached
@@ -132,8 +131,8 @@ void Species::Get_Thermodynamic_Data(
 					//temp_read_in_single_species.NasaHigh6 = temp_split_line_double[5];
 					//temp_read_in_single_species.NasaHigh7 = temp_split_line_double[6];
 					//temp_split_line_double.clear();
-
-
+std::cout << line1 << "\n";
+std::cout << temp_split_line_double1[0] << "\n";
 					species[temp_species_id].thermodynamicdata.SetNasa(
 						temp_split_line_double1[0],
 						temp_split_line_double1[1],
@@ -281,7 +280,6 @@ void Species::Get_Thermodynamic_Data(
 							strtod(line4.substr(30,15).c_str(),NULL);
 					NasaLow[6] =
 							strtod(line4.substr(45,15).c_str(),NULL);
-
 
 					species[temp_species_id].thermodynamicdata.SetNasa(
 						TLow,THigh,TChange,

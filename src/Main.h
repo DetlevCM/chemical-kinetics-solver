@@ -6,6 +6,7 @@
 #include "helpers/Helpers.h"
 
 #include "./get_process_input/get_initial_data/Initial_Data.h"
+#include "./get_process_input/get_mechanism/Species.h"
 #include "./get_process_input/get_mechanism/ReactionMechanism.h"
 
 // File Streams and IO
@@ -90,5 +91,22 @@ void Process_User_Input(
 		vector<string> User_Inputs
 );
 
+
+
+// Making Scheme Irreversible
+vector< SingleReactionData > Make_Irreversible(
+		vector< SingleReactionData > Reactions,
+		const vector< Species > species,
+		double Initial_Temperature, /// use initial temperature from initial data
+		double Range // specify +/- range around initial temperature
+);
+
+void Synchronize_Gas_Liquid_Model(
+		size_t number_synchronized_species,
+		size_t liquid_species_count, size_t gas_species_count, // gas and liquid counts so I know where concentration entries belong to
+		double *y, // concentrations (&temperature) from the ODE solver
+		double Vliq_div_Vgas,
+		vector< double > Henry_Constants // need to line up with species IDs
+);
 
 #endif

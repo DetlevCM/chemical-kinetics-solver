@@ -10,7 +10,7 @@
 
 #include "../../Main.h"
 #include "../get_initial_data/Initial_Data.h"
-#include "ReactionMechanism.h"
+#include "./ReactionMechanism.h"
 
 /* This void needs to supply
  * 1) Species
@@ -30,7 +30,7 @@ bool Handle_Mechanism_Input(
 )
 {
 	//int Number_Reactions;
-	//size_t i;
+	size_t i;
 
 	/* As we now know that the input files exist, let us continue by reading in
 	 * the species list, thermodynamic data and mechanism
@@ -40,7 +40,7 @@ bool Handle_Mechanism_Input(
 			filenames.mechanism ,
 			reaction_mechanism
 	);
-	//size_t Number_Species = reaction_mechanism.species_size();
+	size_t Number_Species = reaction_mechanism.species_size();
 
 
 	// /* Did the user request the removal of species? If yes, remove the
@@ -87,9 +87,9 @@ bool Handle_Mechanism_Input(
 	// }
 
 
-	// /* We have finished processing the mechanism itself. Let us now read the initial
-	//  * data file which specifies initial conditions.
-	//  */
+	/* We have finished processing the mechanism itself. Let us now read the initial
+	 * data file which specifies initial conditions.
+	 */
 
 	Initial_Data::Get_Initial_Conditions(
 	 		filenames.initial_data,
@@ -97,112 +97,112 @@ bool Handle_Mechanism_Input(
 	 		InitialParameters
 	 );
 
-	// cout << "Initial concentrations are supplied for "
-	// 		<< InitialParameters.InitialLiquidSpecies.size()
-	// 		<< " species as follow:\n";
+	cout << "Initial concentrations are supplied for "
+	 		<< InitialParameters.InitialLiquidSpecies.size()
+	 		<< " species as follow:\n";
 
 
-	// /*
-	//  * Once we have read in all user input and make the dangerous assumption
-	//  * that it does not contain any errors, we can begin to process it and prepare
-	//  * it for the integrator
-	//  */
+	/*
+	 * Once we have read in all user input and make the dangerous assumption
+	 * that it does not contain any errors, we can begin to process it and prepare
+	 * it for the integrator
+	 */
 
-	// // We'll store the initial Concentrations separately so we have a reset parameter for multiple runs
-	// InitialParameters.InitialSpeciesConcentration.clear(); // not needed as it should be empty, but doesn't hurt
-	// InitialParameters.InitialSpeciesConcentration.resize(Number_Species + 1);
-	// /* not needed with a vector, default is initialisation to zero
-	// for (i = 0; i <= Number_Species; i++)
-	// {
-	// 	InitialParameters.InitialSpeciesConcentration[i] = 0;
-	// }//*/
+	// We'll store the initial Concentrations separately so we have a reset parameter for multiple runs
+	InitialParameters.InitialSpeciesConcentration.clear(); // not needed as it should be empty, but doesn't hurt
+	InitialParameters.InitialSpeciesConcentration.resize(Number_Species + 1);
+	/* not needed with a vector, default is initialisation to zero
+	for (i = 0; i <= Number_Species; i++)
+	{
+		InitialParameters.InitialSpeciesConcentration[i] = 0;
+	}//*/
 
-	// /*
-	//  * We have obtained the ID of the initial species when we read in the input data
-	//  * now it is time to translate this information into initial concentrations
-	//  *
-	//  * We MUST consider whether the user desires Gas Phase Kinetics or Liquid Phase
-	//  * Kinetics - for gas phase kinetics the data is adjusted
-	//  */
+	/*
+	 * We have obtained the ID of the initial species when we read in the input data
+	 * now it is time to translate this information into initial concentrations
+	 *
+	 * We MUST consider whether the user desires Gas Phase Kinetics or Liquid Phase
+	 * Kinetics - for gas phase kinetics the data is adjusted
+	 */
 
-	// //*
-	// if(InitialParameters.GasPhase)
-	// {
+	//*
+	if(InitialParameters.GasPhase)
+	{
 
-	// 	// pV = nRT -> m^3 by pressure is in Pa - Concentration is mol/L
-	// 	double GasPressure, GasVolume;
+		// pV = nRT -> m^3 by pressure is in Pa - Concentration is mol/L
+		double GasPressure, GasVolume;
 
-	// 	double Temperature;
+	 	double Temperature;
 
-	// 	Temperature = InitialParameters.temperature;
-	// 	GasPressure = InitialParameters.GasPhasePressure;
-	// 	GasVolume = InitialParameters.GasPhaseVolume;
+	 	Temperature = InitialParameters.temperature;
+	 	GasPressure = InitialParameters.GasPhasePressure;
+	 	GasVolume = InitialParameters.GasPhaseVolume;
 
-	// 	vector< double > temp(Number_Species);
+		vector< double > temp(Number_Species);
 
-	// 	for (i = 0; i < InitialParameters.InitialLiquidSpecies.size(); i++)
-	// 	{
-	// 		temp[InitialParameters.InitialLiquidSpecies[i].SpecID] =
-	// 				InitialParameters.InitialLiquidSpecies[i].SpecConc;
-	// 	}
+	 	for (i = 0; i < InitialParameters.InitialLiquidSpecies.size(); i++)
+	 	{
+	 		temp[InitialParameters.InitialLiquidSpecies[i].SpecID] =
+	 				InitialParameters.InitialLiquidSpecies[i].SpecConc;
+	 	}
 
-	// 	// total mol in input file:
-	// 	double total_mol = 0;
-	// 	for (i = 0; i < Number_Species; i++)
-	// 	{
-	// 		total_mol = total_mol + temp[i];
-	// 	}
-	// 	// Gas Volume m^3, concentrations in input mol/L * volume for mol count
-	// 	//total_mol = (1000*total_mol);
-	// 	total_mol = (total_mol);
-
-
-
-	// 	double n;
-	// 	double R = 8.31451; // Gas Constant
-
-	// 	n = (GasPressure * GasVolume) /(Temperature * R);
-
-	// 	// n is now the amount of moles I should have
-
-	// 	double conversion_factor=1;
-	// 	if(n!=total_mol)
-	// 	{
-	// 		conversion_factor = n/(total_mol); // correct for L
-	// 	}
-
-	// 	for (i = 0; i < Number_Species; i++)
-	// 	{
-	// 		InitialParameters.InitialSpeciesConcentration[i] = conversion_factor * temp[i];
-	// 		if(temp[i]!=0)
-	// 		{
-	// 			cout << reaction_mechanism.Species[InitialParameters.InitialLiquidSpecies[i].SpecID] << " " << InitialParameters.InitialSpeciesConcentration[i] << "\n";
-	// 		}
-	// 	}
-	// }
-	// else
-	// {
-	// 	for (i = 0; i < InitialParameters.InitialLiquidSpecies.size(); i++)
-	// 	{
-	// 		InitialParameters.InitialSpeciesConcentration[InitialParameters.InitialLiquidSpecies[i].SpecID] =
-	// 				InitialParameters.InitialLiquidSpecies[i].SpecConc;
-	// 		cout << reaction_mechanism.Species[InitialParameters.InitialLiquidSpecies[i].SpecID] << " " << InitialParameters.InitialLiquidSpecies[i].SpecConc << "\n";
-	// 	}//*/
-	// }
-
-	// // and the Initial Temperature
-	// InitialParameters.InitialSpeciesConcentration[Number_Species] = InitialParameters.temperature; //Input[1][0];
-	// cout << "\n";
+	 	// total mol in input file:
+	 	double total_mol = 0;
+	 	for (i = 0; i < Number_Species; i++)
+	 	{
+	 		total_mol = total_mol + temp[i];
+	 	}
+	 	// Gas Volume m^3, concentrations in input mol/L * volume for mol count
+	 	//total_mol = (1000*total_mol);
+	 	total_mol = (total_mol);
 
 
-	// // Did the user request an irreversible scheme?
-	// if (InitialParameters.irrev) // contains true of false
-	// {
-	// 	cout << "Transformation to irreversible scheme requested!\n";
-	// 	reaction_mechanism.Reactions = Make_Irreversible(reaction_mechanism.Reactions, reaction_mechanism.Thermodynamics, InitialParameters.temperature, 50); // hardcoded to +/- 50K right now
-	// 	WriteReactions("irreversible_scheme.txt", reaction_mechanism.Species, reaction_mechanism.Reactions);
-	// }
-	// // End of initial data
+
+	 	double n;
+	 	double R = 8.31451; // Gas Constant
+
+	 	n = (GasPressure * GasVolume) /(Temperature * R);
+
+	 	// n is now the amount of moles I should have
+
+	 	double conversion_factor=1;
+	 	if(n!=total_mol)
+	 	{
+	 		conversion_factor = n/(total_mol); // correct for L
+	 	}
+
+	 	for (i = 0; i < Number_Species; i++)
+	 	{
+	 		InitialParameters.InitialSpeciesConcentration[i] = conversion_factor * temp[i];
+	 		if(temp[i]!=0)
+	 		{
+	 			cout << reaction_mechanism.species[InitialParameters.InitialLiquidSpecies[i].SpecID].Name << " " << InitialParameters.InitialSpeciesConcentration[i] << "\n";
+	 		}
+	 	}
+	 }
+	 else
+	 {
+	 	for (i = 0; i < InitialParameters.InitialLiquidSpecies.size(); i++)
+	 	{
+	 		InitialParameters.InitialSpeciesConcentration[InitialParameters.InitialLiquidSpecies[i].SpecID] =
+	 				InitialParameters.InitialLiquidSpecies[i].SpecConc;
+	 		cout << reaction_mechanism.species[InitialParameters.InitialLiquidSpecies[i].SpecID].Name << " " << InitialParameters.InitialLiquidSpecies[i].SpecConc << "\n";
+	 	}//*/
+	 }
+
+	 // and the Initial Temperature
+	 InitialParameters.InitialSpeciesConcentration[Number_Species] = InitialParameters.temperature; //Input[1][0];
+	 cout << "\n";
+
+
+	 // Did the user request an irreversible scheme?
+	 if (InitialParameters.irrev) // contains true of false
+	 {
+	 	cout << "Transformation to irreversible scheme requested!\n";
+	 	reaction_mechanism.reactions = Make_Irreversible(reaction_mechanism.reactions, reaction_mechanism.species, InitialParameters.temperature, 50); // hardcoded to +/- 50K right now
+	 	WriteReactions("irreversible_scheme.txt", reaction_mechanism.species, reaction_mechanism.reactions);
+	 }
+	 // End of initial data
 
 
 
