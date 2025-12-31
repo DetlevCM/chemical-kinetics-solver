@@ -3,6 +3,7 @@
         "Chemkin",
         "CODATA",
         "consumptionrate",
+        "ctot",
         "detlevcm",
         "dlsoda",
         "dodesol",
@@ -19,9 +20,11 @@
         "odepack",
         "pmdcm",
         "productionrate",
+        "qtot",
         "reac",
         "REAC",
         "REACTIONMECHANISM",
+        "RHSODE",
         "rtol",
         "RWORK",
         "tempj",
@@ -30,6 +33,8 @@
         "tlow",
         "troe",
         "TROE",
-        "unclassed"
+        "unclassed",
+        "Vgas",
+        "Vliq"
     ]
 }
