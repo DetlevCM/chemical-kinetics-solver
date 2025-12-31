@@ -2,7 +2,7 @@
 #include "./run_integrator.h"
 
 vector< double > Get_Delta_N(
-		const vector< SingleReactionData >& Reactions
+		const vector< SingleReactionData > Reactions
 		)
 {
 	size_t i,j;

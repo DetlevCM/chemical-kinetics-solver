@@ -131,7 +131,7 @@ static int Prepare_Integrator_Settings(
 		Settings_Intel&
 );
 
-static vector< double > Get_Delta_N(const vector< SingleReactionData >& Reactions);
+static vector< double > Get_Delta_N(const vector< SingleReactionData > Reactions);
 
 // solve based on concentrations in the liquid phase
 static void Integrate_Liquid_Phase(
