@@ -5,15 +5,15 @@
  *      Author: DetlevCM
  */
 
-#include "../Headers.hpp"
+#include "./Rates-Analysis.h"
 
 
-void Prepare_Print_Rates_Per_Species(
+void RatesAnalysis::Prepare_Print_Rates_Per_Species(
 		//vector< TrackSpecies > & ProductsForRates,
 		//vector< TrackSpecies > & ReactantsForRates,
 		string separator,
 		//vector< double > & Rates,
-		vector< string > Species,
+		vector< Species > species,
 		vector< size_t > SelectedSpeciesID,
 		vector< vector< size_t > > ReactionsForSpeciesSelectedForRates//,
 		//vector< SingleReactionData >& Reactions
@@ -34,8 +34,8 @@ void Prepare_Print_Rates_Per_Species(
 	{
 		string OutFilenameProd, OutFilenameCons;
 
-		OutFilenameProd = Species[SelectedSpeciesID[i]] + "-Prod.txt";
-		OutFilenameCons = Species[SelectedSpeciesID[i]] + "-Cons.txt";
+		OutFilenameProd = species[SelectedSpeciesID[i]].Name + "-Prod.txt";
+		OutFilenameCons = species[SelectedSpeciesID[i]].Name + "-Cons.txt";
 
 		OutfileProd.open(OutFilenameProd.c_str(),ios::out);
 		OutfileCons.open(OutFilenameCons.c_str(),ios::out);
@@ -95,20 +95,20 @@ void Prepare_Print_Rates_Per_Species(
 }
 
 
-void Print_Rates_Per_Species(
+void RatesAnalysis::Print_Rates_Per_Species(
 		vector< TrackSpecies > & ProductsForRates,
 		vector< TrackSpecies > & ReactantsForRates,
 		const string separator,
 		vector< double > & Rates,
 		double current_time,
-		vector< string > Species,
+		vector< Species > species,
 		vector< size_t > SelectedSpeciesID,
 		vector< vector< size_t > > ReactionsForSpeciesSelectedForRates
 )
 {
 	size_t i;
 
-	size_t Number_Species = Species.size();
+	size_t Number_Species = species.size();
 	size_t Number_Reactions = Rates.size();
 
 	vector< vector < str_RatesAnalysis > > RatesAnalysisData;
@@ -149,8 +149,8 @@ void Print_Rates_Per_Species(
 	{
 		string OutFilenameProd, OutFilenameCons;
 
-		OutFilenameProd = Species[SelectedSpeciesID[i]] + "-Prod.txt";
-		OutFilenameCons = Species[SelectedSpeciesID[i]] + "-Cons.txt";
+		OutFilenameProd = species[SelectedSpeciesID[i]].Name + "-Prod.txt";
+		OutFilenameCons = species[SelectedSpeciesID[i]].Name + "-Cons.txt";
 
 
 		OutfileProd.open(OutFilenameProd.c_str(),ios::app);

@@ -7,7 +7,7 @@
 
 
 #include "../global_const.h"
-#include "../Headers.hpp"
+#include "./solver_calculations.h"
 
 // we know the volume of the PetroOxy Dish
 // We should let the user enter all other information
@@ -19,7 +19,7 @@
  * 3) pmax Maximum Pressure
  * 4) O2 space in PetroOxy <- m^3
  * 5) Gas Species
- * 6) mol of gas species at 25 degree celsius
+ * 6) mol of gas species at 25 degree Celsius
  * 7) O2 derived pressure
  * 8) Vapour Pressure solvent component
  * 9) solubility of gas at 298K, mol/L (C)
@@ -32,7 +32,7 @@
  */
 
 
-void AdjustGasConcentration(
+void SolverCalculation::AdjustGasConcentration(
 		double & GasSpeciesInLiquidConcentration,
 		double temperature,
 		double time_difference,
@@ -121,7 +121,7 @@ void AdjustGasConcentration(
 
 
 // identical to regular PetroOxy function, but corrects concentration without change to reservoir
-void Adjust_Gas_Concentration_Initial(
+void SolverCalculation::Adjust_Gas_Concentration_Initial(
 		double & GasSpeciesInLiquidConcentration,
 		double temperature,
 		PressureVesselCalc & PetroOxyData

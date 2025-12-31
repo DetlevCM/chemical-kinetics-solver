@@ -48,7 +48,7 @@ void MechanismReduction::ReactionRateImportance(
 
 // retain the reactions found to be important
 vector< SingleReactionData > MechanismReduction::ReduceReactionsNew(
-		const vector< string >& Species,
+		const vector< Species >& species,
 		const vector<  SingleReactionData >& Reactions,
 		const vector< double >& SelectedReactions
 )
@@ -74,7 +74,7 @@ vector< SingleReactionData > MechanismReduction::ReduceReactionsNew(
 
 	if(ReducedReactionsRemoved.size() > 0)
 	{
-		WriteReactions("Removed_Reactions.txt", Species, ReducedReactionsRemoved);
+		WriteReactions("Removed_Reactions.txt", species, ReducedReactionsRemoved);
 	}
 	//printf("Got to the end of Reaction reduction!! \n");
 	return ReducedReactions;

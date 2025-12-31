@@ -2,6 +2,7 @@
     "cSpell.words": [
         "Chemkin",
         "CODATA",
+        "Constantk",
         "consumptionrate",
         "ctot",
         "detlevcm",
@@ -27,6 +28,7 @@
         "RHSODE",
         "rtol",
         "RWORK",
+        "targetconcentration",
         "tempj",
         "thermo",
         "thermodynamicdata",

@@ -106,12 +106,12 @@ double InvT;
 
 ThermoT(double temperature)
 {
-	double T1 = temperature;
-	double T2 = temperature*temperature;
-	double T3 = T2*temperature;
-	double T4 = T3*temperature;
-	double logT = log(temperature);
-	double InvT = 1.0/temperature;
+	T1 = temperature;
+	T2 = temperature*temperature;
+	T3 = T2*temperature;
+	T4 = T3*temperature;
+	logT = log(temperature);
+	InvT = 1.0/temperature;
 };
 };
 

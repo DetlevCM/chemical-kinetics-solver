@@ -12,6 +12,12 @@
 #include "./run_integrator.h"
 #include "./solver_calculations/solver_calculations.h"
 
+#include "../write_output/write_output.h"
+
+#include "../get_process_input/mechanism_reduction/Mechanism_Reduction.h"
+
+#include "../rates_analysis/Rates-Analysis.h"
+
 // Not a perfect solution, but stick integrator into its own void with global variables via a namespace
 void RunIntegrator::Integrate_Liquid_Phase(
 		Main::Filenames OutputFilenames,
@@ -188,7 +194,7 @@ void RunIntegrator::Integrate_Liquid_Phase(
     //*/
 
 	// prepare the Jacobian matrix
-	Prepare_Jacobian_Matrix(JacobianMatrix,reaction_mechanism.reactions);
+	solver_calculation.Prepare_Jacobian_Matrix(solver_calculation.JacobianMatrix,reaction_mechanism.reactions);
 
 
 	// Get the rate Constants, forward and backwards
@@ -212,13 +218,13 @@ void RunIntegrator::Integrate_Liquid_Phase(
 	// Don't forget Rates Analysis for Mechanism Reduction at t=0 - or is this nonsense?
 	if(InitialParameters.MechanismReduction.ReduceReactions != 0)
 	{
-		ReactionRateImportance(KeyRates, 
+		MechanismReduction::ReactionRateImportance(KeyRates, 
 			solver_calculation.Rates, InitialParameters.MechanismReduction.ReduceReactions);
 	}
 
 
 	// do not forget output at time = 0
-	StreamConcentrations(
+	WriteOutput::StreamConcentrations(
 			Concentration_OFStream,
 			InitialParameters.Solver_Parameters.separator,
 			InitialParameters.GasPhase,
@@ -231,7 +237,7 @@ void RunIntegrator::Integrate_Liquid_Phase(
 	// Only stream if the user desires it, still doesn't prevent file creation...
 	if(InitialParameters.PrintReacRates)
 	{
-		StreamReactionRates(
+		WriteOutput::StreamReactionRates(
 				ReactionRates_OFStream,
 				InitialParameters.Solver_Parameters.separator,
 				time_current,
@@ -286,7 +292,7 @@ void RunIntegrator::Integrate_Liquid_Phase(
 			temp.clear();
 		}
 
-		Prepare_Print_Rates_Per_Species(
+		RatesAnalysis::Prepare_Print_Rates_Per_Species(
 				InitialParameters.Solver_Parameters.separator,
 				reaction_mechanism.species,
 				InitialParameters.MechanismAnalysis.SpeciesSelectedForRates,
@@ -296,7 +302,7 @@ void RunIntegrator::Integrate_Liquid_Phase(
 
 
 	vector< double > SpeciesConcentrationChange = 
-	SpeciesLossRate(
+	SolverCalculation::SpeciesLossRate(
 		Number_Species, 
 		solver_calculation.Rates, 
 		solver_calculation.SpeciesLossAll);
@@ -335,7 +341,7 @@ void RunIntegrator::Integrate_Liquid_Phase(
 		case 1002 :
 			dodesol_rkm9mka(&Intel.vector_ipar[0], &n, &time_current, &time_step,
 					y,(void*) &SolverCalculation::ODE_RHS_Liquid_Phase,
-					(void*) Jacobian_Matrix_Intel, &Intel.h, &Intel.hm, &Intel.ep, &Intel.tr,
+					(void*) &SolverCalculation::Jacobian_Matrix_Intel, &Intel.h, &Intel.hm, &Intel.ep, &Intel.tr,
 					&Intel.vector_dpar[0], &Intel.vector_kd[0], &Intel.ierr
 			);
 			if (Intel.ierr!=0){printf("\n dodesol_rkm9mkn routine exited with error code %4d\n",Intel.ierr);exit(1);}
@@ -353,7 +359,7 @@ void RunIntegrator::Integrate_Liquid_Phase(
 		case 1004 :
 			dodesol_mk52lfa(&Intel.vector_ipar[0], &n, &time_current, &time_step,
 					y,(void*) &SolverCalculation::ODE_RHS_Liquid_Phase,
-					(void*) Jacobian_Matrix_Intel, &Intel.h, &Intel.hm, &Intel.ep, &Intel.tr,
+					(void*) &SolverCalculation::Jacobian_Matrix_Intel, &Intel.h, &Intel.hm, &Intel.ep, &Intel.tr,
 					&Intel.vector_dpar[0], &Intel.vector_kd[0], &Intel.ierr
 			);
 			if (Intel.ierr!=0){printf("\n dodesol_rkm9mkn routine exited with error code %4d\n",Intel.ierr);exit(1);}
@@ -366,7 +372,7 @@ void RunIntegrator::Integrate_Liquid_Phase(
 					&LSODA.ITOL,&LSODA.RTOL,&LSODA.ATOL,
 					&LSODA.ITASK,&LSODA.ISTATE,&LSODA.IOPT,
 					&LSODA.vector_RWORK[0],&LSODA.LRW,&LSODA.vector_IWORK[0],&LSODA.LIW,
-					(void*) Jacobian_Matrix_Odepack_LSODA,&LSODA.JT);
+					(void*) &SolverCalculation::Jacobian_Matrix_Odepack_LSODA,&LSODA.JT);
 			if (LSODA.ISTATE<0){printf("\n LSODA routine exited with error code %4d\n",LSODA.ISTATE);exit(1);}
 			break;
 		case 2002 :
@@ -374,7 +380,7 @@ void RunIntegrator::Integrate_Liquid_Phase(
 					&LSODA.ITOL,&LSODA.RTOL,&LSODA.ATOL,
 					&LSODA.ITASK,&LSODA.ISTATE,&LSODA.IOPT,
 					&LSODA.vector_RWORK[0],&LSODA.LRW,&LSODA.vector_IWORK[0],&LSODA.LIW,
-					(void*) Jacobian_Matrix_Odepack_LSODA,&LSODA.JT);
+					(void*) &SolverCalculation::Jacobian_Matrix_Odepack_LSODA,&LSODA.JT);
 			if (LSODA.ISTATE<0){printf("\n LSODA routine exited with error code %4d\n",LSODA.ISTATE);exit(1);}
 			break;
 
@@ -385,7 +391,7 @@ void RunIntegrator::Integrate_Liquid_Phase(
 
 		if(InitialParameters.MechanismAnalysis.MaximumRates)
 		{
-			MaxRatesAnalysis(
+			RatesAnalysis::MaxRatesAnalysis(
 				RatesAnalysisData,
 				ProductsForRatesAnalysis,
 				solver_calculation.ReactantsForReactions,
@@ -397,7 +403,7 @@ void RunIntegrator::Integrate_Liquid_Phase(
 		if(InitialParameters.MechanismAnalysis.RatesAnalysisAtTime &&
 				InitialParameters.MechanismAnalysis.RatesAnalysisAtTimeData[RatesAnalysisTimepoint] == time_current)
 		{
-			RatesAnalysisAtTimes(
+			RatesAnalysis::RatesAnalysisAtTimes(
 					ProductsForRatesAnalysis,
 					solver_calculation.ReactantsForReactions,
 					solver_calculation.Rates,
@@ -412,7 +418,7 @@ void RunIntegrator::Integrate_Liquid_Phase(
 		// Function for new per species output
 		if(InitialParameters.MechanismAnalysis.RatesOfSpecies)
 		{
-			Print_Rates_Per_Species(
+			RatesAnalysis::Print_Rates_Per_Species(
 					ProductsForRatesAnalysis,
 					solver_calculation.ReactantsForReactions,
 					InitialParameters.Solver_Parameters.separator,
@@ -428,7 +434,7 @@ void RunIntegrator::Integrate_Liquid_Phase(
 
 		if(InitialParameters.MechanismAnalysis.StreamRatesAnalysis)
 		{
-			StreamRatesAnalysis(
+			RatesAnalysis::StreamRatesAnalysis(
 					OutputFilenames.Prefix,
 					ProductsForRatesAnalysis,
 					solver_calculation.ReactantsForReactions,
@@ -453,7 +459,7 @@ void RunIntegrator::Integrate_Liquid_Phase(
 		pressure = (total_mol  * R * SpeciesConcentration[Number_Species])/InitialParameters.GasPhaseVolume;
 		}//*/
 
-		StreamConcentrations(
+		WriteOutput::StreamConcentrations(
 				Concentration_OFStream,
 				InitialParameters.Solver_Parameters.separator,
 				false, //InitialParameters.GasPhase,
@@ -465,18 +471,23 @@ void RunIntegrator::Integrate_Liquid_Phase(
 
 		if(InitialParameters.PrintReacRates)
 		{
-			StreamReactionRates(
+			//// TODO: seems to have broken...
+			/*
+			WriteOutput::Input_File_For_Ehsan_Opt(
 					ReactionRates_OFStream,
 					InitialParameters.Solver_Parameters.separator,
 					time_current,
 					solver_calculation.Rates
 			);
+			//*/
 		}
 
 
 		if(InitialParameters.MechanismReduction.ReduceReactions != 0)
 		{
-			ReactionRateImportance(KeyRates, solver_calculation.Rates, InitialParameters.MechanismReduction.ReduceReactions);
+			MechanismReduction::ReactionRateImportance(
+				KeyRates, solver_calculation.Rates, 
+				InitialParameters.MechanismReduction.ReduceReactions);
 		}
 
 
@@ -504,7 +515,9 @@ void RunIntegrator::Integrate_Liquid_Phase(
 
 	if(InitialParameters.MechanismAnalysis.MaximumRates)
 	{
-		WriteMaxRatesAnalysis(RatesAnalysisData, reaction_mechanism.species, reaction_mechanism.reactions,OutputFilenames.Prefix);
+		RatesAnalysis::WriteMaxRatesAnalysis(
+			RatesAnalysisData, reaction_mechanism.species,
+			reaction_mechanism.reactions,OutputFilenames.Prefix);
 	}
 
 

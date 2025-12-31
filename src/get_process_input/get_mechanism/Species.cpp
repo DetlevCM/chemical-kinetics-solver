@@ -18,7 +18,7 @@ for(size_t i=0; species.size(); i++)
 
 	new_species_vec.push_back(new_species);
 }
-
+	return new_species_vec;
 }
 
 
@@ -77,7 +77,7 @@ double Species::ThermodynamicData::calculate_Hf_at_T(const ThermoT T)
     }
 }
 
-double Species::ThermodynamicData::calculate_Cp_at_T(const const ThermoT T)
+double Species::ThermodynamicData::calculate_Cp_at_T(const ThermoT T)
 {
     if (T.T1 <= TChange) {
         			return R*(
@@ -105,7 +105,7 @@ double Species::ThermodynamicData::calculate_Cv_at_T(const ThermoT T)
     return ThermodynamicData::calculate_Cp_at_T(T.T1) - R;
 }
 
-double Species::ThermodynamicData::calculate_S_at_T(const const ThermoT T)
+double Species::ThermodynamicData::calculate_S_at_T(const ThermoT T)
 {
     if (T.T1 <= TChange) {
         return  R*(

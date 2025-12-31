@@ -20,6 +20,8 @@ using std::vector;
 
 #include <math.h>
 
+#include "./Species.h"
+
 namespace Reaction
 {
 
@@ -46,14 +48,14 @@ struct ReactionParameter {
 
 string Prepare_Single_Reaction_Output(
 		size_t ,
-		const vector< string >& ,
+		const vector< Species >& ,
 		const SingleReactionData&
 );
 
 
 void WriteReactions(
 		string ,
-		const vector< string >& ,
+		const vector< Species >& species,
 		const vector< SingleReactionData >&
 );
 

@@ -10,7 +10,7 @@
 
 void Reaction::WriteReactions(
 		string filename ,
-		const vector< string >& Species,
+		const vector< Species >& species,
 		const vector< SingleReactionData >& Reactions
 )
 {
@@ -29,7 +29,7 @@ void Reaction::WriteReactions(
 
 		for(i=0;i<Number_Reactions;i++)
 		{
-			ReactionsOutput << Prepare_Single_Reaction_Output(Number_Species, Species, Reactions[i]);
+			ReactionsOutput << Prepare_Single_Reaction_Output(Number_Species, species, Reactions[i]);
 			if(Reactions[i].IsDuplicate == true){
 				ReactionsOutput << "DUPLICATE\n";
 			}

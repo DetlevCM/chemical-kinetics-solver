@@ -6,7 +6,7 @@
  */
 
 
-#include "../../Headers.hpp"
+#include "./solver_calculations.h"
 
 
 
@@ -14,9 +14,9 @@
 
 
 
-void Prepare_Jacobian_Matrix(
+void SolverCalculation::Prepare_Jacobian_Matrix(
 		vector < JacobianData > & JacobianColumnWise,
-		const vector< SingleReactionData > & Reactions
+		const vector< Reaction::SingleReactionData > & Reactions
 )
 {
 	JacobianColumnWise.clear();

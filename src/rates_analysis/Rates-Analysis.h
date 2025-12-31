@@ -5,10 +5,34 @@
  *      Author: DetlevCM
  */
 
-#ifndef HEADERS_RATES_ANALYSIS_HPP_
-#define HEADERS_RATES_ANALYSIS_HPP_
+#ifndef RATES_ANALYSIS
+#define RATES_ANALYSIS
 
-void MaxRatesAnalysis(
+#include <iostream>
+using std::ofstream;
+//using std::ifstream;
+using std::ios;
+
+#include <vector>
+using std::vector;
+
+#include <string>
+using std::string;
+
+
+#include "../global_struct.h"
+
+#include "../get_process_input/get_mechanism/Species.h"
+#include "../get_process_input/get_mechanism/Reaction.h"
+
+//// TODO: 
+using Reaction::SingleReactionData; // remove in future or optimize
+
+class RatesAnalysis {
+
+public:
+
+static void MaxRatesAnalysis(
 		vector< vector < str_RatesAnalysis > >& ,
 		const vector< TrackSpecies > & ,
 		const vector< TrackSpecies > & ,
@@ -17,29 +41,29 @@ void MaxRatesAnalysis(
 );
 
 
-void RatesAnalysisAtTimes(
+static void RatesAnalysisAtTimes(
 		const vector< TrackSpecies > & ,
 		const vector< TrackSpecies > & ,
 		const vector< double > & ,
 		const double ,
-		const vector< string > ,
+		const vector< Species > species,
 		const vector< SingleReactionData >&
 );
 
 
-void WriteMaxRatesAnalysis(
+static void WriteMaxRatesAnalysis(
 		vector< vector < str_RatesAnalysis > >&,
-		const vector< string >&,
+		const vector< Species >& species,
 		const vector< SingleReactionData >&,
 		string
 );
 
-void PrepareStreamRatesAnalysis(
+static void PrepareStreamRatesAnalysis(
 		const vector< string >&,
 		string
 		);
 
-void StreamRatesAnalysis(
+static void StreamRatesAnalysis(
 		const string,
 		const vector< TrackSpecies > & ,
 		const vector< TrackSpecies > & ,
@@ -50,30 +74,30 @@ void StreamRatesAnalysis(
 
 // New function for rates of production
 
-void Prepare_Print_Rates_Per_Species(
+static void Prepare_Print_Rates_Per_Species(
 		//vector< TrackSpecies > & ,
 		//vector< TrackSpecies > & ,
 		string,
 		//vector< double > & ,
-		vector< string > ,
+		vector< Species > species,
 		vector< size_t > ,
 		vector< vector< size_t > >//,
 		//vector< SingleReactionData >&
 );
 
 
-void Print_Rates_Per_Species(
+static void Print_Rates_Per_Species(
 		vector< TrackSpecies > & ,
 		vector< TrackSpecies > & ,
 		const string,
 		vector< double > & ,
 		double ,
-		vector< string > ,
+		vector< Species > species,
 		vector< size_t > ,
 		vector< vector< size_t > > //,
 		//vector< SingleReactionData >&
 );
 
+};
 
-
-#endif /* HEADERS_RATES_ANALYSIS_HPP_ */
+#endif

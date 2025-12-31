@@ -30,7 +30,7 @@ bool Handle_Mechanism_Input(
 )
 {
 	//int Number_Reactions;
-	size_t i;
+	//size_t i;
 
 	/* As we now know that the input files exist, let us continue by reading in
 	 * the species list, thermodynamic data and mechanism
@@ -40,7 +40,7 @@ bool Handle_Mechanism_Input(
 			filenames.mechanism ,
 			reaction_mechanism
 	);
-	size_t Number_Species = reaction_mechanism.species_size();
+	//size_t Number_Species = reaction_mechanism.species_size();
 
 
 	// /* Did the user request the removal of species? If yes, remove the

@@ -29,31 +29,11 @@ public:
 
 
 
-struct JacobianSpecies{
-	size_t SpeciesID;
-	double power;
-};
-
-struct JacobianData {
-	bool IsForward;
-	bool IsProduction;
-	size_t ColumnWiseArrayPosition;
-	size_t ReactionID;
-	double coefficient;
-	vector< JacobianSpecies > Species;
-};
-
-//// TODO: makes thes proper class variables with constructor and destructor
-
-class Jacobian
-{
-	public:
-vector< JacobianData > JacobianMatrix;
-};
 
 
 
 
+/*
 class Jacobian_ODE_RHS
 {
 	public:
@@ -70,6 +50,7 @@ vector< Species::ThermodynamicData::CalculatedThermodynamics > CalculatedThermo;
 vector< double > Kf;
 vector< double > Kr;
 };
+//*/
 
 /*
 class ODE_RHS
@@ -88,6 +69,7 @@ vector< double > SpeciesConcentrationChange;
 //*/
 
 // Split into own namespace for efficiency
+/*
 class ODE_RHS_Pressure_Vessel_Variables
 {
 	public:
@@ -96,6 +78,7 @@ PressureVesselCalc PetroOxyData;
 //for limited Oxy
 double time_previous;
 };
+//*/
 
 //// end TODO: 
 

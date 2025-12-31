@@ -8,8 +8,14 @@
 #include "../../lib/headers/lib_Intel_ODE.hpp"
 #include "../../lib/headers/lib_odepack.hpp"
 
-#include "run_integrator.h"
+#include "./run_integrator.h"
+#include "./solver_calculations/solver_calculations.h"
 
+#include "../write_output/write_output.h"
+
+#include "../get_process_input/mechanism_reduction/Mechanism_Reduction.h"
+
+#include "../rates_analysis/Rates-Analysis.h"
 
 
 // Not a perfect solution, but stick integrator into its own void with global variables via a namespace
@@ -28,19 +34,19 @@ void RunIntegrator::Integrate_Pressure_Vessel_Liquid_Phase(
 
 	vector< TrackSpecies > ProductsForRatesAnalysis;
 
-	using namespace Jacobian_ODE_RHS;
-	using namespace ODE_RHS;
-	using namespace ODE_RHS_Pressure_Vessel_Variables;
-	using namespace Jacobian;
+	//using namespace Jacobian_ODE_RHS;
+	//using namespace ODE_RHS;
+	//using namespace ODE_RHS_Pressure_Vessel_Variables;
+	//using namespace Jacobian;
 
-	Number_Species = reaction_mechanism.Species.size();
-	Number_Reactions = reaction_mechanism.Reactions.size();
+	size_t Number_Species = reaction_mechanism.species.size();
+	size_t Number_Reactions = reaction_mechanism.reactions.size();
 
 	// outputting mechanism size in integration routing so that it is printed every time
 	cout << "The mechanism to be integrated contains " << Number_Species << " species and " << Number_Reactions << " Reactions.\n" << std::flush;
 
 
-	Thermodynamics = reaction_mechanism.Thermodynamics; // "Hack" - to fix a regression
+	//Thermodynamics = reaction_mechanism.Thermodynamics; // "Hack" - to fix a regression
 
 
 	ofstream ReactionRatesOutput;
@@ -78,15 +84,17 @@ void RunIntegrator::Integrate_Pressure_Vessel_Liquid_Phase(
 	clock_t cpu_time_begin, cpu_time_end, cpu_time_current;
 
 
-	Delta_N = Get_Delta_N(reaction_mechanism.Reactions); // just make sure the Delta_N is current
+	//Delta_N = Get_Delta_N(reaction_mechanism.Reactions); // just make sure the Delta_N is current
+	vector<double> prep_delta_n = SolverCalculation::Get_Delta_N(reaction_mechanism.reactions);
 	// Reduce the matrix from a sparse matrix to something more manageable and quicker to use
 
 
-	ReactionParameters = Process_Reaction_Parameters(reaction_mechanism.Reactions);
+	//ReactionParameters = Process_Reaction_Parameters(reaction_mechanism.Reactions);
 
-	ReactantsForReactions = Reactants_ForReactionRate(reaction_mechanism.Reactions);
+	vector< TrackSpecies > ReactantsForReactions = Reactants_ForReactionRate(reaction_mechanism.reactions);
 
-	ProductsForReactions = Products_ForReactionRate(reaction_mechanism.Reactions,false);
+	vector < TrackSpecies> ProductsForReactions = Products_ForReactionRate(reaction_mechanism.reactions,false);
+
 
 
 	if(InitialParameters.MechanismAnalysis.MaximumRates ||
@@ -94,16 +102,31 @@ void RunIntegrator::Integrate_Pressure_Vessel_Liquid_Phase(
 			InitialParameters.MechanismAnalysis.RatesAnalysisAtTime ||
 			InitialParameters.MechanismAnalysis.RatesOfSpecies)
 	{
-		ProductsForRatesAnalysis = Products_ForReactionRate(reaction_mechanism.Reactions,true);
+		ProductsForRatesAnalysis = Products_ForReactionRate(reaction_mechanism.reactions,true);
 	}
 
-	SpeciesLossAll = PrepareSpecies_ForSpeciesLoss(reaction_mechanism.Reactions); // New method of listing species
+	//SpeciesLossAll = PrepareSpecies_ForSpeciesLoss(reaction_mechanism.Reactions); // New method of listing species
 
 
+	vector< TrackSpecies > SpeciesLossAll = PrepareSpecies_ForSpeciesLoss(reaction_mechanism.reactions); // New method of listing species
+
+	//// NOTE: Here initialises the Solver Calc class, in which the members act as global variables
+	//// for and during the calculation
+	SolverCalculation solver_calculation(
+		reaction_mechanism.species,
+		reaction_mechanism.species.size(),
+		reaction_mechanism.reactions_size(),
+		ReactantsForReactions,
+		ProductsForReactions,
+		SpeciesLossAll,
+		prep_delta_n);
+
+	solver_calculation.ReactionParameters = Process_Reaction_Parameters(reaction_mechanism.reactions);
+	
 	// original old code
 	//double* y = &SpeciesConcentration[0];
-	Concentration.clear();
-	Concentration.resize(Number_Species + 1);
+	//Concentration.clear();
+	//Concentration.resize(Number_Species + 1);
 
 	// Should be faster, but is 10 times slower???
 	/*
@@ -124,34 +147,34 @@ void RunIntegrator::Integrate_Pressure_Vessel_Liquid_Phase(
 
 	/* -- Initial values at t = 0 -- */
 
-	Number_Reactions = ReactionParameters.size();
+	//Number_Reactions = ReactionParameters.size();
 
-	CalculatedThermo.resize(Number_Species);
+	//CalculatedThermo.resize(Number_Species);
 
-	InitialDataConstants.EnforceStability = InitialParameters.EnforceStability;
-	InitialDataConstants.PetroOxy = InitialParameters.PetroOxy.IsSet;
-	InitialDataConstants.PetroOxyTemperatureRise = InitialParameters.PetroOxy.TemperatureRise;
-	InitialDataConstants.temperature = InitialParameters.temperature;
+	solver_calculation.InitialDataConstants.EnforceStability = InitialParameters.EnforceStability;
+	solver_calculation.InitialDataConstants.PetroOxy = InitialParameters.PetroOxy.IsSet;
+	solver_calculation.InitialDataConstants.PetroOxyTemperatureRise = InitialParameters.PetroOxy.TemperatureRise;
+	solver_calculation.InitialDataConstants.temperature = InitialParameters.temperature;
 
 
 	// set constant concentration if desired
-	InitialDataConstants.ConstantConcentration = InitialParameters.ConstantConcentration;
+	solver_calculation.InitialDataConstants.ConstantConcentration = InitialParameters.ConstantConcentration;
 	if(InitialParameters.ConstantConcentration)
 	{
 		cout << "Constant Species desired\n";
 
-		InitialDataConstants.ConstantSpecies.clear();
-		InitialDataConstants.ConstantSpecies.resize(Number_Species);
+		solver_calculation.InitialDataConstants.ConstantSpecies.clear();
+		solver_calculation.InitialDataConstants.ConstantSpecies.resize(Number_Species);
 
 		// zero just to make sure
 		for(i=0;i<Number_Species;i++)
 		{
-			InitialDataConstants.ConstantSpecies[i] = 0;
+			solver_calculation.InitialDataConstants.ConstantSpecies[i] = 0;
 		}
 
 		for(i=0;i<InitialParameters.ConstantSpecies.size();i++)
 		{// fix initial concentrations
-			InitialDataConstants.ConstantSpecies[InitialParameters.ConstantSpecies[i]] =
+			solver_calculation.InitialDataConstants.ConstantSpecies[InitialParameters.ConstantSpecies[i]] =
 					SpeciesConcentration[InitialParameters.ConstantSpecies[i]];
 		}
 	}
@@ -159,9 +182,9 @@ void RunIntegrator::Integrate_Pressure_Vessel_Liquid_Phase(
 
 	if(InitialParameters.PetroOxy.IsSet)
 	{
-		PetroOxyOutputHeader(OutputFilenames.PetroOxy);
-		OxyGasSpeciesID = InitialParameters.PetroOxy.GasSpecies;
-		PetroOxyData = PetroOxyDataInput;
+		SolverCalculation::PetroOxyOutputHeader(OutputFilenames.PetroOxy);
+		solver_calculation.OxyGasSpeciesID = InitialParameters.PetroOxy.GasSpecies;
+		solver_calculation.PetroOxyData = PetroOxyDataInput;
 	}
 	// Oxy with temperature Rise
 	if(
@@ -171,11 +194,13 @@ void RunIntegrator::Integrate_Pressure_Vessel_Liquid_Phase(
 	{
 		SpeciesConcentration[Number_Species] = 298;
 		// for Oxy diffusion limit, gets ignored if not required
-		time_previous = 0;
+		solver_calculation.time_previous = 0;
 	}//*/
 
 
-	Evaluate_Thermodynamic_Parameters(CalculatedThermo, Thermodynamics, SpeciesConcentration[Number_Species]);
+	solver_calculation.Evaluate_Thermodynamic_Parameters(
+		solver_calculation.CalculatedThermo, 
+		reaction_mechanism.species, SpeciesConcentration[Number_Species]);
 
 	/*
 	for(i=0;i<Number_Species;i++)
@@ -183,6 +208,7 @@ void RunIntegrator::Integrate_Pressure_Vessel_Liquid_Phase(
 		cout << CalculatedThermo[i].Hf << " " << CalculatedThermo[i].Cp << " " << CalculatedThermo[i].S <<"\n";
 	}//*/
 
+	/*
 	Kf.clear();
 	Kr.clear();
 	Kf.resize(Number_Reactions);
@@ -193,20 +219,33 @@ void RunIntegrator::Integrate_Pressure_Vessel_Liquid_Phase(
 		Kr[i] = 0;
 	}
 	Rates.resize(Number_Reactions);
-
+//*/
 
 	// prepare the Jacobian matrix
-	Prepare_Jacobian_Matrix(JacobianMatrix,reaction_mechanism.Reactions);
-
+	//Prepare_Jacobian_Matrix(JacobianMatrix,reaction_mechanism.reactions);
+	solver_calculation.Prepare_Jacobian_Matrix(solver_calculation.JacobianMatrix,reaction_mechanism.reactions);
 
 	// Get the rate Constants, forward and backwards
-	Calculate_Rate_Constant(Kf, Kr, SpeciesConcentration[Number_Species],ReactionParameters, CalculatedThermo, SpeciesLossAll, Delta_N);
-	CalculateReactionRates(Rates, SpeciesConcentration, Kf, Kr, ReactantsForReactions, ProductsForReactions);
+	solver_calculation.Calculate_Rate_Constant(
+		solver_calculation.Kf,
+		solver_calculation.Kr,
+		SpeciesConcentration[Number_Species],
+		solver_calculation.ReactionParameters, 
+		solver_calculation.CalculatedThermo,
+		solver_calculation.SpeciesLossAll,
+		solver_calculation.delta_n);
+	solver_calculation.CalculateReactionRates(
+		solver_calculation.Rates, 
+		SpeciesConcentration, 
+		solver_calculation.Kf, 
+		solver_calculation.Kr, 
+		solver_calculation.ReactantsForReactions,
+		solver_calculation.ProductsForReactions);
 
 	// Don't forget Rates Analysis for Mechanism Reduction at t=0 - or is this nonsense?
 	if(InitialParameters.MechanismReduction.ReduceReactions != 0)
 	{
-		ReactionRateImportance(KeyRates, Rates, InitialParameters.MechanismReduction.ReduceReactions);
+		MechanismReduction::ReactionRateImportance(KeyRates, solver_calculation.Rates, InitialParameters.MechanismReduction.ReduceReactions);
 	}
 
 	if(InitialParameters.PetroOxy.IsSet)
@@ -214,20 +253,20 @@ void RunIntegrator::Integrate_Pressure_Vessel_Liquid_Phase(
 
 		//  the PetroOxy will saturate the hydrocarbon with oxygen
 		// at no loss to the reservoir
-		Adjust_Gas_Concentration_Initial(
-				SpeciesConcentration[OxyGasSpeciesID],
+		solver_calculation.Adjust_Gas_Concentration_Initial(
+				SpeciesConcentration[solver_calculation.OxyGasSpeciesID],
 				SpeciesConcentration[Number_Species],
-				PetroOxyData);
+				solver_calculation.PetroOxyData);
 
-		PetroOxyOutputStream(
+		SolverCalculation::PetroOxyOutputStream(
 				OutputFilenames.PetroOxy,
-				PetroOxyData,
+				solver_calculation.PetroOxyData,
 				time_current);
 	}
 
 
 	// do not forget output at time = 0
-	StreamConcentrations(
+	WriteOutput::StreamConcentrations(
 			ConcentrationOutput,
 			InitialParameters.Solver_Parameters.separator,
 			InitialParameters.GasPhase,
@@ -240,11 +279,11 @@ void RunIntegrator::Integrate_Pressure_Vessel_Liquid_Phase(
 	// Only stream if the user desires it, still doesn't prevent file creation...
 	if(InitialParameters.PrintReacRates)
 	{
-		StreamReactionRates(
+		WriteOutput::StreamReactionRates(
 				ReactionRatesOutput,
 				InitialParameters.Solver_Parameters.separator,
 				time_current,
-				Rates
+				solver_calculation.Rates
 		);
 	}
 
@@ -257,17 +296,17 @@ void RunIntegrator::Integrate_Pressure_Vessel_Liquid_Phase(
 
 		vector< vector< size_t > > TempMatrix;
 		vector< size_t > TempRow;
-		size_t Temp_Number_Species = reaction_mechanism.Species.size();
+		size_t Temp_Number_Species = reaction_mechanism.species.size();
 
-		for(tempi=0;tempi<reaction_mechanism.Reactions.size();tempi++){
-			TempRow.resize(reaction_mechanism.Species.size());
+		for(tempi=0;tempi<reaction_mechanism.reactions.size();tempi++){
+			TempRow.resize(reaction_mechanism.species.size());
 			for(tempj=0;tempj<Temp_Number_Species;tempj++)
 			{
-				if(reaction_mechanism.Reactions[tempi].Reactants[tempj] != 0)
+				if(reaction_mechanism.reactions[tempi].Reactants[tempj] != 0)
 				{
 					TempRow[tempj] = 1;
 				}
-				if(reaction_mechanism.Reactions[tempi].Products[tempj] != 0)
+				if(reaction_mechanism.reactions[tempi].Products[tempj] != 0)
 				{
 					TempRow[tempj] = 1;
 				}
@@ -282,7 +321,7 @@ void RunIntegrator::Integrate_Pressure_Vessel_Liquid_Phase(
 		{
 			size_t SpeciesID = InitialParameters.MechanismAnalysis.SpeciesSelectedForRates[tempj];
 			vector< size_t > temp;
-			for(tempi=0;tempi<reaction_mechanism.Reactions.size();tempi++)
+			for(tempi=0;tempi<reaction_mechanism.reactions.size();tempi++)
 			{
 				if(TempMatrix[tempi][SpeciesID] !=0 )
 				{
@@ -294,12 +333,12 @@ void RunIntegrator::Integrate_Pressure_Vessel_Liquid_Phase(
 		}
 
 
-		Prepare_Print_Rates_Per_Species(
+		RatesAnalysis::Prepare_Print_Rates_Per_Species(
 				//ProductsForRatesAnalysis,
 				//ReactantsForReactions,
 				InitialParameters.Solver_Parameters.separator,
 				//Rates,
-				reaction_mechanism.Species,
+				reaction_mechanism.species,
 				InitialParameters.MechanismAnalysis.SpeciesSelectedForRates,
 				ReactionsForSpeciesSelectedForRates//,
 				//reaction_mechanism.Reactions
@@ -307,7 +346,7 @@ void RunIntegrator::Integrate_Pressure_Vessel_Liquid_Phase(
 	}
 
 
-	vector< double > SpeciesConcentrationChange = SpeciesLossRate(Number_Species, Rates, SpeciesLossAll);
+	vector< double > SpeciesConcentrationChange = SolverCalculation::SpeciesLossRate(Number_Species, solver_calculation.Rates, SpeciesLossAll);
 
 
 	/* -- Got values at t = 0 -- */
@@ -321,7 +360,7 @@ void RunIntegrator::Integrate_Pressure_Vessel_Liquid_Phase(
 
 
 	// set the solver:
-	solver_type Solver_Type;
+	Initial_Data::solver_type Solver_Type;
 	Solver_Type = InitialParameters.Solver_Type[0];
 
 	// start the clock:
@@ -345,7 +384,7 @@ void RunIntegrator::Integrate_Pressure_Vessel_Liquid_Phase(
 				// case IntelODE
 				case 1001:
 					dodesol_rkm9mkn(Intel.vector_ipar.data(), &n, &time_current, &time_step,
-							SpeciesConcentration.data(),(void*) ODE_RHS_Pressure_Vessel,
+							solver_calculation.Concentration.data(),(void*) &SolverCalculation::ODE_RHS_Pressure_Vessel,
 							&Intel.h, &Intel.hm, &Intel.ep, &Intel.tr,
 							Intel.vector_dpar.data(), Intel.vector_kd.data(), &Intel.ierr
 					);
@@ -354,8 +393,8 @@ void RunIntegrator::Integrate_Pressure_Vessel_Liquid_Phase(
 
 				case 1002 :
 					dodesol_rkm9mka(Intel.vector_ipar.data(), &n, &time_current, &time_step,
-							SpeciesConcentration.data(),(void*) ODE_RHS_Pressure_Vessel,
-							(void*) Jacobian_Matrix_Intel, &Intel.h, &Intel.hm, &Intel.ep, &Intel.tr,
+							solver_calculation.Concentration.data(),(void*) &SolverCalculation::ODE_RHS_Pressure_Vessel,
+							(void*) &SolverCalculation::Jacobian_Matrix_Intel, &Intel.h, &Intel.hm, &Intel.ep, &Intel.tr,
 							Intel.vector_dpar.data(), Intel.vector_kd.data(), &Intel.ierr
 					);
 					if (Intel.ierr!=0){printf("\n dodesol_rkm9mkn routine exited with error code %4d\n",Intel.ierr);exit(1);}
@@ -363,7 +402,7 @@ void RunIntegrator::Integrate_Pressure_Vessel_Liquid_Phase(
 
 				case 1003 :
 					dodesol_mk52lfn(Intel.vector_ipar.data(), &n, &time_current, &time_step,
-							SpeciesConcentration.data(),(void*) ODE_RHS_Pressure_Vessel,
+							solver_calculation.Concentration.data(),(void*) &SolverCalculation::ODE_RHS_Pressure_Vessel,
 							&Intel.h, &Intel.hm, &Intel.ep, &Intel.tr,
 							Intel.vector_dpar.data(), Intel.vector_kd.data(), &Intel.ierr
 					);
@@ -372,8 +411,8 @@ void RunIntegrator::Integrate_Pressure_Vessel_Liquid_Phase(
 
 				case 1004 :
 					dodesol_mk52lfa(Intel.vector_ipar.data(), &n, &time_current, &time_step,
-							SpeciesConcentration.data(),(void*) ODE_RHS_Pressure_Vessel,
-							(void*) Jacobian_Matrix_Intel, &Intel.h, &Intel.hm, &Intel.ep, &Intel.tr,
+							solver_calculation.Concentration.data(),(void*) &SolverCalculation::ODE_RHS_Pressure_Vessel,
+							(void*) &SolverCalculation::Jacobian_Matrix_Intel, &Intel.h, &Intel.hm, &Intel.ep, &Intel.tr,
 							Intel.vector_dpar.data(), Intel.vector_kd.data(), &Intel.ierr
 					);
 					if (Intel.ierr!=0){printf("\n dodesol_rkm9mkn routine exited with error code %4d\n",Intel.ierr);exit(1);}
@@ -382,19 +421,19 @@ void RunIntegrator::Integrate_Pressure_Vessel_Liquid_Phase(
 
 					// use LSODA
 				case 2001 :
-					dlsoda_((void*) ODE_RHS_Pressure_Vessel,&n,SpeciesConcentration.data(),&time_current,&time_step,
+					dlsoda_((void*) &SolverCalculation::ODE_RHS_Pressure_Vessel,&n,solver_calculation.Concentration.data(),&time_current,&time_step,
 							&LSODA.ITOL,&LSODA.RTOL,&LSODA.ATOL,
 							&LSODA.ITASK,&LSODA.ISTATE,&LSODA.IOPT,
 							LSODA.vector_RWORK.data(),&LSODA.LRW,LSODA.vector_IWORK.data(),&LSODA.LIW,
-							(void*) Jacobian_Matrix_Odepack_LSODA,&LSODA.JT);
+							(void*) &SolverCalculation::Jacobian_Matrix_Odepack_LSODA,&LSODA.JT);
 					if (LSODA.ISTATE<0){printf("\n LSODA routine exited with error code %4d\n",LSODA.ISTATE);exit(1);}
 					break;
 				case 2002 :
-					dlsoda_((void*) ODE_RHS_Pressure_Vessel,&n,SpeciesConcentration.data(),&time_current,&time_step,
+					dlsoda_((void*) &SolverCalculation::ODE_RHS_Pressure_Vessel,&n,solver_calculation.Concentration.data(),&time_current,&time_step,
 							&LSODA.ITOL,&LSODA.RTOL,&LSODA.ATOL,
 							&LSODA.ITASK,&LSODA.ISTATE,&LSODA.IOPT,
 							LSODA.vector_RWORK.data(),&LSODA.LRW,LSODA.vector_IWORK.data(),&LSODA.LIW,
-							(void*) Jacobian_Matrix_Odepack_LSODA,&LSODA.JT);
+							(void*) &SolverCalculation::Jacobian_Matrix_Odepack_LSODA,&LSODA.JT);
 					if (LSODA.ISTATE<0){printf("\n LSODA routine exited with error code %4d\n",LSODA.ISTATE);exit(1);}
 					break;
 
@@ -404,20 +443,20 @@ void RunIntegrator::Integrate_Pressure_Vessel_Liquid_Phase(
 
 		if(InitialParameters.MechanismAnalysis.MaximumRates)
 		{
-			MaxRatesAnalysis(RatesAnalysisData,ProductsForRatesAnalysis,ReactantsForReactions,Rates,time_current);
+			RatesAnalysis::MaxRatesAnalysis(RatesAnalysisData,ProductsForRatesAnalysis,ReactantsForReactions,solver_calculation.Rates,time_current);
 		}
 
 
 		if(InitialParameters.MechanismAnalysis.RatesAnalysisAtTime &&
 				InitialParameters.MechanismAnalysis.RatesAnalysisAtTimeData[RatesAnalysisTimepoint] == time_current)
 		{
-			RatesAnalysisAtTimes(
+			RatesAnalysis::RatesAnalysisAtTimes(
 					ProductsForRatesAnalysis,
 					ReactantsForReactions,
-					Rates,
+					solver_calculation.Rates,
 					time_current,
-					reaction_mechanism.Species,
-					reaction_mechanism.Reactions
+					reaction_mechanism.species,
+					reaction_mechanism.reactions
 			);
 
 			RatesAnalysisTimepoint = RatesAnalysisTimepoint + 1;
@@ -428,13 +467,13 @@ void RunIntegrator::Integrate_Pressure_Vessel_Liquid_Phase(
 		//*
 		if(InitialParameters.MechanismAnalysis.RatesOfSpecies)
 		{
-			Print_Rates_Per_Species(
+			RatesAnalysis::Print_Rates_Per_Species(
 					ProductsForRatesAnalysis,
 					ReactantsForReactions,
 					InitialParameters.Solver_Parameters.separator,
-					Rates,
+					solver_calculation.Rates,
 					time_current,
-					reaction_mechanism.Species,
+					reaction_mechanism.species,
 					InitialParameters.MechanismAnalysis.SpeciesSelectedForRates,
 					ReactionsForSpeciesSelectedForRates//,
 					//reaction_mechanism.Reactions
@@ -444,11 +483,11 @@ void RunIntegrator::Integrate_Pressure_Vessel_Liquid_Phase(
 
 		if(InitialParameters.MechanismAnalysis.StreamRatesAnalysis)
 		{
-			StreamRatesAnalysis(
+			RatesAnalysis::StreamRatesAnalysis(
 					OutputFilenames.Prefix,
 					ProductsForRatesAnalysis,
 					ReactantsForReactions,
-					Rates,
+					solver_calculation.Rates,
 					time_current,
 					Number_Species
 			);
@@ -470,7 +509,7 @@ void RunIntegrator::Integrate_Pressure_Vessel_Liquid_Phase(
 
 		}
 
-		StreamConcentrations(
+		WriteOutput::StreamConcentrations(
 				ConcentrationOutput,
 				InitialParameters.Solver_Parameters.separator,
 				InitialParameters.GasPhase,
@@ -482,27 +521,27 @@ void RunIntegrator::Integrate_Pressure_Vessel_Liquid_Phase(
 
 		if(InitialParameters.PrintReacRates)
 		{
-			StreamReactionRates(
+			WriteOutput::StreamReactionRates(
 					ReactionRatesOutput,
 					InitialParameters.Solver_Parameters.separator,
 					time_current,
-					Rates
+					solver_calculation.Rates
 			);
 		}
 
 
 		if(InitialParameters.PetroOxy.IsSet)
 		{
-			PetroOxyOutputStream(
+			SolverCalculation::PetroOxyOutputStream(
 					OutputFilenames.PetroOxy,
-					PetroOxyData,
+					solver_calculation.PetroOxyData,
 					time_current
 			);
 		}
 
 		if(InitialParameters.MechanismReduction.ReduceReactions != 0)
 		{
-			ReactionRateImportance(KeyRates, Rates, InitialParameters.MechanismReduction.ReduceReactions);
+			MechanismReduction::ReactionRateImportance(KeyRates, solver_calculation.Rates, InitialParameters.MechanismReduction.ReduceReactions);
 		}
 
 
@@ -539,7 +578,7 @@ void RunIntegrator::Integrate_Pressure_Vessel_Liquid_Phase(
 
 	if(InitialParameters.MechanismAnalysis.MaximumRates)
 	{
-		WriteMaxRatesAnalysis(RatesAnalysisData, reaction_mechanism.Species, reaction_mechanism.Reactions,OutputFilenames.Prefix);
+		RatesAnalysis::WriteMaxRatesAnalysis(RatesAnalysisData, reaction_mechanism.species, reaction_mechanism.reactions,OutputFilenames.Prefix);
 	}
 
 

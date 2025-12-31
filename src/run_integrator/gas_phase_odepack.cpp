@@ -8,17 +8,24 @@
 #include "../../lib/headers/lib_Intel_ODE.hpp"
 #include "../../lib/headers/lib_odepack.hpp"
 
-#include "../Headers.hpp"
+#include "./run_integrator.h"
+#include "./solver_calculations/solver_calculations.h"
+
+#include "../write_output/write_output.h"
+
+#include "../get_process_input/mechanism_reduction/Mechanism_Reduction.h"
+
+#include "../rates_analysis/Rates-Analysis.h"
 
 // initially this is the same as the liquid phase solver
 // in the long term, this function will need to get third body support etc. IF it is actively developed...
 
 
 // Not a perfect solution, but stick integrator into its own void with global variables via a namespace
-void Integrate_Gas_Phase_Odepack_LSODA(
-		Filenames OutputFilenames,
+void RunIntegrator::Integrate_Gas_Phase_Odepack_LSODA(
+		Main::Filenames OutputFilenames,
 		vector< double > SpeciesConcentration,
-		Reaction_Mechanism reaction_mechanism,
+		ReactionMechanism reaction_mechanism,
 		//vector< string > Species,vector< ThermodynamicData > Thermo,vector< SingleReactionData >& Reactions,
 		Initial_Data InitialParameters,
 		vector< double >& KeyRates,
@@ -28,20 +35,20 @@ void Integrate_Gas_Phase_Odepack_LSODA(
 
 	vector< TrackSpecies > ProductsForRatesAnalysis;
 
-	using namespace Jacobian_ODE_RHS;
-	using namespace ODE_RHS;
-	using namespace Jacobian;
+	//using namespace Jacobian_ODE_RHS;
+	//using namespace ODE_RHS;
+	//using namespace Jacobian;
 
 
 
-	Number_Species = reaction_mechanism.Species.size();
-	Number_Reactions = reaction_mechanism.Reactions.size();
+	size_t Number_Species = reaction_mechanism.species.size();
+	size_t Number_Reactions = reaction_mechanism.reactions.size();
 
 	// outputting mechanism size in integration routing so that it is printed every time
 	cout << "The mechanism to be integrated contains " << Number_Species << " species and " << Number_Reactions << " Reactions.\n" << std::flush;
 
 
-	Thermodynamics = reaction_mechanism.Thermodynamics; // "Hack" - to fix a regression
+	//Thermodynamics = reaction_mechanism.Thermodynamics; // "Hack" - to fix a regression
 
 
 	ofstream ReactionRatesOutput;
@@ -90,15 +97,16 @@ void Integrate_Gas_Phase_Odepack_LSODA(
 	RTOL = InitialParameters.Solver_Parameters.rtol;
 	ATOL = InitialParameters.Solver_Parameters.atol;
 
-	Delta_N = Get_Delta_N(reaction_mechanism.Reactions); // just make sure the Delta_N is current
+	//Delta_N = Get_Delta_N(reaction_mechanism.Reactions); // just make sure the Delta_N is current
+	vector<double> prep_delta_n = SolverCalculation::Get_Delta_N(reaction_mechanism.reactions);
 	// Reduce the matrix from a sparse matrix to something more manageable and quicker to use
 
 
-	ReactionParameters = Process_Reaction_Parameters(reaction_mechanism.Reactions);
+	//ReactionParameters = Process_Reaction_Parameters(reaction_mechanism.Reactions);
 
-	ReactantsForReactions = Reactants_ForReactionRate(reaction_mechanism.Reactions);
+	vector< TrackSpecies > ReactantsForReactions = Reactants_ForReactionRate(reaction_mechanism.reactions);
 
-	ProductsForReactions = Products_ForReactionRate(reaction_mechanism.Reactions,false);
+	vector < TrackSpecies> ProductsForReactions = Products_ForReactionRate(reaction_mechanism.reactions,false);
 
 
 	if(InitialParameters.MechanismAnalysis.MaximumRates ||
@@ -106,14 +114,31 @@ void Integrate_Gas_Phase_Odepack_LSODA(
 			InitialParameters.MechanismAnalysis.RatesAnalysisAtTime ||
 			InitialParameters.MechanismAnalysis.RatesOfSpecies)
 	{
-		ProductsForRatesAnalysis = Products_ForReactionRate(reaction_mechanism.Reactions,true);
+		ProductsForRatesAnalysis = Products_ForReactionRate(reaction_mechanism.reactions,true);
 	}
 
-	SpeciesLossAll = PrepareSpecies_ForSpeciesLoss(reaction_mechanism.Reactions); // New method of listing species
+	//SpeciesLossAll = PrepareSpecies_ForSpeciesLoss(reaction_mechanism.Reactions); // New method of listing species
+
+	vector< TrackSpecies > SpeciesLossAll = PrepareSpecies_ForSpeciesLoss(reaction_mechanism.reactions); // New method of listing species
+
+	//// NOTE: Here initialises the Solver Calc class, in which the members act as global variables
+	//// for and during the calculation
+	SolverCalculation solver_calculation(
+		reaction_mechanism.species,
+		reaction_mechanism.species.size(),
+		reaction_mechanism.reactions_size(),
+		ReactantsForReactions,
+		ProductsForReactions,
+		SpeciesLossAll,
+		prep_delta_n);
+
+	solver_calculation.ReactionParameters = Process_Reaction_Parameters(reaction_mechanism.reactions);
+
+
 
 	// original old code
-	Concentration.clear();
-	Concentration.resize(Number_Species + 1);
+	//Concentration.clear();
+	//Concentration.resize(Number_Species + 1);
 
 	double time_current, time_step, time_step1, time_end;
 
@@ -127,43 +152,46 @@ void Integrate_Gas_Phase_Odepack_LSODA(
 
 	/* -- Initial values at t = 0 -- */
 
-	Number_Reactions = ReactionParameters.size();
+	//Number_Reactions = ReactionParameters.size();
 
-	CalculatedThermo.resize(Number_Species);
+	//CalculatedThermo.resize(Number_Species);
 
-	InitialDataConstants.EnforceStability = InitialParameters.EnforceStability;
-	InitialDataConstants.temperature = InitialParameters.temperature;
+	solver_calculation.InitialDataConstants.EnforceStability = InitialParameters.EnforceStability;
+	solver_calculation.InitialDataConstants.temperature = InitialParameters.temperature;
 
 
 	// set constant concentration if desired
-	InitialDataConstants.ConstantConcentration = InitialParameters.ConstantConcentration;
+	solver_calculation.InitialDataConstants.ConstantConcentration = InitialParameters.ConstantConcentration;
 	if(InitialParameters.ConstantConcentration)
 	{
 		cout << "Constant Species desired\n";
 
-		InitialDataConstants.ConstantSpecies.clear();
-		InitialDataConstants.ConstantSpecies.resize(Number_Species);
+		solver_calculation.InitialDataConstants.ConstantSpecies.clear();
+		solver_calculation.InitialDataConstants.ConstantSpecies.resize(Number_Species);
 
 		// zero just to make sure
 		for(i=0;i<Number_Species;i++)
 		{
-			InitialDataConstants.ConstantSpecies[i] = 0;
+			solver_calculation.InitialDataConstants.ConstantSpecies[i] = 0;
 		}
 
 		for(i=0;i<InitialParameters.ConstantSpecies.size();i++)
 		{// fix initial concentrations
-			InitialDataConstants.ConstantSpecies[InitialParameters.ConstantSpecies[i]] =
+			solver_calculation.InitialDataConstants.ConstantSpecies[InitialParameters.ConstantSpecies[i]] =
 					SpeciesConcentration[InitialParameters.ConstantSpecies[i]];
 		}
 	}
 
-	Evaluate_Thermodynamic_Parameters(CalculatedThermo, Thermodynamics, SpeciesConcentration[Number_Species]);
+	solver_calculation.Evaluate_Thermodynamic_Parameters(
+		solver_calculation.CalculatedThermo, 
+		solver_calculation.species, SpeciesConcentration[Number_Species]);
 
 	/*for(i=0;i<Number_Species;i++)
 	{
 	cout << CalculatedThermo[i].Hf << " " << CalculatedThermo[i].Cp << " " << CalculatedThermo[i].S <<"\n";
 	}//*/
 
+	/*
 	Kf.clear();
 	Kr.clear();
 	Kf.resize(Number_Reactions);
@@ -174,25 +202,37 @@ void Integrate_Gas_Phase_Odepack_LSODA(
 		Kr[i] = 0;
 	}
 	Rates.resize(Number_Reactions);
-
+//*/
 
 	// prepare the Jacobian matrix
-	Prepare_Jacobian_Matrix(JacobianMatrix,reaction_mechanism.Reactions);
-
+	solver_calculation.Prepare_Jacobian_Matrix(solver_calculation.JacobianMatrix,reaction_mechanism.reactions);
 
 	// Get the rate Constants, forward and backwards
-	Calculate_Rate_Constant(Kf, Kr, SpeciesConcentration[Number_Species],ReactionParameters, CalculatedThermo, SpeciesLossAll, Delta_N);
-	CalculateReactionRates(Rates, SpeciesConcentration, Kf, Kr, ReactantsForReactions, ProductsForReactions);
+	solver_calculation.Calculate_Rate_Constant(
+		solver_calculation.Kf,
+		solver_calculation.Kr,
+		SpeciesConcentration[Number_Species],
+		solver_calculation.ReactionParameters, 
+		solver_calculation.CalculatedThermo,
+		solver_calculation.SpeciesLossAll,
+		solver_calculation.delta_n);
+	solver_calculation.CalculateReactionRates(
+		solver_calculation.Rates, 
+		SpeciesConcentration, 
+		solver_calculation.Kf, 
+		solver_calculation.Kr, 
+		solver_calculation.ReactantsForReactions,
+		solver_calculation.ProductsForReactions);
 
 	// Don't forget Rates Analysis for Mechanism Reduction at t=0 - or is this nonsense?
 	if(InitialParameters.MechanismReduction.ReduceReactions != 0)
 	{
-		ReactionRateImportance(KeyRates, Rates, InitialParameters.MechanismReduction.ReduceReactions);
+		MechanismReduction::ReactionRateImportance(KeyRates, solver_calculation.Rates, InitialParameters.MechanismReduction.ReduceReactions);
 	}
 
 
 	// do not forget output at time = 0
-	StreamConcentrations(
+	WriteOutput::StreamConcentrations(
 			ConcentrationOutput,
 			InitialParameters.Solver_Parameters.separator,
 			InitialParameters.GasPhase,
@@ -205,11 +245,11 @@ void Integrate_Gas_Phase_Odepack_LSODA(
 	// Only stream if the user desires it, still doesn't prevent file creation...
 	if(InitialParameters.PrintReacRates)
 	{
-		StreamReactionRates(
+		WriteOutput::StreamReactionRates(
 				ReactionRatesOutput,
 				InitialParameters.Solver_Parameters.separator,
 				time_current,
-				Rates
+				solver_calculation.Rates
 		);
 	}
 
@@ -222,17 +262,17 @@ void Integrate_Gas_Phase_Odepack_LSODA(
 
 		vector< vector< size_t > > TempMatrix;
 		vector< size_t > TempRow;
-		size_t Temp_Number_Species = reaction_mechanism.Species.size();
+		size_t Temp_Number_Species = reaction_mechanism.species.size();
 
-		for(tempi=0;tempi<reaction_mechanism.Reactions.size();tempi++){
-			TempRow.resize(reaction_mechanism.Species.size());
+		for(tempi=0;tempi<reaction_mechanism.reactions.size();tempi++){
+			TempRow.resize(reaction_mechanism.species.size());
 			for(tempj=0;tempj<Temp_Number_Species;tempj++)
 			{
-				if(reaction_mechanism.Reactions[tempi].Reactants[tempj] != 0)
+				if(reaction_mechanism.reactions[tempi].Reactants[tempj] != 0)
 				{
 					TempRow[tempj] = 1;
 				}
-				if(reaction_mechanism.Reactions[tempi].Products[tempj] != 0)
+				if(reaction_mechanism.reactions[tempi].Products[tempj] != 0)
 				{
 					TempRow[tempj] = 1;
 				}
@@ -248,7 +288,7 @@ void Integrate_Gas_Phase_Odepack_LSODA(
 			size_t SpeciesID = InitialParameters.MechanismAnalysis.SpeciesSelectedForRates[tempj];
 			vector< size_t > temp;
 
-			for(tempi=0;tempi<reaction_mechanism.Reactions.size();tempi++)
+			for(tempi=0;tempi<reaction_mechanism.reactions.size();tempi++)
 			{
 				if(TempMatrix[tempi][SpeciesID] !=0 )
 				{
@@ -261,12 +301,12 @@ void Integrate_Gas_Phase_Odepack_LSODA(
 		}
 
 		//*
-		Prepare_Print_Rates_Per_Species(
+		RatesAnalysis::Prepare_Print_Rates_Per_Species(
 				//ProductsForRatesAnalysis,
 				//ReactantsForReactions,
 				InitialParameters.Solver_Parameters.separator,
 				//Rates,
-				reaction_mechanism.Species,
+				reaction_mechanism.species,
 				InitialParameters.MechanismAnalysis.SpeciesSelectedForRates,
 				ReactionsForSpeciesSelectedForRates//,
 				//reaction_mechanism.Reactions
@@ -274,7 +314,7 @@ void Integrate_Gas_Phase_Odepack_LSODA(
 	}
 
 
-	vector< double > SpeciesConcentrationChange = SpeciesLossRate(Number_Species, Rates, SpeciesLossAll);
+	vector< double > SpeciesConcentrationChange = SolverCalculation::SpeciesLossRate(Number_Species, solver_calculation.Rates, SpeciesLossAll);
 
 
 	/* -- Got values at t = 0 -- */
@@ -298,16 +338,16 @@ void Integrate_Gas_Phase_Odepack_LSODA(
 		if(Use_Analytical_Jacobian)
 		{
 			int JT = 1;
-			dlsoda_((void*) ODE_RHS_Gas_Phase,&n,SpeciesConcentration.data(),&time_current,&time_step,
+			dlsoda_((void*) &SolverCalculation::ODE_RHS_Gas_Phase,&n,solver_calculation.Concentration.data(),&time_current,&time_step,
 					&ITOL,&RTOL,&ATOL,&ITASK,&ISTATE,&IOPT,RWORK,&LRW,IWORK,&LIW,
-					(void*) Jacobian_Matrix_Odepack_LSODA,&JT);
+					(void*) &SolverCalculation::Jacobian_Matrix_Odepack_LSODA,&JT);
 		}
 		else //if(!Use_Analytical_Jacobian)
 		{
 			int JT = 2;
-			dlsoda_((void*) ODE_RHS_Gas_Phase,&n,SpeciesConcentration.data(),&time_current,&time_step,
+			dlsoda_((void*) &SolverCalculation::ODE_RHS_Gas_Phase,&n,solver_calculation.Concentration.data(),&time_current,&time_step,
 					&ITOL,&RTOL,&ATOL,&ITASK,&ISTATE,&IOPT,RWORK,&LRW,IWORK,&LIW,
-					(void*) Jacobian_Matrix_Odepack_LSODA,&JT);
+					(void*) &SolverCalculation::Jacobian_Matrix_Odepack_LSODA,&JT);
 		}
 
 		if (ISTATE < 0)
@@ -320,20 +360,20 @@ void Integrate_Gas_Phase_Odepack_LSODA(
 
 		if(InitialParameters.MechanismAnalysis.MaximumRates)
 		{
-			MaxRatesAnalysis(RatesAnalysisData,ProductsForRatesAnalysis,ReactantsForReactions,Rates,time_current);
+			RatesAnalysis::MaxRatesAnalysis(RatesAnalysisData,ProductsForRatesAnalysis,ReactantsForReactions,solver_calculation.Rates,time_current);
 		}
 
 
 		if(InitialParameters.MechanismAnalysis.RatesAnalysisAtTime &&
 				InitialParameters.MechanismAnalysis.RatesAnalysisAtTimeData[RatesAnalysisTimepoint] == time_current)
 		{
-			RatesAnalysisAtTimes(
+			RatesAnalysis::RatesAnalysisAtTimes(
 					ProductsForRatesAnalysis,
 					ReactantsForReactions,
-					Rates,
+					solver_calculation.Rates,
 					time_current,
-					reaction_mechanism.Species,
-					reaction_mechanism.Reactions
+					reaction_mechanism.species,
+					reaction_mechanism.reactions
 			);
 			RatesAnalysisTimepoint = RatesAnalysisTimepoint + 1;
 		}
@@ -342,13 +382,13 @@ void Integrate_Gas_Phase_Odepack_LSODA(
 		// Function for new per species output
 		if(InitialParameters.MechanismAnalysis.RatesOfSpecies)
 		{
-			Print_Rates_Per_Species(
+			RatesAnalysis::Print_Rates_Per_Species(
 					ProductsForRatesAnalysis,
 					ReactantsForReactions,
 					InitialParameters.Solver_Parameters.separator,
-					Rates,
+					solver_calculation.Rates,
 					time_current,
-					reaction_mechanism.Species,
+					reaction_mechanism.species,
 					InitialParameters.MechanismAnalysis.SpeciesSelectedForRates,
 					ReactionsForSpeciesSelectedForRates//,
 					//reaction_mechanism.Reactions
@@ -358,11 +398,11 @@ void Integrate_Gas_Phase_Odepack_LSODA(
 
 		if(InitialParameters.MechanismAnalysis.StreamRatesAnalysis)
 		{
-			StreamRatesAnalysis(
+			RatesAnalysis::StreamRatesAnalysis(
 					OutputFilenames.Prefix,
 					ProductsForRatesAnalysis,
 					ReactantsForReactions,
-					Rates,
+					solver_calculation.Rates,
 					time_current,
 					Number_Species
 			);
@@ -380,7 +420,7 @@ void Integrate_Gas_Phase_Odepack_LSODA(
 		}
 		pressure = (total_mol  * R * SpeciesConcentration[Number_Species])/InitialParameters.GasPhaseVolume;
 
-		StreamConcentrations(
+		WriteOutput::StreamConcentrations(
 				ConcentrationOutput,
 				InitialParameters.Solver_Parameters.separator,
 				true, //InitialParameters.GasPhase,
@@ -392,18 +432,18 @@ void Integrate_Gas_Phase_Odepack_LSODA(
 
 		if(InitialParameters.PrintReacRates)
 		{
-			StreamReactionRates(
+			WriteOutput::StreamReactionRates(
 					ReactionRatesOutput,
 					InitialParameters.Solver_Parameters.separator,
 					time_current,
-					Rates
+					solver_calculation.Rates
 			);
 		}
 
 
 		if(InitialParameters.MechanismReduction.ReduceReactions != 0)
 		{
-			ReactionRateImportance(KeyRates, Rates, InitialParameters.MechanismReduction.ReduceReactions);
+			MechanismReduction::ReactionRateImportance(KeyRates, solver_calculation.Rates, InitialParameters.MechanismReduction.ReduceReactions);
 		}
 
 
@@ -430,7 +470,7 @@ void Integrate_Gas_Phase_Odepack_LSODA(
 
 	if(InitialParameters.MechanismAnalysis.MaximumRates)
 	{
-		WriteMaxRatesAnalysis(RatesAnalysisData, reaction_mechanism.Species, reaction_mechanism.Reactions,OutputFilenames.Prefix);
+		RatesAnalysis::WriteMaxRatesAnalysis(RatesAnalysisData, reaction_mechanism.species, reaction_mechanism.reactions,OutputFilenames.Prefix);
 	}
 
 

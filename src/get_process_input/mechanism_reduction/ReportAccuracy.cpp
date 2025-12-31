@@ -6,9 +6,9 @@
  */
 
 
-#include "../Headers.hpp"
+#include "./Mechanism_Reduction.h"
 
-void ReportAccuracy(
+void MechanismReduction::ReportAccuracy(
 		string separator,
 		size_t Number_Species,
 		vector< string > Species,

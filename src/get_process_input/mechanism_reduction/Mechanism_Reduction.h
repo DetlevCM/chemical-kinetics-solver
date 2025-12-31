@@ -33,26 +33,26 @@ struct ClassNaming
 	string Name;
 };
 
-void Reduce_Species_Thermo_Mechanism(
+static void Reduce_Species_Thermo_Mechanism(
 		vector< bool > ,
-		vector<string>& ,
+		vector<Species>& species ,
 		vector< Species::ThermodynamicData >& ,
 		vector< SingleReactionData >&
 );
 
 
-void mechanism_picking(
+static void mechanism_picking(
 		string filename,
-		vector< string >& Species,
+		vector< Species >& species,
 		vector< Species::ThermodynamicData >& ,
 		vector< SingleReactionData >&
 );
 
 
-void handle_reactions_with_chosen_species(
+static void handle_reactions_with_chosen_species(
 		string ,
 		vector< SpeciesPicking >& ,
-		vector< string >& ,
+		vector< Species >& species,
 		vector< Species::ThermodynamicData >& ,
 		vector< SingleReactionData >&
 );
@@ -64,7 +64,7 @@ void handle_reactions_with_chosen_species(
 /* ******************************************************* */
 
 
-void ReportAccuracy(
+static void ReportAccuracy(
 		string,
 		size_t,
 		vector< string > ,
@@ -73,24 +73,24 @@ void ReportAccuracy(
 		string
 );
 
-vector< bool > Read_Kill_List(
+static vector< bool > Read_Kill_List(
 		string filename,
 		vector< string > Species
 );
 
-void ReactionRateImportance(
+static void ReactionRateImportance(
 		vector< double >& KeyRates,
 		const vector< double >& Rates,
 		double parameter
 );
 
-vector< SingleReactionData > ReduceReactionsNew(
-		const vector< string >& ,
+static vector< SingleReactionData > ReduceReactionsNew(
+		const vector< Species >& species,
 		const vector< SingleReactionData >& ,
 		const vector< double >&
 );
 
-vector< double > Compare_Concentrations(
+static vector< double > Compare_Concentrations(
 		//const vector< double >& OldTimePoints,
 		const vector< vector< double > >& OldConcentrations,
 		//const vector< double >& NewTimePoints,
@@ -103,33 +103,33 @@ vector< double > Compare_Concentrations(
 //*  species lumping and reaction reduction   *//
 /* ***************************************** *///
 
-vector< vector< string > > Get_Combine_Species_Mapping(
+static vector< vector< string > > Get_Combine_Species_Mapping(
 		string filename
 );
 
-vector<ClassNaming> GetSpeciesClassesNames(
+static vector<ClassNaming> GetSpeciesClassesNames(
 		vector< vector< string > >
 );
 
-vector< string > RenameSpecies(
+static vector< string > RenameSpecies(
 		vector< string > Species,
 		vector<ClassNaming> UserDefinedNames,
 		const vector< size_t > & SpeciesClassMapping
 );
 
 
-vector< size_t > Map_Species_Classes(
+static vector< size_t > Map_Species_Classes(
 		const vector< vector< string > >& ,
 		const vector< string >&
 );
 
 
-vector< Species > Process_Thermodynamics_Species_Classes(
+static vector< Species > Process_Thermodynamics_Species_Classes(
 		const vector< size_t >& SpeciesMapping,
 		vector< Species > species
 );
 
-vector< SingleReactionData > Process_Reactions_For_Species_Lumping(
+static vector< SingleReactionData > Process_Reactions_For_Species_Lumping(
 		size_t ,
 		const vector< size_t >& ,
 		vector< SingleReactionData >,
@@ -140,32 +140,32 @@ vector< SingleReactionData > Process_Reactions_For_Species_Lumping(
 );
 
 // Some helpers for the reduction:
-ReactionMechanism::ReactionParameter Average_Ea_k_fitted_Fast(
+static Reaction::ReactionParameter Average_Ea_k_fitted_Fast(
 		vector< SingleReactionData >& ,
 		double ,
 		size_t
 );
 
-ReactionMechanism::ReactionParameter Average_Ea_k_fitted_Slow(
+static Reaction::ReactionParameter Average_Ea_k_fitted_Slow(
 		vector< SingleReactionData >& ,
 		double ,
 		size_t
 );
 
 // Some helpers for the reduction:
-ReactionMechanism::ReactionParameter n_zero_k_fitted_Fast(
+static Reaction::ReactionParameter n_zero_k_fitted_Fast(
 		vector< SingleReactionData >& ,
 		double ,
 		size_t
 );
 
-ReactionMechanism::ReactionParameter n_zero_k_fitted_Slow(
+static Reaction::ReactionParameter n_zero_k_fitted_Slow(
 		vector< SingleReactionData >& ,
 		double ,
 		size_t
 );
 
-ReactionMechanism::ReactionParameter Average_Ea_n_zero_k_fitted(
+static Reaction::ReactionParameter Average_Ea_n_zero_k_fitted(
 		vector< SingleReactionData >& ,
 		double ,
 		size_t

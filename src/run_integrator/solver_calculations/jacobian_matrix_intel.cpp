@@ -1,29 +1,23 @@
 /*
  * Jacobian.cpp
  *
- *  Created on: 20.10.2017
+ *  Created on: 06.07.2015
  *      Author: DetlevCM
  */
 
 
-#include "../../Headers.hpp"
+#include "./solver_calculations.h"
 
-// from odepack
-//SUBROUTINE JAC (NEQ, T, Y, ML, MU, PD, NROWPD)
-//DOUBLE PRECISION T, Y(*), PD(NROWPD,*)
 
-// ML & MU double?
-// PD = a BUT: PD is a 2D matrix
-// NROWPD is the number of rows in the system
-void Jacobian_Matrix_Odepack_LSODA(int*n,double*t,double*y,double*ML,double*MU,double*a,int*NROWPD) {
+void SolverCalculation::Jacobian_Matrix_Intel(int*n,double*t,double*y,double*a) {
 
 	// n -> number of species
 	// t time
 	// y concentration
 	// a Jacobian in column wise order
 
-	using namespace Jacobian_ODE_RHS;
-	using namespace Jacobian;
+	//using namespace Jacobian_ODE_RHS;
+	//using namespace Jacobian;
 	size_t i,j;
 
 	// enable force stability?
@@ -48,8 +42,8 @@ void Jacobian_Matrix_Odepack_LSODA(int*n,double*t,double*y,double*ML,double*MU,d
 	// provides me a fresh array every time :) - ideal
 	vector< double > JacobeanColumnWise((Number_Species+1)*(Number_Species+1));
 
-	Evaluate_Thermodynamic_Parameters(CalculatedThermo, Thermodynamics, Concentration[Number_Species]);
-	Calculate_Rate_Constant(Kf, Kr, Concentration[Number_Species],ReactionParameters, CalculatedThermo, SpeciesLossAll, Delta_N);
+	Evaluate_Thermodynamic_Parameters(CalculatedThermo, species, Concentration[Number_Species]);
+	Calculate_Rate_Constant(Kf, Kr, Concentration[Number_Species],ReactionParameters, CalculatedThermo, SpeciesLossAll, delta_n);
 
 	for(i=0;i< JacobianMatrix.size();i++)
 	{
@@ -79,7 +73,6 @@ void Jacobian_Matrix_Odepack_LSODA(int*n,double*t,double*y,double*ML,double*MU,d
 			}
 		}
 
-
 		for(j=0;j< JacobianMatrix[i].Species.size();j++)
 		{
 			if(JacobianMatrix[i].Species[j].power != 0) // power 0 = *1
@@ -105,7 +98,6 @@ void Jacobian_Matrix_Odepack_LSODA(int*n,double*t,double*y,double*ML,double*MU,d
 	{
 		a[i] = JacobeanColumnWise[i];
 	}
-
 
 	/* Debug Output */
 	/*

@@ -11,7 +11,7 @@
 
 void MechanismReduction::mechanism_picking(
 		string filename,
-		vector< string >& Species,
+		vector< Species >& species,
 		vector< Species::ThermodynamicData >& Thermodynamics,
 		vector< SingleReactionData >& Reactions
 )
@@ -20,7 +20,7 @@ void MechanismReduction::mechanism_picking(
 	// Input File via a stream:
 	ifstream ReductionData;
 
-	size_t Number_Species = Species.size();
+	size_t Number_Species = species.size();
 
 	// Two files I want to open, mechanism data & input data
 	ReductionData.open(filename.c_str());
@@ -88,7 +88,7 @@ void MechanismReduction::mechanism_picking(
 				// check which species I need to retain
 				for(i=0;i<Number_Species;i++){
 					// compare the name of the species with the species in the kill list
-					if(strcmp(Species[i].c_str(),RemoveComments[0].c_str()) == 0){
+					if(strcmp(species[i].Name.c_str(),RemoveComments[0].c_str()) == 0){
 						ChosenSpecies[i].Choice = true;
 						if(RemoveComments.size()>1)
 						{
@@ -110,7 +110,7 @@ void MechanismReduction::mechanism_picking(
 	handle_reactions_with_chosen_species(
 			line1,
 			ChosenSpecies,
-			Species,
+			species,
 			Thermodynamics,
 			Reactions
 	);
@@ -123,7 +123,7 @@ void MechanismReduction::mechanism_picking(
 void MechanismReduction::handle_reactions_with_chosen_species(
 		string type,
 		vector< SpeciesPicking >& ChosenSpecies,
-		vector< string >& Species,
+		vector< Species >& species,
 		vector< Species::ThermodynamicData >& Thermodynamics,
 		vector< SingleReactionData >& Reactions
 )
@@ -134,7 +134,7 @@ void MechanismReduction::handle_reactions_with_chosen_species(
 
 	size_t i,j ;
 	size_t Number_Reactions = Reactions.size();
-	size_t Number_Species = Species.size();
+	size_t Number_Species = species.size();
 
 	vector< string > PickedSpecies;
 	//vector< vector< double > > PickedThermodynamics;
@@ -224,7 +224,7 @@ void MechanismReduction::handle_reactions_with_chosen_species(
 	vector< SingleReactionData > RecombinationReaction;
 
 	Number_Reactions = PickedReactions.size();
-	Number_Species = Species.size();
+	Number_Species = species.size();
 
 	size_t nbr_spc_reac = 0 ;
 	size_t nbr_spc_prod = 0 ;
@@ -298,12 +298,12 @@ void MechanismReduction::handle_reactions_with_chosen_species(
 
 	if(RecombinationReaction.size() > 0)
 	{
-		WriteReactions("Species_Picked_Reactions_regular.txt", Species, RegularReaction);
+		WriteReactions("Species_Picked_Reactions_regular.txt", species, RegularReaction);
 	}
 
 	if(RecombinationReaction.size() > 0)
 	{
-		WriteReactions("Species_Picked_Reactions_rearrange.txt", Species, RecombinationReaction);
+		WriteReactions("Species_Picked_Reactions_rearrange.txt", species, RecombinationReaction);
 	}
 
 	for(i=0;i<RegularReaction.size();i++)
@@ -325,7 +325,7 @@ void MechanismReduction::handle_reactions_with_chosen_species(
 
 	Reduce_Species_Thermo_Mechanism(
 			RetainOrNot,
-			Species,
+			species,
 			Thermodynamics,
 			PickedReactions
 	);

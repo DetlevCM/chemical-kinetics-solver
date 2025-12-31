@@ -18,6 +18,14 @@ class SolverCalculation {
 
 public:
 
+/// PetroOxy Additional variables
+
+size_t OxyGasSpeciesID;
+PressureVesselCalc PetroOxyData;
+//for limited Oxy
+double time_previous;
+
+// end PetroOxy variables
 
 
 
@@ -63,19 +71,18 @@ vector< TrackSpecies > SpeciesLossAll; // vector for recording species loss
 //vector< ReactionParameter > ReactionParameters; // tidier than reactions vector
 vector< Reaction::ReactionParameter > ReactionParameters; // tidier than reactions vector
 
-static size_t Number_Species; // old variable
-static size_t Number_Reactions; //old variable
+inline static size_t Number_Species; // old variable
+inline static size_t Number_Reactions; //old variable
 
-static vector< Species::ThermodynamicData::CalculatedThermodynamics > CalculatedThermo;
-static vector< double > Kf;
-static vector< double > Kr;
-static vector< double > Rates;
-static vector< double > Concentration;
-static vector< double > SpeciesConcentrationChange;
-static vector< double > delta_n;
+inline static vector< Species::ThermodynamicData::CalculatedThermodynamics > CalculatedThermo;
+inline static vector< double > Kf;
+inline static vector< double > Kr;
+inline static vector< double > Rates;
+inline static vector< double > Concentration;
+inline static vector< double > SpeciesConcentrationChange;
+inline static vector< double > delta_n;
 vector< Species > species; // quickest and easiest way right now... 
 
-double time_previous = 0.0;
 
 public:
 
@@ -93,7 +100,7 @@ SolverCalculation(
 ConstantInitRHSODE InitialDataConstants;
 ReactantsForReactions = reactantsForReactions;
 ProductsForReactions = productsForReactions;
-vector< TrackSpecies > speciesLossAll;
+SpeciesLossAll = speciesLossAll;
 delta_n = prep_delta_n;
 
 species = vec_species;
@@ -154,7 +161,7 @@ static void CalculateReactionRates(
 );
 
 
-void SolverCalculation::Evaluate_Thermodynamic_Parameters(
+void Evaluate_Thermodynamic_Parameters(
 		vector< Species::ThermodynamicData::CalculatedThermodynamics > &CalculatedThermo,
 		vector< Species > & species, //Thermodynamics,
 		const double Temperature
@@ -173,6 +180,66 @@ static void Synchronize_Gas_Liquid_Model(
 		double *y, // concentrations (&temperature) from the ODE solver
 		double Vliq_div_Vgas,
 		vector< double > Henry_Constants // need to line up with species IDs
+);
+
+
+//// NOTE: included in solver calculations for ease of implementation
+
+struct JacobianSpecies{
+	size_t SpeciesID;
+	double power;
+};
+
+struct JacobianData {
+	bool IsForward;
+	bool IsProduction;
+	size_t ColumnWiseArrayPosition;
+	size_t ReactionID;
+	double coefficient;
+	vector< JacobianSpecies > Species;
+};
+
+inline static vector< JacobianData > JacobianMatrix;
+
+
+// Jacobian Matrix for plain Arrhenius expressions only
+
+void Prepare_Jacobian_Matrix(
+		vector < JacobianData > & JacobianColumnWise,
+		const vector< Reaction::SingleReactionData > & Reactions
+);
+
+void Jacobian_Matrix_Intel(int*, double*, double*, double*);
+
+void Jacobian_Matrix_Odepack_LSODA(int*, double*, double*, double*, double*, double*, int*);
+
+
+//// NOTE: included in solver calculation for ease of implementation
+
+void AdjustGasConcentration(
+		double & ,
+		double ,
+		double ,
+		PressureVesselCalc &
+);
+
+void Adjust_Gas_Concentration_Initial(
+		double & ,
+		double ,
+		PressureVesselCalc &
+);
+
+
+//// TODO: should the PetroOxy output be here or in the output class 
+static void PetroOxyOutputHeader(
+		string
+);
+
+
+static void PetroOxyOutputStream(
+		string,
+		const PressureVesselCalc &,
+		double
 );
 
 };

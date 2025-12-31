@@ -93,16 +93,7 @@ static void Input_File_For_Ehsan_Opt(
 );
 
 
-static void PetroOxyOutputHeader(
-		string
-);
 
-
-static void PetroOxyOutputStream(
-		string,
-		const PressureVesselCalc &,
-		double
-);
 
 };
 

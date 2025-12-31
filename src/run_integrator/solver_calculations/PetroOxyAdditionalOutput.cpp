@@ -6,7 +6,7 @@
  */
 
 
-#include "../Headers.hpp"
+#include "./solver_calculations.h"
 
 
 // we know the volume of the PetroOxy Dish
@@ -27,7 +27,7 @@
  * 10) "k" as Henry's Law Constant, M / L
  */
 
-void PetroOxyOutputHeader(string filename)
+void SolverCalculation::PetroOxyOutputHeader(string filename)
 {
 	// Stream to output file, output mode (Should clear old content)
 	ofstream ConcentrationOutput (filename.c_str(),ios::out);
@@ -49,7 +49,7 @@ void PetroOxyOutputHeader(string filename)
 
 
 
-void PetroOxyOutputStream(
+void SolverCalculation::PetroOxyOutputStream(
 		string filename,
 		const PressureVesselCalc & PetroOxyData,
 		double CurrentTime

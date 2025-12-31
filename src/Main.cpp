@@ -107,7 +107,7 @@ int main(int argc, char* argv[])
 //*/
 
 
-	size_t i; 	// useful counter
+	//size_t i; 	// useful counter
 	size_t Number_Species = reaction_mechanism.species_size();
 	size_t Number_Reactions = reaction_mechanism.reactions_size();
 	vector< double > KeyRates; // for mechanism reduction

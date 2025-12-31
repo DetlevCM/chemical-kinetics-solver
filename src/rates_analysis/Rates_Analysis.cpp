@@ -6,13 +6,13 @@
  */
 
 
-#include "../Headers.hpp"
+#include "./Rates-Analysis.h"
 
 
 
 
 // Indentify the largest rates
-void MaxRatesAnalysis(
+void RatesAnalysis::MaxRatesAnalysis(
 		vector< vector < str_RatesAnalysis > >& RatesAnalysisData,
 		const vector< TrackSpecies > & ProductsForRates,
 		const vector< TrackSpecies > & ReactantsForRates,
@@ -52,9 +52,9 @@ void MaxRatesAnalysis(
 
 
 // Simple for now
-void WriteMaxRatesAnalysis(
+void RatesAnalysis::WriteMaxRatesAnalysis(
 		vector< vector < str_RatesAnalysis > >& RatesAnalysisData,
-		const vector< string >& Species,
+		const vector< Species >& species,
 		const vector< SingleReactionData >& Reactions,
 		string rates_analysis_stream_filename
 )
@@ -78,7 +78,7 @@ void WriteMaxRatesAnalysis(
 	{
 		for(i=0;i<Number_Species;i++)
 		{
-			Outfile << "Rate of Production For: " << Species[i] << "\n";
+			Outfile << "Rate of Production For: " << species[i].Name << "\n";
 			// sort first, then print out sorted output
 			for(j=0;j<Number_Reactions;j++)
 			{
@@ -90,7 +90,7 @@ void WriteMaxRatesAnalysis(
 							RatesAnalysisData[i][j].productionrate << " 	, at 	" << RatesAnalysisData[i][j].prod_time << " 	 s    ";
 					// now need to print the reaction
 
-					Outfile << Prepare_Single_Reaction_Output(Number_Species, Species, Reactions[j]);
+					Outfile << Prepare_Single_Reaction_Output(Number_Species, species, Reactions[j]);
 
 				}
 			};
@@ -109,7 +109,7 @@ void WriteMaxRatesAnalysis(
 	{
 		for(i=0;i<Number_Species;i++)
 		{
-			Outfile << "Rate of Consumption For: " << Species[i] << "\n";
+			Outfile << "Rate of Consumption For: " << species[i].Name << "\n";
 			// sort first, then print out sorted output
 			for(j=0;j<Number_Reactions;j++)
 			{
@@ -121,7 +121,7 @@ void WriteMaxRatesAnalysis(
 							RatesAnalysisData[i][j].consumptionrate << " 	, at 	" << RatesAnalysisData[i][j].cons_time << " 	s    ";
 
 					// now need to print the reaction
-					Outfile << Prepare_Single_Reaction_Output(Number_Species, Species, Reactions[j]);
+					Outfile << Prepare_Single_Reaction_Output(Number_Species, species, Reactions[j]);
 				};
 			};
 
@@ -137,7 +137,7 @@ void WriteMaxRatesAnalysis(
 //*
 // Rates Analysis - stream
 
-void PrepareStreamRatesAnalysis(
+void RatesAnalysis::PrepareStreamRatesAnalysis(
 		const vector< string >& Species,
 		string rates_analysis_stream_filename
 )
@@ -180,7 +180,7 @@ void PrepareStreamRatesAnalysis(
 }
 
 
-void StreamRatesAnalysis(
+void RatesAnalysis::StreamRatesAnalysis(
 		const string rates_analysis_stream_filename,
 		const vector< TrackSpecies > & ProductsForRates,
 		const vector< TrackSpecies > & ReactantsForRates,
@@ -250,12 +250,12 @@ void StreamRatesAnalysis(
 
 // output at specific times
 
-void RatesAnalysisAtTimes(
+void RatesAnalysis::RatesAnalysisAtTimes(
 		const vector< TrackSpecies > & ProductsForRates,
 		const vector< TrackSpecies > & ReactantsForRates,
 		const vector< double > & Rates,
 		const double current_time,
-		const vector< string > Species,
+		const vector< Species > species,
 		const vector< SingleReactionData >& Reactions
 )
 {
@@ -263,7 +263,7 @@ void RatesAnalysisAtTimes(
 
 	i = 0; j = 0;
 
-	size_t Number_Species = Species.size();
+	size_t Number_Species = species.size();
 	size_t Number_Reactions = Reactions.size();
 
 
@@ -312,7 +312,7 @@ void RatesAnalysisAtTimes(
 	{
 		for(i=0;i<Number_Species;i++)
 		{
-			Outfile << "At Time " << current_time  << "s , total Rate of Production for: " << Species[i] << " "
+			Outfile << "At Time " << current_time  << "s , total Rate of Production for: " << species[i].Name << " "
 					<< RatesAnalysisDataTimeStepTotal[i].productionrate << "\n";
 			// sort first, then print out sorted output
 			for(j=0;j<Number_Reactions;j++)
@@ -322,7 +322,7 @@ void RatesAnalysisAtTimes(
 				{
 					Outfile << "Reaction " << j << " 	" << RatesAnalysisData[i][j].productionrate <<" 	";
 					// now need to print the reaction
-					Outfile << Prepare_Single_Reaction_Output(Number_Species, Species, Reactions[j]);
+					Outfile << Prepare_Single_Reaction_Output(Number_Species, species, Reactions[j]);
 				}
 			};
 			Outfile << "\n\n";
@@ -337,7 +337,7 @@ void RatesAnalysisAtTimes(
 	{
 		for(i=0;i<Number_Species;i++)
 		{
-			Outfile << "At Time " << current_time  << "s , total Rate of Consumption for: " << Species[i] << " "
+			Outfile << "At Time " << current_time  << "s , total Rate of Consumption for: " << species[i].Name << " "
 					<< RatesAnalysisDataTimeStepTotal[i].consumptionrate << "\n";
 			// sort first, then print out sorted output
 			for(j=0;j<Number_Reactions;j++)
@@ -347,7 +347,7 @@ void RatesAnalysisAtTimes(
 				{
 					Outfile << "Reaction " << j << " 	" << RatesAnalysisData[i][j].consumptionrate <<" 	";
 					// now need to print the reaction
-					Outfile << Prepare_Single_Reaction_Output(Number_Species, Species, Reactions[j]);
+					Outfile << Prepare_Single_Reaction_Output(Number_Species, species, Reactions[j]);
 				}
 			};
 			Outfile << "\n\n";

@@ -5,6 +5,8 @@
 #ifndef _GLOBAL_STRUCT
 #define _GLOBAL_STRUCT
 
+#include <cstddef>
+
 //// TODO: See that these are kept to a minimum
 
 struct PressureVesselCalc {

@@ -6,12 +6,13 @@
  */
 
 
+#include "./Species.h"
 #include "./Reaction.h"
 
 
 string Reaction::Prepare_Single_Reaction_Output(
 		size_t Number_Species,
-		const vector< string >& Species,
+		const vector< Species >& species,
 		const SingleReactionData& Reaction
 )
 {
@@ -32,7 +33,7 @@ string Reaction::Prepare_Single_Reaction_Output(
 				{
 					convert << " + ";
 				}
-				convert << Species[i];
+				convert << species[i].Name;
 				check = true;
 				Reaction_Order = Reaction_Order + 1; // stoichiometry 1
 			}
@@ -42,7 +43,7 @@ string Reaction::Prepare_Single_Reaction_Output(
 				{
 					convert << " + ";
 				}
-				convert << fabs(Reaction.Reactants[i]) << Species[i];
+				convert << fabs(Reaction.Reactants[i]) << species[i].Name;
 				check = true;
 				Reaction_Order = Reaction_Order + fabs(Reaction.Reactants[i]); // stoichiometry not 1
 			}
@@ -70,7 +71,7 @@ string Reaction::Prepare_Single_Reaction_Output(
 				{
 					convert << " + ";
 				}
-				convert << Species[i];
+				convert << species[i].Name;
 				check = true;
 			}
 			else
@@ -79,7 +80,7 @@ string Reaction::Prepare_Single_Reaction_Output(
 				{
 					convert << " + ";
 				}
-				convert << Reaction.Products[i] << Species[i];
+				convert << Reaction.Products[i] << species[i].Name;
 				check = true;
 			}
 		}
