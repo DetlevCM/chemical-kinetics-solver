@@ -5,18 +5,10 @@
  *      Author: DetlevCM
  */
 
-#include "../../lib/headers/lib_Intel_ODE.hpp"
-#include "../../lib/headers/lib_odepack.hpp"
-
 
 #include "./run_integrator.h"
-#include "./solver_calculations/solver_calculations.h"
 
-#include "../write_output/write_output.h"
 
-#include "../get_process_input/mechanism_reduction/Mechanism_Reduction.h"
-
-#include "../rates_analysis/Rates-Analysis.h"
 
 // Not a perfect solution, but stick integrator into its own void with global variables via a namespace
 void RunIntegrator::Integrate_Liquid_Phase(

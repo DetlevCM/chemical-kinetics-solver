@@ -11,6 +11,8 @@
 #include <vector>
 using std::vector;
 
+#include "../global_struct.h"
+
 #include "../Main.h"
 
 #include "../get_process_input/get_initial_data/Initial_Data.h"
@@ -18,8 +20,15 @@ using std::vector;
 #include "../get_process_input/get_mechanism/Species.h"
 #include "../get_process_input/get_mechanism/ReactionMechanism.h"
 
-#include "../global_struct.h"
+#include "../get_process_input/mechanism_reduction/Mechanism_Reduction.h"
 
+#include "../rates_analysis/Rates-Analysis.h"
+
+#include "../write_output/write_output.h"
+
+#include "../../lib/headers/lib_Intel_ODE.hpp"
+#include "../../lib/headers/lib_odepack.hpp"
+#include "./solver_calculations/solver_calculations.h"
 
 class RunIntegrator 
 {

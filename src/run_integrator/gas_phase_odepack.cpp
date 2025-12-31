@@ -5,17 +5,10 @@
  *      Author: DetlevCM
  */
 
-#include "../../lib/headers/lib_Intel_ODE.hpp"
-#include "../../lib/headers/lib_odepack.hpp"
+
 
 #include "./run_integrator.h"
-#include "./solver_calculations/solver_calculations.h"
 
-#include "../get_process_input/mechanism_reduction/Mechanism_Reduction.h"
-
-#include "../rates_analysis/Rates-Analysis.h"
-
-#include "../write_output/write_output.h"
 
 // initially this is the same as the liquid phase solver
 // in the long term, this function will need to get third body support etc. IF it is actively developed...
