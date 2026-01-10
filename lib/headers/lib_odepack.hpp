@@ -8,6 +8,10 @@
 #ifndef HEADERS_INTEGRATE_ODEPACK_H_
 #define HEADERS_INTEGRATE_ODEPACK_H_
 
+#include "../../src/run_integrator/solver_calculations/solver_calculations.h"
+
+// reference for inspiration on how the member function can be accessed:
+// https://community.intel.com/t5/Intel-Fortran-Compiler/Pass-class-object-from-C-to-Fortran-to-C/td-p/860805
 
 extern "C" {
 

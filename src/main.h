@@ -58,6 +58,23 @@ using std::istringstream;
 
 using std::stod; // for C++ string to double
 
+#include "./run_integrator/solver_calculations/solver_calculations.h"
+
+
+// use a global glass so we can use a function to redirect
+extern SolverCalculation solver_calculation; 
+
+static void wrapper_ODE_RHS_Liquid_Phase(int*n, double*t, double*y, double*f)
+{
+	solver_calculation.ODE_RHS_Liquid_Phase(n, t, y, f);
+}
+static void wrapper_Jacobian_Matrix_Odepack_LSODA(int*n,double*t,double*y,double*ML,double*MU,double*a,int*NROWPD)
+{
+	
+    solver_calculation.Jacobian_Matrix_Odepack_LSODA(n,t,y,ML,MU,a,NROWPD);
+}
+
+
 class Main {
 
 public:
@@ -98,5 +115,9 @@ void Synchronize_Gas_Liquid_Model(
 		double Vliq_div_Vgas,
 		vector< double > Henry_Constants // need to line up with species IDs
 );
+
+
+
+
 
 #endif

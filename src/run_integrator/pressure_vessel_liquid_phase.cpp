@@ -106,7 +106,8 @@ void RunIntegrator::Integrate_Pressure_Vessel_Liquid_Phase(
 
 	//// NOTE: Here initialises the Solver Calc class, in which the members act as global variables
 	//// for and during the calculation
-	SolverCalculation solver_calculation(
+	//SolverCalculation solver_calculation(
+	solver_calculation.init(
 		reaction_mechanism.species,
 		reaction_mechanism.species.size(),
 		reaction_mechanism.reactions_size(),

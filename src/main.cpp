@@ -7,7 +7,8 @@
 
 #include "./main.h"
 
-
+// use a global glass so we can use a function to redirect
+SolverCalculation solver_calculation; 
 
 // http://stackoverflow.com/questions/13600204/checking-if-argvi-exists-c
 // argc = number of arguments

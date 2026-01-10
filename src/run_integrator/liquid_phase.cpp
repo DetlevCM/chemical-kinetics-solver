@@ -94,7 +94,9 @@ void RunIntegrator::Integrate_Liquid_Phase(
 
 	//// NOTE: Here initialises the Solver Calc class, in which the members act as global variables
 	//// for and during the calculation
-	SolverCalculation solver_calculation(
+	SolverCalculation solver_calculation;
+	//SolverCalculation solver_calculation(
+	solver_calculation.init(
 		reaction_mechanism.species,
 		reaction_mechanism.species.size(),
 		reaction_mechanism.reactions_size(),
@@ -314,6 +316,7 @@ void RunIntegrator::Integrate_Liquid_Phase(
 	{
 		time_step = time_current + time_step1;
 
+		cout << "debug " << time_current << " " << time_step1 << "\n";
 
 		// https://en.cppreference.com/w/cpp/language/switch
 		switch(solver_choice) // begin ODE Solver switch
@@ -360,19 +363,21 @@ void RunIntegrator::Integrate_Liquid_Phase(
 
 			// use LSODA
 		case 2001 :
-			dlsoda_((void*) &SolverCalculation::ODE_RHS_Liquid_Phase,&n,y,&time_current,&time_step,
+//			dlsoda_((void*) &SolverCalculation::ODE_RHS_Liquid_Phase,&n,y,&time_current,&time_step,
+			dlsoda_((void*) wrapper_ODE_RHS_Liquid_Phase,&n,y,&time_current,&time_step,
 					&LSODA.ITOL,&LSODA.RTOL,&LSODA.ATOL,
 					&LSODA.ITASK,&LSODA.ISTATE,&LSODA.IOPT,
 					&LSODA.vector_RWORK[0],&LSODA.LRW,&LSODA.vector_IWORK[0],&LSODA.LIW,
-					(void*) &SolverCalculation::Jacobian_Matrix_Odepack_LSODA,&LSODA.JT);
+					(void*) wrapper_Jacobian_Matrix_Odepack_LSODA,&LSODA.JT);
 			if (LSODA.ISTATE<0){printf("\n LSODA routine exited with error code %4d\n",LSODA.ISTATE);exit(1);}
 			break;
 		case 2002 :
-			dlsoda_((void*) &SolverCalculation::ODE_RHS_Liquid_Phase,&n,y,&time_current,&time_step,
+//			dlsoda_((void*) &SolverCalculation::ODE_RHS_Liquid_Phase,&n,y,&time_current,&time_step,
+			dlsoda_((void*) wrapper_ODE_RHS_Liquid_Phase,&n,y,&time_current,&time_step,
 					&LSODA.ITOL,&LSODA.RTOL,&LSODA.ATOL,
 					&LSODA.ITASK,&LSODA.ISTATE,&LSODA.IOPT,
 					&LSODA.vector_RWORK[0],&LSODA.LRW,&LSODA.vector_IWORK[0],&LSODA.LIW,
-					(void*) &SolverCalculation::Jacobian_Matrix_Odepack_LSODA,&LSODA.JT);
+					(void*) wrapper_Jacobian_Matrix_Odepack_LSODA,&LSODA.JT);
 			if (LSODA.ISTATE<0){printf("\n LSODA routine exited with error code %4d\n",LSODA.ISTATE);exit(1);}
 			break;
 

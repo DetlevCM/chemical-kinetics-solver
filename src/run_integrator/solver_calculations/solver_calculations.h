@@ -86,7 +86,9 @@ vector< Species > species; // quickest and easiest way right now...
 
 public:
 
-SolverCalculation(
+// cannot use the object in the solver with a member function
+// so use a global object and then init & use helper function?
+void init(
 	vector< Species > vec_species, // quick and ugly... 
 	size_t number_species,
 	size_t number_reactions, 
@@ -243,5 +245,15 @@ static void PetroOxyOutputStream(
 );
 
 };
+
+
+/* wrappers to allow calling the member functions from Fortran */
+
+// https://isocpp.org/wiki/faq/pointers-to-members
+//typedef void (SolverCalculation::*ODE_RHS_Liquid_Phase)(int*n, double*t, double*y, double*f);
+//typedef void (SolverCalculation::*Jacobian_Matrix_Odepack_LSODA)(int*n,double*t,double*y,double*ML,double*MU,double*a,int*NROWPD);
+//typedef void (SolverCalculation::*Jacobian_Matrix_Intel)(int*n,double*t,double*y,double*a);
+
+
 
 #endif
