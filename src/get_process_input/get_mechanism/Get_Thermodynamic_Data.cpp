@@ -47,9 +47,11 @@ void Species::Get_Thermodynamic_Data(string filename,
         //
         //  Does NOT filter blank lines with more than one white space...
         //
-        if (!end_flag && !line1.empty() && line1.compare(0, 1, "!") != 0 //&&
-            // line1.compare(0,1," ") != 0 && // normal whitespace
-            // line1.compare(0,1,"	") != 0 // tab
+        if (!end_flag && !line1.empty() &&
+            line1.compare(0, 1, "!") !=
+                0 //&&
+                  // line1.compare(0,1," ") != 0 && // normal whitespace
+                  // line1.compare(0,1,"	") != 0 // tab
         ) {
           // One Species
           Species::ThermodynamicData temp_read_in_single_species;

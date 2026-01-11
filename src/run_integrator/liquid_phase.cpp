@@ -83,7 +83,7 @@ void RunIntegrator::Integrate_Liquid_Phase(
       reaction_mechanism.reactions); // New method of listing species
 
   //// NOTE: Here initialises the Solver Calc class, in which the members act as
-  ///global variables / for and during the calculation
+  /// global variables / for and during the calculation
   SolverCalculation solver_calculation;
   // SolverCalculation solver_calculation(
   solver_calculation.init(
@@ -202,15 +202,15 @@ void RunIntegrator::Integrate_Liquid_Phase(
       // solver_calculation.ReactionParameters,
       // solver_calculation.CalculatedThermo,
       solver_calculation.SpeciesLossAll //,
-      // solver_calculation.delta_n
+                                        // solver_calculation.delta_n
   );
   solver_calculation.CalculateReactionRates(
       // solver_calculation.Rates,
       // solver_calculation.Concentration,
       solver_calculation.Kf,
       solver_calculation.Kr //,
-      // solver_calculation.ReactantsForReactions,
-      // solver_calculation.ProductsForReactions
+                            // solver_calculation.ReactantsForReactions,
+                            // solver_calculation.ProductsForReactions
   );
 
   // Don't forget Rates Analysis for Mechanism Reduction at t=0 - or is this
@@ -413,7 +413,7 @@ void RunIntegrator::Integrate_Liquid_Phase(
           solver_calculation.Rates, time_current, reaction_mechanism.species,
           InitialParameters.MechanismAnalysis.SpeciesSelectedForRates,
           ReactionsForSpeciesSelectedForRates //,
-          // reaction_mechanism.Reactions
+                                              // reaction_mechanism.Reactions
       );
     }
 

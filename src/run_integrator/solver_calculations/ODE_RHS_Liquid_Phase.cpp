@@ -57,7 +57,7 @@ void SolverCalculation::ODE_RHS_Liquid_Phase(int *n, double *t, double *y,
     qint = qint + delta_n[i] * Rates[i];
   }
   qtot = -qint / (ctot); //*1000); // scale l to ml and Na not needed for
-                         //moles/l * Na); //*/
+                         // moles/l * Na); //*/
 
   f[Number_Species] = qtot; // Temperature equation
   // cout << ctot << " " << qint << " " << qtot << "\n";

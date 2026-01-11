@@ -54,7 +54,7 @@ void SolverCalculation::Calculate_Rate_Constant(
                 Temperature); // do NOT forget the - !!!
 
     //* Speedup by only raising temperature to power where needed: improvement
-    //is large :)
+    // is large :)
     if (ReactionParameters[i].paramN !=
         0) // raising to power 0 has no effect, so only if not 0
     {

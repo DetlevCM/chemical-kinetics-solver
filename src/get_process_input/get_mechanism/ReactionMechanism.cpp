@@ -39,7 +39,7 @@ void ReactionMechanism::get_mechanism(string filename,
   // reaction_mechanism.Thermodynamics.size() << " Thermodynamic Data
   // Entries.\n";
   //// NOTE: There is no longer a way to determine how many thermodynamic data
-  ///entries have been read in
+  /// entries have been read in
 
   vector<SingleReactionData> reactions =
       ReactionMechanism::Get_Reactions(filename, species);
@@ -49,7 +49,7 @@ void ReactionMechanism::get_mechanism(string filename,
   reaction_mechanism.Set_Reactions(reactions);
 
   //// NOTE: above assignment stores data in class ReactionMechanism,
-  ///implementation is ugly
+  /// implementation is ugly
 
   cout << "The Mechanism contains " << Number_Reactions << " Reactions.\n";
 }

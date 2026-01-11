@@ -27,7 +27,7 @@ MechanismReduction::RenameSpecies(vector<Species> species,
   temp_species_names.resize(Number_Species_Classes);
 
   //// TODO: verify this doesn't remove the thermodynamic data... Would be a
-  ///problem
+  /// problem
   for (i = 0; i < Number_Species; i++) {
     size_t ClassID = SpeciesClassMapping[i];
 
