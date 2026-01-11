@@ -8,6 +8,10 @@
 
 #include "./solver_calculations.h"
 
+// n = number equations/differentiated variables
+// t = time step
+// y = current value
+// f = dy/dt
 
 void SolverCalculation::ODE_RHS_Liquid_Phase(int*n, double*t, double*y, double*f)
 {
