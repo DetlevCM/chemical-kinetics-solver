@@ -33,55 +33,6 @@ using std::vector;
 class RunIntegrator {
 
 public:
-  /*
-  class Jacobian_ODE_RHS
-  {
-          public:
-  //// constant (i.e. set once) ////
-  size_t Number_Species;
-  vector< double > Delta_N;
-  vector< Species::ThermodynamicData > Thermodynamics;
-  //vector< Reaction::ReactionParameter > ReactionParameters; // tidier than
-  reactions vector vector< TrackSpecies > SpeciesLossAll; // vector for
-  recording species loss
-
-  //// variable (values change during calculation ////
-  vector< double > Concentration;
-  vector< Species::ThermodynamicData::CalculatedThermodynamics >
-  CalculatedThermo; vector< double > Kf; vector< double > Kr;
-  };
-  //*/
-
-  /*
-  class ODE_RHS
-  {
-          public:
-  //// constant (i.e. set once) ////
-  size_t Number_Reactions;
-  //ConstantInitRHSODE InitialDataConstants;
-  vector< TrackSpecies > ReactantsForReactions;
-  vector< TrackSpecies > ProductsForReactions;
-
-  //// variable (values change during calculation ////
-  vector< double > Rates;
-  vector< double > SpeciesConcentrationChange;
-  };
-  //*/
-
-  // Split into own namespace for efficiency
-  /*
-  class ODE_RHS_Pressure_Vessel_Variables
-  {
-          public:
-  size_t OxyGasSpeciesID;
-  PressureVesselCalc PetroOxyData;
-  //for limited Oxy
-  double time_previous;
-  };
-  //*/
-
-  //// end TODO:
-
   struct Settings_LSODA {
     int solver_subsettings;
 

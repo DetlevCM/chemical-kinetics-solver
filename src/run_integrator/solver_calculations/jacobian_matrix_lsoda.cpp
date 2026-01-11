@@ -46,12 +46,7 @@ void SolverCalculation::Jacobian_Matrix_Odepack_LSODA(int *n, double *t,
   vector<double> JacobeanColumnWise((Number_Species + 1) *
                                     (Number_Species + 1));
 
-  // Evaluate_Thermodynamic_Parameters(CalculatedThermo, species,
-  // Concentration[Number_Species]);
   Evaluate_Thermodynamic_Parameters(Concentration[Number_Species]);
-  // Calculate_Rate_Constant(Kf, Kr,
-  // Concentration[Number_Species],ReactionParameters, CalculatedThermo,
-  // SpeciesLossAll, delta_n);
   Calculate_Rate_Constant(Concentration[Number_Species], SpeciesLossAll);
 
   for (size_t i = 0; i < JacobianMatrix.size(); i++) {
