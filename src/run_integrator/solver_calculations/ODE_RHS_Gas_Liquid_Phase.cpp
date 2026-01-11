@@ -32,7 +32,7 @@ void SolverCalculation::ODE_RHS_Gas_Liquid_Phase(int *n, double *time_current,
 
   /* The input will need to be a single huge system, covering all reactions and
    * species individually. Regularly the concentrations will need to be
-   * synchronised.
+   * synchronized.
    */
 
   // stability hack
@@ -85,7 +85,7 @@ void SolverCalculation::ODE_RHS_Gas_Liquid_Phase(int *n, double *time_current,
   // CalculateReactionRates(Rates, Concentration, Kf, Kr, ReactantsForReactions,
   // ProductsForReactions);
   CalculateReactionRates(Kf, Kr);
-  SpeciesConcentrationChange = SpeciesLossRate(Rates, SpeciesLossAll);
+  SpeciesConcentrationChange = SolverCalculation.SpeciesLossRate(Rates, SpeciesLossAll);
 
   double ctot = 0;
   double qint = 0;
