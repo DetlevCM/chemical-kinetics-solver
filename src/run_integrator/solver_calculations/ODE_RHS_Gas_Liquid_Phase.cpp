@@ -85,7 +85,8 @@ void SolverCalculation::ODE_RHS_Gas_Liquid_Phase(int *n, double *time_current,
   // CalculateReactionRates(Rates, Concentration, Kf, Kr, ReactantsForReactions,
   // ProductsForReactions);
   CalculateReactionRates(Kf, Kr);
-  SpeciesConcentrationChange = SolverCalculation.SpeciesLossRate(Rates, SpeciesLossAll);
+  SpeciesConcentrationChange =
+      SolverCalculation.SpeciesLossRate(Rates, SpeciesLossAll);
 
   double ctot = 0;
   double qint = 0;
