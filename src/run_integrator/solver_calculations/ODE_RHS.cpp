@@ -38,10 +38,10 @@ void SolverCalculation::ODE_RHS(int *n, double *t, double *y, double *f) {
   }
 
   Evaluate_Thermodynamic_Parameters(Concentration[Number_Species]);
-  Calculate_Rate_Constant(Concentration[Number_Species], SpeciesLossAll);
+  Calculate_Rate_Constant(Concentration[Number_Species]);
   CalculateReactionRates(Concentration, Kf, Kr);
 
-  SpeciesConcentrationChange = SpeciesLossRate(SpeciesLossAll);
+  SpeciesConcentrationChange = SpeciesLossRate();
 
   double ctot = 0.0;
   double qint = 0.0;

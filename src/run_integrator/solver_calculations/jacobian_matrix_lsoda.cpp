@@ -47,7 +47,7 @@ void SolverCalculation::Jacobian_Matrix_Odepack_LSODA(int *n, double *t,
                                     (Number_Species + 1));
 
   Evaluate_Thermodynamic_Parameters(Concentration[Number_Species]);
-  Calculate_Rate_Constant(Concentration[Number_Species], SpeciesLossAll);
+  Calculate_Rate_Constant(Concentration[Number_Species]);
 
   for (size_t i = 0; i < JacobianMatrix.size(); i++) {
     double temp;

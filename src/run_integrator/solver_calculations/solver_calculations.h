@@ -21,6 +21,7 @@ private:
   // vectors to provide performant calculation structures:
   vector<TrackSpecies> ReactantsForReactions;
   vector<TrackSpecies> ProductsForReactions;
+  vector<TrackSpecies> SpeciesLossAll; // vector for recording species loss
 
   // vector of data needed for the calculation, really just set once
   vector<double> delta_n;
@@ -28,6 +29,8 @@ private:
   // variables used actively in the calculation
   vector<Species::ThermodynamicData::CalculatedThermodynamics> CalculatedThermo;
 
+  vector<double> Kf;
+  vector<double> Kr;
   vector<double> Rates;
 
   // functions needed for access to the private variables:
@@ -36,13 +39,13 @@ public:
     return ReactantsForReactions;
   };
   const vector<double> &Get_Rates() { return Rates; };
+  vector<double> Get_Kf() { return Kf; };
+  vector<double> Get_Kr() { return Kr; };
 
 public:
   // cannot make this private just yet
   vector<double> Concentration;
-  vector<double> Kf;
-  vector<double> Kr;
-  vector<TrackSpecies> SpeciesLossAll; // vector for recording species loss
+
   vector<double> SpeciesConcentrationChange;
 
   /// PetroOxy Additional variables
@@ -124,16 +127,14 @@ public:
 
   void Evaluate_Thermodynamic_Parameters(const double Temperature);
 
-  void Calculate_Rate_Constant(const double Temperature,
-                               const vector<TrackSpecies> &SpeciesAll //,
-  );
+  void Calculate_Rate_Constant(const double Temperature);
 
   void CalculateReactionRates(const vector<double> &Concentration,
                               vector<double> Forward_Rates,
                               vector<double> Reverse_Rates //,
   );
 
-  vector<double> SpeciesLossRate(const vector<TrackSpecies> &SpeciesLossList);
+  vector<double> SpeciesLossRate();
 
   //// NOTE: included in solver calculations for ease of implementation
 

@@ -174,12 +174,11 @@ void RunIntegrator::Integrate_Liquid_Phase(
 
   // Get the rate Constants, forward and backwards
   solver_calculation.Calculate_Rate_Constant(
-      solver_calculation.Concentration[Number_Species],
-      solver_calculation.SpeciesLossAll);
+      solver_calculation.Concentration[Number_Species]);
 
   solver_calculation.CalculateReactionRates(solver_calculation.Concentration,
-                                            solver_calculation.Kf,
-                                            solver_calculation.Kr);
+                                            solver_calculation.Get_Kf(),
+                                            solver_calculation.Get_Kr());
   // Don't forget Rates Analysis for Mechanism Reduction at t=0 - or is this
   // nonsense?
   if (InitialParameters.MechanismReduction.ReduceReactions != 0) {
@@ -261,7 +260,7 @@ void RunIntegrator::Integrate_Liquid_Phase(
   }
 
   solver_calculation.SpeciesConcentrationChange =
-      solver_calculation.SpeciesLossRate(solver_calculation.SpeciesLossAll);
+      solver_calculation.SpeciesLossRate();
 
   /* -- Got values at t = 0 -- */
 

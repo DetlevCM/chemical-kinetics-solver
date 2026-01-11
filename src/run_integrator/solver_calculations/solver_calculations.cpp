@@ -14,8 +14,7 @@ void SolverCalculation::Evaluate_Thermodynamic_Parameters(
   }
 }
 
-void SolverCalculation::Calculate_Rate_Constant(
-    const double Temperature, const vector<TrackSpecies> &SpeciesAll)
+void SolverCalculation::Calculate_Rate_Constant(const double Temperature)
 
 {
   // Pressure Independent Reactions Only
@@ -34,16 +33,17 @@ void SolverCalculation::Calculate_Rate_Constant(
   // as we have the value of the calculated thermodynamics, we just need to put
   // them together per reaction, going through every species
 
-  for (size_t i = 0; i < SpeciesAll.size(); i++) { // loop over every reaction
-    delta_H[SpeciesAll[i].ReactionID] =
-        delta_H[SpeciesAll[i].ReactionID] +
-        (CalculatedThermo[SpeciesAll[i].SpeciesID].Hf *
-         SpeciesAll[i].coefficient);
+  for (size_t i = 0; i < SpeciesLossAll.size();
+       i++) { // loop over every reaction
+    delta_H[SpeciesLossAll[i].ReactionID] =
+        delta_H[SpeciesLossAll[i].ReactionID] +
+        (CalculatedThermo[SpeciesLossAll[i].SpeciesID].Hf *
+         SpeciesLossAll[i].coefficient);
 
-    delta_S[SpeciesAll[i].ReactionID] =
-        delta_S[SpeciesAll[i].ReactionID] +
-        (CalculatedThermo[SpeciesAll[i].SpeciesID].S *
-         SpeciesAll[i].coefficient);
+    delta_S[SpeciesLossAll[i].ReactionID] =
+        delta_S[SpeciesLossAll[i].ReactionID] +
+        (CalculatedThermo[SpeciesLossAll[i].SpeciesID].S *
+         SpeciesLossAll[i].coefficient);
   }
 
   for (size_t i = 0; i < Number_Reactions;
@@ -174,14 +174,13 @@ void SolverCalculation::CalculateReactionRates(
   }
 }
 
-vector<double> SolverCalculation::SpeciesLossRate(
-    const vector<TrackSpecies> &SpeciesLossList) {
+vector<double> SolverCalculation::SpeciesLossRate() {
   vector<double> temp_species_loss(Number_Species);
 
-  for (size_t i = 0; i < SpeciesLossList.size(); i++) {
-    temp_species_loss[SpeciesLossList[i].SpeciesID] =
-        temp_species_loss[SpeciesLossList[i].SpeciesID] +
-        (Rates[SpeciesLossList[i].ReactionID] * SpeciesLossList[i].coefficient);
+  for (size_t i = 0; i < SpeciesLossAll.size(); i++) {
+    temp_species_loss[SpeciesLossAll[i].SpeciesID] =
+        temp_species_loss[SpeciesLossAll[i].SpeciesID] +
+        (Rates[SpeciesLossAll[i].ReactionID] * SpeciesLossAll[i].coefficient);
   }
 
   /*
