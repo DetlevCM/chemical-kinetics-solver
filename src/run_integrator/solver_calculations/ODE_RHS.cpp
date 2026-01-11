@@ -41,7 +41,7 @@ void SolverCalculation::ODE_RHS(int *n, double *t, double *y, double *f) {
   Calculate_Rate_Constant(Concentration[Number_Species]);
   CalculateReactionRates(Concentration, Kf, Kr);
 
-  SpeciesConcentrationChange = SpeciesLossRate();
+  ConcentrationChange = SpeciesLossRate();
 
   double ctot = 0.0;
   double qint = 0.0;
@@ -50,7 +50,7 @@ void SolverCalculation::ODE_RHS(int *n, double *t, double *y, double *f) {
   for (size_t i = 0; i < Number_Species; i++) {
     ctot = ctot + CalculatedThermo[i].Cv * Concentration[i];
     // reduce number of loops
-    f[i] = SpeciesConcentrationChange[i];
+    f[i] = ConcentrationChange[i];
   }
   // ctot = ctot / 1000; // working in moles/l so no Na;
 

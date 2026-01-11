@@ -45,8 +45,7 @@ public:
 public:
   // cannot make this private just yet
   vector<double> Concentration;
-
-  vector<double> SpeciesConcentrationChange;
+  vector<double> ConcentrationChange;
 
   /// PetroOxy Additional variables
 
@@ -113,8 +112,8 @@ public:
 
     Concentration.resize(number_species +
                          1); // 1 extra position for temperature
-    SpeciesConcentrationChange.resize(number_species +
-                                      2); // temperature + one extra position?
+    ConcentrationChange.resize(number_species +
+                               2); // temperature + one extra position?
   };
 
   // The ODE RHS functions are split - regular initial value & pressure vessel

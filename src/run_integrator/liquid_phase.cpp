@@ -259,8 +259,7 @@ void RunIntegrator::Integrate_Liquid_Phase(
         ReactionsForSpeciesSelectedForRates);
   }
 
-  solver_calculation.SpeciesConcentrationChange =
-      solver_calculation.SpeciesLossRate();
+  solver_calculation.ConcentrationChange = solver_calculation.SpeciesLossRate();
 
   /* -- Got values at t = 0 -- */
 
