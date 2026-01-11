@@ -1,5 +1,5 @@
 /*
- * ODE_RHS_Liquid_Phase.cpp
+ * ODE_RHS.cpp
  *
  *  Created on: 06.07.2015
  *      Author: DetlevCM
@@ -12,7 +12,7 @@
 // y = current value
 // f = dy/dt
 
-void SolverCalculation::ODE_RHS_Liquid_Phase(int *n, double *t, double *y,
+void SolverCalculation::ODE_RHS(int *n, double *t, double *y,
                                              double *f) {
   // stability hack - but has a performance impact...
   if (InitialDataConstants.EnforceStability) {

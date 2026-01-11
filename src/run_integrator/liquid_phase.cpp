@@ -285,7 +285,7 @@ void RunIntegrator::Integrate_Liquid_Phase(
     // case IntelODE
     case 1001:
       dodesol_rkm9mkn(&Intel.vector_ipar[0], &n, &time_current, &time_step, y,
-                      (void *)&wrapper_ODE_RHS_Liquid_Phase, &Intel.h,
+                      (void *)&wrapper_ODE_RHS, &Intel.h,
                       &Intel.hm, &Intel.ep, &Intel.tr, &Intel.vector_dpar[0],
                       &Intel.vector_kd[0], &Intel.ierr);
       if (Intel.ierr != 0) {
@@ -297,7 +297,7 @@ void RunIntegrator::Integrate_Liquid_Phase(
 
     case 1002:
       dodesol_rkm9mka(&Intel.vector_ipar[0], &n, &time_current, &time_step, y,
-                      (void *)&wrapper_ODE_RHS_Liquid_Phase,
+                      (void *)&wrapper_ODE_RHS,
                       (void *)&SolverCalculation::Jacobian_Matrix_Intel,
                       &Intel.h, &Intel.hm, &Intel.ep, &Intel.tr,
                       &Intel.vector_dpar[0], &Intel.vector_kd[0], &Intel.ierr);
@@ -310,7 +310,7 @@ void RunIntegrator::Integrate_Liquid_Phase(
 
     case 1003:
       dodesol_mk52lfn(&Intel.vector_ipar[0], &n, &time_current, &time_step, y,
-                      (void *)&wrapper_ODE_RHS_Liquid_Phase, &Intel.h,
+                      (void *)&wrapper_ODE_RHS, &Intel.h,
                       &Intel.hm, &Intel.ep, &Intel.tr, &Intel.vector_dpar[0],
                       &Intel.vector_kd[0], &Intel.ierr);
       if (Intel.ierr != 0) {
@@ -322,7 +322,7 @@ void RunIntegrator::Integrate_Liquid_Phase(
 
     case 1004:
       dodesol_mk52lfa(&Intel.vector_ipar[0], &n, &time_current, &time_step, y,
-                      (void *)&wrapper_ODE_RHS_Liquid_Phase,
+                      (void *)&wrapper_ODE_RHS,
                       (void *)&SolverCalculation::Jacobian_Matrix_Intel,
                       &Intel.h, &Intel.hm, &Intel.ep, &Intel.tr,
                       &Intel.vector_dpar[0], &Intel.vector_kd[0], &Intel.ierr);
@@ -335,7 +335,7 @@ void RunIntegrator::Integrate_Liquid_Phase(
 
       // use LSODA
     case 2001:
-      dlsoda_((void *)wrapper_ODE_RHS_Liquid_Phase, &n, y, &time_current,
+      dlsoda_((void *)wrapper_ODE_RHS, &n, y, &time_current,
               &time_step, &LSODA.ITOL, &LSODA.RTOL, &LSODA.ATOL, &LSODA.ITASK,
               &LSODA.ISTATE, &LSODA.IOPT, &LSODA.vector_RWORK[0], &LSODA.LRW,
               &LSODA.vector_IWORK[0], &LSODA.LIW,
@@ -346,7 +346,7 @@ void RunIntegrator::Integrate_Liquid_Phase(
       }
       break;
     case 2002:
-      dlsoda_((void *)wrapper_ODE_RHS_Liquid_Phase, &n, y, &time_current,
+      dlsoda_((void *)wrapper_ODE_RHS, &n, y, &time_current,
               &time_step, &LSODA.ITOL, &LSODA.RTOL, &LSODA.ATOL, &LSODA.ITASK,
               &LSODA.ISTATE, &LSODA.IOPT, &LSODA.vector_RWORK[0], &LSODA.LRW,
               &LSODA.vector_IWORK[0], &LSODA.LIW,

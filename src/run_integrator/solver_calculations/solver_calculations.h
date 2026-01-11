@@ -105,10 +105,7 @@ public:
 
   // The ODE RHS functions are split - regular initial value & pressure vessel
   // (reservoir)
-  void ODE_RHS_Liquid_Phase(int *n, double *t, double *y, double *f);
-  void ODE_RHS_Gas_Phase(int *n, double *t, double *y, double *f);
-  void ODE_RHS_Gas_Liquid_Phase(int *n, double *t, double *y, double *f);
-  void ODE_RHS_Pressure_Vessel(int *n, double *t, double *y, double *f);
+  void ODE_RHS(int *n, double *t, double *y, double *f);
 
   /*
    * Calculating Rate Constants
@@ -127,15 +124,6 @@ public:
 
   vector<double> SpeciesLossRate(const vector<double> &Combined_Rates,
                                  const vector<TrackSpecies> &SpeciesLossList);
-
-  void Synchronize_Gas_Liquid_Model(
-      size_t number_synchronized_species, size_t liquid_species_count,
-      size_t gas_species_count, // gas and liquid counts so I know where
-                                // concentration entries belong to
-      double *y, // concentrations (&temperature) from the ODE solver
-      double Vliq_div_Vgas,
-      vector<double> Henry_Constants // need to line up with species IDs
-  );
 
   //// NOTE: included in solver calculations for ease of implementation
 
@@ -179,12 +167,7 @@ public:
 };
 
 /* wrappers to allow calling the member functions from Fortran */
-
 // https://isocpp.org/wiki/faq/pointers-to-members
-// typedef void (SolverCalculation::*ODE_RHS_Liquid_Phase)(int*n, double*t,
-// double*y, double*f); typedef void
-// (SolverCalculation::*Jacobian_Matrix_Odepack_LSODA)(int*n,double*t,double*y,double*ML,double*MU,double*a,int*NROWPD);
-// typedef void
-// (SolverCalculation::*Jacobian_Matrix_Intel)(int*n,double*t,double*y,double*a);
+
 
 #endif

@@ -82,10 +82,6 @@ public:
       vector<double> &KeyRates, PressureVesselCalc PetroOxyDataInput,
       vector<vector<str_RatesAnalysis>> &RatesAnalysisData);
 
-  static void Integrate_Gas_Phase_Odepack_LSODA(
-      Filenames, vector<double>, ReactionMechanism, Initial_Data,
-      vector<double> &, vector<vector<str_RatesAnalysis>> &);
-
   //// Pre-Processing:
 
   static vector<ReactionParameter>
