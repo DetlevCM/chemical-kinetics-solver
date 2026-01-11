@@ -26,9 +26,6 @@ void RunIntegrator::Integrate_Liquid_Phase(
        << " species and " << Number_Reactions << " Reactions.\n"
        << std::flush;
 
-  // Jacobian_ODE_RHS::Thermodynamics = reaction_mechanism.Thermodynamics; //
-  // "Hack" - to fix a regression
-
   ofstream ReactionRates_OFStream;
   ofstream Concentration_OFStream(OutputFilenames.Species.c_str(), ios::app);
 
@@ -55,7 +52,6 @@ void RunIntegrator::Integrate_Liquid_Phase(
   // For performance assessment, use a clock:
   clock_t cpu_time_begin, cpu_time_end, cpu_time_current;
 
-  // Jacobian_ODE_RHS::Delta_N = Get_Delta_N(reaction_mechanism.reactions); //
   // just make sure the Delta_N is current
   vector<double> prep_delta_n = Get_Delta_N(reaction_mechanism.reactions);
   // Reduce the matrix from a sparse matrix to something more manageable and
@@ -79,9 +75,7 @@ void RunIntegrator::Integrate_Liquid_Phase(
       reaction_mechanism.reactions); // New method of listing species
 
   //// NOTE: Here initialises the Solver Calc class, in which the members act as
-  /// global variables / for and during the calculation
-  // SolverCalculation solver_calculation;
-  //  SolverCalculation solver_calculation(
+  //// global variables / for and during the calculation
   solver_calculation.init(
       reaction_mechanism.species, reaction_mechanism.species.size(),
       reaction_mechanism.reactions_size(), ReactantsForReactions,
@@ -90,20 +84,10 @@ void RunIntegrator::Integrate_Liquid_Phase(
   solver_calculation.ReactionParameters =
       Process_Reaction_Parameters(reaction_mechanism.reactions);
 
-  // Jacobian_ODE_RHS::Concentration.clear(); // ensure the concentrations array
-  // is empty Jacobian_ODE_RHS::Concentration.resize(Number_Species + 1);
-  // Jacobian_ODE_RHS::Concentration = SpeciesConcentration; // set it to the
-  // initial values, also ensures it has the right length
-
   //// TODO: clean up
   solver_calculation.Concentration = SpeciesConcentration;
 
-  // double* y = &solver_calculation.Concentration[0];//.data();
-  // //SpeciesConcentration.data();
-  double *y =
-      solver_calculation.Concentration.data(); // SpeciesConcentration.data();
-  // cout << SpeciesConcentration.size() << " " << Number_Species << " " << n <<
-  // "\n";
+  double *y = solver_calculation.Concentration.data();
 
   double time_current, time_step, time_step1, time_end;
 
@@ -116,10 +100,6 @@ void RunIntegrator::Integrate_Liquid_Phase(
   // cout << "\nEnd Time: " << time_end << " Time Step: " << time_step1 << "\n";
 
   /* -- Initial values at t = 0 -- */
-
-  // ODE_RHS::Number_Reactions = Jacobian_ODE_RHS::ReactionParameters.size();
-
-  // Jacobian_ODE_RHS::CalculatedThermo.resize(Number_Species);
 
   solver_calculation.InitialDataConstants.EnforceStability =
       InitialParameters.EnforceStability;
@@ -186,29 +166,7 @@ void RunIntegrator::Integrate_Liquid_Phase(
   } //*/
 
   solver_calculation.Evaluate_Thermodynamic_Parameters(
-      // solver_calculation.CalculatedThermo,
-      // reaction_mechanism.species,
       solver_calculation.Concentration[Number_Species]);
-
-  /*for(i=0;i<Number_Species;i++)
-  {
-  cout << CalculatedThermo[i].Hf << " " << CalculatedThermo[i].Cp << " " <<
-  CalculatedThermo[i].S <<"\n";
-  }//*/
-
-  // Jacobian_ODE_RHS::Kf.clear();
-  // Jacobian_ODE_RHS::Kr.clear();
-  // Jacobian_ODE_RHS::Kf.resize(ODE_RHS::Number_Reactions);
-  // Jacobian_ODE_RHS::Kr.resize(ODE_RHS::Number_Reactions);
-
-  // vectors auto-initialize to zero
-  /*
-  for(i=0;i<ODE_RHS::Number_Reactions;i++)
-  {
-          Jacobian_ODE_RHS::Kr[i] = 0;
-  }
-  ODE_RHS::Rates.resize(ODE_RHS::Number_Reactions);
-//*/
 
   // prepare the Jacobian matrix
   solver_calculation.Prepare_Jacobian_Matrix(solver_calculation.JacobianMatrix,
@@ -216,22 +174,12 @@ void RunIntegrator::Integrate_Liquid_Phase(
 
   // Get the rate Constants, forward and backwards
   solver_calculation.Calculate_Rate_Constant(
-      // solver_calculation.Kf,
-      // solver_calculation.Kr,
       solver_calculation.Concentration[Number_Species],
-      // solver_calculation.ReactionParameters,
-      // solver_calculation.CalculatedThermo,
-      solver_calculation.SpeciesLossAll //,
-                                        // solver_calculation.delta_n
-  );
+      solver_calculation.SpeciesLossAll);
 
-  solver_calculation.CalculateReactionRates(
-      // solver_calculation.Rates,
-      solver_calculation.Concentration, solver_calculation.Kf,
-      solver_calculation.Kr //,
-                            // solver_calculation.ReactantsForReactions,
-                            // solver_calculation.ProductsForReactions
-  );
+  solver_calculation.CalculateReactionRates(solver_calculation.Concentration,
+                                            solver_calculation.Kf,
+                                            solver_calculation.Kr);
   // Don't forget Rates Analysis for Mechanism Reduction at t=0 - or is this
   // nonsense?
   if (InitialParameters.MechanismReduction.ReduceReactions != 0) {
@@ -387,8 +335,6 @@ void RunIntegrator::Integrate_Liquid_Phase(
 
       // use LSODA
     case 2001:
-      //			dlsoda_((void*)
-      //&wrapper_ODE_RHS_Liquid_Phase,&n,y,&time_current,&time_step,
       dlsoda_((void *)wrapper_ODE_RHS_Liquid_Phase, &n, y, &time_current,
               &time_step, &LSODA.ITOL, &LSODA.RTOL, &LSODA.ATOL, &LSODA.ITASK,
               &LSODA.ISTATE, &LSODA.IOPT, &LSODA.vector_RWORK[0], &LSODA.LRW,
@@ -400,8 +346,6 @@ void RunIntegrator::Integrate_Liquid_Phase(
       }
       break;
     case 2002:
-      //			dlsoda_((void*)
-      //&wrapper_ODE_RHS_Liquid_Phase,&n,y,&time_current,&time_step,
       dlsoda_((void *)wrapper_ODE_RHS_Liquid_Phase, &n, y, &time_current,
               &time_step, &LSODA.ITOL, &LSODA.RTOL, &LSODA.ATOL, &LSODA.ITASK,
               &LSODA.ISTATE, &LSODA.IOPT, &LSODA.vector_RWORK[0], &LSODA.LRW,
