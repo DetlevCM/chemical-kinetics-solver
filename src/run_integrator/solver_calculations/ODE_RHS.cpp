@@ -12,8 +12,7 @@
 // y = current value
 // f = dy/dt
 
-void SolverCalculation::ODE_RHS(int *n, double *t, double *y,
-                                             double *f) {
+void SolverCalculation::ODE_RHS(int *n, double *t, double *y, double *f) {
   // stability hack - but has a performance impact...
   if (InitialDataConstants.EnforceStability) {
     for (size_t i = 0; i <= Number_Species; i++) {

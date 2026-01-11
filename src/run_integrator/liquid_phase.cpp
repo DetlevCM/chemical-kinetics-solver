@@ -285,9 +285,9 @@ void RunIntegrator::Integrate_Liquid_Phase(
     // case IntelODE
     case 1001:
       dodesol_rkm9mkn(&Intel.vector_ipar[0], &n, &time_current, &time_step, y,
-                      (void *)&wrapper_ODE_RHS, &Intel.h,
-                      &Intel.hm, &Intel.ep, &Intel.tr, &Intel.vector_dpar[0],
-                      &Intel.vector_kd[0], &Intel.ierr);
+                      (void *)&wrapper_ODE_RHS, &Intel.h, &Intel.hm, &Intel.ep,
+                      &Intel.tr, &Intel.vector_dpar[0], &Intel.vector_kd[0],
+                      &Intel.ierr);
       if (Intel.ierr != 0) {
         printf("\n dodesol_rkm9mkn routine exited with error code %4d\n",
                Intel.ierr);
@@ -310,9 +310,9 @@ void RunIntegrator::Integrate_Liquid_Phase(
 
     case 1003:
       dodesol_mk52lfn(&Intel.vector_ipar[0], &n, &time_current, &time_step, y,
-                      (void *)&wrapper_ODE_RHS, &Intel.h,
-                      &Intel.hm, &Intel.ep, &Intel.tr, &Intel.vector_dpar[0],
-                      &Intel.vector_kd[0], &Intel.ierr);
+                      (void *)&wrapper_ODE_RHS, &Intel.h, &Intel.hm, &Intel.ep,
+                      &Intel.tr, &Intel.vector_dpar[0], &Intel.vector_kd[0],
+                      &Intel.ierr);
       if (Intel.ierr != 0) {
         printf("\n dodesol_rkm9mkn routine exited with error code %4d\n",
                Intel.ierr);
@@ -335,8 +335,8 @@ void RunIntegrator::Integrate_Liquid_Phase(
 
       // use LSODA
     case 2001:
-      dlsoda_((void *)wrapper_ODE_RHS, &n, y, &time_current,
-              &time_step, &LSODA.ITOL, &LSODA.RTOL, &LSODA.ATOL, &LSODA.ITASK,
+      dlsoda_((void *)wrapper_ODE_RHS, &n, y, &time_current, &time_step,
+              &LSODA.ITOL, &LSODA.RTOL, &LSODA.ATOL, &LSODA.ITASK,
               &LSODA.ISTATE, &LSODA.IOPT, &LSODA.vector_RWORK[0], &LSODA.LRW,
               &LSODA.vector_IWORK[0], &LSODA.LIW,
               (void *)wrapper_Jacobian_Matrix_Odepack_LSODA, &LSODA.JT);
@@ -346,8 +346,8 @@ void RunIntegrator::Integrate_Liquid_Phase(
       }
       break;
     case 2002:
-      dlsoda_((void *)wrapper_ODE_RHS, &n, y, &time_current,
-              &time_step, &LSODA.ITOL, &LSODA.RTOL, &LSODA.ATOL, &LSODA.ITASK,
+      dlsoda_((void *)wrapper_ODE_RHS, &n, y, &time_current, &time_step,
+              &LSODA.ITOL, &LSODA.RTOL, &LSODA.ATOL, &LSODA.ITASK,
               &LSODA.ISTATE, &LSODA.IOPT, &LSODA.vector_RWORK[0], &LSODA.LRW,
               &LSODA.vector_IWORK[0], &LSODA.LIW,
               (void *)wrapper_Jacobian_Matrix_Odepack_LSODA, &LSODA.JT);

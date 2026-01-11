@@ -169,5 +169,4 @@ public:
 /* wrappers to allow calling the member functions from Fortran */
 // https://isocpp.org/wiki/faq/pointers-to-members
 
-
 #endif
