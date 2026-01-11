@@ -28,13 +28,9 @@ void SolverCalculation::ODE_RHS_Liquid_Phase(int *n, double *t, double *y,
       Concentration[i] = y[i];
     }
   }
-  cout << "test 50\n";
   Evaluate_Thermodynamic_Parameters(Concentration[Number_Species]);
-  cout << "test 51\n";
   Calculate_Rate_Constant(Concentration[Number_Species], SpeciesLossAll);
-  cout << "test 52\n";
   CalculateReactionRates(Concentration, Kf, Kr);
-  cout << "test 53\n";
 
   SpeciesConcentrationChange = SpeciesLossRate(Rates, SpeciesLossAll);
 
@@ -56,7 +52,7 @@ void SolverCalculation::ODE_RHS_Liquid_Phase(int *n, double *t, double *y,
                          // moles/l * Na); //*/
 
   f[Number_Species] = qtot; // Temperature equation
-  cout << ctot << " " << qint << " " << qtot << "\n";
+  // cout << ctot << " " << qint << " " << qtot << "\n";
 
   // Settings relevant rates to zero
   if (InitialDataConstants.ConstantConcentration) {

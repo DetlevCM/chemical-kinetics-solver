@@ -188,13 +188,12 @@ void RunIntegrator::Integrate_Liquid_Phase(
   }
   ODE_RHS::Rates.resize(ODE_RHS::Number_Reactions);
 //*/
-  cout << "test 18\n";
+
   // prepare the Jacobian matrix
   solver_calculation.Prepare_Jacobian_Matrix(solver_calculation.JacobianMatrix,
                                              reaction_mechanism.reactions);
 
   // Get the rate Constants, forward and backwards
-  cout << "test 19\n";
   solver_calculation.Calculate_Rate_Constant(
       // solver_calculation.Kf,
       // solver_calculation.Kr,
@@ -205,7 +204,6 @@ void RunIntegrator::Integrate_Liquid_Phase(
                                         // solver_calculation.delta_n
   );
 
-  cout << "test 20\n";
   solver_calculation.CalculateReactionRates(
       // solver_calculation.Rates,
       solver_calculation.Concentration, solver_calculation.Kf,
@@ -213,7 +211,6 @@ void RunIntegrator::Integrate_Liquid_Phase(
                             // solver_calculation.ReactantsForReactions,
                             // solver_calculation.ProductsForReactions
   );
-  cout << "test 21\n";
   // Don't forget Rates Analysis for Mechanism Reduction at t=0 - or is this
   // nonsense?
   if (InitialParameters.MechanismReduction.ReduceReactions != 0) {
@@ -221,7 +218,6 @@ void RunIntegrator::Integrate_Liquid_Phase(
         KeyRates, solver_calculation.Rates,
         InitialParameters.MechanismReduction.ReduceReactions);
   }
-  cout << "test 22\n";
   // do not forget output at time = 0
   WriteOutput::StreamConcentrations(
       Concentration_OFStream, InitialParameters.Solver_Parameters.separator,
@@ -229,24 +225,20 @@ void RunIntegrator::Integrate_Liquid_Phase(
       InitialParameters.GasPhasePressure, solver_calculation.Concentration
       // SpeciesConcentration
   );
-  cout << "test 23\n";
   // Only stream if the user desires it, still doesn't prevent file creation...
   if (InitialParameters.PrintReacRates) {
     WriteOutput::StreamReactionRates(
         ReactionRates_OFStream, InitialParameters.Solver_Parameters.separator,
         time_current, solver_calculation.Rates);
   }
-  cout << "test 24\n";
   // not happy with this more widely available, needs a cleanup...
   vector<vector<size_t>> ReactionsForSpeciesSelectedForRates;
   // Not the best place to put it, but OK for now:
   if (InitialParameters.MechanismAnalysis.RatesOfSpecies) {
     size_t tempi, tempj;
-    cout << "test 25\n";
     vector<vector<size_t>> TempMatrix;
     vector<size_t> TempRow;
     size_t Temp_Number_Species = reaction_mechanism.species.size();
-    cout << "test 26\n";
     for (tempi = 0; tempi < reaction_mechanism.reactions_size(); tempi++) {
       TempRow.resize(reaction_mechanism.species.size());
       for (tempj = 0; tempj < Temp_Number_Species; tempj++) {
@@ -284,7 +276,7 @@ void RunIntegrator::Integrate_Liquid_Phase(
         InitialParameters.MechanismAnalysis.SpeciesSelectedForRates,
         ReactionsForSpeciesSelectedForRates);
   }
-  cout << "test 40\n";
+
   solver_calculation.SpeciesConcentrationChange =
       // vector< double > SpeciesConcentrationChange =
       solver_calculation.SpeciesLossRate(solver_calculation.Rates,
@@ -298,11 +290,10 @@ void RunIntegrator::Integrate_Liquid_Phase(
   // start the clock:
   cpu_time_begin = cpu_time_current = clock();
 
-  cout << "test 41\n";
   do {
     time_step = time_current + time_step1;
 
-    cout << "debug " << time_current << " " << time_step1 << "\n";
+    // cout << "debug " << time_current << " " << time_step1 << "\n";
 
     // https://en.cppreference.com/w/cpp/language/switch
     switch (solver_choice) // begin ODE Solver switch
