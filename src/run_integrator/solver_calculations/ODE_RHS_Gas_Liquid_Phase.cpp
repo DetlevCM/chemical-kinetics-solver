@@ -76,7 +76,7 @@ void SolverCalculation::ODE_RHS_Gas_Liquid_Phase(int *n, double *time_current,
     Evaluate_Thermodynamic_Parameters(Concentration[Number_Species]);
     Calculate_Rate_Constant(Concentration[Number_Species], SpeciesLossAll);
   }
-  CalculateReactionRates(Kf, Kr);
+  CalculateReactionRates(Concentration, Kf, Kr);
   SpeciesConcentrationChange = SpeciesLossRate(Rates, SpeciesLossAll);
 
   double ctot = 0;

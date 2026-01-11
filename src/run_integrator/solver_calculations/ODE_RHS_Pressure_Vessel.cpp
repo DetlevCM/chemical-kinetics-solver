@@ -51,7 +51,7 @@ void SolverCalculation::ODE_RHS_Pressure_Vessel(int *n, double *time_current,
   }
   // CalculateReactionRates(Rates, Concentration, Kf, Kr, ReactantsForReactions,
   // ProductsForReactions);
-  CalculateReactionRates(Kf, Kr);
+  CalculateReactionRates(Concentration, Kf, Kr);
   SpeciesConcentrationChange = SpeciesLossRate(Rates, SpeciesLossAll);
 
   double ctot = 0;

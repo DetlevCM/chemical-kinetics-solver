@@ -59,17 +59,29 @@ using std::stod; // for C++ string to double
 
 // use a global glass so we can use a function to redirect
 extern SolverCalculation solver_calculation;
+// SolverCalculation solver_calculation;
 
-static void wrapper_ODE_RHS_Liquid_Phase(int *n, double *t, double *y,
-                                         double *f) {
-  solver_calculation.ODE_RHS_Liquid_Phase(n, t, y, f);
-}
-static void wrapper_Jacobian_Matrix_Odepack_LSODA(int *n, double *t, double *y,
-                                                  double *ML, double *MU,
-                                                  double *a, int *NROWPD) {
+void wrapper_ODE_RHS_Liquid_Phase(int *n, double *t, double *y, double *f);
 
-  solver_calculation.Jacobian_Matrix_Odepack_LSODA(n, t, y, ML, MU, a, NROWPD);
+void wrapper_Jacobian_Matrix_Odepack_LSODA(int *n, double *t, double *y,
+                                           double *ML, double *MU, double *a,
+                                           int *NROWPD);
+
+/*
+static void* wrapper_ODE_RHS_Liquid_Phase(int *n, double *t, double *y,
+double *f) {
+cout << "test 45\n";
+cout << solver_calculation.Concentration.size() << "\n";
+cout << solver_calculation.Rates.size() << "\n";
+solver_calculation.ODE_RHS_Liquid_Phase(n, t, y, f);
 }
+static void* wrapper_Jacobian_Matrix_Odepack_LSODA(int *n, double *t, double *y,
+double *ML, double *MU,
+double *a, int *NROWPD) {
+
+solver_calculation.Jacobian_Matrix_Odepack_LSODA(n, t, y, ML, MU, a, NROWPD);
+}
+//*/
 
 class Main {
 

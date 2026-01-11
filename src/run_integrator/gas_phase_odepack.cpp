@@ -214,7 +214,7 @@ void RunIntegrator::Integrate_Gas_Phase_Odepack_LSODA(
   solver_calculation.CalculateReactionRates(
       // solver_calculation.Rates,
       // SpeciesConcentration,
-      solver_calculation.Kf,
+      solver_calculation.Concentration, solver_calculation.Kf,
       solver_calculation.Kr //,
                             // solver_calculation.ReactantsForReactions,
                             // solver_calculation.ProductsForReactions

@@ -118,8 +118,9 @@ void SolverCalculation::Calculate_Rate_Constant(
 }
 
 // vector< double > CalculateReactionRates(
-void SolverCalculation::CalculateReactionRates(vector<double> Forward_Rates,
-                                               vector<double> Reverse_Rates) {
+void SolverCalculation::CalculateReactionRates(
+    const vector<double> &Concentration, vector<double> Forward_Rates,
+    vector<double> Reverse_Rates) {
 
   for (size_t i = 0; i < ReactantsForReactions.size();
        i++) { // Forward Rates determined by the reactants
@@ -165,8 +166,11 @@ void SolverCalculation::CalculateReactionRates(vector<double> Forward_Rates,
             cout << i << " " << Rates[i] << "   " << Forward_Rates[i] << "   "
     << Reverse_Rates[i] << "\r\n";
     }//*/
-    // cout << i << " " << Rates[i] << "   " << Forward_Rates[i] << "   " <<
-    // Reverse_Rates[i] << "\r\n" << std::flush;
+
+    /*
+    cout << i << " " << Rates[i] << "   " << Forward_Rates[i] << "   " <<
+    Reverse_Rates[i] << "\r\n" << std::flush;
+    //*/
   }
 }
 

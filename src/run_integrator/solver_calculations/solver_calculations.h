@@ -82,6 +82,7 @@ public:
 
   vector<double> Rates;
   vector<double> Concentration;
+  vector<double> Calc_Concentration;
   vector<double> SpeciesConcentrationChange;
 
 public:
@@ -115,7 +116,8 @@ public:
 
     Concentration.resize(number_species +
                          1); // 1 extra position for temperature
-    SpeciesConcentrationChange.resize(number_species + 1);
+    SpeciesConcentrationChange.resize(number_species +
+                                      2); // temperature + one extra position?
   };
 
   // The ODE RHS functions are split - regular initial value & pressure vessel
@@ -135,7 +137,8 @@ public:
                                const vector<TrackSpecies> &SpeciesAll //,
   );
 
-  void CalculateReactionRates(vector<double> Forward_Rates,
+  void CalculateReactionRates(const vector<double> &Concentration,
+                              vector<double> Forward_Rates,
                               vector<double> Reverse_Rates //,
   );
 
@@ -167,7 +170,7 @@ public:
     vector<JacobianSpecies> Species;
   };
 
-  inline static vector<JacobianData> JacobianMatrix;
+  vector<JacobianData> JacobianMatrix;
 
   // Jacobian Matrix for plain Arrhenius expressions only
 

@@ -33,5 +33,5 @@ void WriteOutput::StreamReactionRates(ofstream &OutputFile,
   for (i = 0; i < ReactionRates.size(); i++) {
     OutputFile << separator << ReactionRates[i];
   }
-  OutputFile << "\n";
+  OutputFile << "\n" << std::flush;
 }

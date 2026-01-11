@@ -8,7 +8,25 @@
 #include "./main.h"
 
 // use a global glass so we can use a function to redirect
+// extern SolverCalculation solver_calculation;
 SolverCalculation solver_calculation;
+
+void wrapper_ODE_RHS_Liquid_Phase(int *n, double *t, double *y, double *f) {
+  cout << "test 45\n";
+  cout << solver_calculation.Concentration.size() << "\n";
+  cout << solver_calculation.Rates.size() << "\n";
+  solver_calculation.ODE_RHS_Liquid_Phase(n, t, y, f);
+}
+void wrapper_Jacobian_Matrix_Odepack_LSODA(int *n, double *t, double *y,
+                                           double *ML, double *MU, double *a,
+                                           int *NROWPD) {
+
+  solver_calculation.Jacobian_Matrix_Odepack_LSODA(n, t, y, ML, MU, a, NROWPD);
+}
+
+// use a global glass so we can use a function to redirect to the internal
+// member functions
+// SolverCalculation solver_calculation;
 
 // http://stackoverflow.com/questions/13600204/checking-if-argvi-exists-c
 // argc = number of arguments

@@ -28,17 +28,13 @@ void SolverCalculation::ODE_RHS_Liquid_Phase(int *n, double *t, double *y,
       Concentration[i] = y[i];
     }
   }
-
-  // Evaluate_Thermodynamic_Parameters(CalculatedThermo, species,
-  // Concentration[Number_Species]);
+  cout << "test 50\n";
   Evaluate_Thermodynamic_Parameters(Concentration[Number_Species]);
-  // Calculate_Rate_Constant(Kf, Kr,
-  // Concentration[Number_Species],ReactionParameters, CalculatedThermo,
-  // SpeciesLossAll, delta_n);
+  cout << "test 51\n";
   Calculate_Rate_Constant(Concentration[Number_Species], SpeciesLossAll);
-  // CalculateReactionRates(Rates, Concentration, Kf, Kr, ReactantsForReactions,
-  // ProductsForReactions);
-  CalculateReactionRates(Kf, Kr);
+  cout << "test 52\n";
+  CalculateReactionRates(Concentration, Kf, Kr);
+  cout << "test 53\n";
 
   SpeciesConcentrationChange = SpeciesLossRate(Rates, SpeciesLossAll);
 
@@ -60,15 +56,15 @@ void SolverCalculation::ODE_RHS_Liquid_Phase(int *n, double *t, double *y,
                          // moles/l * Na); //*/
 
   f[Number_Species] = qtot; // Temperature equation
-  // cout << ctot << " " << qint << " " << qtot << "\n";
+  cout << ctot << " " << qint << " " << qtot << "\n";
 
   // Settings relevant rates to zero
   if (InitialDataConstants.ConstantConcentration) {
     // cout << "preparing constant species \n";
     for (size_t i = 0; i < Number_Species; i++) {
       if (InitialDataConstants.ConstantSpecies[i] != 0) {
-        f[i] = 0; // concentration reset
-                  // cout << "f[" << i << "] = " << f[i];
+        f[i] = 0.0; // concentration reset
+                    // cout << "f[" << i << "] = " << f[i];
       }
     }
   }
@@ -78,7 +74,7 @@ void SolverCalculation::ODE_RHS_Liquid_Phase(int *n, double *t, double *y,
       f[Number_Species] = InitialDataConstants.TGA_rate;
     } else if (Concentration[Number_Species] >=
                InitialDataConstants.TGA_target) {
-      f[Number_Species] = 0;
+      f[Number_Species] = 0.0;
     }
   }
 
@@ -86,7 +82,7 @@ void SolverCalculation::ODE_RHS_Liquid_Phase(int *n, double *t, double *y,
   // if temperature blows up, freeze it
   //*
   if (qtot != qtot) {
-    f[Number_Species] = 0;
+    f[Number_Species] = 0.0;
   }
   //*/
 }

@@ -43,7 +43,7 @@ void WriteOutput::StreamConcentrations(ofstream &Concentration_OFStream,
   if (GasPhasePressure) {
     Concentration_OFStream << separator << Pressure;
   }
-  Concentration_OFStream << "\n";
+  Concentration_OFStream << "\n" << std::flush;
 }
 
 void WriteOutput::StreamConcentrationsV2(ofstream &Concentration_OFStream,
@@ -58,5 +58,5 @@ void WriteOutput::StreamConcentrationsV2(ofstream &Concentration_OFStream,
     Concentration_OFStream << Concentration[i] << separator;
   }
   Concentration_OFStream << Concentration[Number_Species] << separator;
-  Concentration_OFStream << "\n";
+  Concentration_OFStream << "\n" << std::flush;
 }

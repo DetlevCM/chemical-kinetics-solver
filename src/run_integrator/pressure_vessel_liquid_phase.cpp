@@ -225,7 +225,7 @@ void RunIntegrator::Integrate_Pressure_Vessel_Liquid_Phase(
   solver_calculation.CalculateReactionRates(
       // solver_calculation.Rates,
       // SpeciesConcentration,
-      solver_calculation.Kf,
+      solver_calculation.Concentration, solver_calculation.Kf,
       solver_calculation.Kr //,
                             // solver_calculation.ReactantsForReactions,
                             // solver_calculation.ProductsForReactions
