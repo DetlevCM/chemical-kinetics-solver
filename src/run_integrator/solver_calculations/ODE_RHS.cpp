@@ -41,7 +41,7 @@ void SolverCalculation::ODE_RHS(int *n, double *t, double *y, double *f) {
   Calculate_Rate_Constant(Concentration[Number_Species], SpeciesLossAll);
   CalculateReactionRates(Concentration, Kf, Kr);
 
-  SpeciesConcentrationChange = SpeciesLossRate(Rates, SpeciesLossAll);
+  SpeciesConcentrationChange = SpeciesLossRate(SpeciesLossAll);
 
   double ctot = 0.0;
   double qint = 0.0;

@@ -26,7 +26,7 @@ void WriteOutput::WriteLabelsReactionRates(string filename, string separator,
 void WriteOutput::StreamReactionRates(ofstream &OutputFile,
                                       const string separator,
                                       double CurrentTime,
-                                      vector<double> &ReactionRates) {
+                                      const vector<double> &ReactionRates) {
   size_t i;
   OutputFile << CurrentTime; // time
 

@@ -92,9 +92,9 @@ void RatesAnalysis::Prepare_Print_Rates_Per_Species(
 }
 
 void RatesAnalysis::Print_Rates_Per_Species(
-    vector<TrackSpecies> &ProductsForRates,
-    vector<TrackSpecies> &ReactantsForRates, const string separator,
-    vector<double> &Rates, double current_time, vector<Species> species,
+    const vector<TrackSpecies> &ProductsForRates,
+    const vector<TrackSpecies> &ReactantsForRates, const string separator,
+    const vector<double> &Rates, double current_time, vector<Species> species,
     vector<size_t> SelectedSpeciesID,
     vector<vector<size_t>> ReactionsForSpeciesSelectedForRates) {
   size_t i;

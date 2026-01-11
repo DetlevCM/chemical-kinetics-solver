@@ -16,7 +16,35 @@
 
 class SolverCalculation {
 
+  // private member variables, needed for the calculations:
+private:
+  // vectors to provide performant calculation structures:
+  vector<TrackSpecies> ReactantsForReactions;
+  vector<TrackSpecies> ProductsForReactions;
+
+  // vector of data needed for the calculation, really just set once
+  vector<double> delta_n;
+
+  // variables used actively in the calculation
+  vector<Species::ThermodynamicData::CalculatedThermodynamics> CalculatedThermo;
+
+  vector<double> Rates;
+
+  // functions needed for access to the private variables:
 public:
+  const vector<TrackSpecies> &Get_ReactantsForReactions() {
+    return ReactantsForReactions;
+  };
+  const vector<double> &Get_Rates() { return Rates; };
+
+public:
+  // cannot make this private just yet
+  vector<double> Concentration;
+  vector<double> Kf;
+  vector<double> Kr;
+  vector<TrackSpecies> SpeciesLossAll; // vector for recording species loss
+  vector<double> SpeciesConcentrationChange;
+
   /// PetroOxy Additional variables
 
   size_t OxyGasSpeciesID;
@@ -43,30 +71,13 @@ public:
 
   ConstantInitRHSODE InitialDataConstants;
 
-  vector<TrackSpecies> ReactantsForReactions;
-  vector<TrackSpecies> ProductsForReactions;
-
-  vector<TrackSpecies> SpeciesLossAll; // vector for recording species loss
-
-  // vector< ReactionParameter > ReactionParameters; // tidier than reactions
-  // vector
   vector<Reaction::ReactionParameter>
       ReactionParameters; // tidier than reactions vector
 
   size_t Number_Species;   // old variable
   size_t Number_Reactions; // old variable
 
-  vector<Species::ThermodynamicData::CalculatedThermodynamics> CalculatedThermo;
-  vector<double> Kf;
-  vector<double> Kr;
-  vector<double> delta_n;
-
   vector<Species> species; // quickest and easiest way right now...
-
-  vector<double> Rates;
-  vector<double> Concentration;
-  vector<double> Calc_Concentration;
-  vector<double> SpeciesConcentrationChange;
 
 public:
   // cannot use the object in the solver with a member function
@@ -122,8 +133,7 @@ public:
                               vector<double> Reverse_Rates //,
   );
 
-  vector<double> SpeciesLossRate(const vector<double> &Combined_Rates,
-                                 const vector<TrackSpecies> &SpeciesLossList);
+  vector<double> SpeciesLossRate(const vector<TrackSpecies> &SpeciesLossList);
 
   //// NOTE: included in solver calculations for ease of implementation
 

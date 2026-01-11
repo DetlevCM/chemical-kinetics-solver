@@ -52,7 +52,7 @@ public:
   static void WriteLabelsReactionRates(string, string, size_t);
 
   static void StreamReactionRates(ofstream &, const string, double,
-                                  vector<double> &);
+                                  const vector<double> &Rates);
 
   // output of input files
 

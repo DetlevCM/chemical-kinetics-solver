@@ -175,15 +175,13 @@ void SolverCalculation::CalculateReactionRates(
 }
 
 vector<double> SolverCalculation::SpeciesLossRate(
-    const vector<double> &Combined_Rates,
     const vector<TrackSpecies> &SpeciesLossList) {
   vector<double> temp_species_loss(Number_Species);
 
   for (size_t i = 0; i < SpeciesLossList.size(); i++) {
     temp_species_loss[SpeciesLossList[i].SpeciesID] =
         temp_species_loss[SpeciesLossList[i].SpeciesID] +
-        (Combined_Rates[SpeciesLossList[i].ReactionID] *
-         SpeciesLossList[i].coefficient);
+        (Rates[SpeciesLossList[i].ReactionID] * SpeciesLossList[i].coefficient);
   }
 
   /*

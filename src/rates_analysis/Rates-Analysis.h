@@ -65,13 +65,12 @@ public:
                              // vector< SingleReactionData >&
   );
 
-  static void Print_Rates_Per_Species(vector<TrackSpecies> &,
-                                      vector<TrackSpecies> &, const string,
-                                      vector<double> &, double,
-                                      vector<Species> species, vector<size_t>,
-                                      vector<vector<size_t>> //,
-                                      // vector< SingleReactionData >&
-  );
+  static void Print_Rates_Per_Species(
+      const vector<TrackSpecies> &ProductsForRates,
+      const vector<TrackSpecies> &ReactantsForRates, const string separator,
+      const vector<double> &Rates, double current_time, vector<Species> species,
+      vector<size_t> SelectedSpeciesID,
+      vector<vector<size_t>> ReactionsForSpeciesSelectedForRates);
 };
 
 #endif

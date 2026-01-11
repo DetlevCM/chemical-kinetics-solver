@@ -184,7 +184,7 @@ void RunIntegrator::Integrate_Liquid_Phase(
   // nonsense?
   if (InitialParameters.MechanismReduction.ReduceReactions != 0) {
     MechanismReduction::ReactionRateImportance(
-        KeyRates, solver_calculation.Rates,
+        KeyRates, solver_calculation.Get_Rates(),
         InitialParameters.MechanismReduction.ReduceReactions);
   }
 
@@ -212,7 +212,7 @@ void RunIntegrator::Integrate_Liquid_Phase(
   if (InitialParameters.PrintReacRates) {
     WriteOutput::StreamReactionRates(
         ReactionRates_OFStream, InitialParameters.Solver_Parameters.separator,
-        time_current, solver_calculation.Rates);
+        time_current, solver_calculation.Get_Rates());
   }
   // not happy with this more widely available, needs a cleanup...
   vector<vector<size_t>> ReactionsForSpeciesSelectedForRates;
@@ -261,9 +261,7 @@ void RunIntegrator::Integrate_Liquid_Phase(
   }
 
   solver_calculation.SpeciesConcentrationChange =
-      // vector< double > SpeciesConcentrationChange =
-      solver_calculation.SpeciesLossRate(solver_calculation.Rates,
-                                         solver_calculation.SpeciesLossAll);
+      solver_calculation.SpeciesLossRate(solver_calculation.SpeciesLossAll);
 
   /* -- Got values at t = 0 -- */
 
@@ -360,10 +358,10 @@ void RunIntegrator::Integrate_Liquid_Phase(
     } // end of ODE solver switch
 
     if (InitialParameters.MechanismAnalysis.MaximumRates) {
-      RatesAnalysis::MaxRatesAnalysis(RatesAnalysisData,
-                                      ProductsForRatesAnalysis,
-                                      solver_calculation.ReactantsForReactions,
-                                      solver_calculation.Rates, time_current);
+      RatesAnalysis::MaxRatesAnalysis(
+          RatesAnalysisData, ProductsForRatesAnalysis,
+          solver_calculation.Get_ReactantsForReactions(),
+          solver_calculation.Get_Rates(), time_current);
     }
 
     if (InitialParameters.MechanismAnalysis.RatesAnalysisAtTime &&
@@ -371,18 +369,21 @@ void RunIntegrator::Integrate_Liquid_Phase(
                 .RatesAnalysisAtTimeData[RatesAnalysisTimepoint] ==
             time_current) {
       RatesAnalysis::RatesAnalysisAtTimes(
-          ProductsForRatesAnalysis, solver_calculation.ReactantsForReactions,
-          solver_calculation.Rates, time_current, reaction_mechanism.species,
-          reaction_mechanism.reactions);
+          ProductsForRatesAnalysis,
+          solver_calculation.Get_ReactantsForReactions(),
+          solver_calculation.Get_Rates(), time_current,
+          reaction_mechanism.species, reaction_mechanism.reactions);
       RatesAnalysisTimepoint = RatesAnalysisTimepoint + 1;
     }
 
     // Function for new per species output
     if (InitialParameters.MechanismAnalysis.RatesOfSpecies) {
       RatesAnalysis::Print_Rates_Per_Species(
-          ProductsForRatesAnalysis, solver_calculation.ReactantsForReactions,
+          ProductsForRatesAnalysis,
+          solver_calculation.Get_ReactantsForReactions(),
           InitialParameters.Solver_Parameters.separator,
-          solver_calculation.Rates, time_current, reaction_mechanism.species,
+          solver_calculation.Get_Rates(), time_current,
+          reaction_mechanism.species,
           InitialParameters.MechanismAnalysis.SpeciesSelectedForRates,
           ReactionsForSpeciesSelectedForRates);
     }
@@ -390,8 +391,8 @@ void RunIntegrator::Integrate_Liquid_Phase(
     if (InitialParameters.MechanismAnalysis.StreamRatesAnalysis) {
       RatesAnalysis::StreamRatesAnalysis(
           OutputFilenames.Prefix, ProductsForRatesAnalysis,
-          solver_calculation.ReactantsForReactions, solver_calculation.Rates,
-          time_current, Number_Species);
+          solver_calculation.Get_ReactantsForReactions(),
+          solver_calculation.Get_Rates(), time_current, Number_Species);
     }
 
     double pressure = 0;
@@ -433,7 +434,7 @@ void RunIntegrator::Integrate_Liquid_Phase(
 
     if (InitialParameters.MechanismReduction.ReduceReactions != 0) {
       MechanismReduction::ReactionRateImportance(
-          KeyRates, solver_calculation.Rates,
+          KeyRates, solver_calculation.Get_Rates(),
           InitialParameters.MechanismReduction.ReduceReactions);
     }
 
