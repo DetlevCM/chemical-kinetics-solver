@@ -101,6 +101,17 @@ void Process_User_Input(
 
 
 // Making Scheme Irreversible
+
+void Calculate_Rate_Constant(
+		vector< double >& Kf,
+		vector< double >& Kr,
+		const double Temperature,
+		const vector< Reaction::ReactionParameter >& ReactionParameters,
+		const vector< Species::ThermodynamicData::CalculatedThermodynamics >& CalculatedThermo,
+		const vector< TrackSpecies >& SpeciesAll,
+		const vector< double >& Delta_N
+);
+
 vector< SingleReactionData > Make_Irreversible(
 		vector< SingleReactionData > Reactions,
 		const vector< Species > species,

@@ -111,7 +111,11 @@ void RunIntegrator::Integrate_Liquid_Phase(
 	//Jacobian_ODE_RHS::Concentration.resize(Number_Species + 1);
 	//Jacobian_ODE_RHS::Concentration = SpeciesConcentration; // set it to the initial values, also ensures it has the right length
 	
-	double* y = &solver_calculation.Concentration[0];//.data(); //SpeciesConcentration.data();
+//// TODO: clean up
+solver_calculation.Concentration = SpeciesConcentration;
+
+	//double* y = &solver_calculation.Concentration[0];//.data(); //SpeciesConcentration.data();
+	double* y = solver_calculation.Concentration.data(); //SpeciesConcentration.data();
 	//cout << SpeciesConcentration.size() << " " << Number_Species << " " << n << "\n";
 
 	double time_current, time_step, time_step1, time_end;
@@ -159,14 +163,14 @@ void RunIntegrator::Integrate_Liquid_Phase(
 		for(i=0;i<InitialParameters.ConstantSpecies.size();i++)
 		{// fix initial concentrations
 			solver_calculation.InitialDataConstants.ConstantSpecies[InitialParameters.ConstantSpecies[i]] =
-					SpeciesConcentration[InitialParameters.ConstantSpecies[i]];
+					solver_calculation.Concentration[InitialParameters.ConstantSpecies[i]];
 		}
 	}
 
 	solver_calculation.Evaluate_Thermodynamic_Parameters(
-		solver_calculation.CalculatedThermo, 
-		reaction_mechanism.species, 
-		SpeciesConcentration[Number_Species]);
+		//solver_calculation.CalculatedThermo, 
+		//reaction_mechanism.species, 
+		solver_calculation.Concentration[Number_Species]);
 
 	/*for(i=0;i<Number_Species;i++)
 	{
@@ -194,20 +198,22 @@ void RunIntegrator::Integrate_Liquid_Phase(
 	// Get the rate Constants, forward and backwards
 	
 	solver_calculation.Calculate_Rate_Constant(
-		solver_calculation.Kf,
-		solver_calculation.Kr,
-		SpeciesConcentration[Number_Species],
-		solver_calculation.ReactionParameters, 
-		solver_calculation.CalculatedThermo,
-		solver_calculation.SpeciesLossAll,
-		solver_calculation.delta_n);
+		//solver_calculation.Kf,
+		//solver_calculation.Kr,
+		solver_calculation.Concentration[Number_Species],
+		//solver_calculation.ReactionParameters, 
+		//solver_calculation.CalculatedThermo,
+		solver_calculation.SpeciesLossAll//,
+		//solver_calculation.delta_n
+		);
 	solver_calculation.CalculateReactionRates(
-		solver_calculation.Rates, 
-		SpeciesConcentration, 
+		//solver_calculation.Rates, 
+		//solver_calculation.Concentration, 
 		solver_calculation.Kf, 
-		solver_calculation.Kr, 
-		solver_calculation.ReactantsForReactions,
-		solver_calculation.ProductsForReactions);
+		solver_calculation.Kr//, 
+		//solver_calculation.ReactantsForReactions,
+		//solver_calculation.ProductsForReactions
+		);
 
 	// Don't forget Rates Analysis for Mechanism Reduction at t=0 - or is this nonsense?
 	if(InitialParameters.MechanismReduction.ReduceReactions != 0)
@@ -225,7 +231,8 @@ void RunIntegrator::Integrate_Liquid_Phase(
 			Number_Species,
 			time_current,
 			InitialParameters.GasPhasePressure,
-			SpeciesConcentration
+			solver_calculation.Concentration
+			//SpeciesConcentration
 	);
 
 	// Only stream if the user desires it, still doesn't prevent file creation...
@@ -294,8 +301,8 @@ void RunIntegrator::Integrate_Liquid_Phase(
 		);
 	}
 
-
-	vector< double > SpeciesConcentrationChange = 
+	solver_calculation.SpeciesConcentrationChange =
+	//vector< double > SpeciesConcentrationChange = 
 	SolverCalculation::SpeciesLossRate(
 		Number_Species, 
 		solver_calculation.Rates, 
@@ -316,7 +323,7 @@ void RunIntegrator::Integrate_Liquid_Phase(
 	{
 		time_step = time_current + time_step1;
 
-		cout << "debug " << time_current << " " << time_step1 << "\n";
+		//cout << "debug " << time_current << " " << time_step1 << "\n";
 
 		// https://en.cppreference.com/w/cpp/language/switch
 		switch(solver_choice) // begin ODE Solver switch
@@ -326,7 +333,7 @@ void RunIntegrator::Integrate_Liquid_Phase(
 		// case IntelODE
 		case 1001:
 			dodesol_rkm9mkn(&Intel.vector_ipar[0], &n, &time_current, &time_step,
-					y,(void*) &SolverCalculation::ODE_RHS_Liquid_Phase,
+					y,(void*) &wrapper_ODE_RHS_Liquid_Phase,
 					&Intel.h, &Intel.hm, &Intel.ep, &Intel.tr,
 					&Intel.vector_dpar[0], &Intel.vector_kd[0], &Intel.ierr
 			);
@@ -335,7 +342,7 @@ void RunIntegrator::Integrate_Liquid_Phase(
 
 		case 1002 :
 			dodesol_rkm9mka(&Intel.vector_ipar[0], &n, &time_current, &time_step,
-					y,(void*) &SolverCalculation::ODE_RHS_Liquid_Phase,
+					y,(void*) &wrapper_ODE_RHS_Liquid_Phase,
 					(void*) &SolverCalculation::Jacobian_Matrix_Intel, &Intel.h, &Intel.hm, &Intel.ep, &Intel.tr,
 					&Intel.vector_dpar[0], &Intel.vector_kd[0], &Intel.ierr
 			);
@@ -344,7 +351,7 @@ void RunIntegrator::Integrate_Liquid_Phase(
 
 		case 1003 :
 			dodesol_mk52lfn(&Intel.vector_ipar[0], &n, &time_current, &time_step,
-					y,(void*) &SolverCalculation::ODE_RHS_Liquid_Phase,
+					y,(void*) &wrapper_ODE_RHS_Liquid_Phase,
 					&Intel.h, &Intel.hm, &Intel.ep, &Intel.tr,
 					&Intel.vector_dpar[0], &Intel.vector_kd[0], &Intel.ierr
 			);
@@ -353,7 +360,7 @@ void RunIntegrator::Integrate_Liquid_Phase(
 
 		case 1004 :
 			dodesol_mk52lfa(&Intel.vector_ipar[0], &n, &time_current, &time_step,
-					y,(void*) &SolverCalculation::ODE_RHS_Liquid_Phase,
+					y,(void*) &wrapper_ODE_RHS_Liquid_Phase,
 					(void*) &SolverCalculation::Jacobian_Matrix_Intel, &Intel.h, &Intel.hm, &Intel.ep, &Intel.tr,
 					&Intel.vector_dpar[0], &Intel.vector_kd[0], &Intel.ierr
 			);
@@ -363,7 +370,7 @@ void RunIntegrator::Integrate_Liquid_Phase(
 
 			// use LSODA
 		case 2001 :
-//			dlsoda_((void*) &SolverCalculation::ODE_RHS_Liquid_Phase,&n,y,&time_current,&time_step,
+//			dlsoda_((void*) &wrapper_ODE_RHS_Liquid_Phase,&n,y,&time_current,&time_step,
 			dlsoda_((void*) wrapper_ODE_RHS_Liquid_Phase,&n,y,&time_current,&time_step,
 					&LSODA.ITOL,&LSODA.RTOL,&LSODA.ATOL,
 					&LSODA.ITASK,&LSODA.ISTATE,&LSODA.IOPT,
@@ -372,7 +379,7 @@ void RunIntegrator::Integrate_Liquid_Phase(
 			if (LSODA.ISTATE<0){printf("\n LSODA routine exited with error code %4d\n",LSODA.ISTATE);exit(1);}
 			break;
 		case 2002 :
-//			dlsoda_((void*) &SolverCalculation::ODE_RHS_Liquid_Phase,&n,y,&time_current,&time_step,
+//			dlsoda_((void*) &wrapper_ODE_RHS_Liquid_Phase,&n,y,&time_current,&time_step,
 			dlsoda_((void*) wrapper_ODE_RHS_Liquid_Phase,&n,y,&time_current,&time_step,
 					&LSODA.ITOL,&LSODA.RTOL,&LSODA.ATOL,
 					&LSODA.ITASK,&LSODA.ISTATE,&LSODA.IOPT,
@@ -463,7 +470,7 @@ void RunIntegrator::Integrate_Liquid_Phase(
 				Number_Species,
 				time_current,
 				pressure,
-				SpeciesConcentration
+				solver_calculation.Concentration
 		);
 
 		if(InitialParameters.PrintReacRates)

@@ -177,8 +177,9 @@ void RunIntegrator::Integrate_Gas_Phase_Odepack_LSODA(
 	}
 
 	solver_calculation.Evaluate_Thermodynamic_Parameters(
-		solver_calculation.CalculatedThermo, 
-		solver_calculation.species, SpeciesConcentration[Number_Species]);
+		//solver_calculation.CalculatedThermo, 
+		//solver_calculation.species, 
+		SpeciesConcentration[Number_Species]);
 
 	/*for(i=0;i<Number_Species;i++)
 	{
@@ -203,20 +204,21 @@ void RunIntegrator::Integrate_Gas_Phase_Odepack_LSODA(
 
 	// Get the rate Constants, forward and backwards
 	solver_calculation.Calculate_Rate_Constant(
-		solver_calculation.Kf,
-		solver_calculation.Kr,
+		//solver_calculation.Kf,
+		//solver_calculation.Kr,
 		SpeciesConcentration[Number_Species],
-		solver_calculation.ReactionParameters, 
-		solver_calculation.CalculatedThermo,
-		solver_calculation.SpeciesLossAll,
-		solver_calculation.delta_n);
+		//solver_calculation.ReactionParameters, 
+		//solver_calculation.CalculatedThermo,
+		solver_calculation.SpeciesLossAll//,
+		//solver_calculation.delta_n
+		);
 	solver_calculation.CalculateReactionRates(
-		solver_calculation.Rates, 
-		SpeciesConcentration, 
+		//solver_calculation.Rates, 
+		//SpeciesConcentration, 
 		solver_calculation.Kf, 
-		solver_calculation.Kr, 
-		solver_calculation.ReactantsForReactions,
-		solver_calculation.ProductsForReactions);
+		solver_calculation.Kr//, 
+		//solver_calculation.ReactantsForReactions,
+		//solver_calculation.ProductsForReactions);
 
 	// Don't forget Rates Analysis for Mechanism Reduction at t=0 - or is this nonsense?
 	if(InitialParameters.MechanismReduction.ReduceReactions != 0)

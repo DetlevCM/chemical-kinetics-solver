@@ -45,10 +45,13 @@ cout << n << "\n";
 	if(f[Number_Species] > 1e-6)
 	{
 		// Thermodynamic data, Rate Constant, Rates, new Concentrations
-		Evaluate_Thermodynamic_Parameters(CalculatedThermo, species, Concentration[Number_Species]);
-		Calculate_Rate_Constant(Kf, Kr, Concentration[Number_Species],ReactionParameters, CalculatedThermo, SpeciesLossAll, delta_n);
+		//Evaluate_Thermodynamic_Parameters(CalculatedThermo, species, Concentration[Number_Species]);
+		Evaluate_Thermodynamic_Parameters(Concentration[Number_Species]);
+		//Calculate_Rate_Constant(Kf, Kr, Concentration[Number_Species],ReactionParameters, CalculatedThermo, SpeciesLossAll, delta_n);
+		Calculate_Rate_Constant(Concentration[Number_Species], SpeciesLossAll);
 	}
-	CalculateReactionRates(Rates, Concentration, Kf, Kr, ReactantsForReactions, ProductsForReactions);
+	//CalculateReactionRates(Rates, Concentration, Kf, Kr, ReactantsForReactions, ProductsForReactions);
+	CalculateReactionRates(Kf, Kr);
 	SpeciesConcentrationChange = SpeciesLossRate(Number_Species, Rates, SpeciesLossAll);
 
 

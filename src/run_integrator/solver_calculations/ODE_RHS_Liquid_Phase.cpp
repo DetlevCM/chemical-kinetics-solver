@@ -42,9 +42,13 @@ void SolverCalculation::ODE_RHS_Liquid_Phase(int*n, double*t, double*y, double*f
 		}
 	}
 
-	Evaluate_Thermodynamic_Parameters(CalculatedThermo, species, Concentration[Number_Species]);
-	Calculate_Rate_Constant(Kf, Kr, Concentration[Number_Species],ReactionParameters, CalculatedThermo, SpeciesLossAll, delta_n);
-	CalculateReactionRates(Rates, Concentration, Kf, Kr, ReactantsForReactions, ProductsForReactions);
+	//Evaluate_Thermodynamic_Parameters(CalculatedThermo, species, Concentration[Number_Species]);
+	Evaluate_Thermodynamic_Parameters(Concentration[Number_Species]);
+	//Calculate_Rate_Constant(Kf, Kr, Concentration[Number_Species],ReactionParameters, CalculatedThermo, SpeciesLossAll, delta_n);
+	Calculate_Rate_Constant(Concentration[Number_Species], SpeciesLossAll);
+	//CalculateReactionRates(Rates, Concentration, Kf, Kr, ReactantsForReactions, ProductsForReactions);
+	CalculateReactionRates(Kf, Kr);
+
 	SpeciesConcentrationChange = SpeciesLossRate(Number_Species, Rates, SpeciesLossAll);
 
 

@@ -22,6 +22,7 @@ void SolverCalculation::Evaluate_Thermodynamic_Parameters(
 	for(i=0;i<Number_Species;i++)
 	{
 		CalculatedThermo[i] = species[i].thermodynamicdata.calculate_thermodynamics(temperatures);
+		//cout << "Hf: " <<  CalculatedThermo[i].Hf << "\n";
 	}
 }
 

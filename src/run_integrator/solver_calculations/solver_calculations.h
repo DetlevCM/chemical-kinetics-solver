@@ -71,17 +71,21 @@ vector< TrackSpecies > SpeciesLossAll; // vector for recording species loss
 //vector< ReactionParameter > ReactionParameters; // tidier than reactions vector
 vector< Reaction::ReactionParameter > ReactionParameters; // tidier than reactions vector
 
-inline static size_t Number_Species; // old variable
-inline static size_t Number_Reactions; //old variable
+size_t Number_Species; // old variable
+size_t Number_Reactions; //old variable
 
-inline static vector< Species::ThermodynamicData::CalculatedThermodynamics > CalculatedThermo;
-inline static vector< double > Kf;
-inline static vector< double > Kr;
-inline static vector< double > Rates;
-inline static vector< double > Concentration;
-inline static vector< double > SpeciesConcentrationChange;
-inline static vector< double > delta_n;
+vector< Species::ThermodynamicData::CalculatedThermodynamics > CalculatedThermo;
+vector< double > Kf;
+vector< double > Kr;
+vector< double > delta_n;
+
 vector< Species > species; // quickest and easiest way right now... 
+
+vector< double > Rates;
+vector< double > Concentration;
+vector< double > SpeciesConcentrationChange;
+
+
 
 
 public:
@@ -127,10 +131,10 @@ SpeciesConcentrationChange.resize(number_species);
 
 
 // The ODE RHS functions are split - regular initial value & pressure vessel (reservoir)
-void ODE_RHS_Liquid_Phase(int*, double*, double*, double*);
-void ODE_RHS_Gas_Phase(int*, double*, double*, double*);
-void ODE_RHS_Gas_Liquid_Phase(int*, double*, double*, double*);
-void ODE_RHS_Pressure_Vessel(int*, double*, double*, double*);
+void ODE_RHS_Liquid_Phase(int*n, double*t, double*y, double*f);
+void ODE_RHS_Gas_Phase(int*n, double*t, double*y, double*f);
+void ODE_RHS_Gas_Liquid_Phase(int*n, double*t, double*y, double*f);
+void ODE_RHS_Pressure_Vessel(int*n, double*t, double*y, double*f);
 
 
 
@@ -141,32 +145,32 @@ void ODE_RHS_Pressure_Vessel(int*, double*, double*, double*);
  * Calculating Rate Constants
  */
 
-static void Calculate_Rate_Constant(
-		vector< double >& Kf,
-		vector< double >& Kr,
+
+void Evaluate_Thermodynamic_Parameters(
+		//vector< Species::ThermodynamicData::CalculatedThermodynamics > &CalculatedThermo,
+		//vector< Species > & species, //Thermodynamics,
+		const double Temperature
+);
+
+void Calculate_Rate_Constant(
+		//vector< double >& Kf,
+		//vector< double >& Kr,
 		const double Temperature,
-		const vector< Reaction::ReactionParameter >& ReactionParameters,
-		const vector< Species::ThermodynamicData::CalculatedThermodynamics >& CalculatedThermo,
-		const vector< TrackSpecies >& SpeciesAll,
-		const vector< double >& Delta_N
+		//const vector< Reaction::ReactionParameter >& ReactionParameters,
+		//const vector< Species::ThermodynamicData::CalculatedThermodynamics >& CalculatedThermo,
+		const vector< TrackSpecies >& SpeciesAll//,
+		//const vector< double >& Delta_N
 );
 
 
 //vector< double >
-static void CalculateReactionRates(
-		vector< double >& Rates,
-		const vector< double >& SpeciesConcentration,
+void CalculateReactionRates(
+		//vector< double >& Rates,
+		//const vector< double >& SpeciesConcentration,
 		vector< double > Forward_Rates,
-		vector< double > Reverse_Rates,
-		const vector< TrackSpecies >& ReactantsForRates,
-		const vector< TrackSpecies >& ProductsForRates
-);
-
-
-void Evaluate_Thermodynamic_Parameters(
-		vector< Species::ThermodynamicData::CalculatedThermodynamics > &CalculatedThermo,
-		vector< Species > & species, //Thermodynamics,
-		const double Temperature
+		vector< double > Reverse_Rates//,
+		//const vector< TrackSpecies >& ReactantsForRates,
+		//const vector< TrackSpecies >& ProductsForRates
 );
 
 

@@ -42,8 +42,10 @@ void SolverCalculation::Jacobian_Matrix_Intel(int*n,double*t,double*y,double*a) 
 	// provides me a fresh array every time :) - ideal
 	vector< double > JacobeanColumnWise((Number_Species+1)*(Number_Species+1));
 
-	Evaluate_Thermodynamic_Parameters(CalculatedThermo, species, Concentration[Number_Species]);
-	Calculate_Rate_Constant(Kf, Kr, Concentration[Number_Species],ReactionParameters, CalculatedThermo, SpeciesLossAll, delta_n);
+	//Evaluate_Thermodynamic_Parameters(CalculatedThermo, species, Concentration[Number_Species]);
+	Evaluate_Thermodynamic_Parameters(Concentration[Number_Species]);
+	//Calculate_Rate_Constant(Kf, Kr, Concentration[Number_Species],ReactionParameters, CalculatedThermo, SpeciesLossAll, delta_n);
+	Calculate_Rate_Constant(Concentration[Number_Species], SpeciesLossAll);
 
 	for(i=0;i< JacobianMatrix.size();i++)
 	{

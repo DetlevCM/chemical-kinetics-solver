@@ -12,13 +12,13 @@
 
 
 void SolverCalculation::Calculate_Rate_Constant(
-		vector< double >& Kf,
-		vector< double >& Kr,
+		//vector< double >& Kf,
+		//vector< double >& Kr,
 		const double Temperature,
-		const vector< Reaction::ReactionParameter >& ReactionParameters,
-		const vector< Species::ThermodynamicData::CalculatedThermodynamics >& CalculatedThermo,
-		const vector< TrackSpecies >& SpeciesAll,
-		const vector< double >& Delta_N
+		//const vector< Reaction::ReactionParameter >& ReactionParameters,
+		//const vector< Species::ThermodynamicData::CalculatedThermodynamics >& CalculatedThermo,
+		const vector< TrackSpecies >& SpeciesAll//,
+		//const vector< double >& Delta_N
 )
 
 {
@@ -98,13 +98,13 @@ void SolverCalculation::Calculate_Rate_Constant(
 			delta_G[i] = delta_H[i] - Temperature*delta_S[i];
 			temp_kp = exp(-delta_G[i]/(R*Temperature));
 
-			if(Delta_N[i] == 0) // an if check is less expensive than a pow(,)
+			if(delta_n[i] == 0) // an if check is less expensive than a pow(,)
 			{
 			Kr[i] = Kf[i]/temp_kp;
 			}
 			else
 			{
-				temp_kc = temp_kp*pow((0.0820578*Temperature),(-Delta_N[i])); // L atm K^(-1) mol^(-1)
+				temp_kc = temp_kp*pow((0.0820578*Temperature),(-delta_n[i])); // L atm K^(-1) mol^(-1)
 				//temp_kc = temp_kp*pow((1.3624659e-22*Temperature),(-Delta_N[i])); // for molecules cm^(-3)
 				Kr[i] = Kf[i]/temp_kc;
 			}
