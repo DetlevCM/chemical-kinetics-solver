@@ -12,7 +12,7 @@
 void RunIntegrator::Integrate_Liquid_Phase(
     Filenames OutputFilenames, vector<double> SpeciesConcentration,
     ReactionMechanism reaction_mechanism, Initial_Data InitialParameters,
-    vector<double> &KeyRates,
+    vector<double> &KeyRates, PressureVesselCalc PetroOxyDataInput,
     vector<vector<str_RatesAnalysis>> &RatesAnalysisData) {
 
   vector<TrackSpecies> ProductsForRatesAnalysis;
@@ -140,6 +140,16 @@ void RunIntegrator::Integrate_Liquid_Phase(
         InitialParameters.TGA_target;
   }
 
+  // Is the PetroOxy pressure vessel option requested?
+  if (InitialParameters.PetroOxy.IsSet) {
+    solver_calculation.InitialDataConstants.EnforceStability =
+        InitialParameters.EnforceStability;
+    solver_calculation.InitialDataConstants.PetroOxy =
+        InitialParameters.PetroOxy.IsSet;
+    solver_calculation.InitialDataConstants.PetroOxyTemperatureRise =
+        InitialParameters.PetroOxy.TemperatureRise;
+  }
+
   // set constant concentration if desired
   solver_calculation.InitialDataConstants.ConstantConcentration =
       InitialParameters.ConstantConcentration;
@@ -163,6 +173,21 @@ void RunIntegrator::Integrate_Liquid_Phase(
               .Concentration[InitialParameters.ConstantSpecies[i]];
     }
   }
+
+  if (InitialParameters.PetroOxy.IsSet) {
+    SolverCalculation::PetroOxyOutputHeader(OutputFilenames.PetroOxy);
+    solver_calculation.OxyGasSpeciesID = InitialParameters.PetroOxy.GasSpecies;
+    solver_calculation.PetroOxyData = PetroOxyDataInput;
+  }
+  // Oxy with temperature Rise
+  if (InitialParameters.PetroOxy.IsSet &&
+      InitialParameters.PetroOxy.TemperatureRise !=
+          0) // fix temperature for Oxy, rise desired
+  {
+    SpeciesConcentration[Number_Species] = 298;
+    // for Oxy diffusion limit, gets ignored if not required
+    solver_calculation.time_previous = 0;
+  } //*/
 
   solver_calculation.Evaluate_Thermodynamic_Parameters(
       // solver_calculation.CalculatedThermo,
@@ -218,6 +243,20 @@ void RunIntegrator::Integrate_Liquid_Phase(
         KeyRates, solver_calculation.Rates,
         InitialParameters.MechanismReduction.ReduceReactions);
   }
+
+  if (InitialParameters.PetroOxy.IsSet) {
+
+    //  the PetroOxy will saturate the hydrocarbon with oxygen
+    // at no loss to the reservoir
+    solver_calculation.Adjust_Gas_Concentration_Initial(
+        SpeciesConcentration[solver_calculation.OxyGasSpeciesID],
+        SpeciesConcentration[Number_Species], solver_calculation.PetroOxyData);
+
+    SolverCalculation::PetroOxyOutputStream(OutputFilenames.PetroOxy,
+                                            solver_calculation.PetroOxyData,
+                                            time_current);
+  }
+
   // do not forget output at time = 0
   WriteOutput::StreamConcentrations(
       Concentration_OFStream, InitialParameters.Solver_Parameters.separator,
@@ -405,9 +444,7 @@ void RunIntegrator::Integrate_Liquid_Phase(
           InitialParameters.Solver_Parameters.separator,
           solver_calculation.Rates, time_current, reaction_mechanism.species,
           InitialParameters.MechanismAnalysis.SpeciesSelectedForRates,
-          ReactionsForSpeciesSelectedForRates //,
-                                              // reaction_mechanism.Reactions
-      );
+          ReactionsForSpeciesSelectedForRates);
     }
 
     if (InitialParameters.MechanismAnalysis.StreamRatesAnalysis) {
@@ -418,19 +455,17 @@ void RunIntegrator::Integrate_Liquid_Phase(
     }
 
     double pressure = 0;
-    /*
-    if(InitialParameters.GasPhase)
-    {
-            double R = 8.31451; // Gas Constant
-            // Pressure Tracking for Gas Phase Kinetics
-    double total_mol = 0;
-    for(i=0;i<Number_Species;i++)
-    {
-            total_mol = total_mol + SpeciesConcentration[i];
-    }
-    pressure = (total_mol  * R *
-    SpeciesConcentration[Number_Species])/InitialParameters.GasPhaseVolume;
-    }//*/
+    //* // this is used in the PetroOxy code
+    if (InitialParameters.GasPhase) {
+      double R = 8.31451; // Gas Constant
+                          // Pressure Tracking for Gas Phase Kinetics
+      double total_mol = 0;
+      for (i = 0; i < Number_Species; i++) {
+        total_mol = total_mol + SpeciesConcentration[i];
+      }
+      pressure = (total_mol * R * SpeciesConcentration[Number_Species]) /
+                 InitialParameters.GasPhaseVolume;
+    } //*/
 
     WriteOutput::StreamConcentrations(
         Concentration_OFStream, InitialParameters.Solver_Parameters.separator,
@@ -448,6 +483,12 @@ void RunIntegrator::Integrate_Liquid_Phase(
                       solver_calculation.Rates
       );
       //*/
+    }
+
+    if (InitialParameters.PetroOxy.IsSet) {
+      SolverCalculation::PetroOxyOutputStream(OutputFilenames.PetroOxy,
+                                              solver_calculation.PetroOxyData,
+                                              time_current);
     }
 
     if (InitialParameters.MechanismReduction.ReduceReactions != 0) {

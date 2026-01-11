@@ -125,22 +125,15 @@ public:
   static vector<double> Get_Delta_N(const vector<SingleReactionData> Reactions);
 
   // solve based on concentrations in the liquid phase
-  static void Integrate_Liquid_Phase(Filenames, vector<double>,
-                                     ReactionMechanism, Initial_Data,
-                                     vector<double> &,
-                                     vector<vector<str_RatesAnalysis>> &);
+  static void Integrate_Liquid_Phase(
+      Filenames OutputFilenames, vector<double> SpeciesConcentration,
+      ReactionMechanism reaction_mechanism, Initial_Data InitialParameters,
+      vector<double> &KeyRates, PressureVesselCalc PetroOxyDataInput,
+      vector<vector<str_RatesAnalysis>> &RatesAnalysisData);
 
   static void Integrate_Gas_Phase_Odepack_LSODA(
       Filenames, vector<double>, ReactionMechanism, Initial_Data,
       vector<double> &, vector<vector<str_RatesAnalysis>> &);
-
-  // solve based on concentrations in the liquid phase and consider headspace
-  // gas
-  static void
-  Integrate_Pressure_Vessel_Liquid_Phase(Filenames, vector<double>,
-                                         ReactionMechanism, Initial_Data,
-                                         vector<double> &, PressureVesselCalc,
-                                         vector<vector<str_RatesAnalysis>> &);
 
   //// Pre-Processing:
 

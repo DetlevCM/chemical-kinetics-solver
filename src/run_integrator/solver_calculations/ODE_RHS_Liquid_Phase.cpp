@@ -28,6 +28,16 @@ void SolverCalculation::ODE_RHS_Liquid_Phase(int *n, double *t, double *y,
       Concentration[i] = y[i];
     }
   }
+
+  // if PetroOxy case
+  if (InitialDataConstants.PetroOxy) {
+    double time_difference;
+
+    time_difference = fabs(*t - time_previous);
+    AdjustGasConcentration(y[OxyGasSpeciesID], Concentration[Number_Species],
+                           time_difference, PetroOxyData);
+  }
+
   Evaluate_Thermodynamic_Parameters(Concentration[Number_Species]);
   Calculate_Rate_Constant(Concentration[Number_Species], SpeciesLossAll);
   CalculateReactionRates(Concentration, Kf, Kr);
@@ -53,6 +63,28 @@ void SolverCalculation::ODE_RHS_Liquid_Phase(int *n, double *t, double *y,
 
   f[Number_Species] = qtot; // Temperature equation
   // cout << ctot << " " << qint << " " << qtot << "\n";
+
+  if (InitialDataConstants.PetroOxy) {
+    if (Concentration[Number_Species] >= InitialDataConstants.temperature) {
+      y[Number_Species] =
+          InitialDataConstants
+              .temperature; // ensure temperature is not exceeded
+      InitialDataConstants.PetroOxyTemperatureRise = 0;
+
+      f[Number_Species] = 0;
+    }
+
+    if (InitialDataConstants.PetroOxyTemperatureRise !=
+        0) // fix temperature for Oxy, rise desired
+    {
+      // 298K starting temp, GlobalArrays::InitialParameters.temperature is
+      // target rise time given in minutes
+      f[Number_Species] = (InitialDataConstants.temperature - 298) /
+                          (InitialDataConstants.PetroOxyTemperatureRise);
+
+      // std::cout << f[Number_Species] << "\n";
+    }
+  }
 
   // Settings relevant rates to zero
   if (InitialDataConstants.ConstantConcentration) {
@@ -81,4 +113,7 @@ void SolverCalculation::ODE_RHS_Liquid_Phase(int *n, double *t, double *y,
     f[Number_Species] = 0.0;
   }
   //*/
+
+  // For Oxy limiting - easier to just always calculate it
+  time_previous = *t;
 }
