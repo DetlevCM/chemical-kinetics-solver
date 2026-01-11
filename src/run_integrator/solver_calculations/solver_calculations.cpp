@@ -185,7 +185,7 @@ vector<double> SolverCalculation::SpeciesLossRate(
   /*
       for(size_t i = 0; i< temp_species_loss.size();i++)
       {
-              cout << i << "  " << temp_species_loss[i] << std::flush;
+              cout << i << "  " << temp_species_loss[i] << "\n" << std::flush;
       }
       //*/
 

@@ -318,8 +318,8 @@ void RunIntegrator::Integrate_Pressure_Vessel_Liquid_Phase(
   }
 
   vector<double> SpeciesConcentrationChange =
-      SolverCalculation::SpeciesLossRate(
-          Number_Species, solver_calculation.Rates, SpeciesLossAll);
+      solver_calculation.SpeciesLossRate(solver_calculation.Rates,
+                                         SpeciesLossAll);
 
   /* -- Got values at t = 0 -- */
 

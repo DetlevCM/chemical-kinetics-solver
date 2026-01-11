@@ -142,7 +142,7 @@ public:
   vector<double> SpeciesLossRate(const vector<double> &Combined_Rates,
                                  const vector<TrackSpecies> &SpeciesLossList);
 
-  static void Synchronize_Gas_Liquid_Model(
+  void Synchronize_Gas_Liquid_Model(
       size_t number_synchronized_species, size_t liquid_species_count,
       size_t gas_species_count, // gas and liquid counts so I know where
                                 // concentration entries belong to
