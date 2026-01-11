@@ -18,18 +18,10 @@
 
 void SolverCalculation::ODE_RHS_Pressure_Vessel(int*n, double*time_current, double*y, double*f)
 {
-	// A namespace allows global variables without causing a mess, should be quicker than redefining too
-	//using namespace ODE_RHS;
-	//using namespace ODE_RHS_Pressure_Vessel_Variables;
-	//using namespace Jacobian_ODE_RHS;
-
-	size_t i;
-
-
 	// stability hack
 	if(InitialDataConstants.EnforceStability)
 	{
-		for (i = 0; i <= Number_Species; i++)
+		for (size_t i = 0; i <= Number_Species; i++)
 		{
 			if(y[i]<0){
 				//if(y[i]<1.e-24){
@@ -42,7 +34,7 @@ void SolverCalculation::ODE_RHS_Pressure_Vessel(int*n, double*time_current, doub
 		}
 	}
 	else{
-		for (i = 0; i <= Number_Species; i++)
+		for (size_t i = 0; i <= Number_Species; i++)
 		{
 			Concentration[i] = y[i];
 		}
@@ -69,7 +61,7 @@ void SolverCalculation::ODE_RHS_Pressure_Vessel(int*n, double*time_current, doub
 	}
 	//CalculateReactionRates(Rates, Concentration, Kf, Kr, ReactantsForReactions, ProductsForReactions);
 	CalculateReactionRates(Kf, Kr);
-	SpeciesConcentrationChange = SpeciesLossRate(Number_Species, Rates, SpeciesLossAll);
+	SpeciesConcentrationChange = SpeciesLossRate(Rates, SpeciesLossAll);
 
 
 	double ctot=0;
@@ -77,7 +69,7 @@ void SolverCalculation::ODE_RHS_Pressure_Vessel(int*n, double*time_current, doub
 	double qtot=0;
 
 
-	for (i = 0; i < Number_Species; i++)
+	for (size_t i = 0; i < Number_Species; i++)
 	{
 		ctot = ctot + CalculatedThermo[i].Cv * Concentration[i];
 		//cout << CalculatedThermo[i].Hf << " ";
@@ -88,7 +80,7 @@ void SolverCalculation::ODE_RHS_Pressure_Vessel(int*n, double*time_current, doub
 	//cout << "\n";
 	// ctot = ctot / 1000; // working in moles/l so no Na;
 
-	for (i = 0; i < Number_Reactions; i++)
+	for (size_t i = 0; i < Number_Reactions; i++)
 	{
 		qint = qint + delta_n[i] * Rates[i];
 	}
@@ -132,7 +124,7 @@ void SolverCalculation::ODE_RHS_Pressure_Vessel(int*n, double*time_current, doub
 	if(InitialDataConstants.ConstantConcentration)
 	{
 		//cout << "preparing constant species \n";
-		for(i=0;i<Number_Species;i++)
+		for(size_t i=0;i<Number_Species;i++)
 		{
 			if(InitialDataConstants.ConstantSpecies[i] != 0){
 				f[i] = 0 ; // concentration reset

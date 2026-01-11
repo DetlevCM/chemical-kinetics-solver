@@ -92,7 +92,7 @@ void SolverCalculation::ODE_RHS_Gas_Liquid_Phase(int*n, double*time_current, dou
 	}
 	//CalculateReactionRates(Rates, Concentration, Kf, Kr, ReactantsForReactions, ProductsForReactions);
 	CalculateReactionRates(Kf, Kr);
-	SpeciesConcentrationChange = SpeciesLossRate(Number_Species, Rates, SpeciesLossAll);
+	SpeciesConcentrationChange = SpeciesLossRate(Rates, SpeciesLossAll);
 
 
 	double ctot=0;

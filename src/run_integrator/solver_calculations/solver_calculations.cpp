@@ -4,20 +4,12 @@
 #include "./solver_calculations.h"
 
 void SolverCalculation::Evaluate_Thermodynamic_Parameters(
-        //vector< Species::ThermodynamicData::CalculatedThermodynamics > &CalculatedThermo,
-		//vector< Species > & species, 
 		const double Temperature
 		)
 {
-	size_t i;
-
-	size_t Number_Species = species.size() ; //Thermodynamics.size();
-
 	Species::ThermodynamicData::ThermoT temperatures(Temperature);
-
 	/* Hf, Cp, Cv, S */
-
-	for(i=0;i<Number_Species;i++)
+	for(size_t i=0;i<Number_Species;i++)
 	{
 		CalculatedThermo[i] = species[i].thermodynamicdata.calculate_thermodynamics(temperatures);
 		//cout << "Hf: " <<  CalculatedThermo[i].Hf << "\n";
@@ -26,19 +18,11 @@ void SolverCalculation::Evaluate_Thermodynamic_Parameters(
 
 
 void SolverCalculation::Calculate_Rate_Constant(
-		//vector< double >& Kf,
-		//vector< double >& Kr,
 		const double Temperature,
-		//const vector< Reaction::ReactionParameter >& ReactionParameters,
-		//const vector< Species::ThermodynamicData::CalculatedThermodynamics >& CalculatedThermo,
-		const vector< TrackSpecies >& SpeciesAll//,
-		//const vector< double >& Delta_N
+		const vector< TrackSpecies >& SpeciesAll
 )
 
 {
-
-	size_t Number_Reactions = ReactionParameters.size();
-
 	// Pressure Independent Reactions Only
 	/*
 	k[i] = a1[i]*exp(-e1[i]*inv_T);  // kinf calculation
@@ -46,22 +30,17 @@ void SolverCalculation::Calculate_Rate_Constant(
 	k[i] *= pow(T, n1[i]);
 	//*/
 
-	size_t i;
-
 	//Define vectors in the right size right away
 	vector< double > delta_H(Number_Reactions);
 	vector< double > delta_S(Number_Reactions);
 	vector< double > delta_G(Number_Reactions);
 
 
-
-
-
 	// Worked out per reaction
 	// as we have the value of the calculated thermodynamics, we just need to put them together
 	// per reaction, going through every species
 
-	for(i = 0;i< SpeciesAll.size();i++){ // loop over every reaction
+	for(size_t i = 0;i< SpeciesAll.size();i++){ // loop over every reaction
 		delta_H[SpeciesAll[i].ReactionID] =
 				delta_H[SpeciesAll[i].ReactionID] +
 				(CalculatedThermo[SpeciesAll[i].SpeciesID].Hf * SpeciesAll[i].coefficient);
@@ -72,9 +51,7 @@ void SolverCalculation::Calculate_Rate_Constant(
 	}
 
 
-
-
-	for(i=0;i<Number_Reactions;i++) // Straightforward Arrhenius Expression/Equation
+	for(size_t i=0;i<Number_Reactions;i++) // Straightforward Arrhenius Expression/Equation
 	{
 		Kf[i] = ReactionParameters[i].paramA *
 				exp(-ReactionParameters[i].paramEa/Temperature); // do NOT forget the - !!!
@@ -138,25 +115,17 @@ void SolverCalculation::Calculate_Rate_Constant(
 		}//*/
 	}
 
-
 }
+
 
 //vector< double > CalculateReactionRates(
 void SolverCalculation::CalculateReactionRates(
-		//vector< double >& Rates,
-		//const vector< double >& SpeciesConcentration,
 		vector< double > Forward_Rates,
-		vector< double > Reverse_Rates//,
-		//const vector< TrackSpecies >& ReactantsForRates,
-		//const vector< TrackSpecies >& ProductsForRates
+		vector< double > Reverse_Rates
 )
 {
 
-	size_t i;
-
-
-
-	for(i = 0;i< ReactantsForReactions.size();i++){ // Forward Rates determined by the reactants
+	for(size_t i = 0;i< ReactantsForReactions.size();i++){ // Forward Rates determined by the reactants
 
 		if(ReactantsForReactions[i].coefficient == 1) // this is quicker than raising to the power of 1 - but check with the struct
 		{
@@ -173,7 +142,7 @@ void SolverCalculation::CalculateReactionRates(
 	}
 
 
-	for(i = 0;i< ProductsForReactions.size();i++){ // Reverse Rates determined by the products
+	for(size_t i = 0;i< ProductsForReactions.size();i++){ // Reverse Rates determined by the products
 
 		if(ProductsForReactions[i].coefficient == 1) // this is quicker than raising to the power of 1 - but check with the struct
 		{
@@ -190,14 +159,40 @@ void SolverCalculation::CalculateReactionRates(
 	}
 
 
-	for(i=0;i< Rates.size();i++){
+	for(size_t i=0;i< Rates.size();i++){
 		Rates[i] = Forward_Rates[i] - Reverse_Rates[i];
 		/*
 		if(abs(Rates[i]) > 1.0e6)
 		{
 			cout << i << " " << Rates[i] << "   " << Forward_Rates[i] << "   " << Reverse_Rates[i] << "\r\n";
 		}//*/
+		//cout << i << " " << Rates[i] << "   " << Forward_Rates[i] << "   " << Reverse_Rates[i] << "\r\n" << std::flush;
 	}
 
 }
+
+vector< double > SolverCalculation::SpeciesLossRate(
+		const vector< double >& Combined_Rates,
+		const vector< TrackSpecies >& SpeciesLossList
+		)
+{
+	vector< double > temp_species_loss(Number_Species);
+
+	for(size_t i=0;i< SpeciesLossList.size();i++){
+		temp_species_loss[SpeciesLossList[i].SpeciesID] =
+				temp_species_loss[SpeciesLossList[i].SpeciesID] +
+				(Combined_Rates[SpeciesLossList[i].ReactionID] * SpeciesLossList[i].coefficient);
+	}
+
+
+    /*
+	for(size_t i = 0; i< temp_species_loss.size();i++)
+	{
+		cout << i << "  " << temp_species_loss[i] << std::flush; 
+	}
+	//*/
+
+	return temp_species_loss;
+}
+
 

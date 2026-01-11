@@ -13,15 +13,21 @@ vector< double > SolverCalculation::SpeciesLossRate(
 		const vector< TrackSpecies >& SpeciesLossList
 		)
 {
-	size_t i;
-
 	vector< double > temp_species_loss(Number_Species);
 
-	for(i=0;i< SpeciesLossList.size();i++){
+	for(size_t i=0;i< SpeciesLossList.size();i++){
 		temp_species_loss[SpeciesLossList[i].SpeciesID] =
 				temp_species_loss[SpeciesLossList[i].SpeciesID] +
 				(Combined_Rates[SpeciesLossList[i].ReactionID] * SpeciesLossList[i].coefficient);
 	}
+
+
+    /*
+	for(size_t i = 0; i< temp_species_loss.size();i++)
+	{
+		cout << i << "  " << temp_species_loss[i] << std::flush; 
+	}
+	//*/
 
 	return temp_species_loss;
 }

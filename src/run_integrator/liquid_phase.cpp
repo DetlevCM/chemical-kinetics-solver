@@ -303,8 +303,7 @@ solver_calculation.Concentration = SpeciesConcentration;
 
 	solver_calculation.SpeciesConcentrationChange =
 	//vector< double > SpeciesConcentrationChange = 
-	SolverCalculation::SpeciesLossRate(
-		Number_Species, 
+	solver_calculation.SpeciesLossRate(
 		solver_calculation.Rates, 
 		solver_calculation.SpeciesLossAll);
 

@@ -15,16 +15,10 @@
 
 void SolverCalculation::ODE_RHS_Liquid_Phase(int*n, double*t, double*y, double*f)
 {
-	// A namespace allows global variables without causing a mess, should be quicker than redefining too
-	//using namespace ODE_RHS;
-	//using namespace Jacobian_ODE_RHS;
-
-	size_t i;
-
 	// stability hack - but has a performance impact...
 	if(InitialDataConstants.EnforceStability)
 	{
-		for (i = 0; i <= Number_Species; i++)
+		for (size_t i = 0; i <= Number_Species; i++)
 		{
 			if(y[i]<0){
 				Concentration[i] = 0;
@@ -36,7 +30,7 @@ void SolverCalculation::ODE_RHS_Liquid_Phase(int*n, double*t, double*y, double*f
 		}
 	}
 	else{
-		for (i = 0; i <= Number_Species; i++)
+		for (size_t i = 0; i <= Number_Species; i++)
 		{
 			Concentration[i] = y[i];
 		}
@@ -49,7 +43,7 @@ void SolverCalculation::ODE_RHS_Liquid_Phase(int*n, double*t, double*y, double*f
 	//CalculateReactionRates(Rates, Concentration, Kf, Kr, ReactantsForReactions, ProductsForReactions);
 	CalculateReactionRates(Kf, Kr);
 
-	SpeciesConcentrationChange = SpeciesLossRate(Number_Species, Rates, SpeciesLossAll);
+	SpeciesConcentrationChange = SpeciesLossRate(Rates, SpeciesLossAll);
 
 
 	double ctot = 0.0;
@@ -57,7 +51,7 @@ void SolverCalculation::ODE_RHS_Liquid_Phase(int*n, double*t, double*y, double*f
 	double qtot = 0.0;
 
 
-	for (i = 0; i < Number_Species; i++)
+	for (size_t i = 0; i < Number_Species; i++)
 	{
 		ctot = ctot + CalculatedThermo[i].Cv * Concentration[i];
 		// reduce number of loops
@@ -65,7 +59,7 @@ void SolverCalculation::ODE_RHS_Liquid_Phase(int*n, double*t, double*y, double*f
 	}
 	// ctot = ctot / 1000; // working in moles/l so no Na;
 
-	for (i = 0; i < Number_Reactions; i++)
+	for (size_t i = 0; i < Number_Reactions; i++)
 	{
 		qint = qint + delta_n[i] * Rates[i];
 	}
@@ -79,7 +73,7 @@ void SolverCalculation::ODE_RHS_Liquid_Phase(int*n, double*t, double*y, double*f
 	if(InitialDataConstants.ConstantConcentration)
 	{
 		//cout << "preparing constant species \n";
-		for(i=0;i<Number_Species;i++)
+		for(size_t i=0;i<Number_Species;i++)
 		{
 			if(InitialDataConstants.ConstantSpecies[i] != 0){
 				f[i] = 0 ; // concentration reset

@@ -218,7 +218,8 @@ void RunIntegrator::Integrate_Gas_Phase_Odepack_LSODA(
 		solver_calculation.Kf, 
 		solver_calculation.Kr//, 
 		//solver_calculation.ReactantsForReactions,
-		//solver_calculation.ProductsForReactions);
+		//solver_calculation.ProductsForReactions
+		);
 
 	// Don't forget Rates Analysis for Mechanism Reduction at t=0 - or is this nonsense?
 	if(InitialParameters.MechanismReduction.ReduceReactions != 0)
@@ -310,7 +311,7 @@ void RunIntegrator::Integrate_Gas_Phase_Odepack_LSODA(
 	}
 
 
-	vector< double > SpeciesConcentrationChange = SolverCalculation::SpeciesLossRate(Number_Species, solver_calculation.Rates, SpeciesLossAll);
+	vector< double > SpeciesConcentrationChange = solver_calculation.SpeciesLossRate(solver_calculation.Rates, SpeciesLossAll);
 
 
 	/* -- Got values at t = 0 -- */

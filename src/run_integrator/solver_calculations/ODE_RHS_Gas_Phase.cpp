@@ -52,7 +52,7 @@ cout << n << "\n";
 	}
 	//CalculateReactionRates(Rates, Concentration, Kf, Kr, ReactantsForReactions, ProductsForReactions);
 	CalculateReactionRates(Kf, Kr);
-	SpeciesConcentrationChange = SpeciesLossRate(Number_Species, Rates, SpeciesLossAll);
+	SpeciesConcentrationChange = SpeciesLossRate(Rates, SpeciesLossAll);
 
 
 	double ctot=0;
