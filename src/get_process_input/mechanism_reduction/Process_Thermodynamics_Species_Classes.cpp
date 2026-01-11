@@ -7,179 +7,168 @@
 
 #include "Mechanism_Reduction.h"
 
+vector<Species> MechanismReduction::Process_Thermodynamics_Species_Classes(
+    const vector<size_t> &SpeciesMapping, vector<Species> species) {
 
-vector< Species > MechanismReduction::Process_Thermodynamics_Species_Classes(
-		const vector< size_t >& SpeciesMapping,
-		vector< Species > species
-)
-{
+  /* For a start, do something idiotic, i.e. average all parameters
+   * This will invariably lead to dodgy thermodynamic data, but I cannot think
+   * of a better method right now...
+   * And anyway, upgrade can be made to just this function.
+   */
 
-	/* For a start, do something idiotic, i.e. average all parameters
-	 * This will invariably lead to dodgy thermodynamic data, but I cannot think
-	 * of a better method right now...
-	 * And anyway, upgrade can be made to just this function.
-	 */
+  vector<vector<double>> new_thermo;
+  vector<double> SingleClassEntry;
 
-	vector< vector< double > > new_thermo;
-	vector< double > SingleClassEntry;
+  size_t i, j;
 
+  size_t Number_Species = species.size();
 
-	size_t i,j;
+  // Convert Thermodynamics for Mechanims Modification
+  vector<vector<double>> ThermodynamicsOld;
 
-	size_t Number_Species = species.size();
+  //*
+  for (i = 0; i < Number_Species; i++) {
 
+    vector<double> temp(17);
 
-	// Convert Thermodynamics for Mechanims Modification
-	vector< vector< double > > ThermodynamicsOld;
+    temp[0] = species[i].thermodynamicdata.TLow;
+    temp[1] = species[i].thermodynamicdata.THigh;
+    temp[2] = species[i].thermodynamicdata.TChange;
 
-	//*
-	for(i=0;i<Number_Species;i++){
+    temp[3] = species[i].thermodynamicdata.NasaLow1;
+    temp[4] = species[i].thermodynamicdata.NasaLow2;
+    temp[5] = species[i].thermodynamicdata.NasaLow3;
+    temp[6] = species[i].thermodynamicdata.NasaLow4;
+    temp[7] = species[i].thermodynamicdata.NasaLow5;
+    temp[8] = species[i].thermodynamicdata.NasaLow6;
+    temp[9] = species[i].thermodynamicdata.NasaLow7;
 
-		vector< double > temp(17);
+    temp[10] = species[i].thermodynamicdata.NasaHigh1;
+    temp[11] = species[i].thermodynamicdata.NasaHigh2;
+    temp[12] = species[i].thermodynamicdata.NasaHigh3;
+    temp[13] = species[i].thermodynamicdata.NasaHigh4;
+    temp[14] = species[i].thermodynamicdata.NasaHigh5;
+    temp[15] = species[i].thermodynamicdata.NasaHigh6;
+    temp[16] = species[i].thermodynamicdata.NasaHigh7;
 
-		temp[0] = species[i].thermodynamicdata.TLow;
-		temp[1] = species[i].thermodynamicdata.THigh;
-		temp[2] = species[i].thermodynamicdata.TChange;
+    ThermodynamicsOld.push_back(temp);
+  } //*/
 
-		temp[3] = species[i].thermodynamicdata.NasaLow1;
-		temp[4] = species[i].thermodynamicdata.NasaLow2;
-		temp[5] = species[i].thermodynamicdata.NasaLow3;
-		temp[6] = species[i].thermodynamicdata.NasaLow4;
-		temp[7] = species[i].thermodynamicdata.NasaLow5;
-		temp[8] = species[i].thermodynamicdata.NasaLow6;
-		temp[9] = species[i].thermodynamicdata.NasaLow7;
+  size_t Number_Species_Classes = 0;
+  // use abs() to get the absolute value
+  for (i = 0; i < Number_Species; i++) {
+    // The biggest number will be the last class (might be an individual species
+    // or group)
+    if (Number_Species_Classes < SpeciesMapping[i]) {
+      Number_Species_Classes = SpeciesMapping[i];
+    }
+    // printf("Number Classes %i  Mapping: %i
+    // \n",Number_Species_Classes,SpeciesMapping[i]);
+  }
+  Number_Species_Classes = Number_Species_Classes +
+                           1; // even with class zero, there needs to be 1 space
+  // printf("The system contain %u species classes! \n",Number_Species_Classes);
 
+  // cout << "checkpoint 2 \n";
 
-		temp[10] = species[i].thermodynamicdata.NasaHigh1;
-		temp[11] = species[i].thermodynamicdata.NasaHigh2;
-		temp[12] = species[i].thermodynamicdata.NasaHigh3;
-		temp[13] = species[i].thermodynamicdata.NasaHigh4;
-		temp[14] = species[i].thermodynamicdata.NasaHigh5;
-		temp[15] = species[i].thermodynamicdata.NasaHigh6;
-		temp[16] = species[i].thermodynamicdata.NasaHigh7;
+  /* we now know how many positions we require in our new output.
+   * so we can now loop through the thermodynamic data, assigning the relevant
+   * information as required In a final step we MUST remember to divide the
+   * thermodynamic data after summing it all up.
+   */
 
-		ThermodynamicsOld.push_back(temp);
-	}//*/
+  /* remember that we have lost class 0 and species class 1 is in position 1 not
+   * 0 which adds one array position. Then for some reason we need yet one extra
+   * position, therefore + 2 */
+  size_t Number_New_Thermo_Positions = Number_Species_Classes; // + 2;
 
+  new_thermo.resize(Number_New_Thermo_Positions);
+  SingleClassEntry.resize(18);
 
-	size_t Number_Species_Classes = 0;
-	// use abs() to get the absolute value
-	for(i=0;i<Number_Species;i++)
-	{
-		// The biggest number will be the last class (might be an individual species or group)
-		if(Number_Species_Classes < SpeciesMapping[i])
-		{
-			Number_Species_Classes = SpeciesMapping[i];
-		}
-		//printf("Number Classes %i  Mapping: %i \n",Number_Species_Classes,SpeciesMapping[i]);
-	}
-	Number_Species_Classes = Number_Species_Classes + 1; // even with class zero, there needs to be 1 space
-	//printf("The system contain %u species classes! \n",Number_Species_Classes);
+  // Clumsy method of initialising the new thermodynamics array with zeroes
+  for (i = 0; i < Number_New_Thermo_Positions; i++) {
+    for (j = 0; j < 17; j++) // make sure the matrix is initialized
+    {
+      SingleClassEntry[j] = 0;
+    }
+    new_thermo[i] = SingleClassEntry;
+  }
+  SingleClassEntry.clear();
 
-	//cout << "checkpoint 2 \n";
+  // cout << "checkpoint 3 \n";
 
-	/* we now know how many positions we require in our new output.
-	 * so we can now loop through the thermodynamic data, assigning the relevant information as required
-	 * In a final step we MUST remember to divide the thermodynamic data after summing it all up.
-	 */
+  for (i = 0; i < Number_Species; i++) {
+    size_t ClassID =
+        SpeciesMapping[i]; // abs() is important, includes negative values...
+    // printf("%i %i \n",i,ClassID);
+    SingleClassEntry.resize(18); // 1 extra position for number of species
 
-	/* remember that we have lost class 0 and species class 1 is in position 1 not 0
-	 * which adds one array position. Then for some reason we need yet one extra position,
-	 * therefore + 2 */
-	size_t Number_New_Thermo_Positions = Number_Species_Classes;// + 2;
+    SingleClassEntry =
+        new_thermo[ClassID]; // obtain any existing thermodynamic data
 
-	new_thermo.resize(Number_New_Thermo_Positions);
-	SingleClassEntry.resize(18);
+    // Add value for species
+    for (j = 0; j < 17; j++) {
+      SingleClassEntry[j] = SingleClassEntry[j] + ThermodynamicsOld[i][j];
+    }
+    SingleClassEntry[17] = SingleClassEntry[17] + 1; // 1 species added to class
 
-	// Clumsy method of initialising the new thermodynamics array with zeroes
-	for(i=0;i<Number_New_Thermo_Positions;i++)
-	{
-		for(j=0;j<17;j++) // make sure the matrix is initialized
-		{
-			SingleClassEntry[j] = 0;
-		}
-		new_thermo[i] = SingleClassEntry;
-	}
-	SingleClassEntry.clear();
+    new_thermo[ClassID] = SingleClassEntry;
 
-	//cout << "checkpoint 3 \n";
+    SingleClassEntry.clear(); // clear just to make sure
+  }
 
-	for(i=0;i<Number_Species;i++)
-	{
-		size_t ClassID = SpeciesMapping[i]; // abs() is important, includes negative values...
-		//printf("%i %i \n",i,ClassID);
-		SingleClassEntry.resize(18); // 1 extra position for number of species
+  // cout << "checkpoint 4 \n";
 
-		SingleClassEntry = new_thermo[ClassID]; // obtain any existing thermodynamic data
+  // now average values by class count:
+  for (i = 0; i < Number_New_Thermo_Positions; i++) {
+    for (j = 0; j < 17; j++) {
+      new_thermo[i][j] = new_thermo[i][j] / new_thermo[i][17];
+    }
+  }
 
-		// Add value for species
-		for(j=0;j<17;j++)
-		{
-			SingleClassEntry[j] = SingleClassEntry[j] + ThermodynamicsOld[i][j];
-		}
-		SingleClassEntry[17] = SingleClassEntry[17] + 1; // 1 species added to class
+  // cout << "checkpoint 5 \n";
 
-		new_thermo[ClassID] = SingleClassEntry;
+  /*
+   * Write Thermodynamic Data into new format again
+   */
 
-		SingleClassEntry.clear(); // clear just to make sure
-	}
+  /// TODO: I am sure this has now become a mess...
 
-	//cout << "checkpoint 4 \n";
+  // Convert Thermodynamics for Mechanims Modification
+  // Thermodynamics.clear(); // emtpy first, then populate again
+  //*
+  for (i = 0; i < Number_Species_Classes; i++) {
 
-	// now average values by class count:
-	for(i=0;i<Number_New_Thermo_Positions;i++)
-	{
-		for(j=0;j<17;j++)
-		{
-			new_thermo[i][j] = new_thermo[i][j] / new_thermo[i][17];
-		}
-	}
+    // ThermodynamicData temp;
 
-	//cout << "checkpoint 5 \n";
+    Species temp;
 
+    temp.Name = "";
 
-	/*
-	 * Write Thermodynamic Data into new format again
-	 */
+    temp.thermodynamicdata.TLow = new_thermo[i][0];
+    temp.thermodynamicdata.THigh = new_thermo[i][1];
+    temp.thermodynamicdata.TChange = new_thermo[i][2];
 
-	 /// TODO: I am sure this has now become a mess... 
+    temp.thermodynamicdata.NasaLow1 = new_thermo[i][3];
+    temp.thermodynamicdata.NasaLow2 = new_thermo[i][4];
+    temp.thermodynamicdata.NasaLow3 = new_thermo[i][5];
+    temp.thermodynamicdata.NasaLow4 = new_thermo[i][6];
+    temp.thermodynamicdata.NasaLow5 = new_thermo[i][7];
+    temp.thermodynamicdata.NasaLow6 = new_thermo[i][8];
+    temp.thermodynamicdata.NasaLow7 = new_thermo[i][9];
 
-	// Convert Thermodynamics for Mechanims Modification
-	//Thermodynamics.clear(); // emtpy first, then populate again
-	//*
-	for(i=0;i<Number_Species_Classes;i++){
+    temp.thermodynamicdata.NasaHigh1 = new_thermo[i][10];
+    temp.thermodynamicdata.NasaHigh2 = new_thermo[i][11];
+    temp.thermodynamicdata.NasaHigh3 = new_thermo[i][12];
+    temp.thermodynamicdata.NasaHigh4 = new_thermo[i][13];
+    temp.thermodynamicdata.NasaHigh5 = new_thermo[i][14];
+    temp.thermodynamicdata.NasaHigh6 = new_thermo[i][15];
+    temp.thermodynamicdata.NasaHigh7 = new_thermo[i][16];
 
-		//ThermodynamicData temp;
+    // Thermodynamics.push_back(temp);
+    species.push_back(temp);
+  } //*/
 
-		Species temp;
-
-		temp.Name = "";
-
-		temp.thermodynamicdata.TLow = new_thermo[i][0];
-		temp.thermodynamicdata.THigh = new_thermo[i][1];
-		temp.thermodynamicdata.TChange = new_thermo[i][2];
-
-		temp.thermodynamicdata.NasaLow1 = new_thermo[i][3];
-		temp.thermodynamicdata.NasaLow2 = new_thermo[i][4];
-		temp.thermodynamicdata.NasaLow3 = new_thermo[i][5];
-		temp.thermodynamicdata.NasaLow4 = new_thermo[i][6];
-		temp.thermodynamicdata.NasaLow5 = new_thermo[i][7];
-		temp.thermodynamicdata.NasaLow6 = new_thermo[i][8];
-		temp.thermodynamicdata.NasaLow7 = new_thermo[i][9];
-
-		temp.thermodynamicdata.NasaHigh1 = new_thermo[i][10];
-		temp.thermodynamicdata.NasaHigh2 = new_thermo[i][11];
-		temp.thermodynamicdata.NasaHigh3 = new_thermo[i][12];
-		temp.thermodynamicdata.NasaHigh4 = new_thermo[i][13];
-		temp.thermodynamicdata.NasaHigh5 = new_thermo[i][14];
-		temp.thermodynamicdata.NasaHigh6 = new_thermo[i][15];
-		temp.thermodynamicdata.NasaHigh7 = new_thermo[i][16];
-
-		//Thermodynamics.push_back(temp);
-		species.push_back(temp);
-	}//*/
-
-
-	//return Thermodynamics;
-	return species; 
+  // return Thermodynamics;
+  return species;
 }

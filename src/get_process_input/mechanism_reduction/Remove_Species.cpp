@@ -6,158 +6,135 @@
  *      Author: DetlevCM
  */
 
-
-
 #include "Mechanism_Reduction.h"
 
+vector<bool> MechanismReduction::Read_Kill_List(string filename,
+                                                vector<Species> species) {
+  ifstream InputFile;
+  InputFile.open(filename.c_str());
 
+  size_t i, j;
+  size_t Number_Species = species.size();
+  string line;
 
-vector< bool > MechanismReduction::Read_Kill_List(
-		string filename,
-		vector< Species > species
-)
-{
-	ifstream InputFile;
-	InputFile.open (filename.c_str());
+  // vector to determine whether a species is retained or not
+  vector<bool> RetainOrNot(Number_Species);
 
-	size_t i, j;
-	size_t Number_Species = species.size();
-	string line;
+  for (i = 0; i < Number_Species; i++) {
+    RetainOrNot[i] = true;
+  }
 
-	// vector to determine whether a species is retained or not
-	vector< bool > RetainOrNot(Number_Species);
+  // first I need to read in my species to remove
+  if (InputFile.is_open()) {
+    cout << "Removing selected species from the mechanism.\n";
 
-	for(i=0;i<Number_Species;i++){
-		RetainOrNot[i] = true;
-	}
+    while (InputFile.good()) {
+      getline(InputFile, line);
+      if (Line_Not_Comment_Or_Empty(line)) {
+        vector<string> Remove_Comments;
+        vector<string> Species_Present;
 
-	// first I need to read in my species to remove
-	if (InputFile.is_open())
-	{
-		cout << "Removing selected species from the mechanism.\n";
+        Remove_Comments =
+            Tokenise_String_To_String(line, "!"); // cut away comments
+        Species_Present =
+            Tokenise_String_To_String(Remove_Comments[0], "\t "); // split entry
 
-		while (InputFile.good())
-		{
-			getline (InputFile,line);
-			if(Line_Not_Comment_Or_Empty(line))
-			{
-				vector< string > Remove_Comments;
-				vector< string > Species_Present;
+        // in case more than one species is names on a single line
+        for (i = 0; i < Species_Present.size(); i++) {
+          for (j = 0; j < Number_Species; j++) {
+            // compare the name of the species with the species in the kill list
+            if (strcmp(species[j].Name.c_str(), Species_Present[i].c_str()) ==
+                0) {
+              RetainOrNot[j] = false;
+            }
+          }
+        }
+        Remove_Comments.clear(); // tidy up
+        Species_Present.clear();
+      }
+    }
+    InputFile.close();
+  }
 
-				Remove_Comments = Tokenise_String_To_String(line,"!"); // cut away comments
-				Species_Present = Tokenise_String_To_String(Remove_Comments[0],"\t "); // split entry
-
-				// in case more than one species is names on a single line
-				for(i=0;i<Species_Present.size();i++)
-				{
-					for(j=0;j<Number_Species;j++){
-						// compare the name of the species with the species in the kill list
-						if(strcmp(species[j].Name.c_str(),Species_Present[i].c_str()) == 0){
-							RetainOrNot[j] = false;
-						}
-					}
-				}
-				Remove_Comments.clear(); //tidy up
-				Species_Present.clear();
-			}
-		}
-		InputFile.close();
-	}
-
-	return RetainOrNot;
+  return RetainOrNot;
 }
-
-
-
 
 void MechanismReduction::Reduce_Species_Thermo_Mechanism(
-		vector< bool > RetainOrNot,
-		vector<Species>& species,
-		//vector< vector< double > >& Thermodynamics,
-		//vector< Species::ThermodynamicData > & Thermodynamics,
-		vector< SingleReactionData >& Reactions
-)
-{
+    vector<bool> RetainOrNot, vector<Species> &species,
+    // vector< vector< double > >& Thermodynamics,
+    // vector< Species::ThermodynamicData > & Thermodynamics,
+    vector<SingleReactionData> &Reactions) {
 
-	size_t i, j;
-	size_t Number_Species = species.size();
-	vector<Species> NewSpecies;
-	//vector< vector< double > >
-	vector< Species::ThermodynamicData > NewThermodynamics;
-	vector< SingleReactionData > NewReactions;
+  size_t i, j;
+  size_t Number_Species = species.size();
+  vector<Species> NewSpecies;
+  // vector< vector< double > >
+  vector<Species::ThermodynamicData> NewThermodynamics;
+  vector<SingleReactionData> NewReactions;
 
+  for (i = 0; i < Number_Species; i++) {
+    if (RetainOrNot[i]) { // if we retain the species, write it to the new
+                          // vector
+      NewSpecies.push_back(species[i]);
+      NewThermodynamics.push_back(species[i].thermodynamicdata);
+    }
+  }
 
-	for(i=0;i<Number_Species;i++){
-		if(RetainOrNot[i]){ // if we retain the species, write it to the new vector
-			NewSpecies.push_back(species[i]);
-			NewThermodynamics.push_back(species[i].thermodynamicdata);
-		}
-	}
+  bool kill;
 
+  for (j = 0; j < Reactions.size(); j++) {
 
-	bool kill;
+    kill = false;
 
-	for(j=0;j<Reactions.size();j++){
+    for (i = 0; i < Number_Species; i++) {
+      if (Reactions[j].Reactants[i] != 0 && !RetainOrNot[i]) {
+        kill = true;
+      }
+      if (Reactions[j].Products[i] != 0 && !RetainOrNot[i]) {
+        kill = true;
+      }
+    }
 
-		kill = false;
+    SingleReactionData SingleReactionData;
 
-		for(i=0;i<Number_Species;i++){
-			if(Reactions[j].Reactants[i] != 0 && !RetainOrNot[i]){
-				kill = true;
-			}
-			if(Reactions[j].Products[i] != 0 && !RetainOrNot[i]){
-				kill = true;
-			}
-		}
+    if (!kill) // if not kill true, retain
+    {
+      size_t k;
+      vector<double> Reactants;
+      vector<double> Products;
 
-		SingleReactionData SingleReactionData;
+      for (k = 0; k < Number_Species; k++) {
+        if (RetainOrNot[k]) {
+          Reactants.push_back(Reactions[j].Reactants[k]);
+          Products.push_back(Reactions[j].Products[k]);
+        }
+      }
 
-		if(!kill) // if not kill true, retain
-		{
-			size_t k;
-			vector< double > Reactants;
-			vector< double > Products;
+      SingleReactionData.Reactants = Reactants;
+      SingleReactionData.Products = Products;
 
-			for(k=0;k<Number_Species;k++)
-			{
-				if(RetainOrNot[k])
-				{
-					Reactants.push_back(Reactions[j].Reactants[k]);
-					Products.push_back(Reactions[j].Products[k]);
-				}
-			}
+      SingleReactionData.paramA = Reactions[j].paramA;
+      SingleReactionData.paramN = Reactions[j].paramN;
+      SingleReactionData.paramEa = Reactions[j].paramEa;
+      SingleReactionData.Reversible = Reactions[j].Reversible;
+      SingleReactionData.IsDuplicate = Reactions[j].IsDuplicate;
 
-			SingleReactionData.Reactants = Reactants;
-			SingleReactionData.Products = Products;
+      NewReactions.push_back(SingleReactionData);
+    }
+  }
 
-			SingleReactionData.paramA = Reactions[j].paramA;
-			SingleReactionData.paramN = Reactions[j].paramN;
-			SingleReactionData.paramEa = Reactions[j].paramEa;
-			SingleReactionData.Reversible = Reactions[j].Reversible;
-			SingleReactionData.IsDuplicate = Reactions[j].IsDuplicate;
+  // clear out the old arrays
+  species.clear();
+  Reactions.clear();
+  // Thermodynamics.clear();
 
-			NewReactions.push_back(SingleReactionData);
-		}
-	}
+  cout << "\nAfter species removal, the scheme contains the following counts:\n"
+       << "Species: " << NewSpecies.size() << "\n"
+       << "Thermodynamic Entries: " << NewThermodynamics.size() << "\n"
+       << "Reactions: " << NewReactions.size() << "\n\n";
 
-
-	// clear out the old arrays
-	species.clear();
-	Reactions.clear();
-	//Thermodynamics.clear();
-
-
-	cout << "\nAfter species removal, the scheme contains the following counts:\n" <<
-			"Species: " << NewSpecies.size() << "\n" <<
-			"Thermodynamic Entries: " << NewThermodynamics.size() << "\n" <<
-			"Reactions: " << NewReactions.size() << "\n\n";
-
-
-	// assign new arrays
-	species = NewSpecies;
-	//Thermodynamics = NewThermodynamics;
-	Reactions = NewReactions;
+  // assign new arrays
+  species = NewSpecies;
+  // Thermodynamics = NewThermodynamics;
+  Reactions = NewReactions;
 }
-
-
-

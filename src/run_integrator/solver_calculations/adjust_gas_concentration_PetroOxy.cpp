@@ -5,7 +5,6 @@
  *      Author: DetlevCM
  */
 
-
 #include "../../global_const.h"
 #include "./solver_calculations.h"
 
@@ -31,127 +30,112 @@
  * P_gas
  */
 
-
 void SolverCalculation::AdjustGasConcentration(
-		double & GasSpeciesInLiquidConcentration,
-		double temperature,
-		double time_difference,
-		PressureVesselCalc & PetroOxyData
-)
-{
+    double &GasSpeciesInLiquidConcentration, double temperature,
+    double time_difference, PressureVesselCalc &PetroOxyData) {
 
-	// cout << time_difference << "\n"; // checked, it is non-zero
+  // cout << time_difference << "\n"; // checked, it is non-zero
 
-	//cout << PetroOxyData.HenryLawDiffusionLimitSet << "\n";
+  // cout << PetroOxyData.HenryLawDiffusionLimitSet << "\n";
 
-	if(PetroOxyData.HenryLawDiffusionLimitSet){ // arrangement for limited gas to liquid diffusion
-		//cout << "Check Limit Set \n";
-		//cout << time_difference << "\n";
+  if (PetroOxyData.HenryLawDiffusionLimitSet) { // arrangement for limited gas
+                                                // to liquid diffusion
+    // cout << "Check Limit Set \n";
+    // cout << time_difference << "\n";
 
-		double targetconcentration =
-				(
-						(PetroOxyData.HeadSpaceGasMol +
-								PetroOxyData.SampleSize*GasSpeciesInLiquidConcentration*1000)
-								*R*temperature)
-								/
-								(PetroOxyData.HeadSpaceGas*PetroOxyData.HenryConstantk +
-										R*temperature*PetroOxyData.SampleSize);
+    double targetconcentration =
+        ((PetroOxyData.HeadSpaceGasMol +
+          PetroOxyData.SampleSize * GasSpeciesInLiquidConcentration * 1000) *
+         R * temperature) /
+        (PetroOxyData.HeadSpaceGas * PetroOxyData.HenryConstantk +
+         R * temperature * PetroOxyData.SampleSize);
 
+    // Now we need to compare the liquid concentration to the gas concentrations
+    // volume is in m^3 -> I get mol/L m^3 - *1000 to get mol /L * L
+    double transferMolGas =
+        (targetconcentration - GasSpeciesInLiquidConcentration) *
+        PetroOxyData.SampleSize * 1000;
 
-		// Now we need to compare the liquid concentration to the gas concentrations
-		// volume is in m^3 -> I get mol/L m^3 - *1000 to get mol /L * L
-		double transferMolGas = (targetconcentration - GasSpeciesInLiquidConcentration) * PetroOxyData.SampleSize*1000;
+    if (transferMolGas >
+        PetroOxyData.HenryLawDiffusionLimit * 12.5 *
+            time_difference) // we assume 12.5cm^2 surface area for the liquid
+                             // sample in the PetroOxy
+    {
+      transferMolGas = PetroOxyData.HenryLawDiffusionLimit * 12.5 *
+                       time_difference; // limiter
+      // cout << "Transfer Gas Value " << transferMolGas << "\n";
 
+      PetroOxyData.HeadSpaceGasMol =
+          PetroOxyData.HeadSpaceGasMol - transferMolGas;
+      PetroOxyData.HeadSpaceGasPressure =
+          PetroOxyData.HeadSpaceGasMol * R * temperature /
+          PetroOxyData.HeadSpaceGas; // + PetroOxyData[8];
 
-		if(transferMolGas > PetroOxyData.HenryLawDiffusionLimit*12.5*time_difference) // we assume 12.5cm^2 surface area for the liquid sample in the PetroOxy
-		{
-			transferMolGas = PetroOxyData.HenryLawDiffusionLimit*12.5*time_difference; // limiter
-			//cout << "Transfer Gas Value " << transferMolGas << "\n";
+      GasSpeciesInLiquidConcentration =
+          GasSpeciesInLiquidConcentration +
+          transferMolGas /
+              (1000 *
+               PetroOxyData.SampleSize); // hope I got the correction right...
+    } else {
+      PetroOxyData.HeadSpaceGasMol =
+          PetroOxyData.HeadSpaceGasMol - transferMolGas;
 
-			PetroOxyData.HeadSpaceGasMol = PetroOxyData.HeadSpaceGasMol - transferMolGas;
-			PetroOxyData.HeadSpaceGasPressure = PetroOxyData.HeadSpaceGasMol*R*temperature/PetroOxyData.HeadSpaceGas;// + PetroOxyData[8];
+      // use ideal gas law to recompute pressure
+      // assume the vapour pressure component from the solvent is constant
+      PetroOxyData.HeadSpaceGasPressure =
+          PetroOxyData.HeadSpaceGasMol * R * temperature /
+          PetroOxyData.HeadSpaceGas; // + PetroOxyData[8];
 
-			GasSpeciesInLiquidConcentration = GasSpeciesInLiquidConcentration + transferMolGas/(1000*PetroOxyData.SampleSize); // hope I got the correction right...
-		}
-		else
-		{
-			PetroOxyData.HeadSpaceGasMol = PetroOxyData.HeadSpaceGasMol- transferMolGas;
+      // this is a bit "dangerous", it assumes there is sufficient gas left to
+      // saturate the sample, i.e. oxygen in the headspace does not reach 0
+      GasSpeciesInLiquidConcentration = targetconcentration;
+    }
 
-			// use ideal gas law to recompute pressure
-			// assume the vapour pressure component from the solvent is constant
-			PetroOxyData.HeadSpaceGasPressure = PetroOxyData.HeadSpaceGasMol*R*temperature/PetroOxyData.HeadSpaceGas;// + PetroOxyData[8];
+  } else { // setup for "fast" diffusion from gas to the liquid phase
+    // cout << "Check Limit Not Set \n";
 
-			// this is a bit "dangerous", it assumes there is sufficient gas left to saturate the sample,
-			// i.e. oxygen in the headspace does not reach 0
-			GasSpeciesInLiquidConcentration = targetconcentration;
-		}
+    double targetconcentration =
+        ((PetroOxyData.HeadSpaceGasMol +
+          PetroOxyData.SampleSize * GasSpeciesInLiquidConcentration * 1000) *
+         R * temperature) /
+        (PetroOxyData.HeadSpaceGas * PetroOxyData.HenryConstantk +
+         R * temperature * PetroOxyData.SampleSize);
 
-	}
-	else{ // setup for "fast" diffusion from gas to the liquid phase
-		//cout << "Check Limit Not Set \n";
+    // Now we need to compare the liquid concentration to the gas concentrations
+    // volume is in m^3 -> I get mol/L m^3 - *1000 to get mol /L * L
+    double transferMolGas =
+        (targetconcentration - GasSpeciesInLiquidConcentration) *
+        PetroOxyData.SampleSize * 1000;
 
-		double targetconcentration =
-				(
-						(PetroOxyData.HeadSpaceGasMol +
-								PetroOxyData.SampleSize*GasSpeciesInLiquidConcentration*1000)
-								*R*temperature)
-								/
-								(PetroOxyData.HeadSpaceGas*PetroOxyData.HenryConstantk +
-										R*temperature*PetroOxyData.SampleSize);
+    PetroOxyData.HeadSpaceGasMol =
+        PetroOxyData.HeadSpaceGasMol - transferMolGas;
 
+    // use ideal gas law to recompute pressure
+    // assume the vapour pressure component from the solvent is constant
+    PetroOxyData.HeadSpaceGasPressure =
+        PetroOxyData.HeadSpaceGasMol * R * temperature /
+        PetroOxyData.HeadSpaceGas; // + PetroOxyData[8];
 
-		// Now we need to compare the liquid concentration to the gas concentrations
-		// volume is in m^3 -> I get mol/L m^3 - *1000 to get mol /L * L
-		double transferMolGas = (targetconcentration - GasSpeciesInLiquidConcentration) * PetroOxyData.SampleSize*1000;
-
-		PetroOxyData.HeadSpaceGasMol = PetroOxyData.HeadSpaceGasMol- transferMolGas;
-
-		// use ideal gas law to recompute pressure
-		// assume the vapour pressure component from the solvent is constant
-		PetroOxyData.HeadSpaceGasPressure = PetroOxyData.HeadSpaceGasMol*R*temperature/PetroOxyData.HeadSpaceGas;// + PetroOxyData[8];
-
-		// this is a bit "dangerous", it assumes there is sufficient gas left to saturate the sample,
-		// i.e. oxygen in the headspace does not reach 0
-		GasSpeciesInLiquidConcentration = targetconcentration;
-	}
+    // this is a bit "dangerous", it assumes there is sufficient gas left to
+    // saturate the sample, i.e. oxygen in the headspace does not reach 0
+    GasSpeciesInLiquidConcentration = targetconcentration;
+  }
 }
 
-
-
-
-
-// identical to regular PetroOxy function, but corrects concentration without change to reservoir
+// identical to regular PetroOxy function, but corrects concentration without
+// change to reservoir
 void SolverCalculation::Adjust_Gas_Concentration_Initial(
-		double & GasSpeciesInLiquidConcentration,
-		double temperature,
-		PressureVesselCalc & PetroOxyData
-)
-{
+    double &GasSpeciesInLiquidConcentration, double temperature,
+    PressureVesselCalc &PetroOxyData) {
 
-	double targetconcentration =
-			(
-					(PetroOxyData.HeadSpaceGasMol +
-							PetroOxyData.SampleSize*GasSpeciesInLiquidConcentration*1000)
-							*R*temperature)
-							/
-							(PetroOxyData.HeadSpaceGas*PetroOxyData.HenryConstantk +
-									R*temperature*PetroOxyData.SampleSize);
+  double targetconcentration =
+      ((PetroOxyData.HeadSpaceGasMol +
+        PetroOxyData.SampleSize * GasSpeciesInLiquidConcentration * 1000) *
+       R * temperature) /
+      (PetroOxyData.HeadSpaceGas * PetroOxyData.HenryConstantk +
+       R * temperature * PetroOxyData.SampleSize);
 
-	// this is a bit "dangerous", it assumes there is sufficient gas left to saturate the sample,
-	// i.e. oxygen in the headspace does not reach 0
-	GasSpeciesInLiquidConcentration = targetconcentration;
+  // this is a bit "dangerous", it assumes there is sufficient gas left to
+  // saturate the sample, i.e. oxygen in the headspace does not reach 0
+  GasSpeciesInLiquidConcentration = targetconcentration;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-

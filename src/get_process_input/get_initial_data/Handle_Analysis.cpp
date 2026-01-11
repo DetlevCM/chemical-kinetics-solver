@@ -5,83 +5,74 @@
  *      Author: DetlevCM
  */
 
-
 #include "Initial_Data.h"
 
+void Initial_Data::Handle_Analysis(Initial_Data &InitialParameters,
+                                   vector<string> Input,
+                                   vector<Species> species) {
+  size_t i, j;
+  vector<string> line_content;
 
+  for (i = 0; i < Input.size(); i++) {
 
-void Initial_Data::Handle_Analysis(
-		Initial_Data& InitialParameters,
-		vector<string> Input,
-		vector<Species> species
-		)
-{
-	size_t i, j;
-	vector< string > line_content;
+    if (Test_If_Word_Found(Input[i], "RatesMaxAnalysis")) {
+      InitialParameters.MechanismAnalysis.MaximumRates = true;
+      cout << "Identification of maximum rates desired.\n";
+    }
+    if (Test_If_Word_Found(Input[i], "StreamRatesAnalysis")) {
+      InitialParameters.MechanismAnalysis.StreamRatesAnalysis = true;
+    }
+    if (Test_If_Word_Found(Input[i], "RatesSpeciesAllAnalysis")) {
+      InitialParameters.MechanismAnalysis.RatesSpeciesAllAnalysis = true;
+    }
 
-	for(i=0;i<Input.size();i++)
-	{
+    if (Test_If_Word_Found(Input[i], "RatesAnalysisAtTime")) {
+      InitialParameters.MechanismAnalysis.RatesAnalysisAtTime =
+          true; // user wants rates at specified times
 
-		if (Test_If_Word_Found(Input[i],"RatesMaxAnalysis"))
-		{
-			InitialParameters.MechanismAnalysis.MaximumRates = true;
-			cout << "Identification of maximum rates desired.\n";
-		}
-		if (Test_If_Word_Found(Input[i],"StreamRatesAnalysis"))
-		{
-			InitialParameters.MechanismAnalysis.StreamRatesAnalysis = true;
-		}
-		if (Test_If_Word_Found(Input[i],"RatesSpeciesAllAnalysis"))
-		{
-			InitialParameters.MechanismAnalysis.RatesSpeciesAllAnalysis = true;
-		}
+      line_content = Tokenise_String_To_String(Input[i], " \t");
+      for (j = 1; j < line_content.size();
+           j++) // start at 1, as first position is the keyword
+      {
+        InitialParameters.MechanismAnalysis.RatesAnalysisAtTimeData.push_back(
+            stod(line_content[j], NULL));
+      }
+      line_content.clear(); // tidy up
 
-		if (Test_If_Word_Found(Input[i],"RatesAnalysisAtTime"))
-		{
-			InitialParameters.MechanismAnalysis.RatesAnalysisAtTime = true; // user wants rates at specified times
+      // catch empty array
+      if ((int)InitialParameters.MechanismAnalysis.RatesAnalysisAtTimeData
+              .size() == 0) {
+        cout << "error, no times for rates analysis specified, switched off\n";
+        InitialParameters.MechanismAnalysis.RatesAnalysisAtTime = false;
+      }
+    }
 
-			line_content = Tokenise_String_To_String(Input[i]," \t");
-			for(j=1;j<line_content.size();j++) // start at 1, as first position is the keyword
-			{
-				InitialParameters.MechanismAnalysis.RatesAnalysisAtTimeData.push_back(stod(line_content[j],NULL));
-			}
-			line_content.clear(); // tidy up
+    if (Test_If_Word_Found(Input[i], "RatesOfSpecies")) {
+      InitialParameters.MechanismAnalysis.RatesOfSpecies =
+          true; // user wants rates at specified times
 
-			// catch empty array
-			if((int)InitialParameters.MechanismAnalysis.RatesAnalysisAtTimeData.size()==0)
-			{
-				cout << "error, no times for rates analysis specified, switched off\n";
-				InitialParameters.MechanismAnalysis.RatesAnalysisAtTime = false;
-			}
-		}
+      size_t k;
+      line_content = Tokenise_String_To_String(Input[i], " \t");
 
-		if (Test_If_Word_Found(Input[i],"RatesOfSpecies"))
-		{
-			InitialParameters.MechanismAnalysis.RatesOfSpecies = true; // user wants rates at specified times
+      for (j = 1; j < line_content.size();
+           j++) // start at 1, as first position is the keyword
+      {
+        // check which species has been named for analysis and store its ID
+        for (k = 0; k < species.size(); k++) {
+          if (strcmp(line_content[j].c_str(), species[k].Name.c_str()) == 0) {
+            InitialParameters.MechanismAnalysis.SpeciesSelectedForRates
+                .push_back(k);
+          }
+        }
+      }
 
-			size_t k;
-			line_content = Tokenise_String_To_String(Input[i]," \t");
-
-			for(j=1;j<line_content.size();j++) // start at 1, as first position is the keyword
-			{
-				// check which species has been named for analysis and store its ID
-				for(k=0;k<species.size();k++){
-					if(strcmp(line_content[j].c_str(),species[k].Name.c_str()) == 0)
-					{
-						InitialParameters.MechanismAnalysis.SpeciesSelectedForRates.push_back(k);
-					}
-				}
-			}
-
-			// catch empty array
-			if((int)InitialParameters.MechanismAnalysis.SpeciesSelectedForRates.size()==0)
-			{
-				cout << "error, no species for rates analysis specified, switched off\n";
-				InitialParameters.MechanismAnalysis.RatesOfSpecies = false;
-			}
-		}
-
-
-	}
+      // catch empty array
+      if ((int)InitialParameters.MechanismAnalysis.SpeciesSelectedForRates
+              .size() == 0) {
+        cout
+            << "error, no species for rates analysis specified, switched off\n";
+        InitialParameters.MechanismAnalysis.RatesOfSpecies = false;
+      }
+    }
+  }
 }
-

@@ -17,85 +17,51 @@ using std::string;
 #include <vector>
 using std::vector;
 
-
 #include "../global_struct.h"
 
 #include "../get_process_input/get_mechanism/ReactionMechanism.h"
 
+class WriteOutput {
 
-class WriteOutput
-{
+public:
+  /*|-------------------------------|*/
+  /*|-- Functions to write output --|*/
+  /*|-------------------------------|*/
 
-	public:
+  // Function to write the labels
 
+  // Write labels for concentrations, then stream output
+  static void Write_Header_Species_Temperature_Pressure(string filename,
+                                                        string separator,
+                                                        size_t Number_Species,
+                                                        vector<Species> species,
+                                                        bool GasPhasePressure);
 
-/*|-------------------------------|*/
-/*|-- Functions to write output --|*/
-/*|-------------------------------|*/
+  static void StreamConcentrations(ofstream &Concentration_OFStream,
+                                   const string separator,
+                                   bool GasPhasePressure, size_t Number_Species,
+                                   double CurrentTime, double Pressure,
+                                   const vector<double> &Concentration);
 
-// Function to write the labels
+  static void StreamConcentrationsV2(ofstream &Concentration_OFStream,
+                                     const string separator, double CurrentTime,
+                                     size_t Number_Species,
+                                     double *Concentration);
 
+  // write labels for reactions then stream output
+  static void WriteLabelsReactionRates(string, string, size_t);
 
-// Write labels for concentrations, then stream output
-static void Write_Header_Species_Temperature_Pressure(
-		string filename,
-		string separator,
-		size_t Number_Species,
-		vector< Species > species,
-		bool GasPhasePressure
-);
+  static void StreamReactionRates(ofstream &, const string, double,
+                                  vector<double> &);
 
-static void StreamConcentrations(
-		ofstream& Concentration_OFStream,
-		const string separator,
-		bool GasPhasePressure,
-		size_t Number_Species,
-		double CurrentTime,
-		double Pressure,
-		const vector<double >& Concentration
-);
+  // output of input files
 
-static void StreamConcentrationsV2(
-		ofstream& Concentration_OFStream,
-		const string separator,
-		double CurrentTime,
-		size_t Number_Species,
-		double* Concentration
-);
-
-// write labels for reactions then stream output
-static void WriteLabelsReactionRates(
-		string ,
-		string ,
-		size_t
-);
-
-
-static void StreamReactionRates(
-		ofstream&,
-		const string,
-		double,
-		vector< double> &
-);
-
-
-
-// output of input files
-
-
-static void Write_Stoichiometric_Matrix_For_Opt(
-		string ,
-		//		const vector< string >& ,
-		const vector< SingleReactionData >&
-);
-static void Input_File_For_Ehsan_Opt(
-		string ,
-		const vector< SingleReactionData >&
-);
-
-
-
-
+  static void Write_Stoichiometric_Matrix_For_Opt(
+      string,
+      //		const vector< string >& ,
+      const vector<SingleReactionData> &);
+  static void Input_File_For_Ehsan_Opt(string,
+                                       const vector<SingleReactionData> &);
 };
 
 #endif

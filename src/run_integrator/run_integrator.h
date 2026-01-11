@@ -17,8 +17,8 @@ using std::vector;
 
 #include "../get_process_input/get_initial_data/Initial_Data.h"
 
-#include "../get_process_input/get_mechanism/Species.h"
 #include "../get_process_input/get_mechanism/ReactionMechanism.h"
+#include "../get_process_input/get_mechanism/Species.h"
 
 #include "../get_process_input/mechanism_reduction/Mechanism_Reduction.h"
 
@@ -30,174 +30,131 @@ using std::vector;
 #include "../../lib/headers/lib_odepack.hpp"
 #include "./solver_calculations/solver_calculations.h"
 
-class RunIntegrator 
-{
+class RunIntegrator {
 
 public:
+  /*
+  class Jacobian_ODE_RHS
+  {
+          public:
+  //// constant (i.e. set once) ////
+  size_t Number_Species;
+  vector< double > Delta_N;
+  vector< Species::ThermodynamicData > Thermodynamics;
+  //vector< Reaction::ReactionParameter > ReactionParameters; // tidier than
+  reactions vector vector< TrackSpecies > SpeciesLossAll; // vector for
+  recording species loss
 
+  //// variable (values change during calculation ////
+  vector< double > Concentration;
+  vector< Species::ThermodynamicData::CalculatedThermodynamics >
+  CalculatedThermo; vector< double > Kf; vector< double > Kr;
+  };
+  //*/
 
+  /*
+  class ODE_RHS
+  {
+          public:
+  //// constant (i.e. set once) ////
+  size_t Number_Reactions;
+  //ConstantInitRHSODE InitialDataConstants;
+  vector< TrackSpecies > ReactantsForReactions;
+  vector< TrackSpecies > ProductsForReactions;
 
+  //// variable (values change during calculation ////
+  vector< double > Rates;
+  vector< double > SpeciesConcentrationChange;
+  };
+  //*/
 
+  // Split into own namespace for efficiency
+  /*
+  class ODE_RHS_Pressure_Vessel_Variables
+  {
+          public:
+  size_t OxyGasSpeciesID;
+  PressureVesselCalc PetroOxyData;
+  //for limited Oxy
+  double time_previous;
+  };
+  //*/
 
+  //// end TODO:
 
+  struct Settings_LSODA {
+    int solver_subsettings;
 
+    int JT;
+    // LSODA specific settings
+    int LRW, LIW;
+    int ITOL = 1;
+    int ITASK = 1;
+    int ISTATE = 1;
+    int IOPT = 0;
 
-/*
-class Jacobian_ODE_RHS
-{
-	public:
-//// constant (i.e. set once) ////
-size_t Number_Species;
-vector< double > Delta_N;
-vector< Species::ThermodynamicData > Thermodynamics;
-//vector< Reaction::ReactionParameter > ReactionParameters; // tidier than reactions vector
-vector< TrackSpecies > SpeciesLossAll; // vector for recording species loss
+    // general solver settings
+    double RTOL, ATOL;
 
-//// variable (values change during calculation ////
-vector< double > Concentration;
-vector< Species::ThermodynamicData::CalculatedThermodynamics > CalculatedThermo;
-vector< double > Kf;
-vector< double > Kr;
-};
-//*/
+    // some vectors for LSODA
+    vector<int> vector_IWORK;
+    vector<double> vector_RWORK;
+  };
 
-/*
-class ODE_RHS
-{
-	public: 
-//// constant (i.e. set once) ////
-size_t Number_Reactions;
-//ConstantInitRHSODE InitialDataConstants;
-vector< TrackSpecies > ReactantsForReactions;
-vector< TrackSpecies > ProductsForReactions;
+  struct Settings_Intel {
+    int ierr, dpar_size;
+    double h, hm, ep, tr;
 
-//// variable (values change during calculation ////
-vector< double > Rates;
-vector< double > SpeciesConcentrationChange;
-};
-//*/
+    int solver_subsettings;
 
-// Split into own namespace for efficiency
-/*
-class ODE_RHS_Pressure_Vessel_Variables
-{
-	public:
-size_t OxyGasSpeciesID;
-PressureVesselCalc PetroOxyData;
-//for limited Oxy
-double time_previous;
-};
-//*/
+    vector<int> vector_ipar;
+    vector<int> vector_kd;
+    vector<double> vector_dpar;
+    // set the solver:
+    Initial_Data::solver_type Solver_Type;
+  };
 
-//// end TODO: 
+  // Function to pick the right integration routine
+  static void Choose_Integrator(Filenames, ReactionMechanism, Initial_Data,
+                                vector<double> &, PressureVesselCalc,
+                                vector<vector<str_RatesAnalysis>> &);
 
-struct Settings_LSODA{
-	int solver_subsettings;
+  static int Prepare_Integrator_Settings(Initial_Data, size_t, Settings_LSODA &,
+                                         Settings_Intel &);
 
-	int JT;
-	// LSODA specific settings
-	int LRW, LIW;
-	int ITOL = 1;
-	int ITASK = 1;
-	int ISTATE = 1;
-	int IOPT = 0;
+  static vector<double> Get_Delta_N(const vector<SingleReactionData> Reactions);
 
-	// general solver settings
-	double RTOL, ATOL;
+  // solve based on concentrations in the liquid phase
+  static void Integrate_Liquid_Phase(Filenames, vector<double>,
+                                     ReactionMechanism, Initial_Data,
+                                     vector<double> &,
+                                     vector<vector<str_RatesAnalysis>> &);
 
-	// some vectors for LSODA
-	vector<int> vector_IWORK;
-	vector<double> vector_RWORK;
-};
+  static void Integrate_Gas_Phase_Odepack_LSODA(
+      Filenames, vector<double>, ReactionMechanism, Initial_Data,
+      vector<double> &, vector<vector<str_RatesAnalysis>> &);
 
-struct Settings_Intel{
-	int ierr, dpar_size;
-	double h, hm, ep, tr;
+  // solve based on concentrations in the liquid phase and consider headspace
+  // gas
+  static void
+  Integrate_Pressure_Vessel_Liquid_Phase(Filenames, vector<double>,
+                                         ReactionMechanism, Initial_Data,
+                                         vector<double> &, PressureVesselCalc,
+                                         vector<vector<str_RatesAnalysis>> &);
 
-	int solver_subsettings;
+  //// Pre-Processing:
 
-	vector<int> vector_ipar;
-	vector<int> vector_kd;
-	vector<double> vector_dpar;
-	// set the solver:
-	Initial_Data::solver_type Solver_Type;
-};
+  static vector<ReactionParameter>
+  Process_Reaction_Parameters(const vector<SingleReactionData> &);
 
-// Function to pick the right integration routine
-static void Choose_Integrator(
-		Filenames,
-		ReactionMechanism ,
-		Initial_Data,
-		vector< double >&,
-		PressureVesselCalc,
-		vector< vector < str_RatesAnalysis > > &
-);
+  static vector<TrackSpecies>
+  Reactants_ForReactionRate(const vector<SingleReactionData> &);
 
-static int Prepare_Integrator_Settings(
-		Initial_Data ,
-		size_t ,
-		Settings_LSODA& ,
-		Settings_Intel&
-);
+  static vector<TrackSpecies>
+  Products_ForReactionRate(const vector<SingleReactionData> &, bool);
 
-static vector< double > Get_Delta_N(const vector< SingleReactionData > Reactions);
-
-// solve based on concentrations in the liquid phase
-static void Integrate_Liquid_Phase(
-		Filenames,
-		vector< double >,
-		ReactionMechanism ,
-		Initial_Data,
-		vector< double >&,
-		vector< vector < str_RatesAnalysis > > &
-);
-
-
-static void Integrate_Gas_Phase_Odepack_LSODA(
-		Filenames,
-		vector< double >,
-		ReactionMechanism ,
-		Initial_Data,
-		vector< double >&,
-		vector< vector < str_RatesAnalysis > > &
-);
-
-
-// solve based on concentrations in the liquid phase and consider headspace gas
-static void Integrate_Pressure_Vessel_Liquid_Phase(
-		Filenames,
-		vector< double >,
-		ReactionMechanism ,
-		Initial_Data,
-		vector< double >&,
-		PressureVesselCalc,
-		vector< vector < str_RatesAnalysis > > &
-);
-
-
-//// Pre-Processing:
-
-static vector< ReactionParameter > Process_Reaction_Parameters(
-		const vector< SingleReactionData >&
-);
-
-
-static vector< TrackSpecies > Reactants_ForReactionRate(
-		const vector< SingleReactionData >&
-);
-
-
-static vector< TrackSpecies > Products_ForReactionRate(
-		const vector< SingleReactionData >&,
-		bool
-);
-
-
-static vector< TrackSpecies > PrepareSpecies_ForSpeciesLoss(
-		const vector< SingleReactionData >&
-);
-
-
+  static vector<TrackSpecies>
+  PrepareSpecies_ForSpeciesLoss(const vector<SingleReactionData> &);
 };
 
 #endif

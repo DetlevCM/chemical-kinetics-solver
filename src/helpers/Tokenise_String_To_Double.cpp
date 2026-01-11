@@ -5,28 +5,23 @@
  *      Author: detlevcm
  */
 
-
 #include "Helpers.h"
 
-vector< double > Tokenise_String_To_Double(string input, string tokens)
-{
-	char *cstr, *p;
-	vector< double > output;
+vector<double> Tokenise_String_To_Double(string input, string tokens) {
+  char *cstr, *p;
+  vector<double> output;
 
-	string str = input;
-	cstr = new char [str.size()+1];
-	strcpy (cstr, str.c_str());
+  string str = input;
+  cstr = new char[str.size() + 1];
+  strcpy(cstr, str.c_str());
 
-	p=strtok (cstr,tokens.c_str());
-	while(p!=NULL)
-	{
-		output.push_back(strtod(p,NULL));
-		p=strtok(NULL,tokens.c_str());
-	}
-	delete[] cstr;
-	//delete[] p;
+  p = strtok(cstr, tokens.c_str());
+  while (p != NULL) {
+    output.push_back(strtod(p, NULL));
+    p = strtok(NULL, tokens.c_str());
+  }
+  delete[] cstr;
+  // delete[] p;
 
-	return output;
+  return output;
 }
-
-
