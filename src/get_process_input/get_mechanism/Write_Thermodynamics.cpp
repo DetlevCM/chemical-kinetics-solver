@@ -26,23 +26,22 @@ void Species::ThermodynamicData::Write_Thermodynamic_Data(
                            << species[i].thermodynamicdata.TChange
 
                            << "\n"
-                           << species[i].thermodynamicdata.NasaLow1
-                           << "	" << species[i].thermodynamicdata.NasaLow2
-                           << "	" << species[i].thermodynamicdata.NasaLow3
-                           << "	" << species[i].thermodynamicdata.NasaLow4
-                           << "	" << species[i].thermodynamicdata.NasaLow5
-                           << "	" << species[i].thermodynamicdata.NasaLow6
-                           << "	" << species[i].thermodynamicdata.NasaLow7
+                           << species[i].thermodynamicdata.NasaLow1 << "	"
+                           << species[i].thermodynamicdata.NasaLow2 << "	"
+                           << species[i].thermodynamicdata.NasaLow3 << "	"
+                           << species[i].thermodynamicdata.NasaLow4 << "	"
+                           << species[i].thermodynamicdata.NasaLow5 << "	"
+                           << species[i].thermodynamicdata.NasaLow6 << "	"
+                           << species[i].thermodynamicdata.NasaLow7
 
                            << "\n"
-                           << species[i].thermodynamicdata.NasaHigh1
-                           << "	" << species[i].thermodynamicdata.NasaHigh2
-                           << "	" << species[i].thermodynamicdata.NasaHigh3
-                           << "	" << species[i].thermodynamicdata.NasaHigh4
-                           << "	" << species[i].thermodynamicdata.NasaHigh5
-                           << "	" << species[i].thermodynamicdata.NasaHigh6
-                           << "	" << species[i].thermodynamicdata.NasaHigh7
-                           << "\n";
+                           << species[i].thermodynamicdata.NasaHigh1 << "	"
+                           << species[i].thermodynamicdata.NasaHigh2 << "	"
+                           << species[i].thermodynamicdata.NasaHigh3 << "	"
+                           << species[i].thermodynamicdata.NasaHigh4 << "	"
+                           << species[i].thermodynamicdata.NasaHigh5 << "	"
+                           << species[i].thermodynamicdata.NasaHigh6 << "	"
+                           << species[i].thermodynamicdata.NasaHigh7 << "\n";
 
       // One more new line to separate species
       ThermodynamicsOutput << "\n"; // new line
