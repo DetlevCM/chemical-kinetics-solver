@@ -16,11 +16,6 @@
 
 void SolverCalculation::ODE_RHS_Gas_Liquid_Phase(int *n, double *time_current,
                                                  double *y, double *f) {
-  // A namespace allows global variables without causing a mess, should be
-  // quicker than redefining too
-  // using namespace ODE_RHS;
-  // using namespace ODE_RHS_Pressure_Vessel_Variables;
-  // using namespace Jacobian_ODE_RHS;
 
   size_t i;
 

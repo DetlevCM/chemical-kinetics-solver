@@ -26,23 +26,6 @@ public:
 
   // end PetroOxy variables
 
-  //// TODO: These were the old global variables, now become member variables:
-
-  /*
-  namespace ODE_RHS
-  {
-  //// constant (i.e. set once) ////
-  size_t Number_Reactions;
-  ConstantInitRHSODE InitialDataConstants;
-  vector< TrackSpecies > ReactantsForReactions;
-  vector< TrackSpecies > ProductsForReactions;
-
-  //// variable (values change during calculation ////
-  vector< double > Rates;
-  vector< double > SpeciesConcentrationChange;
-  }
-  //*/
-
   struct ConstantInitRHSODE {
     bool EnforceStability;
     bool PetroOxy;

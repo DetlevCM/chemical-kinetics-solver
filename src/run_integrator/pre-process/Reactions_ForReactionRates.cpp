@@ -1,5 +1,4 @@
 
-// #include "../Headers.hpp"
 
 /*
 struct ReactionRate{
@@ -14,7 +13,7 @@ struct ReactionRate{
 vector<TrackSpecies> RunIntegrator::Reactants_ForReactionRate(
     const vector<SingleReactionData> &Reactions) {
   vector<TrackSpecies> temp_proc_reac;
-  // Bassically go through the reactions and accumulate the Relevant species
+  // Basically go through the reactions and accumulate the Relevant species
 
   TrackSpecies temp;
   size_t Number_Reactions = Reactions.size();
@@ -39,7 +38,7 @@ vector<TrackSpecies> RunIntegrator::Reactants_ForReactionRate(
 vector<TrackSpecies> RunIntegrator::Products_ForReactionRate(
     const vector<SingleReactionData> &Reactions, bool SwitchType) {
   vector<TrackSpecies> temp_proc_reac;
-  // Bassically go through the reactions and accumulate the Relevant species
+  // Basically go through the reactions and accumulate the Relevant species
   size_t i, j;
   TrackSpecies temp;
   size_t Number_Reactions = Reactions.size();

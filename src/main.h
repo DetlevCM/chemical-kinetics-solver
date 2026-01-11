@@ -37,9 +37,6 @@
 #include <algorithm>
 #include <cctype>
 
-// Needed globally for the function definitions
-// using namespace std;
-
 // specific components of namespace std
 using std::cout;
 using std::string;

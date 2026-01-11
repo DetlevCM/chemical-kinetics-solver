@@ -15,10 +15,6 @@ void SolverCalculation::Jacobian_Matrix_Intel(int *n, double *t, double *y,
   // y concentration
   // a Jacobian in column wise order
 
-  // using namespace Jacobian_ODE_RHS;
-  // using namespace Jacobian;
-  size_t i, j;
-
   // enable force stability?
   /*
   for (i = 0; i <= Number_Species; i++)
@@ -33,7 +29,7 @@ void SolverCalculation::Jacobian_Matrix_Intel(int *n, double *t, double *y,
           }
   }//*/
 
-  for (i = 0; i <= Number_Species; i++) {
+  for (size_t i = 0; i <= Number_Species; i++) {
     Concentration[i] = y[i];
   }
 
@@ -41,15 +37,10 @@ void SolverCalculation::Jacobian_Matrix_Intel(int *n, double *t, double *y,
   vector<double> JacobeanColumnWise((Number_Species + 1) *
                                     (Number_Species + 1));
 
-  // Evaluate_Thermodynamic_Parameters(CalculatedThermo, species,
-  // Concentration[Number_Species]);
   Evaluate_Thermodynamic_Parameters(Concentration[Number_Species]);
-  // Calculate_Rate_Constant(Kf, Kr,
-  // Concentration[Number_Species],ReactionParameters, CalculatedThermo,
-  // SpeciesLossAll, delta_n);
   Calculate_Rate_Constant(Concentration[Number_Species], SpeciesLossAll);
 
-  for (i = 0; i < JacobianMatrix.size(); i++) {
+  for (size_t i = 0; i < JacobianMatrix.size(); i++) {
     double temp;
 
     if (JacobianMatrix[i].IsForward) // Forward
@@ -78,7 +69,7 @@ void SolverCalculation::Jacobian_Matrix_Intel(int *n, double *t, double *y,
       }
     }
 
-    for (j = 0; j < JacobianMatrix[i].Species.size(); j++) {
+    for (size_t j = 0; j < JacobianMatrix[i].Species.size(); j++) {
       if (JacobianMatrix[i].Species[j].power != 0) // power 0 = *1
       {
         if (JacobianMatrix[i].Species[j].power ==
@@ -97,7 +88,7 @@ void SolverCalculation::Jacobian_Matrix_Intel(int *n, double *t, double *y,
         JacobeanColumnWise[JacobianMatrix[i].ColumnWiseArrayPosition] + temp;
   }
 
-  for (i = 0; i <= JacobeanColumnWise.size(); i++) {
+  for (size_t i = 0; i <= JacobeanColumnWise.size(); i++) {
     a[i] = JacobeanColumnWise[i];
   }
 

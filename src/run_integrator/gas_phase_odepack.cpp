@@ -11,21 +11,13 @@
 // in the long term, this function will need to get third body support etc. IF
 // it is actively developed...
 
-// Not a perfect solution, but stick integrator into its own void with global
-// variables via a namespace
 void RunIntegrator::Integrate_Gas_Phase_Odepack_LSODA(
     Filenames OutputFilenames, vector<double> SpeciesConcentration,
-    ReactionMechanism reaction_mechanism,
-    // vector< string > Species,vector< ThermodynamicData > Thermo,vector<
-    // SingleReactionData >& Reactions,
-    Initial_Data InitialParameters, vector<double> &KeyRates,
+    ReactionMechanism reaction_mechanism, Initial_Data InitialParameters,
+    vector<double> &KeyRates,
     vector<vector<str_RatesAnalysis>> &RatesAnalysisData) {
 
   vector<TrackSpecies> ProductsForRatesAnalysis;
-
-  // using namespace Jacobian_ODE_RHS;
-  // using namespace ODE_RHS;
-  // using namespace Jacobian;
 
   size_t Number_Species = reaction_mechanism.species.size();
   size_t Number_Reactions = reaction_mechanism.reactions.size();
@@ -45,9 +37,6 @@ void RunIntegrator::Integrate_Gas_Phase_Odepack_LSODA(
   if (InitialParameters.PrintReacRates) {
     ReactionRatesOutput.open(OutputFilenames.Rates.c_str(), ios::app);
   }
-
-  // general variables
-  size_t i;
 
   int n;
 
@@ -161,11 +150,11 @@ void RunIntegrator::Integrate_Gas_Phase_Odepack_LSODA(
         Number_Species);
 
     // zero just to make sure
-    for (i = 0; i < Number_Species; i++) {
+    for (size_t i = 0; i < Number_Species; i++) {
       solver_calculation.InitialDataConstants.ConstantSpecies[i] = 0;
     }
 
-    for (i = 0; i < InitialParameters.ConstantSpecies.size();
+    for (size_t i = 0; i < InitialParameters.ConstantSpecies.size();
          i++) { // fix initial concentrations
       solver_calculation.InitialDataConstants
           .ConstantSpecies[InitialParameters.ConstantSpecies[i]] =
@@ -380,7 +369,7 @@ void RunIntegrator::Integrate_Gas_Phase_Odepack_LSODA(
     double R = 8.31451; // Gas Constant
     /* Pressure Tracking for Gas Phase Kinetics */
     double total_mol = 0;
-    for (i = 0; i < Number_Species; i++) {
+    for (size_t i = 0; i < Number_Species; i++) {
       total_mol = total_mol + SpeciesConcentration[i];
     }
     pressure = (total_mol * R * SpeciesConcentration[Number_Species]) /

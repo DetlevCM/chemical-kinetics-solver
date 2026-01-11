@@ -9,17 +9,11 @@
 
 void SolverCalculation::ODE_RHS_Gas_Phase(int *n, double *t, double *y,
                                           double *f) {
-  // A namespace allows global variables without causing a mess, should be
-  // quicker than redefining too
-  // using namespace ODE_RHS;
-  // using namespace Jacobian_ODE_RHS;
 
-  size_t i;
-
-  cout << n << "\n";
-  // stability hack
+  // cout << n << "\n";
+  //  stability hack
   if (InitialDataConstants.EnforceStability) {
-    for (i = 0; i <= Number_Species; i++) {
+    for (size_t i = 0; i <= Number_Species; i++) {
       if (y[i] < 0) {
         // if(y[i]<1.e-24){
         Concentration[i] = 0;
@@ -28,7 +22,7 @@ void SolverCalculation::ODE_RHS_Gas_Phase(int *n, double *t, double *y,
       }
     }
   } else {
-    for (i = 0; i <= Number_Species; i++) {
+    for (size_t i = 0; i <= Number_Species; i++) {
       Concentration[i] = y[i];
     }
   }
@@ -53,7 +47,7 @@ void SolverCalculation::ODE_RHS_Gas_Phase(int *n, double *t, double *y,
   double qint = 0;
   double qtot = 0;
 
-  for (i = 0; i < Number_Species; i++) {
+  for (size_t i = 0; i < Number_Species; i++) {
     ctot = ctot + CalculatedThermo[i].Cv * Concentration[i];
     // cout << CalculatedThermo[i].Hf << " ";
 
@@ -63,7 +57,7 @@ void SolverCalculation::ODE_RHS_Gas_Phase(int *n, double *t, double *y,
   // cout << "\n";
   //  ctot = ctot / 1000; // working in moles/l so no Na;
 
-  for (i = 0; i < Number_Reactions; i++) {
+  for (size_t i = 0; i < Number_Reactions; i++) {
     qint = qint + delta_n[i] * Rates[i];
   }
   qtot = -qint / (ctot); //*1000); // scale l to ml and Na not needed for
@@ -81,7 +75,7 @@ void SolverCalculation::ODE_RHS_Gas_Phase(int *n, double *t, double *y,
   // Settings relevant rates to zero
   if (InitialDataConstants.ConstantConcentration) {
     // cout << "preparing constant species \n";
-    for (i = 0; i < Number_Species; i++) {
+    for (size_t i = 0; i < Number_Species; i++) {
       if (InitialDataConstants.ConstantSpecies[i] != 0) {
         f[i] = 0; // concentration reset
                   // cout << "f[" << i << "] = " << f[i];

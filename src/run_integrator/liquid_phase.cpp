@@ -17,10 +17,6 @@ void RunIntegrator::Integrate_Liquid_Phase(
 
   vector<TrackSpecies> ProductsForRatesAnalysis;
 
-  // using namespace Jacobian_ODE_RHS;
-  // using namespace ODE_RHS;
-  // using namespace Jacobian;
-
   size_t Number_Species = reaction_mechanism.species.size();
   size_t Number_Reactions = reaction_mechanism.reactions_size();
 
