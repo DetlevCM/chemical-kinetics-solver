@@ -72,7 +72,7 @@ double Species::ThermodynamicData::calculate_Cp_at_T(const ThermoT T) {
 
 double Species::ThermodynamicData::calculate_Cv_at_T(const ThermoT T) {
   // skip ThermoT T(temperature); // temperatures -> T.T1
-  return ThermodynamicData::calculate_Cp_at_T(T.T1) - R;
+  return ThermodynamicData::calculate_Cp_at_T(T) - R;
 }
 
 double Species::ThermodynamicData::calculate_S_at_T(const ThermoT T) {
