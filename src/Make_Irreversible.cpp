@@ -213,9 +213,9 @@ vector<SingleReactionData> Make_Irreversible(
 
     allkreverse.push_back(Kr);
 
-    OneTempSensitivityMatrix[0] = 1;
+    OneTempSensitivityMatrix[0] = 1.0;
     OneTempSensitivityMatrix[1] = log(Temperature);
-    OneTempSensitivityMatrix[2] = 1 / Temperature;
+    OneTempSensitivityMatrix[2] = 1.0 / Temperature;
 
     SensitivityMatrix.push_back(OneTempSensitivityMatrix);
   }
