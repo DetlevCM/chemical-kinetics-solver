@@ -146,10 +146,11 @@ vector<SingleReactionData> Make_Irreversible(
 ) {
   vector<SingleReactionData> Irreversible_Scheme;
 
-  size_t i, j, k;
+  cout << "Initial temperature for conversion to irreversible scheme: "
+       << Initial_Temperature << "\n";
+
   size_t Number_Species = species.size();
   size_t Number_Reactions = Reactions.size();
-  double Temperature;
 
   vector<double> Local_Delta_N = RunIntegrator::Get_Delta_N(Reactions);
 
@@ -191,23 +192,25 @@ vector<SingleReactionData> Make_Irreversible(
   vector<double> Kf(Number_Reactions);
   vector<double> Kr(Number_Reactions);
 
+  double Temperature;
   // let us use 25 steps in either direction of the temperature
-  for (i = 0; i < 50; i++) {
+  for (size_t i = 0; i < 50; i++) {
+
     Temperature =
         Initial_Temperature - Range +
         ((double)i * Range / 25.0); // +/- Range, 25 Steps in either direction
 
     Species::ThermodynamicData::ThermoT temperatures(Temperature);
     /* Hf, Cp, Cv, S */
-    for (i = 0; i < Number_Species; i++) {
-      CalculatedThermo[i] =
-          species[i].thermodynamicdata.calculate_thermodynamics(temperatures);
+    for (size_t k = 0; k < Number_Species; k++) {
+      CalculatedThermo[k] =
+          species[k].thermodynamicdata.calculate_thermodynamics(temperatures);
     }
     Calculate_Rate_Constant(Kf, Kr, Temperature, LocalReactionParameters,
                             CalculatedThermo, LocalSpeciesLossAll,
                             Local_Delta_N);
 
-    for (j = 0; j < Kr.size(); j++) {
+    for (size_t j = 0; j < Kr.size(); j++) {
       Kr[j] = log(Kr[j]);
     }
 
@@ -232,8 +235,8 @@ vector<SingleReactionData> Make_Irreversible(
   SensitivityMatrixTranspose.push_back(RowSensitivityMatrixTranspose);
   SensitivityMatrixTranspose.push_back(RowSensitivityMatrixTranspose);
 
-  for (i = 0; i < 3; i++) {
-    for (j = 0; j < SensitivityMatrix.size(); j++) {
+  for (size_t i = 0; i < 3; i++) {
+    for (size_t j = 0; j < SensitivityMatrix.size(); j++) {
       SensitivityMatrixTranspose[i][j] = SensitivityMatrix[j][i];
     }
   }
@@ -251,9 +254,9 @@ vector<SingleReactionData> Make_Irreversible(
   SMtxSM.push_back(SMt);
   SMtxSM.push_back(SMt);
 
-  for (i = 0; i < 3; i++) {
-    for (j = 0; j < 3; j++) {
-      for (k = 0; k < SensitivityMatrix.size(); k++) {
+  for (size_t i = 0; i < 3; i++) {
+    for (size_t j = 0; j < 3; j++) {
+      for (size_t k = 0; k < SensitivityMatrix.size(); k++) {
         SMtxSM[i][j] = SMtxSM[i][j] + SensitivityMatrixTranspose[i][k] *
                                           SensitivityMatrix[k][j];
       }
@@ -305,8 +308,8 @@ vector<SingleReactionData> Make_Irreversible(
   SMtxSMInv[2][2] = -SMtxSM[0][1] * SMtxSM[1][0] + SMtxSM[0][0] * SMtxSM[1][1];
 
   // Don't forget dividing by the determinant
-  for (i = 0; i < 3; i++) {
-    for (j = 0; j < 3; j++) {
+  for (size_t i = 0; i < 3; i++) {
+    for (size_t j = 0; j < 3; j++) {
       SMtxSMInv[i][j] = SMtxSMInv[i][j] / determinant;
     }
   }
@@ -321,9 +324,9 @@ vector<SingleReactionData> Make_Irreversible(
   InvMxSM.push_back(xSM);
 
   // matrix mult: row x column
-  for (i = 0; i < 3; i++) {
-    for (j = 0; j < SensitivityMatrix.size(); j++) {
-      for (k = 0; k < 3; k++) {
+  for (size_t i = 0; i < 3; i++) {
+    for (size_t j = 0; j < SensitivityMatrix.size(); j++) {
+      for (size_t k = 0; k < 3; k++) {
         InvMxSM[i][j] =
             InvMxSM[i][j] + SMtxSMInv[i][k] * SensitivityMatrixTranspose[k][j];
       }
@@ -339,7 +342,7 @@ vector<SingleReactionData> Make_Irreversible(
   vector<double> ReactionParameters;
   ReactionParameters.resize(4);
 
-  for (i = 0; i < Number_Reactions; i++) {
+  for (size_t i = 0; i < Number_Reactions; i++) {
     // 1) retain the old forward reaction
 
     SingleReaction.Reactants = Reactions[i].Reactants;
@@ -366,15 +369,15 @@ vector<SingleReactionData> Make_Irreversible(
     // form
     if (Reactions[i].Reversible) {
 
-      for (j = 0; j < 3; j++) {
-        for (k = 0; k < SensitivityMatrix.size(); k++) {
+      for (size_t j = 0; j < 3; j++) {
+        for (size_t k = 0; k < SensitivityMatrix.size(); k++) {
           beta[j] = beta[j] + InvMxSM[j][k] * allkreverse[k][i];
         }
       }
 
       // Write out reverse reaction:
       // And now the reverse Reaction - Products and Reactants reversed
-      for (j = 0; j < Number_Species; j++) {
+      for (size_t j = 0; j < Number_Species; j++) {
         ReactantData[j] = -Reactions[i].Products[j];
         ProductData[j] = -Reactions[i].Reactants[j];
       }

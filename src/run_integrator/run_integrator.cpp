@@ -116,11 +116,12 @@ vector<ReactionParameter> RunIntegrator::Process_Reaction_Parameters(
   size_t i;
   size_t Number_Reactions = Reactions.size();
 
-  ReactionParameter temp_one_reaction;
   vector<ReactionParameter> temp_output;
 
   // Output per reaction
   for (i = 0; i < Number_Reactions; i++) {
+    ReactionParameter temp_one_reaction;
+
     temp_one_reaction.paramA = Reactions[i].paramA;   // A
     temp_one_reaction.paramN = Reactions[i].paramN;   // n
     temp_one_reaction.paramEa = Reactions[i].paramEa; // Ea
