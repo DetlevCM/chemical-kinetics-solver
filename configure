@@ -608,7 +608,7 @@ PACKAGE_STRING='Chemical Kinetics Solver VERSION'
 PACKAGE_BUGREPORT='BUG-REPORT-ADDRESS'
 PACKAGE_URL=''
 
-ac_unique_file="src/Main.cpp"
+ac_unique_file="src/main.cpp"
 # Factoring default headers for most tests.
 ac_includes_default="\
 #include <stddef.h>
