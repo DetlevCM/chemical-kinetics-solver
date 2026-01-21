@@ -42,10 +42,8 @@ void RunIntegrator::Integrate(
   Settings_LSODA LSODA;
   Settings_Intel Intel;
 
-  // general variables
-  size_t i;
+  // general variables for the ODE solver
   int n;
-
   // intel ODE wants int not size_t
   n = (int)Number_Species + 1;
 
@@ -143,11 +141,11 @@ void RunIntegrator::Integrate(
         Number_Species);
 
     // zero just to make sure
-    for (i = 0; i < Number_Species; i++) {
+    for (size_t i = 0; i < Number_Species; i++) {
       solver_calculation.InitialDataConstants.ConstantSpecies[i] = 0;
     }
 
-    for (i = 0; i < InitialParameters.ConstantSpecies.size();
+    for (size_t i = 0; i < InitialParameters.ConstantSpecies.size();
          i++) { // fix initial concentrations
       solver_calculation.InitialDataConstants
           .ConstantSpecies[InitialParameters.ConstantSpecies[i]] =
@@ -398,7 +396,7 @@ void RunIntegrator::Integrate(
     if (InitialParameters.GasPhase) {
       //  Pressure Tracking for Gas Phase Kinetics
       double total_mol = 0;
-      for (i = 0; i < Number_Species; i++) {
+      for (size_t i = 0; i < Number_Species; i++) {
         total_mol = total_mol + solver_calculation.Concentration[i];
       }
       pressure =
