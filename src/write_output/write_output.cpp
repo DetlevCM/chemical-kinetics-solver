@@ -57,7 +57,7 @@ void WriteOutput::StreamData(double CurrentTime, bool GasPhasePressure,
   }
   stream_concentrations << "\n" << std::flush;
 
-  if (print_rates) // reaction rates are options
+  if (print_rates) // reaction rates are optional
   {
     stream_rates << CurrentTime; // time
 
