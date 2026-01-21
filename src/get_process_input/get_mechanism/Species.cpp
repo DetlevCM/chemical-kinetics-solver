@@ -20,8 +20,9 @@ vector<Species> Species::VectorClass(vector<string> species) {
   return new_species_vec;
 }
 
-void Species::SetNasa(double tlow, double thigh, double tchange,
-                      vector<double> nasalow, vector<double> nasahigh) {
+void Species::ThermodynamicData::SetNasa(double tlow, double thigh,
+                                         double tchange, vector<double> nasalow,
+                                         vector<double> nasahigh) {
 
   nasa.TLow = tlow;
   nasa.THigh = thigh;
@@ -32,31 +33,9 @@ void Species::SetNasa(double tlow, double thigh, double tchange,
     nasa.low[i] = nasalow[i];
     nasa.high[i] = nasahigh[i];
   }
-
-  // NasaLow = nasalow;
-  /*
-  NasaLow1 = nasalow[0];
-  NasaLow2 = nasalow[1];
-  NasaLow3 = nasalow[2];
-  NasaLow4 = nasalow[3];
-  NasaLow5 = nasalow[4];
-  NasaLow6 = nasalow[5];
-  NasaLow7 = nasalow[6];
-  //*/
-
-  // NasaHigh = nasahigh;
-  /*
-  NasaHigh1 = nasahigh[0];
-  NasaHigh2 = nasahigh[1];
-  NasaHigh3 = nasahigh[2];
-  NasaHigh4 = nasahigh[3];
-  NasaHigh5 = nasahigh[4];
-  NasaHigh6 = nasahigh[5];
-  NasaHigh7 = nasahigh[6];
-  //*/
 }
 
-double Species::calculate_Hf_at_T(const ThermoT T) {
+double Species::ThermodynamicData::calculate_Hf_at_T(const ThermoT T) {
   if (T.T1 <= nasa.TChange) {
     return R * T.T1 *
            (nasa.low[0] + nasa.low[1] * T.T1 * 0.5 + nasa.low[2] * T.T2 / 3.0 +
@@ -70,7 +49,7 @@ double Species::calculate_Hf_at_T(const ThermoT T) {
   }
 }
 
-double Species::calculate_Cp_at_T(const ThermoT T) {
+double Species::ThermodynamicData::calculate_Cp_at_T(const ThermoT T) {
   if (T.T1 <= nasa.TChange) {
     return R * (nasa.low[0] + nasa.low[1] * T.T1 + nasa.low[2] * T.T2 +
                 nasa.low[3] * T.T3 + nasa.low[4] * T.T4);
@@ -80,12 +59,12 @@ double Species::calculate_Cp_at_T(const ThermoT T) {
   };
 }
 
-double Species::calculate_Cv_at_T(const ThermoT T) {
+double Species::ThermodynamicData::calculate_Cv_at_T(const ThermoT T) {
   // skip ThermoT T(temperature); // temperatures -> T.T1
   return calculate_Cp_at_T(T) - R;
 }
 
-double Species::calculate_S_at_T(const ThermoT T) {
+double Species::ThermodynamicData::calculate_S_at_T(const ThermoT T) {
   if (T.T1 <= nasa.TChange) {
     return R * (nasa.low[0] * T.logT + nasa.low[1] * T.T1 +
                 nasa.low[2] * T.T2 * 0.5 + nasa.low[3] * T.T3 / 3.0 +
@@ -97,8 +76,8 @@ double Species::calculate_S_at_T(const ThermoT T) {
   };
 }
 
-Species::CalculatedThermodynamics
-Species::calculate_thermodynamics(const ThermoT T) {
+Species::ThermodynamicData::CalculatedThermodynamics
+Species::ThermodynamicData::calculate_thermodynamics(const ThermoT T) {
 
   CalculatedThermodynamics output;
 

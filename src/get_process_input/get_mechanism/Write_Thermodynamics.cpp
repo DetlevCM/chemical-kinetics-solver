@@ -8,7 +8,7 @@
 #include "./Species.h"
 // Ofstream reference: http://www.cplusplus.com/reference/fstream/ofstream/
 
-void Species::Write_Thermodynamic_Data(string filename,
+void Species::ThermodynamicData::Write_Thermodynamic_Data(string filename,
                                        const vector<Species> &species) {
   size_t i;
   ofstream ThermodynamicsOutput(filename.c_str(), ios::out);

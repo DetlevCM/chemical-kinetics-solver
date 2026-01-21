@@ -31,25 +31,17 @@ vector<Species> MechanismReduction::Process_Thermodynamics_Species_Classes(
 
     vector<double> temp(17);
 
-    temp[0] = species[i].thermodynamicdata.TLow;
-    temp[1] = species[i].thermodynamicdata.THigh;
-    temp[2] = species[i].thermodynamicdata.TChange;
+    temp[0] = species[i].thermodynamicdata.nasa.TLow;
+    temp[1] = species[i].thermodynamicdata.nasa.THigh;
+    temp[2] = species[i].thermodynamicdata.nasa.TChange;
 
-    temp[3] = species[i].thermodynamicdata.NasaLow1;
-    temp[4] = species[i].thermodynamicdata.NasaLow2;
-    temp[5] = species[i].thermodynamicdata.NasaLow3;
-    temp[6] = species[i].thermodynamicdata.NasaLow4;
-    temp[7] = species[i].thermodynamicdata.NasaLow5;
-    temp[8] = species[i].thermodynamicdata.NasaLow6;
-    temp[9] = species[i].thermodynamicdata.NasaLow7;
-
-    temp[10] = species[i].thermodynamicdata.NasaHigh1;
-    temp[11] = species[i].thermodynamicdata.NasaHigh2;
-    temp[12] = species[i].thermodynamicdata.NasaHigh3;
-    temp[13] = species[i].thermodynamicdata.NasaHigh4;
-    temp[14] = species[i].thermodynamicdata.NasaHigh5;
-    temp[15] = species[i].thermodynamicdata.NasaHigh6;
-    temp[16] = species[i].thermodynamicdata.NasaHigh7;
+    // temp[3] = species[i].thermodynamicdata.NasaLow1;
+    for (size_t j = 0; j < 7; j++) {
+      temp[j + 3] = species[i].thermodynamicdata.nasa.low[j];
+    }
+    for (size_t j = 0; j < 7; j++) {
+      temp[j + 10] = species[i].thermodynamicdata.nasa.high[j];
+    }
 
     ThermodynamicsOld.push_back(temp);
   } //*/
@@ -145,25 +137,18 @@ vector<Species> MechanismReduction::Process_Thermodynamics_Species_Classes(
 
     temp.Name = "";
 
-    temp.thermodynamicdata.TLow = new_thermo[i][0];
-    temp.thermodynamicdata.THigh = new_thermo[i][1];
-    temp.thermodynamicdata.TChange = new_thermo[i][2];
+    temp.thermodynamicdata.nasa.TLow = new_thermo[i][0];
+    temp.thermodynamicdata.nasa.THigh = new_thermo[i][1];
+    temp.thermodynamicdata.nasa.TChange = new_thermo[i][2];
 
-    temp.thermodynamicdata.NasaLow1 = new_thermo[i][3];
-    temp.thermodynamicdata.NasaLow2 = new_thermo[i][4];
-    temp.thermodynamicdata.NasaLow3 = new_thermo[i][5];
-    temp.thermodynamicdata.NasaLow4 = new_thermo[i][6];
-    temp.thermodynamicdata.NasaLow5 = new_thermo[i][7];
-    temp.thermodynamicdata.NasaLow6 = new_thermo[i][8];
-    temp.thermodynamicdata.NasaLow7 = new_thermo[i][9];
-
-    temp.thermodynamicdata.NasaHigh1 = new_thermo[i][10];
-    temp.thermodynamicdata.NasaHigh2 = new_thermo[i][11];
-    temp.thermodynamicdata.NasaHigh3 = new_thermo[i][12];
-    temp.thermodynamicdata.NasaHigh4 = new_thermo[i][13];
-    temp.thermodynamicdata.NasaHigh5 = new_thermo[i][14];
-    temp.thermodynamicdata.NasaHigh6 = new_thermo[i][15];
-    temp.thermodynamicdata.NasaHigh7 = new_thermo[i][16];
+    // temp.thermodynamicdata.NasaLow1 = new_thermo[i][3];
+    for (size_t j = 0; j < 7; j++) {
+      temp.thermodynamicdata.nasa.low[j] = new_thermo[i][3 + j];
+    }
+    //  temp.thermodynamicdata.NasaHigh1 = new_thermo[i][10];
+    for (size_t j = 0; j < 7; j++) {
+      temp.thermodynamicdata.nasa.high[j] = new_thermo[i][10 + j];
+    }
 
     // Thermodynamics.push_back(temp);
     species.push_back(temp);
