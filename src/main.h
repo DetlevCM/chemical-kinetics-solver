@@ -53,9 +53,12 @@ using std::stringstream;
 using std::stod; // for C++ string to double
 
 #include "./run_integrator/solver_calculations/solver_calculations.h"
+#include "./write_output/write_output.h"
 
 // use a global glass so we can use a function to redirect
 extern SolverCalculation solver_calculation;
+
+extern WriteOutput write_output;
 
 void wrapper_ODE_RHS(int *n, double *t, double *y, double *f);
 

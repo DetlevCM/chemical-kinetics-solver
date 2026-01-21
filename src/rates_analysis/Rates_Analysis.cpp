@@ -79,9 +79,8 @@ void RatesAnalysis::WriteMaxRatesAnalysis(
         // is less than 1.5 atoms
         if (RatesAnalysisData[i][j].productionrate > 1.0e-22) {
           Outfile << "Reaction 	" << j << " 	"
-                  << RatesAnalysisData[i][j].productionrate
-                  << " 	, at 	" << RatesAnalysisData[i][j].prod_time
-                  << " 	 s    ";
+                  << RatesAnalysisData[i][j].productionrate << " 	, at 	"
+                  << RatesAnalysisData[i][j].prod_time << " 	 s    ";
           // now need to print the reaction
 
           Outfile << Prepare_Single_Reaction_Output(Number_Species, species,
@@ -107,9 +106,8 @@ void RatesAnalysis::WriteMaxRatesAnalysis(
         // is less than 1.5 atoms
         if (RatesAnalysisData[i][j].consumptionrate > 1.0e-22) {
           Outfile << "Reaction 	" << j << " 	"
-                  << RatesAnalysisData[i][j].consumptionrate
-                  << " 	, at 	" << RatesAnalysisData[i][j].cons_time
-                  << " 	s    ";
+                  << RatesAnalysisData[i][j].consumptionrate << " 	, at 	"
+                  << RatesAnalysisData[i][j].cons_time << " 	s    ";
 
           // now need to print the reaction
           Outfile << Prepare_Single_Reaction_Output(Number_Species, species,

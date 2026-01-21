@@ -117,8 +117,8 @@ void MechanismReduction::ReportAccuracy(string separator, size_t Number_Species,
                   "Diff in % 	Max Diff in % \n";
 
     for (i = 1; i <= Number_Species; i++) {
-      OutputFile << species[i - 1].Name << " 	" << OutputReview[i]
-                 << " 	" << MinDiff[i] << " 	" << MaxDiff[i] << " 	"
+      OutputFile << species[i - 1].Name << " 	" << OutputReview[i] << " 	"
+                 << MinDiff[i] << " 	" << MaxDiff[i] << " 	"
                  << " \n";
     }
   }

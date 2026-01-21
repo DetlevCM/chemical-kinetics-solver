@@ -7,10 +7,11 @@
  * the initial output which also clears the file. */
 
 // output function for species labels, temperature at back
-void WriteOutput::WriteLabelsReactionRates(string filename, string separator,
-                                           size_t Number_Reactions) {
+void WriteOutput::WriteLabelsReactionRates(
+    // string filename, string separator,
+    size_t Number_Reactions) {
   size_t i;
-  ofstream OutputFile(filename.c_str(), ios::out);
+  ofstream OutputFile(filename_rates.c_str(), ios::out);
 
   if (OutputFile.is_open()) {
     OutputFile << "Time";
@@ -23,15 +24,15 @@ void WriteOutput::WriteLabelsReactionRates(string filename, string separator,
     cout << "Unable to open file";
 }
 
-void WriteOutput::StreamReactionRates(ofstream &OutputFile,
-                                      const string separator,
-                                      double CurrentTime,
-                                      const vector<double> &ReactionRates) {
+void WriteOutput::StreamReactionRates(
+    // ofstream &OutputFile,
+    const string separator, double CurrentTime,
+    const vector<double> &ReactionRates) {
   size_t i;
-  OutputFile << CurrentTime; // time
+  stream_rates << CurrentTime; // time
 
   for (i = 0; i < ReactionRates.size(); i++) {
-    OutputFile << separator << ReactionRates[i];
+    stream_rates << separator << ReactionRates[i];
   }
-  OutputFile << "\n" << std::flush;
+  stream_rates << "\n" << std::flush;
 }

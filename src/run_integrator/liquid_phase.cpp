@@ -6,13 +6,15 @@
  */
 
 #include "./run_integrator.h"
+#include "./write_output/write_output.h"
 
 // Not a perfect solution, but stick integrator into its own void with global
 // variables via a namespace
 void RunIntegrator::Integrate_Liquid_Phase(
-    Filenames OutputFilenames, vector<double> SpeciesConcentration,
-    ReactionMechanism reaction_mechanism, Initial_Data InitialParameters,
-    vector<double> &KeyRates, PressureVesselCalc PetroOxyDataInput,
+    // Filenames OutputFilenames,
+    vector<double> SpeciesConcentration, ReactionMechanism reaction_mechanism,
+    Initial_Data InitialParameters, vector<double> &KeyRates,
+    PressureVesselCalc PetroOxyDataInput,
     vector<vector<str_RatesAnalysis>> &RatesAnalysisData) {
 
   vector<TrackSpecies> ProductsForRatesAnalysis;
@@ -26,11 +28,15 @@ void RunIntegrator::Integrate_Liquid_Phase(
        << " species and " << Number_Reactions << " Reactions.\n"
        << std::flush;
 
-  ofstream ReactionRates_OFStream;
-  ofstream Concentration_OFStream(OutputFilenames.Species.c_str(), ios::app);
+  // ofstream ReactionRates_OFStream;
+  // ofstream
+  // Concentration_OFStream(write_output.filename_concentrations.c_str(),
+  // ios::app);
+  write_output.open_stream_concentrations();
 
   if (InitialParameters.PrintReacRates) {
-    ReactionRates_OFStream.open(OutputFilenames.Rates.c_str(), ios::app);
+    write_output.open_stream_rates();
+    // ReactionRates_OFStream.open(OutputFilenames.Rates.c_str(), ios::app);
   }
 
   Settings_LSODA LSODA;
@@ -151,7 +157,8 @@ void RunIntegrator::Integrate_Liquid_Phase(
   }
 
   if (InitialParameters.PetroOxy.IsSet) {
-    SolverCalculation::PetroOxyOutputHeader(OutputFilenames.PetroOxy);
+    // SolverCalculation::PetroOxyOutputHeader(OutputFilenames.PetroOxy);
+    SolverCalculation::PetroOxyOutputHeader(write_output.get_name_petrooxy());
     solver_calculation.OxyGasSpeciesID = InitialParameters.PetroOxy.GasSpecies;
     solver_calculation.PetroOxyData = PetroOxyDataInput;
   }
@@ -195,23 +202,28 @@ void RunIntegrator::Integrate_Liquid_Phase(
         SpeciesConcentration[solver_calculation.OxyGasSpeciesID],
         SpeciesConcentration[Number_Species], solver_calculation.PetroOxyData);
 
-    SolverCalculation::PetroOxyOutputStream(OutputFilenames.PetroOxy,
+    SolverCalculation::PetroOxyOutputStream(write_output.get_name_petrooxy(),
+                                            // OutputFilenames.PetroOxy,
                                             solver_calculation.PetroOxyData,
                                             time_current);
   }
 
   // do not forget output at time = 0
-  WriteOutput::StreamConcentrations(
-      Concentration_OFStream, InitialParameters.Solver_Parameters.separator,
+  write_output.StreamConcentrations(
+      // WriteOutput::StreamConcentrations(
+      // Concentration_OFStream,
+      // InitialParameters.Solver_Parameters.separator,
       InitialParameters.GasPhase, Number_Species, time_current,
       InitialParameters.GasPhasePressure, solver_calculation.Concentration
       // SpeciesConcentration
   );
   // Only stream if the user desires it, still doesn't prevent file creation...
   if (InitialParameters.PrintReacRates) {
-    WriteOutput::StreamReactionRates(
-        ReactionRates_OFStream, InitialParameters.Solver_Parameters.separator,
-        time_current, solver_calculation.Get_Rates());
+    write_output.StreamReactionRates(
+        // WriteOutput::StreamReactionRates(
+        // ReactionRates_OFStream,
+        InitialParameters.Solver_Parameters.separator, time_current,
+        solver_calculation.Get_Rates());
   }
   // not happy with this more widely available, needs a cleanup...
   vector<vector<size_t>> ReactionsForSpeciesSelectedForRates;
@@ -294,9 +306,9 @@ void RunIntegrator::Integrate_Liquid_Phase(
     case 1002:
       dodesol_rkm9mka(&Intel.vector_ipar[0], &n, &time_current, &time_step, y,
                       (void *)&wrapper_ODE_RHS,
-                      (void *)&wrapper_Jacobian_Matrix_Intel,
-                      &Intel.h, &Intel.hm, &Intel.ep, &Intel.tr,
-                      &Intel.vector_dpar[0], &Intel.vector_kd[0], &Intel.ierr);
+                      (void *)&wrapper_Jacobian_Matrix_Intel, &Intel.h,
+                      &Intel.hm, &Intel.ep, &Intel.tr, &Intel.vector_dpar[0],
+                      &Intel.vector_kd[0], &Intel.ierr);
       if (Intel.ierr != 0) {
         printf("\n dodesol_rkm9mkn routine exited with error code %4d\n",
                Intel.ierr);
@@ -319,9 +331,9 @@ void RunIntegrator::Integrate_Liquid_Phase(
     case 1004:
       dodesol_mk52lfa(&Intel.vector_ipar[0], &n, &time_current, &time_step, y,
                       (void *)&wrapper_ODE_RHS,
-                      (void *)&wrapper_Jacobian_Matrix_Intel,
-                      &Intel.h, &Intel.hm, &Intel.ep, &Intel.tr,
-                      &Intel.vector_dpar[0], &Intel.vector_kd[0], &Intel.ierr);
+                      (void *)&wrapper_Jacobian_Matrix_Intel, &Intel.h,
+                      &Intel.hm, &Intel.ep, &Intel.tr, &Intel.vector_dpar[0],
+                      &Intel.vector_kd[0], &Intel.ierr);
       if (Intel.ierr != 0) {
         printf("\n dodesol_rkm9mkn routine exited with error code %4d\n",
                Intel.ierr);
@@ -388,7 +400,8 @@ void RunIntegrator::Integrate_Liquid_Phase(
 
     if (InitialParameters.MechanismAnalysis.StreamRatesAnalysis) {
       RatesAnalysis::StreamRatesAnalysis(
-          OutputFilenames.Prefix, ProductsForRatesAnalysis,
+          // OutputFilenames.Prefix,
+          write_output.get_prefix(), ProductsForRatesAnalysis,
           solver_calculation.Get_ReactantsForReactions(),
           solver_calculation.Get_Rates(), time_current, Number_Species);
     }
@@ -405,9 +418,10 @@ void RunIntegrator::Integrate_Liquid_Phase(
       pressure = (total_mol * R * SpeciesConcentration[Number_Species]) /
                  InitialParameters.GasPhaseVolume;
     } //*/
-
-    WriteOutput::StreamConcentrations(
-        Concentration_OFStream, InitialParameters.Solver_Parameters.separator,
+    write_output.StreamConcentrations(
+        // WriteOutput::StreamConcentrations(
+        //   Concentration_OFStream,
+        //   InitialParameters.Solver_Parameters.separator,
         false, // InitialParameters.GasPhase,
         Number_Species, time_current, pressure,
         solver_calculation.Concentration);
@@ -425,9 +439,10 @@ void RunIntegrator::Integrate_Liquid_Phase(
     }
 
     if (InitialParameters.PetroOxy.IsSet) {
-      SolverCalculation::PetroOxyOutputStream(OutputFilenames.PetroOxy,
-                                              solver_calculation.PetroOxyData,
-                                              time_current);
+      SolverCalculation::PetroOxyOutputStream(
+          // OutputFilenames.PetroOxy,
+          write_output.get_name_petrooxy(), solver_calculation.PetroOxyData,
+          time_current);
     }
 
     if (InitialParameters.MechanismReduction.ReduceReactions != 0) {
@@ -457,13 +472,16 @@ void RunIntegrator::Integrate_Liquid_Phase(
        << " seconds\n";
 
   // close output files
-  Concentration_OFStream.close();
-  ReactionRates_OFStream.close();
+  //  Concentration_OFStream.close();
+  // ReactionRates_OFStream.close();
+
+  write_output.close_stream_concentrations();
+  write_output.close_stream_rates();
 
   if (InitialParameters.MechanismAnalysis.MaximumRates) {
     RatesAnalysis::WriteMaxRatesAnalysis(
         RatesAnalysisData, reaction_mechanism.species,
-        reaction_mechanism.reactions, OutputFilenames.Prefix);
+        reaction_mechanism.reactions, write_output.get_prefix());
   }
 
   // stop the clock

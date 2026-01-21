@@ -23,36 +23,72 @@ using std::vector;
 
 class WriteOutput {
 
+private:
+  string separator; // character to use as separator
+
+  string prefix = "";
+
+  string filename_concentrations;
+  string filename_rates;
+  string filename_petrooxy;
+
+  ofstream stream_concentrations;
+  ofstream stream_rates;
+
 public:
   /*|-------------------------------|*/
   /*|-- Functions to write output --|*/
   /*|-------------------------------|*/
 
+  void set_output(string sep, string name_concentrations, string name_rates,
+                  string name_petrooxy) {
+    separator = sep;
+    filename_concentrations = name_concentrations;
+    filename_rates = name_rates;
+    filename_petrooxy = name_petrooxy;
+  };
+
+  void set_prefix(string pref) { prefix = pref; }
+  string get_prefix() { return prefix; }
+
+  string get_name_concentration() { return filename_concentrations; };
+  string get_name_rates() { return filename_rates; };
+  string get_name_petrooxy() { return filename_petrooxy; };
+
+  void open_stream_concentrations() {
+    stream_concentrations = ofstream(filename_concentrations.c_str(), ios::app);
+  };
+  void open_stream_rates() {
+    stream_rates = ofstream(filename_rates.c_str(), ios::app);
+  };
+
+  void close_stream_concentrations() { stream_concentrations.close(); };
+  void close_stream_rates() { stream_rates.close(); };
+
   // Function to write the labels
 
   // Write labels for concentrations, then stream output
-  static void Write_Header_Species_Temperature_Pressure(string filename,
-                                                        string separator,
-                                                        size_t Number_Species,
-                                                        vector<Species> species,
-                                                        bool GasPhasePressure);
+  void Write_Header_Species_Temperature_Pressure(
+      // string filename,
+      // string separator,
+      size_t Number_Species, vector<Species> species, bool GasPhasePressure);
 
-  static void StreamConcentrations(ofstream &Concentration_OFStream,
-                                   const string separator,
-                                   bool GasPhasePressure, size_t Number_Species,
-                                   double CurrentTime, double Pressure,
-                                   const vector<double> &Concentration);
+  void StreamConcentrations( // ofstream &Concentration_OFStream,
+                             //       const string separator,
+      bool GasPhasePressure, size_t Number_Species, double CurrentTime,
+      double Pressure, const vector<double> &Concentration);
 
-  static void StreamConcentrationsV2(ofstream &Concentration_OFStream,
-                                     const string separator, double CurrentTime,
-                                     size_t Number_Species,
-                                     double *Concentration);
+  void StreamConcentrationsV2( // ofstream &Concentration_OFStream,
+                               //       const string separator,
+      double CurrentTime, size_t Number_Species, double *Concentration);
 
   // write labels for reactions then stream output
-  static void WriteLabelsReactionRates(string, string, size_t);
+  void WriteLabelsReactionRates(
+      // string, string,
+      size_t);
 
-  static void StreamReactionRates(ofstream &, const string, double,
-                                  const vector<double> &Rates);
+  void StreamReactionRates( // ofstream &,
+      const string, double, const vector<double> &Rates);
 
   // output of input files
 

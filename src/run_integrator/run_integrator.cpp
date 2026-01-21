@@ -159,9 +159,9 @@ RunIntegrator::Get_Delta_N(const vector<SingleReactionData> Reactions) {
  */
 
 void RunIntegrator::Choose_Integrator(
-    Filenames OutputFilenames, ReactionMechanism reaction_mechanism,
-    Initial_Data InitialParameters, vector<double> &KeyRates,
-    PressureVesselCalc PetroOxyDataInitial,
+    // Filenames OutputFilenames,
+    ReactionMechanism reaction_mechanism, Initial_Data InitialParameters,
+    vector<double> &KeyRates, PressureVesselCalc PetroOxyDataInitial,
     vector<vector<str_RatesAnalysis>> &RatesAnalysisData) {
 
   if (InitialParameters.Solver_Parameters.SolverType == 0) {
@@ -174,8 +174,8 @@ void RunIntegrator::Choose_Integrator(
   }
 
   // if we don' exit, send ot the integrator:
-  Integrate_Liquid_Phase(OutputFilenames,
-                         InitialParameters.InitialSpeciesConcentration,
-                         reaction_mechanism, InitialParameters, KeyRates,
-                         PetroOxyDataInitial, RatesAnalysisData);
+  Integrate_Liquid_Phase(
+      // OutputFilenames,
+      InitialParameters.InitialSpeciesConcentration, reaction_mechanism,
+      InitialParameters, KeyRates, PetroOxyDataInitial, RatesAnalysisData);
 }
