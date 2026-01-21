@@ -8,7 +8,6 @@
 
 // output function for species labels, temperature at back
 void WriteOutput::Write_Header_Species_Temperature_Pressure(
-    // string filename, string separator,
     size_t Number_Species, vector<Species> species, bool GasPhasePressure) {
   size_t i;
   ofstream Concentration_OFStream(filename_concentrations.c_str(), ios::out);
@@ -29,11 +28,10 @@ void WriteOutput::Write_Header_Species_Temperature_Pressure(
 }
 
 // Function to stream the concentrations
-void WriteOutput::StreamConcentrations(
-    // ofstream &Concentration_OFStream,
-    //                                      const string separator,
-    bool GasPhasePressure, size_t Number_Species, double CurrentTime,
-    double Pressure, const vector<double> &Concentration) {
+void WriteOutput::StreamConcentrations(bool GasPhasePressure,
+                                       size_t Number_Species,
+                                       double CurrentTime, double Pressure,
+                                       const vector<double> &Concentration) {
   size_t i;
   stream_concentrations << CurrentTime;
   for (i = 0; i <= Number_Species; i++) {
@@ -45,10 +43,9 @@ void WriteOutput::StreamConcentrations(
   stream_concentrations << "\n" << std::flush;
 }
 
-void WriteOutput::StreamConcentrationsV2(
-    // ofstream &Concentration_OFStream,
-    //                                        const string separator,
-    double CurrentTime, size_t Number_Species, double *Concentration) {
+void WriteOutput::StreamConcentrationsV2(double CurrentTime,
+                                         size_t Number_Species,
+                                         double *Concentration) {
   size_t i;
   stream_concentrations << CurrentTime << separator;
 
@@ -57,4 +54,32 @@ void WriteOutput::StreamConcentrationsV2(
   }
   stream_concentrations << Concentration[Number_Species] << separator;
   stream_concentrations << "\n" << std::flush;
+}
+
+// output function for species labels, temperature at back
+void WriteOutput::WriteLabelsReactionRates(size_t Number_Reactions) {
+  size_t i;
+  ofstream OutputFile(filename_rates.c_str(), ios::out);
+
+  if (OutputFile.is_open()) {
+    OutputFile << "Time";
+    for (i = 0; i < Number_Reactions; i++) {
+      OutputFile << separator << "Reaction(" << i << ")";
+    }
+    OutputFile << "\n";
+    OutputFile.close();
+  } else
+    cout << "Unable to open file";
+}
+
+void WriteOutput::StreamReactionRates(const string separator,
+                                      double CurrentTime,
+                                      const vector<double> &ReactionRates) {
+  size_t i;
+  stream_rates << CurrentTime; // time
+
+  for (i = 0; i < ReactionRates.size(); i++) {
+    stream_rates << separator << ReactionRates[i];
+  }
+  stream_rates << "\n" << std::flush;
 }

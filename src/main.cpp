@@ -12,6 +12,7 @@
 SolverCalculation solver_calculation;
 
 // a global class can handle all output:
+//// TODO: Use a global variable, and initialise as required with new content
 WriteOutput write_output;
 
 void wrapper_ODE_RHS(int *n, double *t, double *y, double *f) {
@@ -27,15 +28,12 @@ void wrapper_ODE_RHS(int *n, double *t, double *y, double *f) {
 //                                                      int *NROWPD) {
 
 //// TODO: merge the two functions into one unified function
-
 void wrapper_Jacobian_Matrix_Intel(int *n, double *t, double *y, double *a) {
   solver_calculation.Jacobian_Matrix_Intel(n, t, y, a);
 }
-
 void wrapper_Jacobian_Matrix_Odepack_LSODA(int *n, double *t, double *y,
                                            double *ML, double *MU, double *a,
                                            int *NROWPD) {
-
   solver_calculation.Jacobian_Matrix_Odepack_LSODA(n, t, y, ML, MU, a, NROWPD);
 }
 
@@ -156,29 +154,13 @@ int main(int argc, char *argv[]) {
     write_output.set_output(initial_parameters.Solver_Parameters.separator,
                             "concentrations.txt", "reaction_rates.txt",
                             "PetroOxy-log.txt");
-    // Define output filenames:
-    // Filenames OutputFilenames;
-
-    // OutputFilenames.Species = ;
-    // OutputFilenames.Rates = ;
-    // OutputFilenames.PetroOxy = ;
-    //  May need to rethink the rates analysis output...
-    //  OutputFilenames.RatesAnalysisStream = "";//rates_analysis_stream";
-    // OutputFilenames.Prefix = "";
 
     write_output.Write_Header_Species_Temperature_Pressure(
-        // WriteOutput::Write_Header_Species_Temperature_Pressure(
-        //     OutputFilenames.Species,
-        //     initial_parameters.Solver_Parameters.separator,
         Number_Species, reaction_mechanism.species,
         initial_parameters.GasPhase);
 
     if (initial_parameters.PrintReacRates) {
-      // WriteOutput::WriteLabelsReactionRates(
-      write_output.WriteLabelsReactionRates(
-          // OutputFilenames.Rates,
-          // initial_parameters.Solver_Parameters.separator,
-          Number_Reactions);
+      write_output.WriteLabelsReactionRates(Number_Reactions);
     }
 
     // only required if the user desires mechanism reduction
@@ -199,8 +181,6 @@ int main(int argc, char *argv[]) {
 
       ReactionMechanism Reduced_Reaction_Mechanism;
       Reduced_Reaction_Mechanism.species = reaction_mechanism.species;
-      // Reduced_Reaction_Mechanism.Thermodynamics =
-      // reaction_mechanism.Thermodynamics;
       Reduced_Reaction_Mechanism.reactions = ReducedReactions;
 
       // start a second run only if reduced scheme is not empty and has size
@@ -213,12 +193,6 @@ int main(int argc, char *argv[]) {
                                 "reduced_concentrations.txt",
                                 "reduced_reaction_rates.txt",
                                 "reduced_PetroOxy-log.txt");
-
-        /*
-OutputFilenames.Species = "reduced_concentrations.txt";
-OutputFilenames.Rates = "reduced_reaction_rates.txt";
-OutputFilenames.PetroOxy = "reduced_PetroOxy-log.txt";
-OutputFilenames.Prefix = "reduced_";//*/
 
         Number_Reactions = ReducedReactions.size();
 
@@ -246,24 +220,16 @@ OutputFilenames.Prefix = "reduced_";//*/
 
         if (initial_parameters.MechanismAnalysis.StreamRatesAnalysis) {
           RatesAnalysis::PrepareStreamRatesAnalysis(
-              Reduced_Reaction_Mechanism.species, write_output.get_prefix()
-              //, OutputFilenames.Prefix
-          );
+              Reduced_Reaction_Mechanism.species, write_output.get_prefix());
         }
 
         write_output.Write_Header_Species_Temperature_Pressure(
-            // OutputFilenames.Species,
-            // initial_parameters.Solver_Parameters.separator,
             Number_Species, Reduced_Reaction_Mechanism.species,
             initial_parameters.GasPhase);
-        write_output.WriteLabelsReactionRates(
-            // OutputFilenames.Rates,
-            // initial_parameters.Solver_Parameters.separator,
-            Number_Reactions);
+        write_output.WriteLabelsReactionRates(Number_Reactions);
 
         cout << "\nHanding Reduced Mechanism to Integrator\n" << std::flush;
         RunIntegrator::Choose_Integrator(
-            // OutputFilenames,
             Reduced_Reaction_Mechanism, initial_parameters, KeyRates,
             PetroOxyDataInitial, RatesAnalysisData);
 

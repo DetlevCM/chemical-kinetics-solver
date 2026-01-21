@@ -8,14 +8,14 @@
 #include "./run_integrator.h"
 #include "./write_output/write_output.h"
 
-// Not a perfect solution, but stick integrator into its own void with global
-// variables via a namespace
 void RunIntegrator::Integrate_Liquid_Phase(
-    // Filenames OutputFilenames,
-    vector<double> SpeciesConcentration, ReactionMechanism reaction_mechanism,
-    Initial_Data InitialParameters, vector<double> &KeyRates,
-    PressureVesselCalc PetroOxyDataInput,
+    ReactionMechanism reaction_mechanism, Initial_Data InitialParameters,
+    vector<double> &KeyRates, PressureVesselCalc PetroOxyDataInput,
     vector<vector<str_RatesAnalysis>> &RatesAnalysisData) {
+
+  //// TODO: do we need this vector?
+  vector<double> SpeciesConcentration =
+      InitialParameters.InitialSpeciesConcentration;
 
   vector<TrackSpecies> ProductsForRatesAnalysis;
 
@@ -28,15 +28,10 @@ void RunIntegrator::Integrate_Liquid_Phase(
        << " species and " << Number_Reactions << " Reactions.\n"
        << std::flush;
 
-  // ofstream ReactionRates_OFStream;
-  // ofstream
-  // Concentration_OFStream(write_output.filename_concentrations.c_str(),
-  // ios::app);
   write_output.open_stream_concentrations();
 
   if (InitialParameters.PrintReacRates) {
     write_output.open_stream_rates();
-    // ReactionRates_OFStream.open(OutputFilenames.Rates.c_str(), ios::app);
   }
 
   Settings_LSODA LSODA;
@@ -157,7 +152,6 @@ void RunIntegrator::Integrate_Liquid_Phase(
   }
 
   if (InitialParameters.PetroOxy.IsSet) {
-    // SolverCalculation::PetroOxyOutputHeader(OutputFilenames.PetroOxy);
     SolverCalculation::PetroOxyOutputHeader(write_output.get_name_petrooxy());
     solver_calculation.OxyGasSpeciesID = InitialParameters.PetroOxy.GasSpecies;
     solver_calculation.PetroOxyData = PetroOxyDataInput;
@@ -210,18 +204,11 @@ void RunIntegrator::Integrate_Liquid_Phase(
 
   // do not forget output at time = 0
   write_output.StreamConcentrations(
-      // WriteOutput::StreamConcentrations(
-      // Concentration_OFStream,
-      // InitialParameters.Solver_Parameters.separator,
       InitialParameters.GasPhase, Number_Species, time_current,
-      InitialParameters.GasPhasePressure, solver_calculation.Concentration
-      // SpeciesConcentration
-  );
+      InitialParameters.GasPhasePressure, solver_calculation.Concentration);
   // Only stream if the user desires it, still doesn't prevent file creation...
   if (InitialParameters.PrintReacRates) {
     write_output.StreamReactionRates(
-        // WriteOutput::StreamReactionRates(
-        // ReactionRates_OFStream,
         InitialParameters.Solver_Parameters.separator, time_current,
         solver_calculation.Get_Rates());
   }
@@ -418,13 +405,9 @@ void RunIntegrator::Integrate_Liquid_Phase(
       pressure = (total_mol * R * SpeciesConcentration[Number_Species]) /
                  InitialParameters.GasPhaseVolume;
     } //*/
-    write_output.StreamConcentrations(
-        // WriteOutput::StreamConcentrations(
-        //   Concentration_OFStream,
-        //   InitialParameters.Solver_Parameters.separator,
-        false, // InitialParameters.GasPhase,
-        Number_Species, time_current, pressure,
-        solver_calculation.Concentration);
+    write_output.StreamConcentrations(false, Number_Species, time_current,
+                                      pressure,
+                                      solver_calculation.Concentration);
 
     if (InitialParameters.PrintReacRates) {
       //// TODO: seems to have broken...
@@ -439,10 +422,9 @@ void RunIntegrator::Integrate_Liquid_Phase(
     }
 
     if (InitialParameters.PetroOxy.IsSet) {
-      SolverCalculation::PetroOxyOutputStream(
-          // OutputFilenames.PetroOxy,
-          write_output.get_name_petrooxy(), solver_calculation.PetroOxyData,
-          time_current);
+      SolverCalculation::PetroOxyOutputStream(write_output.get_name_petrooxy(),
+                                              solver_calculation.PetroOxyData,
+                                              time_current);
     }
 
     if (InitialParameters.MechanismReduction.ReduceReactions != 0) {
@@ -470,10 +452,6 @@ void RunIntegrator::Integrate_Liquid_Phase(
   cout << "CPU Time: "
        << ((double)(clock() - cpu_time_current)) / CLOCKS_PER_SEC
        << " seconds\n";
-
-  // close output files
-  //  Concentration_OFStream.close();
-  // ReactionRates_OFStream.close();
 
   write_output.close_stream_concentrations();
   write_output.close_stream_rates();

@@ -66,9 +66,9 @@ public:
   };
 
   // Function to pick the right integration routine
-  static void Choose_Integrator( // Filenames,
-      ReactionMechanism, Initial_Data, vector<double> &, PressureVesselCalc,
-      vector<vector<str_RatesAnalysis>> &);
+  static void Choose_Integrator(ReactionMechanism, Initial_Data,
+                                vector<double> &, PressureVesselCalc,
+                                vector<vector<str_RatesAnalysis>> &);
 
   static int Prepare_Integrator_Settings(Initial_Data, size_t, Settings_LSODA &,
                                          Settings_Intel &);
@@ -77,10 +77,9 @@ public:
 
   // solve based on concentrations in the liquid phase
   static void Integrate_Liquid_Phase(
-      // Filenames OutputFilenames,
-      vector<double> SpeciesConcentration, ReactionMechanism reaction_mechanism,
-      Initial_Data InitialParameters, vector<double> &KeyRates,
-      PressureVesselCalc PetroOxyDataInput,
+      // vector<double> SpeciesConcentration,
+      ReactionMechanism reaction_mechanism, Initial_Data InitialParameters,
+      vector<double> &KeyRates, PressureVesselCalc PetroOxyDataInput,
       vector<vector<str_RatesAnalysis>> &RatesAnalysisData);
 
   //// Pre-Processing:

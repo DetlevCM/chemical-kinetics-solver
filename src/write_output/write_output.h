@@ -68,34 +68,28 @@ public:
   // Function to write the labels
 
   // Write labels for concentrations, then stream output
-  void Write_Header_Species_Temperature_Pressure(
-      // string filename,
-      // string separator,
-      size_t Number_Species, vector<Species> species, bool GasPhasePressure);
+  void Write_Header_Species_Temperature_Pressure(size_t Number_Species,
+                                                 vector<Species> species,
+                                                 bool GasPhasePressure);
 
-  void StreamConcentrations( // ofstream &Concentration_OFStream,
-                             //       const string separator,
-      bool GasPhasePressure, size_t Number_Species, double CurrentTime,
-      double Pressure, const vector<double> &Concentration);
+  void StreamConcentrations(bool GasPhasePressure, size_t Number_Species,
+                            double CurrentTime, double Pressure,
+                            const vector<double> &Concentration);
 
-  void StreamConcentrationsV2( // ofstream &Concentration_OFStream,
-                               //       const string separator,
-      double CurrentTime, size_t Number_Species, double *Concentration);
+  void StreamConcentrationsV2(double CurrentTime, size_t Number_Species,
+                              double *Concentration);
 
   // write labels for reactions then stream output
-  void WriteLabelsReactionRates(
-      // string, string,
-      size_t);
+  void WriteLabelsReactionRates(size_t);
 
   void StreamReactionRates( // ofstream &,
       const string, double, const vector<double> &Rates);
 
   // output of input files
 
-  static void Write_Stoichiometric_Matrix_For_Opt(
-      string,
-      //		const vector< string >& ,
-      const vector<SingleReactionData> &);
+  static void
+  Write_Stoichiometric_Matrix_For_Opt(string,
+                                      const vector<SingleReactionData> &);
   static void Input_File_For_Ehsan_Opt(string,
                                        const vector<SingleReactionData> &);
 };
