@@ -39,6 +39,7 @@ vector<Species> MechanismReduction::Process_Thermodynamics_Species_Classes(
     for (size_t j = 0; j < 7; j++) {
       temp[j + 3] = species[i].thermodynamicdata.nasa.low[j];
     }
+    // temp[10] = species[i].thermodynamicdata.NasaHigh1;
     for (size_t j = 0; j < 7; j++) {
       temp[j + 10] = species[i].thermodynamicdata.nasa.high[j];
     }
@@ -150,7 +151,6 @@ vector<Species> MechanismReduction::Process_Thermodynamics_Species_Classes(
       temp.thermodynamicdata.nasa.high[j] = new_thermo[i][10 + j];
     }
 
-    // Thermodynamics.push_back(temp);
     species.push_back(temp);
   } //*/
 
