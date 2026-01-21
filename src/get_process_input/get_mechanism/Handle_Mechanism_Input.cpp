@@ -27,15 +27,12 @@ bool Handle_Mechanism_Input(Filenames filenames,
                             Initial_Data &InitialParameters,
                             // vector< double >& InitialSpeciesConcentration,
                             PressureVesselCalc &PetroOxyData) {
-  // int Number_Reactions;
-  size_t i;
 
   /* As we now know that the input files exist, let us continue by reading in
    * the species list, thermodynamic data and mechanism
    */
 
   ReactionMechanism::get_mechanism(filenames.mechanism, reaction_mechanism);
-  size_t Number_Species = reaction_mechanism.species_size();
 
   // /* Did the user request the removal of species? If yes, remove the
   //  * species on the "kill list" from the mechanism/
@@ -48,16 +45,10 @@ bool Handle_Mechanism_Input(Filenames filenames,
     MechanismReduction::Reduce_Species_Thermo_Mechanism(
         MechanismReduction::Read_Kill_List("kill.txt",
                                            reaction_mechanism.species),
-        reaction_mechanism.species,
-        // reaction_mechanism.species.thermodynamics,
-        reaction_mechanism.reactions);
+        reaction_mechanism.species, reaction_mechanism.reactions);
     DataInputFromFile.close();
     WriteReactions("Reactions_After_Species_Removal.txt",
                    reaction_mechanism.species, reaction_mechanism.reactions);
-
-    // 	// Update the counter for the species and reactions
-    Number_Species = reaction_mechanism.species.size();
-    // Number_Reactions = (int)reaction_mechanism.Reactions.size();
   }
 
   /* Did the user decide that he wants to pick specific species from the
@@ -67,7 +58,6 @@ bool Handle_Mechanism_Input(Filenames filenames,
   if (DataInputFromFile.is_open()) {
     MechanismReduction::mechanism_picking("SpeciesPicking.txt",
                                           reaction_mechanism.species,
-                                          // reaction_mechanism.Thermodynamics,
                                           reaction_mechanism.reactions);
     DataInputFromFile.close();
     WriteReactions("Species_Picked_Reactions.txt", reaction_mechanism.species,
@@ -76,10 +66,6 @@ bool Handle_Mechanism_Input(Filenames filenames,
         "Species_Picked_Thermo.txt", reaction_mechanism.species);
     Species::WriteSpecies("Species_Picked_Species.txt",
                           reaction_mechanism.species);
-
-    // Update the counter for the species and reactions
-    Number_Species = reaction_mechanism.species.size();
-    // Number_Reactions = (int) reaction_mechanism.Reactions.size();
   }
 
   /* We have finished processing the mechanism itself. Let us now read the
@@ -98,6 +84,9 @@ bool Handle_Mechanism_Input(Filenames filenames,
    * that it does not contain any errors, we can begin to process it and prepare
    * it for the integrator
    */
+
+  // Setp the counter for the species
+  size_t Number_Species = reaction_mechanism.species.size();
 
   // We'll store the initial Concentrations separately so we have a reset
   // parameter for multiple runs
@@ -133,14 +122,14 @@ bool Handle_Mechanism_Input(Filenames filenames,
 
     vector<double> temp(Number_Species);
 
-    for (i = 0; i < InitialParameters.InitialLiquidSpecies.size(); i++) {
+    for (size_t i = 0; i < InitialParameters.InitialLiquidSpecies.size(); i++) {
       temp[InitialParameters.InitialLiquidSpecies[i].SpecID] =
           InitialParameters.InitialLiquidSpecies[i].SpecConc;
     }
 
     // total mol in input file:
     double total_mol = 0;
-    for (i = 0; i < Number_Species; i++) {
+    for (size_t i = 0; i < Number_Species; i++) {
       total_mol = total_mol + temp[i];
     }
     // Gas Volume m^3, concentrations in input mol/L * volume for mol count
@@ -150,7 +139,6 @@ bool Handle_Mechanism_Input(Filenames filenames,
     double n;
 
     n = (GasPressure * GasVolume) / (Temperature * R);
-
     // n is now the amount of moles I should have
 
     double conversion_factor = 1;
@@ -158,7 +146,7 @@ bool Handle_Mechanism_Input(Filenames filenames,
       conversion_factor = n / (total_mol); // correct for L
     }
 
-    for (i = 0; i < Number_Species; i++) {
+    for (size_t i = 0; i < Number_Species; i++) {
       InitialParameters.InitialSpeciesConcentration[i] =
           conversion_factor * temp[i];
       if (temp[i] != 0) {
@@ -169,7 +157,7 @@ bool Handle_Mechanism_Input(Filenames filenames,
       }
     }
   } else {
-    for (i = 0; i < InitialParameters.InitialLiquidSpecies.size(); i++) {
+    for (size_t i = 0; i < InitialParameters.InitialLiquidSpecies.size(); i++) {
       InitialParameters.InitialSpeciesConcentration
           [InitialParameters.InitialLiquidSpecies[i].SpecID] =
           InitialParameters.InitialLiquidSpecies[i].SpecConc;
@@ -270,7 +258,7 @@ bool Handle_Mechanism_Input(Filenames filenames,
     vector<double> temp; // = SpeciesConcentration;
     temp.resize(Number_Species_Classes + 1);
 
-    for (i = 0; i < Number_Species; i++) {
+    for (size_t i = 0; i < Number_Species; i++) {
       size_t SpeciesID = SpeciesClassMapping[i];
       temp[SpeciesID] =
           temp[SpeciesID] + InitialParameters.InitialSpeciesConcentration[i];

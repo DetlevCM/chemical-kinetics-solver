@@ -142,7 +142,6 @@ RunIntegrator::Get_Delta_N(const vector<SingleReactionData> Reactions) {
   vector<double> delta_n(number_reactions);
 
   for (i = 0; i < number_reactions; i++) {
-    // double delta_n = 0;
     for (j = 0; j < number_species; j++) {
       delta_n[i] = delta_n[i] + Reactions[i].Reactants[j] +
                    Reactions[i].Products[j]; // reactants & products
