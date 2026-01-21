@@ -7,15 +7,16 @@
  * the initial output which also clears the file. */
 
 // output function for species labels, temperature at back
-void WriteOutput::WriteLabelsConcentration(size_t Number_Species,
-                                           vector<Species> species,
-                                           bool GasPhasePressure) {
-  size_t i;
+
+void WriteOutput::WriteHeaders(vector<Species> species, bool GasPhasePressure,
+                               size_t Number_Reactions) {
+
+  // reason to open their own streams here is to open fresh output files
   ofstream Concentration_OFStream(filename_concentrations.c_str(), ios::out);
 
   if (Concentration_OFStream.is_open()) {
     Concentration_OFStream << "Time";
-    for (i = 0; i < Number_Species; i++) {
+    for (size_t i = 0; i < species.size(); i++) {
       Concentration_OFStream << separator << species[i].Name;
     }
     Concentration_OFStream << separator << "Temperature";
@@ -26,50 +27,46 @@ void WriteOutput::WriteLabelsConcentration(size_t Number_Species,
     Concentration_OFStream.close();
   } else
     cout << "Unable to open file";
-}
 
-// output function for reactions label
-void WriteOutput::WriteLabelsReactionRates(size_t Number_Reactions) {
-  size_t i;
-  ofstream OutputFile(filename_rates.c_str(), ios::out);
+  if (print_rates) {
+    ofstream OutputFile(filename_rates.c_str(), ios::out);
 
-  if (OutputFile.is_open()) {
-    OutputFile << "Time";
-    for (i = 0; i < Number_Reactions; i++) {
-      OutputFile << separator << "Reaction(" << i << ")";
-    }
-    OutputFile << "\n";
-    OutputFile.close();
-  } else
-    cout << "Unable to open file";
+    if (OutputFile.is_open()) {
+      OutputFile << "Time";
+      for (size_t i = 0; i < Number_Reactions; i++) {
+        OutputFile << separator << "Reaction(" << i << ")";
+      }
+      OutputFile << "\n";
+      OutputFile.close();
+    } else
+      cout << "Unable to open file";
+  }
 }
 
 //// TODO: reflect whether the old separate functions weren't maybe better
-void WriteOutput::StreamData(stream_type type, double CurrentTime,
-                             bool GasPhasePressure, double Pressure,
-                             const vector<double> &data) {
-  switch (type) {
+void WriteOutput::StreamData(double CurrentTime, bool GasPhasePressure,
+                             double Pressure,
+                             const vector<double> &concentration,
+                             const vector<double> &rates) {
 
-  case concentration:
-    stream_concentrations << CurrentTime;
-    for (size_t i = 0; i < data.size(); i++) {
-      stream_concentrations << separator << data[i];
-    }
-    if (GasPhasePressure) {
-      stream_concentrations << separator << Pressure;
-    }
-    stream_concentrations << "\n" << std::flush;
-    break;
+  stream_concentrations << CurrentTime;
+  for (size_t i = 0; i < concentration.size(); i++) {
+    stream_concentrations << separator << concentration[i];
+  }
+  if (GasPhasePressure) {
+    stream_concentrations << separator << Pressure;
+  }
+  stream_concentrations << "\n" << std::flush;
 
-  case rates:
+  if (print_rates) // reaction rates are options
+  {
     stream_rates << CurrentTime; // time
 
-    for (size_t i = 0; i < data.size(); i++) {
-      stream_rates << separator << data[i];
+    for (size_t i = 0; i < rates.size(); i++) {
+      stream_rates << separator << rates[i];
     }
     stream_rates << "\n" << std::flush;
-    break;
-
-    // case petrooxy:
   }
+
+  // case petrooxy:
 }

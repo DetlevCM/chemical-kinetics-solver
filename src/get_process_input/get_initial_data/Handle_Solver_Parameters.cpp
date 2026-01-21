@@ -23,6 +23,8 @@ void Initial_Data::Handle_Solver_Parameters(Initial_Data &InitialParameters,
      */
     if (Test_If_Word_Found(Input[i], "intelode")) {
       InitialParameters.Solver_Parameters.SolverType = 0;
+      cout << "The Intel ODE solver has been deprecated, the code will exit.\n";
+      exit(1);
     }
     if (Test_If_Word_Found(Input[i], "odepack")) {
       InitialParameters.Solver_Parameters.SolverType = 1;

@@ -153,15 +153,12 @@ int main(int argc, char *argv[]) {
 
     write_output.set_output(initial_parameters.Solver_Parameters.separator,
                             "concentrations.txt", "reaction_rates.txt",
-                            "PetroOxy-log.txt");
+                            "PetroOxy-log.txt",
+                            initial_parameters.PrintReacRates);
 
-    write_output.WriteLabelsConcentration(Number_Species,
-                                          reaction_mechanism.species,
-                                          initial_parameters.GasPhase);
-
-    if (initial_parameters.PrintReacRates) {
-      write_output.WriteLabelsReactionRates(Number_Reactions);
-    }
+    write_output.WriteHeaders(reaction_mechanism.species,
+                              initial_parameters.GasPhase,
+                              reaction_mechanism.reactions_size());
 
     // only required if the user desires mechanism reduction
     if (initial_parameters.MechanismReduction.ReduceReactions != 0) {
@@ -188,10 +185,10 @@ int main(int argc, char *argv[]) {
 
         //// TODO: this should really just require the prefix
         write_output.set_prefix("reduced_");
-        write_output.set_output(initial_parameters.Solver_Parameters.separator,
-                                "reduced_concentrations.txt",
-                                "reduced_reaction_rates.txt",
-                                "reduced_PetroOxy-log.txt");
+        write_output.set_output(
+            initial_parameters.Solver_Parameters.separator,
+            "reduced_concentrations.txt", "reduced_reaction_rates.txt",
+            "reduced_PetroOxy-log.txt", initial_parameters.PrintReacRates);
 
         Number_Reactions = ReducedReactions.size();
 
@@ -222,10 +219,9 @@ int main(int argc, char *argv[]) {
               Reduced_Reaction_Mechanism.species, write_output.get_prefix());
         }
 
-        write_output.WriteLabelsConcentration(
-            Number_Species, Reduced_Reaction_Mechanism.species,
-            initial_parameters.GasPhase);
-        write_output.WriteLabelsReactionRates(Number_Reactions);
+        write_output.WriteHeaders(Reduced_Reaction_Mechanism.species,
+                                  initial_parameters.GasPhase,
+                                  Number_Reactions);
 
         cout << "\nHanding Reduced Mechanism to Integrator\n" << std::flush;
         RunIntegrator::Integrate(Reduced_Reaction_Mechanism, initial_parameters,

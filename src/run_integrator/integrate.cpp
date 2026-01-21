@@ -212,15 +212,11 @@ void RunIntegrator::Integrate(
   }
 
   // do not forget output at time = 0
-  write_output.StreamData(WriteOutput::stream_type::concentration, time_current,
-                          InitialParameters.GasPhase,
+  write_output.StreamData(time_current, InitialParameters.GasPhase,
                           InitialParameters.GasPhasePressure,
-                          solver_calculation.Concentration);
-  // Only stream if the user desires it, still doesn't prevent file creation...
-  if (InitialParameters.PrintReacRates) {
-    write_output.StreamData(WriteOutput::stream_type::rates, time_current,
-                            false, 0.0, solver_calculation.Get_Rates());
-  }
+                          solver_calculation.Concentration,
+                          solver_calculation.Get_Rates());
+
   // not happy with this more widely available, needs a cleanup...
   vector<vector<size_t>> ReactionsForSpeciesSelectedForRates;
   // Not the best place to put it, but OK for now:
@@ -413,14 +409,9 @@ void RunIntegrator::Integrate(
                  InitialParameters.GasPhaseVolume;
     } //*/
 
-    write_output.StreamData(WriteOutput::stream_type::concentration,
-                            time_current, InitialParameters.GasPhase, pressure,
-                            solver_calculation.Concentration);
-
-    if (InitialParameters.PrintReacRates) {
-      write_output.StreamData(WriteOutput::stream_type::rates, time_current,
-                              false, 0.0, solver_calculation.Get_Rates());
-    }
+    write_output.StreamData(time_current, InitialParameters.GasPhase, pressure,
+                            solver_calculation.Concentration,
+                            solver_calculation.Get_Rates());
 
     //// TODO: seems to have broken...
     /*

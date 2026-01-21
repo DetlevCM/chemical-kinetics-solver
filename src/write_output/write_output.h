@@ -35,17 +35,21 @@ private:
   ofstream stream_concentrations;
   ofstream stream_rates;
 
+  bool print_rates;
+
 public:
   /*|-------------------------------|*/
   /*|-- Functions to write output --|*/
   /*|-------------------------------|*/
 
   void set_output(string sep, string name_concentrations, string name_rates,
-                  string name_petrooxy) {
+                  string name_petrooxy, bool bool_print_rates) {
     separator = sep;
     filename_concentrations = name_concentrations;
     filename_rates = name_rates;
     filename_petrooxy = name_petrooxy;
+
+    print_rates = bool_print_rates;
   };
 
   void set_prefix(string pref) { prefix = pref; }
@@ -65,18 +69,12 @@ public:
   void close_stream_concentrations() { stream_concentrations.close(); };
   void close_stream_rates() { stream_rates.close(); };
 
-  // Function to write the labels
+  void WriteHeaders(vector<Species> species, bool GasPhasePressure,
+                    size_t Number_Reactions);
 
-  // Write labels for concentrations, then stream output
-  void WriteLabelsConcentration(size_t Number_Species, vector<Species> species,
-                                bool GasPhasePressure);
-  // write labels for reactions then stream output
-  void WriteLabelsReactionRates(size_t);
-
-  // ref: https://en.cppreference.com/w/cpp/language/enum.html
-  enum stream_type { concentration, rates, petrooxy };
-  void StreamData(stream_type type, double CurrentTime, bool GasPhasePressure,
-                  double Pressure, const vector<double> &data);
+  void StreamData(double CurrentTime, bool GasPhasePressure, double Pressure,
+                  const vector<double> &concentration,
+                  const vector<double> &rates);
 
   // output of input files
   static void
