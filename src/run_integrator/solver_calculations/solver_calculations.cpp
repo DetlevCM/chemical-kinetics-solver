@@ -58,16 +58,16 @@ void SolverCalculation::Calculate_Rate_Constant(const double Temperature)
     //* Speedup by only raising temperature to power where needed: improvement
     // is large :)
     if (ReactionParameters[i].paramN !=
-        0) // raising to power 0 has no effect, so only if not 0
+        0.0) // raising to power 0 has no effect, so only if not 0
     {
       // unsure if this check really gives a performance improvement...
       // maybe it used to and no longer does with a modern
       // compiler/processor/kernel -> seems to be ever so slightly faster
-      if (ReactionParameters[i].paramN != 1) {
-        Kf[i] = Kf[i] * pow(Temperature, ReactionParameters[i].paramN);
-      } else {
+      // if (ReactionParameters[i].paramN != 1.0) {
+      Kf[i] = Kf[i] * pow(Temperature, ReactionParameters[i].paramN);
+      /*} else {
         Kf[i] = Kf[i] * Temperature; // raise temp^1 = temp
-      }
+      }//*/
     }
 
     /*
