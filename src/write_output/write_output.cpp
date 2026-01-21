@@ -6,8 +6,7 @@
  * and appends data to any existing file. See WriteLabelsSpecies for
  * the initial output which also clears the file. */
 
-// output function for species labels, temperature at back
-
+// output function for species labels, temperature and pressure at the back
 void WriteOutput::WriteHeaders(vector<Species> species, bool GasPhasePressure,
                                size_t Number_Reactions) {
 
@@ -43,7 +42,6 @@ void WriteOutput::WriteHeaders(vector<Species> species, bool GasPhasePressure,
   }
 }
 
-//// TODO: reflect whether the old separate functions weren't maybe better
 void WriteOutput::StreamData(double CurrentTime, bool GasPhasePressure,
                              double Pressure,
                              const vector<double> &concentration,
