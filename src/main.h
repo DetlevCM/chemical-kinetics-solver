@@ -59,6 +59,8 @@ extern SolverCalculation solver_calculation;
 
 void wrapper_ODE_RHS(int *n, double *t, double *y, double *f);
 
+void wrapper_Jacobian_Matrix_Intel(int *n, double *t, double *y, double *a);
+
 void wrapper_Jacobian_Matrix_Odepack_LSODA(int *n, double *t, double *y,
                                            double *ML, double *MU, double *a,
                                            int *NROWPD);

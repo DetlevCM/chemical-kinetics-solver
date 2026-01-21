@@ -294,7 +294,7 @@ void RunIntegrator::Integrate_Liquid_Phase(
     case 1002:
       dodesol_rkm9mka(&Intel.vector_ipar[0], &n, &time_current, &time_step, y,
                       (void *)&wrapper_ODE_RHS,
-                      (void *)&SolverCalculation::Jacobian_Matrix_Intel,
+                      (void *)&wrapper_Jacobian_Matrix_Intel,
                       &Intel.h, &Intel.hm, &Intel.ep, &Intel.tr,
                       &Intel.vector_dpar[0], &Intel.vector_kd[0], &Intel.ierr);
       if (Intel.ierr != 0) {
@@ -319,7 +319,7 @@ void RunIntegrator::Integrate_Liquid_Phase(
     case 1004:
       dodesol_mk52lfa(&Intel.vector_ipar[0], &n, &time_current, &time_step, y,
                       (void *)&wrapper_ODE_RHS,
-                      (void *)&SolverCalculation::Jacobian_Matrix_Intel,
+                      (void *)&wrapper_Jacobian_Matrix_Intel,
                       &Intel.h, &Intel.hm, &Intel.ep, &Intel.tr,
                       &Intel.vector_dpar[0], &Intel.vector_kd[0], &Intel.ierr);
       if (Intel.ierr != 0) {
