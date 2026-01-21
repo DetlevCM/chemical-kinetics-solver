@@ -28,19 +28,17 @@ public:
     string Name;
   };
 
-  static void
-  Reduce_Species_Thermo_Mechanism(vector<bool>, vector<Species> &species,
-                                  // vector< Species::ThermodynamicData >& ,
-                                  vector<SingleReactionData> &);
+  static void Reduce_Species_Thermo_Mechanism(vector<bool>,
+                                              vector<Species> &species,
+                                              vector<SingleReactionData> &);
 
   static void mechanism_picking(string filename, vector<Species> &species,
-                                // vector< Species::ThermodynamicData >& ,
                                 vector<SingleReactionData> &);
 
-  static void handle_reactions_with_chosen_species(
-      string, vector<SpeciesPicking> &, vector<Species> &species,
-      // vector< Species::ThermodynamicData >& ,
-      vector<SingleReactionData> &);
+  static void
+  handle_reactions_with_chosen_species(string, vector<SpeciesPicking> &,
+                                       vector<Species> &species,
+                                       vector<SingleReactionData> &);
 
   /* ******************************************************* */
   /*  various functions associated with mechanism reduction  */
@@ -60,11 +58,9 @@ public:
                      const vector<SingleReactionData> &,
                      const vector<double> &);
 
-  static vector<double> Compare_Concentrations(
-      // const vector< double >& OldTimePoints,
-      const vector<vector<double>> &OldConcentrations,
-      // const vector< double >& NewTimePoints,
-      const vector<vector<double>> &NewConcentrations);
+  static vector<double>
+  Compare_Concentrations(const vector<vector<double>> &OldConcentrations,
+                         const vector<vector<double>> &NewConcentrations);
 
   ///* ***************************************** */
   //*  species lumping and reaction reduction   *//

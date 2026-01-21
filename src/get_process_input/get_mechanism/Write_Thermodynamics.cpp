@@ -8,10 +8,8 @@
 #include "./Species.h"
 // Ofstream reference: http://www.cplusplus.com/reference/fstream/ofstream/
 
-void Species::ThermodynamicData::Write_Thermodynamic_Data(
-    string filename, const vector<Species> &species
-    // const vector< ThermodynamicData >& Thermodynamics
-) {
+void Species::Write_Thermodynamic_Data(string filename,
+                                       const vector<Species> &species) {
   size_t i;
   ofstream ThermodynamicsOutput(filename.c_str(), ios::out);
 
@@ -21,28 +19,21 @@ void Species::ThermodynamicData::Write_Thermodynamic_Data(
     for (i = 0; i < Number_Species; i++) {
       ThermodynamicsOutput << species[i].Name << "\n";
 
-      ThermodynamicsOutput << species[i].thermodynamicdata.TLow << "	"
-                           << species[i].thermodynamicdata.THigh << "	"
-                           << species[i].thermodynamicdata.TChange
+      ThermodynamicsOutput << species[i].thermodynamicdata.nasa.TLow << "	"
+                           << species[i].thermodynamicdata.nasa.THigh << "	"
+                           << species[i].thermodynamicdata.nasa.TChange
 
-                           << "\n"
-                           << species[i].thermodynamicdata.NasaLow1
-                           << "	" << species[i].thermodynamicdata.NasaLow2
-                           << "	" << species[i].thermodynamicdata.NasaLow3
-                           << "	" << species[i].thermodynamicdata.NasaLow4
-                           << "	" << species[i].thermodynamicdata.NasaLow5
-                           << "	" << species[i].thermodynamicdata.NasaLow6
-                           << "	" << species[i].thermodynamicdata.NasaLow7
-
-                           << "\n"
-                           << species[i].thermodynamicdata.NasaHigh1
-                           << "	" << species[i].thermodynamicdata.NasaHigh2
-                           << "	" << species[i].thermodynamicdata.NasaHigh3
-                           << "	" << species[i].thermodynamicdata.NasaHigh4
-                           << "	" << species[i].thermodynamicdata.NasaHigh5
-                           << "	" << species[i].thermodynamicdata.NasaHigh6
-                           << "	" << species[i].thermodynamicdata.NasaHigh7
                            << "\n";
+      for (size_t j = 0; j < 7; j++) {
+        ThermodynamicsOutput << species[i].thermodynamicdata.nasa.low[j]
+                             << "	";
+      }
+      ThermodynamicsOutput << "\n";
+      for (size_t j = 0; j < 7; j++) {
+        ThermodynamicsOutput << species[i].thermodynamicdata.nasa.high[j]
+                             << "	";
+      }
+      ThermodynamicsOutput << "\n";
 
       // One more new line to separate species
       ThermodynamicsOutput << "\n"; // new line

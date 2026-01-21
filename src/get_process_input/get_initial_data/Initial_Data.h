@@ -14,8 +14,6 @@
 
 #include "../get_mechanism/Species.h"
 
-// struct InitParam {
-
 class Initial_Data {
 
 public:

@@ -20,15 +20,21 @@ vector<Species> Species::VectorClass(vector<string> species) {
   return new_species_vec;
 }
 
-void Species::ThermodynamicData::SetNasa(double tlow, double thigh,
-                                         double tchange, vector<double> nasalow,
-                                         vector<double> nasahigh) {
+void Species::SetNasa(double tlow, double thigh, double tchange,
+                      vector<double> nasalow, vector<double> nasahigh) {
 
-  TLow = tlow;
-  THigh = thigh;
-  TChange = tchange;
+  nasa.TLow = tlow;
+  nasa.THigh = thigh;
+  nasa.TChange = tchange;
 
-  NasaLow = nasalow;
+  // should never exceed 7 - there are always 7 entries
+  for (size_t i = 0; i < 7; i++) {
+    nasa.low[i] = nasalow[i];
+    nasa.high[i] = nasahigh[i];
+  }
+
+  // NasaLow = nasalow;
+  /*
   NasaLow1 = nasalow[0];
   NasaLow2 = nasalow[1];
   NasaLow3 = nasalow[2];
@@ -36,8 +42,10 @@ void Species::ThermodynamicData::SetNasa(double tlow, double thigh,
   NasaLow5 = nasalow[4];
   NasaLow6 = nasalow[5];
   NasaLow7 = nasalow[6];
+  //*/
 
-  NasaHigh = nasahigh;
+  // NasaHigh = nasahigh;
+  /*
   NasaHigh1 = nasahigh[0];
   NasaHigh2 = nasahigh[1];
   NasaHigh3 = nasahigh[2];
@@ -45,48 +53,52 @@ void Species::ThermodynamicData::SetNasa(double tlow, double thigh,
   NasaHigh5 = nasahigh[4];
   NasaHigh6 = nasahigh[5];
   NasaHigh7 = nasahigh[6];
+  //*/
 }
 
-double Species::ThermodynamicData::calculate_Hf_at_T(const ThermoT T) {
-  if (T.T1 <= TChange) {
+double Species::calculate_Hf_at_T(const ThermoT T) {
+  if (T.T1 <= nasa.TChange) {
     return R * T.T1 *
-           (NasaLow1 + NasaLow2 * T.T1 * 0.5 + NasaLow3 * T.T2 / 3.0 +
-            NasaLow4 * T.T3 * 0.25 + NasaLow5 * T.T4 * 0.2 + NasaLow6 * T.InvT);
+           (nasa.low[0] + nasa.low[1] * T.T1 * 0.5 + nasa.low[2] * T.T2 / 3.0 +
+            nasa.low[3] * T.T3 * 0.25 + nasa.low[4] * T.T4 * 0.2 +
+            nasa.low[5] * T.InvT);
   } else {
     return R * T.T1 *
-           (NasaHigh1 + NasaHigh2 * T.T1 * 0.5 + NasaHigh3 * T.T2 / 3.0 +
-            NasaHigh4 * T.T3 * 0.25 + NasaHigh5 * T.T4 * 0.2 +
-            NasaHigh6 * T.InvT);
+           (nasa.high[0] + nasa.high[1] * T.T1 * 0.5 +
+            nasa.high[2] * T.T2 / 3.0 + nasa.high[3] * T.T3 * 0.25 +
+            nasa.high[4] * T.T4 * 0.2 + nasa.high[5] * T.InvT);
   }
 }
 
-double Species::ThermodynamicData::calculate_Cp_at_T(const ThermoT T) {
-  if (T.T1 <= TChange) {
-    return R * (NasaLow1 + NasaLow2 * T.T1 + NasaLow3 * T.T2 + NasaLow4 * T.T3 +
-                NasaLow5 * T.T4);
+double Species::calculate_Cp_at_T(const ThermoT T) {
+  if (T.T1 <= nasa.TChange) {
+    return R * (nasa.low[0] + nasa.low[1] * T.T1 + nasa.low[2] * T.T2 +
+                nasa.low[3] * T.T3 + nasa.low[4] * T.T4);
   } else {
-    return R * (NasaHigh1 + NasaHigh2 * T.T1 + NasaHigh3 * T.T2 +
-                NasaHigh4 * T.T3 + NasaHigh5 * T.T4);
+    return R * (nasa.high[0] + nasa.high[1] * T.T1 + nasa.high[2] * T.T2 +
+                nasa.high[3] * T.T3 + nasa.high[4] * T.T4);
   };
 }
 
-double Species::ThermodynamicData::calculate_Cv_at_T(const ThermoT T) {
+double Species::calculate_Cv_at_T(const ThermoT T) {
   // skip ThermoT T(temperature); // temperatures -> T.T1
-  return ThermodynamicData::calculate_Cp_at_T(T) - R;
+  return calculate_Cp_at_T(T) - R;
 }
 
-double Species::ThermodynamicData::calculate_S_at_T(const ThermoT T) {
-  if (T.T1 <= TChange) {
-    return R * (NasaLow1 * T.logT + NasaLow2 * T.T1 + NasaLow3 * T.T2 * 0.5 +
-                NasaLow4 * T.T3 / 3.0 + NasaLow5 * T.T4 * 0.25 + NasaLow7);
+double Species::calculate_S_at_T(const ThermoT T) {
+  if (T.T1 <= nasa.TChange) {
+    return R * (nasa.low[0] * T.logT + nasa.low[1] * T.T1 +
+                nasa.low[2] * T.T2 * 0.5 + nasa.low[3] * T.T3 / 3.0 +
+                nasa.low[4] * T.T4 * 0.25 + nasa.low[6]);
   } else {
-    return R * (NasaHigh1 * T.logT + NasaHigh2 * T.T1 + NasaHigh3 * T.T2 * 0.5 +
-                NasaHigh4 * T.T3 / 3.0 + NasaHigh5 * T.T4 * 0.25 + NasaHigh7);
+    return R * (nasa.high[0] * T.logT + nasa.high[1] * T.T1 +
+                nasa.high[2] * T.T2 * 0.5 + nasa.high[3] * T.T3 / 3.0 +
+                nasa.high[4] * T.T4 * 0.25 + nasa.high[6]);
   };
 }
 
-Species::ThermodynamicData::CalculatedThermodynamics
-Species::ThermodynamicData::calculate_thermodynamics(const ThermoT T) {
+Species::CalculatedThermodynamics
+Species::calculate_thermodynamics(const ThermoT T) {
 
   CalculatedThermodynamics output;
 
