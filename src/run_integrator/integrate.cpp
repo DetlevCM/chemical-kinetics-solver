@@ -22,10 +22,6 @@ void RunIntegrator::Integrate(
     exit(1); // exit with error
   }
 
-  //// TODO: do we need this vector?
-  vector<double> SpeciesConcentration =
-      InitialParameters.InitialSpeciesConcentration;
-
   vector<TrackSpecies> ProductsForRatesAnalysis;
 
   size_t Number_Species = reaction_mechanism.species.size();
@@ -94,8 +90,8 @@ void RunIntegrator::Integrate(
   solver_calculation.ReactionParameters =
       Process_Reaction_Parameters(reaction_mechanism.reactions);
 
-  //// TODO: clean up
-  solver_calculation.Concentration = SpeciesConcentration;
+  solver_calculation.Concentration =
+      InitialParameters.InitialSpeciesConcentration;
 
   double *y = solver_calculation.Concentration.data();
 
@@ -170,7 +166,7 @@ void RunIntegrator::Integrate(
       InitialParameters.PetroOxy.TemperatureRise !=
           0) // fix temperature for Oxy, rise desired
   {
-    SpeciesConcentration[Number_Species] = 298;
+    solver_calculation.Concentration[Number_Species] = 298;
     // for Oxy diffusion limit, gets ignored if not required
     solver_calculation.time_previous = 0;
   } //*/
@@ -202,8 +198,9 @@ void RunIntegrator::Integrate(
     //  the PetroOxy will saturate the hydrocarbon with oxygen
     // at no loss to the reservoir
     solver_calculation.Adjust_Gas_Concentration_Initial(
-        SpeciesConcentration[solver_calculation.OxyGasSpeciesID],
-        SpeciesConcentration[Number_Species], solver_calculation.PetroOxyData);
+        solver_calculation.Concentration[solver_calculation.OxyGasSpeciesID],
+        solver_calculation.Concentration[Number_Species],
+        solver_calculation.PetroOxyData);
 
     SolverCalculation::PetroOxyOutputStream(write_output.get_name_petrooxy(),
                                             solver_calculation.PetroOxyData,
@@ -402,10 +399,11 @@ void RunIntegrator::Integrate(
       //  Pressure Tracking for Gas Phase Kinetics
       double total_mol = 0;
       for (i = 0; i < Number_Species; i++) {
-        total_mol = total_mol + SpeciesConcentration[i];
+        total_mol = total_mol + solver_calculation.Concentration[i];
       }
-      pressure = (total_mol * R * SpeciesConcentration[Number_Species]) /
-                 InitialParameters.GasPhaseVolume;
+      pressure =
+          (total_mol * R * solver_calculation.Concentration[Number_Species]) /
+          InitialParameters.GasPhaseVolume;
     } //*/
 
     write_output.StreamData(time_current, InitialParameters.GasPhase, pressure,
