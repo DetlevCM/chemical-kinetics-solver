@@ -11,32 +11,32 @@ void WriteOutput::WriteHeaders(vector<Species> species, bool GasPhasePressure,
                                size_t Number_Reactions) {
 
   // reason to open their own streams here is to open fresh output files
-  ofstream Concentration_OFStream(filename_concentrations.c_str(), ios::out);
+  ofstream conc_stream(filename_concentrations.c_str(), ios::out);
 
-  if (Concentration_OFStream.is_open()) {
-    Concentration_OFStream << "Time";
+  if (conc_stream.is_open()) {
+    conc_stream << "Time";
     for (size_t i = 0; i < species.size(); i++) {
-      Concentration_OFStream << separator << species[i].Name;
+      conc_stream << separator << species[i].Name;
     }
-    Concentration_OFStream << separator << "Temperature";
+    conc_stream << separator << "Temperature";
     if (GasPhasePressure) {
-      Concentration_OFStream << separator << "Pressure";
+      conc_stream << separator << "Pressure";
     }
-    Concentration_OFStream << "\n";
-    Concentration_OFStream.close();
+    conc_stream << "\n";
+    conc_stream.close();
   } else
     cout << "Unable to open file";
 
   if (print_rates) {
-    ofstream OutputFile(filename_rates.c_str(), ios::out);
+    ofstream rate_stream(filename_rates.c_str(), ios::out);
 
-    if (OutputFile.is_open()) {
-      OutputFile << "Time";
+    if (rate_stream.is_open()) {
+      rate_stream << "Time";
       for (size_t i = 0; i < Number_Reactions; i++) {
-        OutputFile << separator << "Reaction(" << i << ")";
+        rate_stream << separator << "Reaction(" << i << ")";
       }
-      OutputFile << "\n";
-      OutputFile.close();
+      rate_stream << "\n";
+      rate_stream.close();
     } else
       cout << "Unable to open file";
   }
@@ -44,13 +44,14 @@ void WriteOutput::WriteHeaders(vector<Species> species, bool GasPhasePressure,
 
 void WriteOutput::StreamData(double CurrentTime, bool GasPhasePressure,
                              double Pressure,
-                             const vector<double> &concentration,
+                             const vector<double> &concentrations,
                              const vector<double> &rates) {
 
   stream_concentrations << CurrentTime;
-  for (size_t i = 0; i < concentration.size(); i++) {
-    stream_concentrations << separator << concentration[i];
+  for (auto &concentration : concentrations) { // iterate over concentrations
+    stream_concentrations << separator << concentration;
   }
+
   if (GasPhasePressure) {
     stream_concentrations << separator << Pressure;
   }
@@ -60,8 +61,8 @@ void WriteOutput::StreamData(double CurrentTime, bool GasPhasePressure,
   {
     stream_rates << CurrentTime; // time
 
-    for (size_t i = 0; i < rates.size(); i++) {
-      stream_rates << separator << rates[i];
+    for (auto &rate : rates) { // iterate over rates
+      stream_rates << separator << rate;
     }
     stream_rates << "\n" << std::flush;
   }
