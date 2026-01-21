@@ -15,7 +15,7 @@ lib_odepack:
 
 
 CC=g++
-CFLAGS=-O2 -Wall
+CFLAGS=-O2 -Wall 
 
 #INCLUDES = -Iinclude
 INCLUDES = -Isrc
@@ -30,7 +30,7 @@ show:
 LFLAGS =  -Llib/intel -Llib/odepack
 
 # gfortran must be linked for the fortran ODE libraries
-LIBS = -liode_intel64 -lodepack -lm -lgfortran
+LIBS = -liode_intel64 -lodepack -lm -lgfortran -fopenmp
 
 OBJS = $(SOURCES:.cpp=.o)
 

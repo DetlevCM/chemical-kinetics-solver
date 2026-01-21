@@ -3,6 +3,9 @@
 
 #include "./solver_calculations.h"
 
+// #include <stdio.h>
+#include <omp.h>
+
 void SolverCalculation::Evaluate_Thermodynamic_Parameters(
     const double Temperature) {
   Species::ThermodynamicData::ThermoT temperatures(Temperature);
@@ -122,6 +125,10 @@ void SolverCalculation::CalculateReactionRates(
     const vector<double> &Concentration, vector<double> Forward_Rates,
     vector<double> Reverse_Rates) {
 
+  // would this be useful?
+  //  omp_set_num_threads(2); // limited utility of too many threads
+  //  #pragma omp parallel for
+
   for (size_t i = 0; i < ReactantsForReactions.size();
        i++) { // Forward Rates determined by the reactants
 
@@ -157,6 +164,7 @@ void SolverCalculation::CalculateReactionRates(
               ProductsForReactions[i].coefficient);
     }
   }
+  //  #pragma omp barrier
 
   for (size_t i = 0; i < Rates.size(); i++) {
     Rates[i] = Forward_Rates[i] - Reverse_Rates[i];
