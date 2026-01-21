@@ -54,7 +54,7 @@ void Species::Get_Thermodynamic_Data(string filename,
                   // line1.compare(0,1,"	") != 0 // tab
         ) {
           // One Species
-          Species::ThermodynamicData temp_read_in_single_species;
+          // Species::ThermodynamicData temp_read_in_single_species;
 
           // split the line by white spaces or tabs
 
@@ -160,7 +160,7 @@ void Species::Get_Thermodynamic_Data(string filename,
         if (!end_flag && !line1.empty() &&
             line1.compare(0, 1, "!") !=
                 0) { // Abort if end reACHED... or empty or comment
-          Species::ThermodynamicData temp_read_in_single_species;
+          // Species::ThermodynamicData temp_read_in_single_species;
 
           // http://www.cplusplus.com/reference/string/string/substr/
           // Substrings, exploit format
