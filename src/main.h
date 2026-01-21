@@ -76,9 +76,7 @@ public:
 // void Handle_Mechanism_Input(
 bool Handle_Mechanism_Input(Filenames filenames,
                             ReactionMechanism &reactions_mechanism,
-                            Initial_Data &,
-                            // vector< double >&,
-                            PressureVesselCalc &);
+                            Initial_Data &, PressureVesselCalc &);
 
 void Process_User_Input(Filenames &filenames, vector<string> User_Inputs);
 

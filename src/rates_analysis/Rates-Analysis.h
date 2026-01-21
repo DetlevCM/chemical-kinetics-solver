@@ -54,16 +54,9 @@ public:
                                   const size_t);
 
   // New function for rates of production
-
-  static void Prepare_Print_Rates_Per_Species(
-      // vector< TrackSpecies > & ,
-      // vector< TrackSpecies > & ,
-      string,
-      // vector< double > & ,
-      vector<Species> species, vector<size_t>,
-      vector<vector<size_t>> //,
-                             // vector< SingleReactionData >&
-  );
+  static void Prepare_Print_Rates_Per_Species(string, vector<Species> species,
+                                              vector<size_t>,
+                                              vector<vector<size_t>>);
 
   static void Print_Rates_Per_Species(
       const vector<TrackSpecies> &ProductsForRates,
