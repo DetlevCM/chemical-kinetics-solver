@@ -71,10 +71,11 @@ public:
   static vector<double> Get_Delta_N(const vector<SingleReactionData> Reactions);
 
   // solve based on concentrations in the liquid phase
-  static void Integrate(
-      ReactionMechanism reaction_mechanism, Initial_Data InitialParameters,
-      vector<double> &KeyRates, PressureVesselCalc PetroOxyDataInput,
-      vector<vector<str_RatesAnalysis>> &RatesAnalysisData);
+  static void Integrate(ReactionMechanism reaction_mechanism,
+                        Initial_Data InitialParameters,
+                        vector<double> &KeyRates,
+                        PressureVesselCalc PetroOxyDataInput,
+                        vector<vector<str_RatesAnalysis>> &RatesAnalysisData);
 
   //// Pre-Processing:
 

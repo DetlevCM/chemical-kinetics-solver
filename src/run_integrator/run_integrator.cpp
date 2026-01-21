@@ -150,4 +150,3 @@ RunIntegrator::Get_Delta_N(const vector<SingleReactionData> Reactions) {
   }
   return delta_n;
 }
-

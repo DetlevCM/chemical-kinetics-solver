@@ -27,6 +27,7 @@ void WriteOutput::Write_Header_Species_Temperature_Pressure(
     cout << "Unable to open file";
 }
 
+/*
 // Function to stream the concentrations
 void WriteOutput::StreamConcentrations(bool GasPhasePressure,
                                        size_t Number_Species,
@@ -42,7 +43,49 @@ void WriteOutput::StreamConcentrations(bool GasPhasePressure,
   }
   stream_concentrations << "\n" << std::flush;
 }
+//*/
 
+/*
+void WriteOutput::StreamReactionRates(
+                                      double CurrentTime,
+                                      const vector<double> &ReactionRates) {
+  size_t i;
+  stream_rates << CurrentTime; // time
+
+  for (i = 0; i < ReactionRates.size(); i++) {
+    stream_rates << separator << ReactionRates[i];
+  }
+  stream_rates << "\n" << std::flush;
+}
+//*/
+
+void WriteOutput::StreamData(stream_type type, double CurrentTime,
+                             bool GasPhasePressure, double Pressure,
+                             const vector<double> &data) {
+  switch (type) {
+  case concentration:
+    stream_concentrations << CurrentTime;
+    for (size_t i = 0; i < data.size(); i++) {
+      stream_concentrations << separator << data[i];
+    }
+    if (GasPhasePressure) {
+      stream_concentrations << separator << Pressure;
+    }
+    stream_concentrations << "\n" << std::flush;
+    break;
+  case rates:
+    stream_rates << CurrentTime; // time
+
+    for (size_t i = 0; i < data.size(); i++) {
+      stream_rates << separator << data[i];
+    }
+    stream_rates << "\n" << std::flush;
+    break;
+    // case petrooxy:
+  }
+}
+
+/*
 void WriteOutput::StreamConcentrationsV2(double CurrentTime,
                                          size_t Number_Species,
                                          double *Concentration) {
@@ -54,7 +97,7 @@ void WriteOutput::StreamConcentrationsV2(double CurrentTime,
   }
   stream_concentrations << Concentration[Number_Species] << separator;
   stream_concentrations << "\n" << std::flush;
-}
+}//*/
 
 // output function for species labels, temperature at back
 void WriteOutput::WriteLabelsReactionRates(size_t Number_Reactions) {
@@ -70,16 +113,4 @@ void WriteOutput::WriteLabelsReactionRates(size_t Number_Reactions) {
     OutputFile.close();
   } else
     cout << "Unable to open file";
-}
-
-void WriteOutput::StreamReactionRates(const string separator,
-                                      double CurrentTime,
-                                      const vector<double> &ReactionRates) {
-  size_t i;
-  stream_rates << CurrentTime; // time
-
-  for (i = 0; i < ReactionRates.size(); i++) {
-    stream_rates << separator << ReactionRates[i];
-  }
-  stream_rates << "\n" << std::flush;
 }

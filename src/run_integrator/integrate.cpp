@@ -13,7 +13,6 @@ void RunIntegrator::Integrate(
     vector<double> &KeyRates, PressureVesselCalc PetroOxyDataInput,
     vector<vector<str_RatesAnalysis>> &RatesAnalysisData) {
 
-
   if (InitialParameters.Solver_Parameters.SolverType == 0) {
     cout << "Using Intel ODE\n" << std::flush;
   } else if (InitialParameters.Solver_Parameters.SolverType == 1) {
@@ -22,7 +21,6 @@ void RunIntegrator::Integrate(
     cout << "Error, solver undefined or not available.\n";
     exit(1); // exit with error
   }
-
 
   //// TODO: do we need this vector?
   vector<double> SpeciesConcentration =
@@ -214,14 +212,20 @@ void RunIntegrator::Integrate(
   }
 
   // do not forget output at time = 0
+  /*
   write_output.StreamConcentrations(
       InitialParameters.GasPhase, Number_Species, time_current,
-      InitialParameters.GasPhasePressure, solver_calculation.Concentration);
+      InitialParameters.GasPhasePressure, solver_calculation.Concentration);//*/
+  write_output.StreamData(WriteOutput::stream_type::concentration, time_current,
+                          InitialParameters.GasPhase,
+                          InitialParameters.GasPhasePressure,
+                          solver_calculation.Concentration);
   // Only stream if the user desires it, still doesn't prevent file creation...
   if (InitialParameters.PrintReacRates) {
-    write_output.StreamReactionRates(
-        InitialParameters.Solver_Parameters.separator, time_current,
-        solver_calculation.Get_Rates());
+    //  write_output.StreamReactionRates(time_current,
+    //                                   solver_calculation.Get_Rates());
+    write_output.StreamData(WriteOutput::stream_type::rates, time_current,
+                            false, 0.0, solver_calculation.Get_Rates());
   }
   // not happy with this more widely available, needs a cleanup...
   vector<vector<size_t>> ReactionsForSpeciesSelectedForRates;
@@ -416,21 +420,30 @@ void RunIntegrator::Integrate(
       pressure = (total_mol * R * SpeciesConcentration[Number_Species]) /
                  InitialParameters.GasPhaseVolume;
     } //*/
+
+    /*
     write_output.StreamConcentrations(false, Number_Species, time_current,
                                       pressure,
-                                      solver_calculation.Concentration);
+                                      solver_calculation.Concentration);//*/
+
+    write_output.StreamData(WriteOutput::stream_type::concentration,
+                            time_current, InitialParameters.GasPhase, pressure,
+                            solver_calculation.Concentration);
 
     if (InitialParameters.PrintReacRates) {
-      //// TODO: seems to have broken...
-      /*
-      WriteOutput::Input_File_For_Ehsan_Opt(
-                      ReactionRates_OFStream,
-                      InitialParameters.Solver_Parameters.separator,
-                      time_current,
-                      solver_calculation.Rates
-      );
-      //*/
+      write_output.StreamData(WriteOutput::stream_type::rates, time_current,
+                              false, 0.0, solver_calculation.Get_Rates());
     }
+
+    //// TODO: seems to have broken...
+    /*
+    WriteOutput::Input_File_For_Ehsan_Opt(
+                    ReactionRates_OFStream,
+                    InitialParameters.Solver_Parameters.separator,
+                    time_current,
+                    solver_calculation.Rates
+    );
+    //*/
 
     if (InitialParameters.PetroOxy.IsSet) {
       SolverCalculation::PetroOxyOutputStream(write_output.get_name_petrooxy(),

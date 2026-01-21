@@ -71,19 +71,25 @@ public:
   void Write_Header_Species_Temperature_Pressure(size_t Number_Species,
                                                  vector<Species> species,
                                                  bool GasPhasePressure);
+  /*
+    void StreamConcentrations(bool GasPhasePressure, size_t Number_Species,
+                              double CurrentTime, double Pressure,
+                              const vector<double> &Concentration);
+                              //*/
 
-  void StreamConcentrations(bool GasPhasePressure, size_t Number_Species,
-                            double CurrentTime, double Pressure,
-                            const vector<double> &Concentration);
+  // ref: https://en.cppreference.com/w/cpp/language/enum.html
+  enum stream_type { concentration, rates, petrooxy };
 
-  void StreamConcentrationsV2(double CurrentTime, size_t Number_Species,
-                              double *Concentration);
+  void StreamData(stream_type type, double CurrentTime, bool GasPhasePressure,
+                  double Pressure, const vector<double> &data);
+
+  // void StreamConcentrationsV2(double CurrentTime, size_t Number_Species,
+  //                             double *Concentration);
 
   // write labels for reactions then stream output
   void WriteLabelsReactionRates(size_t);
 
-  void StreamReactionRates( // ofstream &,
-      const string, double, const vector<double> &Rates);
+  // void StreamReactionRates(double, const vector<double> &Rates);
 
   // output of input files
 

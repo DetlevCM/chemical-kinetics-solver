@@ -110,10 +110,9 @@ public:
     Kr.resize(number_reactions);
     Rates.resize(number_reactions);
 
-    Concentration.resize(number_species +
-                         1); // 1 extra position for temperature
-    ConcentrationChange.resize(number_species +
-                               2); // temperature + one extra position?
+    // 1 extra position for temperature
+    Concentration.resize(number_species + 1);
+    ConcentrationChange.resize(number_species + 1);
   };
 
   // The ODE RHS functions are split - regular initial value & pressure vessel

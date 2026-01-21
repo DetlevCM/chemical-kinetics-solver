@@ -169,9 +169,8 @@ int main(int argc, char *argv[]) {
     }
 
     cout << "\nHanding Mechanism to Integrator\n";
-    RunIntegrator::Integrate(
-        reaction_mechanism, initial_parameters, KeyRates, PetroOxyDataInitial,
-        RatesAnalysisData);
+    RunIntegrator::Integrate(reaction_mechanism, initial_parameters, KeyRates,
+                             PetroOxyDataInitial, RatesAnalysisData);
 
     //*
     if (initial_parameters.MechanismReduction.ReduceReactions != 0) {
@@ -229,9 +228,9 @@ int main(int argc, char *argv[]) {
         write_output.WriteLabelsReactionRates(Number_Reactions);
 
         cout << "\nHanding Reduced Mechanism to Integrator\n" << std::flush;
-        RunIntegrator::Integrate(
-            Reduced_Reaction_Mechanism, initial_parameters, KeyRates,
-            PetroOxyDataInitial, RatesAnalysisData);
+        RunIntegrator::Integrate(Reduced_Reaction_Mechanism, initial_parameters,
+                                 KeyRates, PetroOxyDataInitial,
+                                 RatesAnalysisData);
 
         // Not ideal, should use variables rather than handwritten filenames
         MechanismReduction::ReportAccuracy(
