@@ -120,8 +120,6 @@ int main(int argc, char *argv[]) {
   }
 //*/
 
-  size_t i; // useful counter
-  size_t Number_Species = reaction_mechanism.species_size();
   size_t Number_Reactions = reaction_mechanism.reactions_size();
   vector<double> KeyRates; // for mechanism reduction
 
@@ -137,7 +135,7 @@ int main(int argc, char *argv[]) {
   if (initial_parameters.MechanismAnalysis.MaximumRates) {
     // Initialise array
     vector<str_RatesAnalysis> temp(reaction_mechanism.reactions.size());
-    for (i = 0; i < Number_Species; i++) {
+    for (size_t i = 0; i < reaction_mechanism.species_size(); i++) {
       RatesAnalysisData.push_back(temp);
     }
     // array prepared
@@ -208,7 +206,7 @@ int main(int argc, char *argv[]) {
           // Initialise array
           RatesAnalysisData.clear(); // empty for new run
           vector<str_RatesAnalysis> temp(Number_Reactions);
-          for (i = 0; i < Number_Species; i++) {
+          for (size_t i = 0; i < reaction_mechanism.species_size(); i++) {
             RatesAnalysisData.push_back(temp);
           }
           // array prepared
@@ -230,7 +228,8 @@ int main(int argc, char *argv[]) {
 
         // Not ideal, should use variables rather than handwritten filenames
         MechanismReduction::ReportAccuracy(
-            initial_parameters.Solver_Parameters.separator, Number_Species,
+            initial_parameters.Solver_Parameters.separator,
+            reaction_mechanism.species_size(),
             Reduced_Reaction_Mechanism.species, "reduction_accuracy_report.txt",
             "concentrations.txt", "reduced_concentrations.txt");
 
