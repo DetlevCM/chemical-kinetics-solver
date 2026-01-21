@@ -1,0 +1,250 @@
+
+// Central header file that collates all header, functions etc.
+
+#include "global_const.h"
+#include "global_struct.h"
+#include "helpers/Helpers.h"
+
+#include "./main.h"
+
+// use a global glass so we can use a function to redirect
+// extern SolverCalculation solver_calculation;
+SolverCalculation solver_calculation;
+
+// a global class can handle all output:
+//// TODO: Use a global variable, and initialise as required with new content
+WriteOutput write_output;
+
+void wrapper_ODE_RHS(int *n, double *t, double *y, double *f) {
+  solver_calculation.ODE_RHS(n, t, y, f);
+}
+
+// Jacobian_Matrix_Intel(int *n, double *t, double *y,
+//                                              double *a) {
+
+// Jacobian_Matrix_Odepack_LSODA(int *n, double *t,
+//                                                      double *y, double *ML,
+//                                                      double *MU, double *a,
+//                                                      int *NROWPD) {
+
+//// TODO: merge the two functions into one unified function
+void wrapper_Jacobian_Matrix_Intel(int *n, double *t, double *y, double *a) {
+  solver_calculation.Jacobian_Matrix_Intel(n, t, y, a);
+}
+void wrapper_Jacobian_Matrix_Odepack_LSODA(int *n, double *t, double *y,
+                                           double *ML, double *MU, double *a,
+                                           int *NROWPD) {
+  solver_calculation.Jacobian_Matrix_Odepack_LSODA(n, t, y, ML, MU, a, NROWPD);
+}
+
+// http://stackoverflow.com/questions/13600204/checking-if-argvi-exists-c
+// argc = number of arguments
+// argv[] arguments
+int main(int argc, char *argv[]) {
+  /*
+   * It is generally convenient to dump information to a logfile.
+   * However when developing or debugging, it can be simpler to have the
+   * information output to a terminal instead. The presence of a file named
+   * "debug" acts as a switch for redirecting output to the terminal rather than
+   * a log.txt file.
+   */
+  // http://stackoverflow.com/questions/12774207/fastest-way-to-check-if-a-file-exist-using-standard-c-c11-c
+  ifstream debug_file_exists("debug");
+  // File does not exist, so redirect to log file
+  // http://stackoverflow.com/questions/10150468/how-to-redirect-cin-and-cout-to-files
+  std::ofstream out("log.txt");
+  std::streambuf *coutbuf = std::cout.rdbuf(); // save old buffer
+  if (!debug_file_exists.good()) {
+    std::cout.rdbuf(out.rdbuf());
+  } //*
+  else {
+    std::cout.rdbuf(coutbuf);
+  }
+  //*/
+  debug_file_exists.close();
+
+  // We need to take the input from the user and see what we got:
+  vector<string> user_inputs;
+  for (int i = 1; i < argc; i++) // i=0 is name of executable
+  {
+    user_inputs.push_back(argv[i]);
+  }
+
+  // We create a class for storing necessary filenames:
+  Filenames filenames;
+
+  Process_User_Input(filenames, user_inputs);
+  user_inputs.clear(); // we no longer need them
+
+  /*
+   * Next we deal with the storage classes for the data that will
+   * be read in.
+   * In any case, this includes a mechanisms.
+   *
+   * It may include initial data (not essential for lumping only)
+   * as well as potentially separately dedicated PetroOxy settings.
+   */
+  ReactionMechanism reaction_mechanism;
+  Initial_Data initial_parameters;        // Initial Conditions/Parameters
+  PressureVesselCalc PetroOxyDataInitial; // PetroOxy Specific Initial Data
+
+  // Handle All the Data Input - The Arrays Contain the required information
+  bool Mechanism_Read_In = Handle_Mechanism_Input(
+      filenames, reaction_mechanism, initial_parameters, PetroOxyDataInitial);
+
+  if (!Mechanism_Read_In) // Mechanism failed to read in correctly
+  {
+    cout << "Error occurred while reading in mechanism.\nRun aborted.\n";
+    out.close();              // close output stream
+    std::cout.rdbuf(coutbuf); // reassign buffer to avoid crash
+    exit(1);                  // terminate the code here
+  }
+
+  //// TODO: Update this stuff
+  /*
+  // Mechanism read in correctly, proceed:
+
+  // for someone else's optimisation code, optional output
+  if(initial_parameters.StoichiometryMatrixForOpt)
+  {
+          Write_Stoichiometric_Matrix_For_Opt
+          (
+                          "stoichiometry_matrix.txt" ,
+                          reaction_mechanism.Reactions
+          );
+          Input_File_For_Ehsan_Opt
+          (
+                          "mechanism.txt" ,
+                          reaction_mechanism.Reactions
+          );
+  }
+//*/
+
+  size_t Number_Reactions = reaction_mechanism.reactions_size();
+  vector<double> KeyRates; // for mechanism reduction
+
+  // cout << "test species/reactions: " << Number_Species << " " <<
+  // Number_Reactions << "\n";
+  //  We have now pre-processed all information, time to set up the ODEs and the
+  //  solver Let us set up the reactions first for the ODE solver
+
+  vector<vector<str_RatesAnalysis>> RatesAnalysisData;
+
+  //// TODO: return the rates analysis code
+  //*
+  if (initial_parameters.MechanismAnalysis.MaximumRates) {
+    // Initialise array
+    vector<str_RatesAnalysis> temp(reaction_mechanism.reactions.size());
+    for (size_t i = 0; i < reaction_mechanism.species_size(); i++) {
+      RatesAnalysisData.push_back(temp);
+    }
+    // array prepared
+  }
+
+  if (initial_parameters.MechanismAnalysis.StreamRatesAnalysis) {
+    RatesAnalysis::PrepareStreamRatesAnalysis(reaction_mechanism.species, "");
+  }
+
+  //*/
+
+  if (!initial_parameters.NoIntegration) {
+
+    write_output.set_output(initial_parameters.Solver_Parameters.separator,
+                            "concentrations.txt", "reaction_rates.txt",
+                            "PetroOxy-log.txt",
+                            initial_parameters.PrintReacRates);
+
+    write_output.WriteHeaders(reaction_mechanism.species,
+                              initial_parameters.GasPhase,
+                              reaction_mechanism.reactions_size());
+
+    // only required if the user desires mechanism reduction
+    if (initial_parameters.MechanismReduction.ReduceReactions != 0) {
+      KeyRates.resize(Number_Reactions);
+    }
+
+    cout << "\nHanding Mechanism to Integrator\n";
+    RunIntegrator::Integrate(reaction_mechanism, initial_parameters, KeyRates,
+                             PetroOxyDataInitial, RatesAnalysisData);
+
+    //*
+    if (initial_parameters.MechanismReduction.ReduceReactions != 0) {
+      vector<SingleReactionData> ReducedReactions;
+      ReducedReactions = MechanismReduction::ReduceReactionsNew(
+          reaction_mechanism.species, reaction_mechanism.reactions, KeyRates);
+
+      ReactionMechanism Reduced_Reaction_Mechanism;
+      Reduced_Reaction_Mechanism.species = reaction_mechanism.species;
+      Reduced_Reaction_Mechanism.reactions = ReducedReactions;
+
+      // start a second run only if reduced scheme is not empty and has size
+      // different to original scheme
+      if (Number_Reactions > 0 && Number_Reactions != ReducedReactions.size()) {
+
+        //// TODO: this should really just require the prefix
+        write_output.set_prefix("reduced_");
+        write_output.set_output(
+            initial_parameters.Solver_Parameters.separator,
+            "reduced_concentrations.txt", "reduced_reaction_rates.txt",
+            "reduced_PetroOxy-log.txt", initial_parameters.PrintReacRates);
+
+        Number_Reactions = ReducedReactions.size();
+
+        WriteReactions("reduced_scheme.txt", Reduced_Reaction_Mechanism.species,
+                       ReducedReactions);
+
+        initial_parameters.MechanismReduction.ReduceReactions =
+            0; // switch off reduction...
+
+        if (initial_parameters.StoichiometryMatrixForOpt) {
+          WriteOutput::Write_Stoichiometric_Matrix_For_Opt(
+              "reduced_stoichiometry_matrix.txt", ReducedReactions);
+        }
+
+        // Option considered experimental, cannot see why it won't work...
+        if (initial_parameters.MechanismAnalysis.MaximumRates) {
+          // Initialise array
+          RatesAnalysisData.clear(); // empty for new run
+          vector<str_RatesAnalysis> temp(Number_Reactions);
+          for (size_t i = 0; i < reaction_mechanism.species_size(); i++) {
+            RatesAnalysisData.push_back(temp);
+          }
+          // array prepared
+        }
+
+        if (initial_parameters.MechanismAnalysis.StreamRatesAnalysis) {
+          RatesAnalysis::PrepareStreamRatesAnalysis(
+              Reduced_Reaction_Mechanism.species, write_output.get_prefix());
+        }
+
+        write_output.WriteHeaders(Reduced_Reaction_Mechanism.species,
+                                  initial_parameters.GasPhase,
+                                  Number_Reactions);
+
+        cout << "\nHanding Reduced Mechanism to Integrator\n" << std::flush;
+        RunIntegrator::Integrate(Reduced_Reaction_Mechanism, initial_parameters,
+                                 KeyRates, PetroOxyDataInitial,
+                                 RatesAnalysisData);
+
+        // Not ideal, should use variables rather than handwritten filenames
+        MechanismReduction::ReportAccuracy(
+            initial_parameters.Solver_Parameters.separator,
+            reaction_mechanism.species_size(),
+            Reduced_Reaction_Mechanism.species, "reduction_accuracy_report.txt",
+            "concentrations.txt", "reduced_concentrations.txt");
+
+      } else {
+        cout << "Reduced Scheme does not contain any reactions or is identical "
+                "in size to the original scheme."
+                " \n Aborting...!!!";
+      };
+    }
+    //*/
+  }
+  //*/
+
+  out.close();              // close output stream
+  std::cout.rdbuf(coutbuf); // reassign buffer to avoid crash
+  // And it is done. Return 0 as the code has finished.
+  return 0;
+}

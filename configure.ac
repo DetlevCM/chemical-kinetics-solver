@@ -2,13 +2,13 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.72])
-AC_INIT([Chelical Kinetics Solver], [VERSION], [BUG-REPORT-ADDRESS])
+AC_INIT([Chemical Kinetics Solver], [VERSION], [BUG-REPORT-ADDRESS])
 
 # auxilliary directory
 #AC_CONFIG_AUX_DIR([config])
 
 # defines header and source code
-AC_CONFIG_SRCDIR([src/Main.cpp])
+AC_CONFIG_SRCDIR([src/main.cpp])
 #AC_CONFIG_HEADERS([include/Headers.hpp])
 
 # Checks for programs/compilers:
