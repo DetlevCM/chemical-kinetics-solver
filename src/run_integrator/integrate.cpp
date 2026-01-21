@@ -206,7 +206,6 @@ void RunIntegrator::Integrate(
         SpeciesConcentration[Number_Species], solver_calculation.PetroOxyData);
 
     SolverCalculation::PetroOxyOutputStream(write_output.get_name_petrooxy(),
-                                            // OutputFilenames.PetroOxy,
                                             solver_calculation.PetroOxyData,
                                             time_current);
   }
