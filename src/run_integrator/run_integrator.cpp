@@ -11,15 +11,12 @@
 
 vector<TrackSpecies> RunIntegrator::PrepareSpecies_ForSpeciesLoss(
     const vector<SingleReactionData> &Reactions) {
-  size_t i, j;
-  size_t Number_Reactions = Reactions.size();
-  size_t Number_Species = Reactions[0].Reactants.size();
-  vector<TrackSpecies> SpeciesLossAll;
 
+  vector<TrackSpecies> SpeciesLossAll;
   TrackSpecies temp;
 
-  for (i = 0; i < Number_Species; i++) {
-    for (j = 0; j < Number_Reactions; j++) {
+  for (size_t i = 0; i < Reactions[0].Reactants.size(); i++) {
+    for (size_t j = 0; j < Reactions.size(); j++) {
       if (Reactions[j].Reactants[i] != 0) // Reactants
       {
         temp.SpeciesID = i;
@@ -30,7 +27,7 @@ vector<TrackSpecies> RunIntegrator::PrepareSpecies_ForSpeciesLoss(
     }
     // not sure if this may not be more efficient - first just negative, then
     // just positive
-    for (j = 0; j < Number_Reactions; j++) {
+    for (size_t j = 0; j < Reactions.size(); j++) {
       if (Reactions[j].Products[i] != 0) // Products
       {
         temp.SpeciesID = i;
@@ -50,13 +47,10 @@ vector<TrackSpecies> RunIntegrator::Reactants_ForReactionRate(
   // Basically go through the reactions and accumulate the Relevant species
 
   TrackSpecies temp;
-  size_t Number_Reactions = Reactions.size();
-  size_t Number_Species = Reactions[0].Reactants.size();
-  size_t i, j;
 
   // Output per reaction
-  for (i = 0; i < Number_Reactions; i++) {
-    for (j = 0; j < Number_Species; j++) {
+  for (size_t i = 0; i < Reactions.size(); i++) {
+    for (size_t j = 0; j < Reactions[0].Reactants.size(); j++) {
       if (Reactions[i].Reactants[j] != 0) {
         temp.ReactionID = i;
         temp.SpeciesID = j;
@@ -73,18 +67,16 @@ vector<TrackSpecies> RunIntegrator::Products_ForReactionRate(
     const vector<SingleReactionData> &Reactions, bool SwitchType) {
   vector<TrackSpecies> temp_proc_reac;
   // Basically go through the reactions and accumulate the Relevant species
-  size_t i, j;
+
   TrackSpecies temp;
-  size_t Number_Reactions = Reactions.size();
-  size_t Number_Species = Reactions[0].Reactants.size();
 
   if (!SwitchType) // false treat as rates function
   {
     // Output per reaction
-    for (i = 0; i < Number_Reactions; i++) {
+    for (size_t i = 0; i < Reactions.size(); i++) {
       if (Reactions[i].Reversible) // only include if the reaction is reversible
       {
-        for (j = 0; j < Number_Species; j++) {
+        for (size_t j = 0; j < Reactions[0].Reactants.size(); j++) {
           if (Reactions[i].Products[j] != 0) {
             temp.ReactionID = i;
             temp.SpeciesID = j;
@@ -96,8 +88,8 @@ vector<TrackSpecies> RunIntegrator::Products_ForReactionRate(
     }
   } else // true, for Rates Analysis
   {
-    for (i = 0; i < Number_Reactions; i++) {
-      for (j = 0; j < Number_Species; j++) {
+    for (size_t i = 0; i < Reactions.size(); i++) {
+      for (size_t j = 0; j < Reactions[0].Reactants.size(); j++) {
         if (Reactions[i].Products[j] != 0) {
           temp.ReactionID = i;
           temp.SpeciesID = j;
@@ -113,13 +105,11 @@ vector<TrackSpecies> RunIntegrator::Products_ForReactionRate(
 
 vector<ReactionParameter> RunIntegrator::Process_Reaction_Parameters(
     const vector<SingleReactionData> &Reactions) {
-  size_t i;
-  size_t Number_Reactions = Reactions.size();
 
   vector<ReactionParameter> temp_output;
 
   // Output per reaction
-  for (i = 0; i < Number_Reactions; i++) {
+  for (size_t i = 0; i < Reactions.size(); i++) {
     ReactionParameter temp_one_reaction;
 
     temp_one_reaction.paramA = Reactions[i].paramA;   // A
@@ -135,14 +125,11 @@ vector<ReactionParameter> RunIntegrator::Process_Reaction_Parameters(
 
 vector<double>
 RunIntegrator::Get_Delta_N(const vector<SingleReactionData> Reactions) {
-  size_t i, j;
-  size_t number_species = Reactions[0].Reactants.size();
-  size_t number_reactions = Reactions.size();
 
-  vector<double> delta_n(number_reactions);
+  vector<double> delta_n(Reactions.size());
 
-  for (i = 0; i < number_reactions; i++) {
-    for (j = 0; j < number_species; j++) {
+  for (size_t i = 0; i < Reactions.size(); i++) {
+    for (size_t j = 0; j < Reactions[0].Reactants.size(); j++) {
       delta_n[i] = delta_n[i] + Reactions[i].Reactants[j] +
                    Reactions[i].Products[j]; // reactants & products
     }

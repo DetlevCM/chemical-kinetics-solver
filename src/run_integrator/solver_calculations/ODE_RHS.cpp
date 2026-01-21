@@ -78,7 +78,7 @@ void SolverCalculation::ODE_RHS(int *n, double *t, double *y, double *f) {
     {
       // 298K starting temp, GlobalArrays::InitialParameters.temperature is
       // target rise time given in minutes
-      f[Number_Species] = (InitialDataConstants.temperature - 298) /
+      f[Number_Species] = (InitialDataConstants.temperature - 298.15) /
                           (InitialDataConstants.PetroOxyTemperatureRise);
 
       // std::cout << f[Number_Species] << "\n";

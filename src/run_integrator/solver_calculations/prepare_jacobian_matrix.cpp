@@ -49,19 +49,16 @@ void SolverCalculation::Prepare_Jacobian_Matrix(
   // differentiate with respect to is present then we check if the row species
   // is present and if yes build the input
 
-  size_t i, j, k, m;
-
-  for (i = 0; i < Number_Species; i++) // column
+  for (size_t i = 0; i < Number_Species; i++) // column
   {
 
-    for (j = 0; j < Number_Species; j++) // row
+    for (size_t j = 0; j < Number_Species; j++) // row
     {
       JacobianData temp;
-
       JacobianSpecies temp2;
 
       // Now check every reaction
-      for (k = 0; k < Reactions.size(); k++) {
+      for (size_t k = 0; k < Reactions.size(); k++) {
         vector<JacobianSpecies> SpeciesList;
 
         // species production
@@ -82,7 +79,7 @@ void SolverCalculation::Prepare_Jacobian_Matrix(
           temp2.power = -Reactions[k].Reactants[i] - 1;
           SpeciesList.push_back(temp2);
 
-          for (m = 0; m < Number_Species; m++) {
+          for (size_t m = 0; m < Number_Species; m++) {
             if (Reactions[k].Reactants[m] != 0 && m != i) {
               temp2.SpeciesID = m;
               temp2.power = -Reactions[k].Reactants[m];
@@ -109,7 +106,7 @@ void SolverCalculation::Prepare_Jacobian_Matrix(
           temp2.power = Reactions[k].Products[i] - 1;
           SpeciesList.push_back(temp2);
 
-          for (m = 0; m < Number_Species; m++) {
+          for (size_t m = 0; m < Number_Species; m++) {
             if (Reactions[k].Products[m] != 0 && m != i) {
               temp2.SpeciesID = m;
               temp2.power = Reactions[k].Products[m];
@@ -140,7 +137,7 @@ void SolverCalculation::Prepare_Jacobian_Matrix(
           temp2.power = Reactions[k].Products[i] - 1;
           SpeciesList.push_back(temp2);
 
-          for (m = 0; m < Number_Species; m++) {
+          for (size_t m = 0; m < Number_Species; m++) {
             if (Reactions[k].Products[m] != 0 && m != i) {
               temp2.SpeciesID = m;
               temp2.power = Reactions[k].Products[m];
@@ -167,7 +164,7 @@ void SolverCalculation::Prepare_Jacobian_Matrix(
           temp2.power = -Reactions[k].Reactants[i] - 1;
           SpeciesList.push_back(temp2);
 
-          for (m = 0; m < Number_Species; m++) {
+          for (size_t m = 0; m < Number_Species; m++) {
             if (Reactions[k].Reactants[m] != 0 && m != i) {
               temp2.SpeciesID = m;
               temp2.power = -Reactions[k].Reactants[m];

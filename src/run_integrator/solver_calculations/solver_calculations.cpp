@@ -3,7 +3,6 @@
 
 #include "./solver_calculations.h"
 
-// #include <stdio.h>
 #include <omp.h>
 
 void SolverCalculation::Evaluate_Thermodynamic_Parameters(
@@ -63,15 +62,12 @@ void SolverCalculation::Calculate_Rate_Constant(const double Temperature)
     {
       // unsure if this check really gives a performance improvement...
       // maybe it used to and no longer does with a modern
-      // compiler/processor/kernel
-      // if(ReactionParameters[i].paramN != 1)
-      //{
-      Kf[i] = Kf[i] * pow(Temperature, ReactionParameters[i].paramN);
-      /*}
-      else
-      {
-              Kf[i] = Kf[i] * Temperature; // raise temp^1 = temp
-      }//*/
+      // compiler/processor/kernel -> seems to be ever so slightly faster
+      if (ReactionParameters[i].paramN != 1) {
+        Kf[i] = Kf[i] * pow(Temperature, ReactionParameters[i].paramN);
+      } else {
+        Kf[i] = Kf[i] * Temperature; // raise temp^1 = temp
+      }
     }
 
     /*
@@ -109,14 +105,6 @@ void SolverCalculation::Calculate_Rate_Constant(const double Temperature)
               Kr[i] = 0;
       }//*/
     }
-    // if it is set to zero at the start and not touched for irreversible
-    // reactions thus this is redundant Fewer memory allocations should speed
-    // things up - or not?
-    /*
-    else
-    {
-            Kr[i] = 0;
-    }//*/
   }
 }
 
@@ -169,15 +157,9 @@ void SolverCalculation::CalculateReactionRates(
   for (size_t i = 0; i < Rates.size(); i++) {
     Rates[i] = Forward_Rates[i] - Reverse_Rates[i];
     /*
-    if(abs(Rates[i]) > 1.0e6)
-    {
-            cout << i << " " << Rates[i] << "   " << Forward_Rates[i] << "   "
-    << Reverse_Rates[i] << "\r\n";
-    }//*/
-
-    /*
-    cout << i << " " << Rates[i] << "   " << Forward_Rates[i] << "   " <<
-    Reverse_Rates[i] << "\r\n" << std::flush;
+    cout << i << " " << Rates[i] << "   " << Forward_Rates[i] << "   "
+         << Reverse_Rates[i] << "\r\n"
+         << std::flush;
     //*/
   }
 }
@@ -192,11 +174,10 @@ vector<double> SolverCalculation::SpeciesLossRate() {
   }
 
   /*
-      for(size_t i = 0; i< temp_species_loss.size();i++)
-      {
-              cout << i << "  " << temp_species_loss[i] << "\n" << std::flush;
-      }
-      //*/
+  for (size_t i = 0; i < temp_species_loss.size(); i++) {
+    cout << i << "  " << temp_species_loss[i] << "\n" << std::flush;
+  }
+  //*/
 
   return temp_species_loss;
 }
