@@ -8,10 +8,21 @@
 #include "./run_integrator.h"
 #include "./write_output/write_output.h"
 
-void RunIntegrator::Integrate_Liquid_Phase(
+void RunIntegrator::Integrate(
     ReactionMechanism reaction_mechanism, Initial_Data InitialParameters,
     vector<double> &KeyRates, PressureVesselCalc PetroOxyDataInput,
     vector<vector<str_RatesAnalysis>> &RatesAnalysisData) {
+
+
+  if (InitialParameters.Solver_Parameters.SolverType == 0) {
+    cout << "Using Intel ODE\n" << std::flush;
+  } else if (InitialParameters.Solver_Parameters.SolverType == 1) {
+    cout << "Using odepack\n" << std::flush;
+  } else {
+    cout << "Error, solver undefined or not available.\n";
+    exit(1); // exit with error
+  }
+
 
   //// TODO: do we need this vector?
   vector<double> SpeciesConcentration =

@@ -65,19 +65,13 @@ public:
     Initial_Data::solver_type Solver_Type;
   };
 
-  // Function to pick the right integration routine
-  static void Choose_Integrator(ReactionMechanism, Initial_Data,
-                                vector<double> &, PressureVesselCalc,
-                                vector<vector<str_RatesAnalysis>> &);
-
   static int Prepare_Integrator_Settings(Initial_Data, size_t, Settings_LSODA &,
                                          Settings_Intel &);
 
   static vector<double> Get_Delta_N(const vector<SingleReactionData> Reactions);
 
   // solve based on concentrations in the liquid phase
-  static void Integrate_Liquid_Phase(
-      // vector<double> SpeciesConcentration,
+  static void Integrate(
       ReactionMechanism reaction_mechanism, Initial_Data InitialParameters,
       vector<double> &KeyRates, PressureVesselCalc PetroOxyDataInput,
       vector<vector<str_RatesAnalysis>> &RatesAnalysisData);

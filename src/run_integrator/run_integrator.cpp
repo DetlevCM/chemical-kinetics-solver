@@ -147,34 +147,7 @@ RunIntegrator::Get_Delta_N(const vector<SingleReactionData> Reactions) {
       delta_n[i] = delta_n[i] + Reactions[i].Reactants[j] +
                    Reactions[i].Products[j]; // reactants & products
     }
-    // temp_delta_n.push_back(delta_n);
   }
   return delta_n;
 }
 
-//// NOTE: Model handling has been moved into LiquidPhase...
-/*
- * The more solvers and models are implemented, the messier the code becomes...
- * To keep things tidy, a dedicated function chooses the integrator
- */
-
-void RunIntegrator::Choose_Integrator(
-    ReactionMechanism reaction_mechanism, Initial_Data InitialParameters,
-    vector<double> &KeyRates, PressureVesselCalc PetroOxyDataInitial,
-    vector<vector<str_RatesAnalysis>> &RatesAnalysisData) {
-
-  if (InitialParameters.Solver_Parameters.SolverType == 0) {
-    cout << "Using Intel ODE\n" << std::flush;
-  } else if (InitialParameters.Solver_Parameters.SolverType == 1) {
-    cout << "Using odepack\n" << std::flush;
-  } else {
-    cout << "Error, solver undefined or not available.\n";
-    exit(1); // exit with error
-  }
-
-  // if we don' exit, send ot the integrator:
-  Integrate_Liquid_Phase(
-      // InitialParameters.InitialSpeciesConcentration,
-      reaction_mechanism, InitialParameters, KeyRates, PetroOxyDataInitial,
-      RatesAnalysisData);
-}

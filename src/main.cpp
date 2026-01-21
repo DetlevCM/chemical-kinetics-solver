@@ -169,7 +169,7 @@ int main(int argc, char *argv[]) {
     }
 
     cout << "\nHanding Mechanism to Integrator\n";
-    RunIntegrator::Choose_Integrator( // OutputFilenames,
+    RunIntegrator::Integrate(
         reaction_mechanism, initial_parameters, KeyRates, PetroOxyDataInitial,
         RatesAnalysisData);
 
@@ -229,7 +229,7 @@ int main(int argc, char *argv[]) {
         write_output.WriteLabelsReactionRates(Number_Reactions);
 
         cout << "\nHanding Reduced Mechanism to Integrator\n" << std::flush;
-        RunIntegrator::Choose_Integrator(
+        RunIntegrator::Integrate(
             Reduced_Reaction_Mechanism, initial_parameters, KeyRates,
             PetroOxyDataInitial, RatesAnalysisData);
 
