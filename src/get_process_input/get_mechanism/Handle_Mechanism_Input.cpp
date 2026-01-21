@@ -148,7 +148,6 @@ bool Handle_Mechanism_Input(Filenames filenames,
     total_mol = (total_mol);
 
     double n;
-    double R = 8.31451; // Gas Constant
 
     n = (GasPressure * GasVolume) / (Temperature * R);
 
@@ -327,7 +326,7 @@ bool Handle_Mechanism_Input(Filenames filenames,
     // Initial pressure is at 25 degrees Celsius
     // n = pV/R/T
     PetroOxyData.HeadSpaceGasMol = InitialParameters.PetroOxy.InitPressure *
-                                   PetroOxyData.HeadSpaceGas / R / 298;
+                                   PetroOxyData.HeadSpaceGas / R / 298.15;
     // p = nRT/V
     PetroOxyData.HeadSpaceGasPressure = PetroOxyData.HeadSpaceGasMol * R *
                                         InitialParameters.temperature /
