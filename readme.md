@@ -5,32 +5,23 @@ titled "Autoxidation Behaviour of Hydrocarbons in the Context of Conventional an
 Aviation Fuels",submitted at the University of Leeds in 2015.
 [http://etheses.whiterose.ac.uk/10407/](http://etheses.whiterose.ac.uk/10407/)
 
-NOTE: the Intel ODE solver has been largely replaced by LSODA in the latest restructuring.
+Initially developed using the Intel ODE solver, this has now been deprecated as a solver, and LSODA should be used instead.
 
-This solver draws on the Intel ODE library for solving the appropriate ordinary differential
-equations. however in theory any other solver may be used to solve the system of ODEs. I have
-done my best to use self contained functions, hence modifying the code should not be too
-difficult - though it may be tedious to step through some of my comments.
+The recommended solver is odepack,
+developed by Alan C. Hindmarsh and Linda R. Petzold.
+As of writing this readme, the source code is freely available on the
+LLNL website: [https://computing.llnl.gov/projects/odepack/software](https://computing.llnl.gov/projects/odepack/software)
 
-The library is NOT included with the distribution and has to be downloaded separately from the
-Intel website as the EULA disallows distribution of the library itself:
-[https://software.intel.com/en-us/articles/intel-ordinary-differential-equations-solver-library](https://software.intel.com/en-us/articles/intel-ordinary-differential-equations-solver-library)
-Should the link "go dead", it is advised to search for "Intel ODE solver" with the help of a
-search engine.
-
-A later expansion is seeking to implement the odepack library, developed by Alan C. Hindmarsh
-and Linda R. Petzold. As of writing this readme, the source code is freely available on the
-LLNL website. (As well as on other websites.)
-This addition should be considered experimental.
-Unfortunately, for some reason, the solver is unstable under some conditions.
-(Initial time steps too large.)
+Under some conditions, the solver can be unstable.
 This can be resolved by running the first calculations for very small time steps.
 For example 10 steps at 1e.-26s up to 1e-25s before switching to the desired time step.
 This should not change the result in any significant manner.
 
 The chemical kinetics solver was originally developed using Eclipse CDT using the included builder.
+This has since been migrated to the user of makefiles.
 It used to compile on both Windows and Linux. With the inclusion of odepack, only Linux is
-officially supported. (It is easier.) However, you are free to build the code under Windows too,
+officially supported.
+However, you are free to build the code under Windows too,
 which may be possible if you built the odepack archive with static links.
 
 To build the code, both a C++ compiler and a Fortran compiler are required.
