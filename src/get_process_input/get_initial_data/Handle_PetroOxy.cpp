@@ -102,7 +102,7 @@ void Initial_Data::Handle_PetroOxy(Initial_Data &InitialParameters,
     }
 
     // if all required data has been input, switch PetroOxy on
-    // Need the Gas Species ID... - but gas species could be scpecies 0....
+    // Need the Gas Species ID... - but gas species could be species 0....
 
     if (InitialParameters.PetroOxy.SampleSize != 0 &&
         InitialParameters.PetroOxy.InitPressure != 0 &&

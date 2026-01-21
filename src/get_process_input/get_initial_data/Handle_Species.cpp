@@ -24,7 +24,6 @@ Initial_Data::Handle_Species(Initial_Data &InitialParameters,
     // strip comments
     vector<string> strip_comment =
         Tokenise_String_To_String(Input[i], "!/*#"); // split
-    // line_content = Tokenise_String_To_String(Input[i]," \t");
     line_content = Tokenise_String_To_String(strip_comment[0], " \t");
     strip_comment.clear();
 
