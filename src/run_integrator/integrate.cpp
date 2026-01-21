@@ -212,18 +212,12 @@ void RunIntegrator::Integrate(
   }
 
   // do not forget output at time = 0
-  /*
-  write_output.StreamConcentrations(
-      InitialParameters.GasPhase, Number_Species, time_current,
-      InitialParameters.GasPhasePressure, solver_calculation.Concentration);//*/
   write_output.StreamData(WriteOutput::stream_type::concentration, time_current,
                           InitialParameters.GasPhase,
                           InitialParameters.GasPhasePressure,
                           solver_calculation.Concentration);
   // Only stream if the user desires it, still doesn't prevent file creation...
   if (InitialParameters.PrintReacRates) {
-    //  write_output.StreamReactionRates(time_current,
-    //                                   solver_calculation.Get_Rates());
     write_output.StreamData(WriteOutput::stream_type::rates, time_current,
                             false, 0.0, solver_calculation.Get_Rates());
   }
@@ -402,7 +396,6 @@ void RunIntegrator::Integrate(
 
     if (InitialParameters.MechanismAnalysis.StreamRatesAnalysis) {
       RatesAnalysis::StreamRatesAnalysis(
-          // OutputFilenames.Prefix,
           write_output.get_prefix(), ProductsForRatesAnalysis,
           solver_calculation.Get_ReactantsForReactions(),
           solver_calculation.Get_Rates(), time_current, Number_Species);
@@ -420,11 +413,6 @@ void RunIntegrator::Integrate(
       pressure = (total_mol * R * SpeciesConcentration[Number_Species]) /
                  InitialParameters.GasPhaseVolume;
     } //*/
-
-    /*
-    write_output.StreamConcentrations(false, Number_Species, time_current,
-                                      pressure,
-                                      solver_calculation.Concentration);//*/
 
     write_output.StreamData(WriteOutput::stream_type::concentration,
                             time_current, InitialParameters.GasPhase, pressure,
