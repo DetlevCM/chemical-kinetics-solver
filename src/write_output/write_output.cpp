@@ -7,8 +7,9 @@
  * the initial output which also clears the file. */
 
 // output function for species labels, temperature at back
-void WriteOutput::Write_Header_Species_Temperature_Pressure(
-    size_t Number_Species, vector<Species> species, bool GasPhasePressure) {
+void WriteOutput::WriteLabelsConcentration(size_t Number_Species,
+                                           vector<Species> species,
+                                           bool GasPhasePressure) {
   size_t i;
   ofstream Concentration_OFStream(filename_concentrations.c_str(), ios::out);
 

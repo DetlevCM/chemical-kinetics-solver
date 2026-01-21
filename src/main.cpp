@@ -155,9 +155,9 @@ int main(int argc, char *argv[]) {
                             "concentrations.txt", "reaction_rates.txt",
                             "PetroOxy-log.txt");
 
-    write_output.Write_Header_Species_Temperature_Pressure(
-        Number_Species, reaction_mechanism.species,
-        initial_parameters.GasPhase);
+    write_output.WriteLabelsConcentration(Number_Species,
+                                          reaction_mechanism.species,
+                                          initial_parameters.GasPhase);
 
     if (initial_parameters.PrintReacRates) {
       write_output.WriteLabelsReactionRates(Number_Reactions);
@@ -222,7 +222,7 @@ int main(int argc, char *argv[]) {
               Reduced_Reaction_Mechanism.species, write_output.get_prefix());
         }
 
-        write_output.Write_Header_Species_Temperature_Pressure(
+        write_output.WriteLabelsConcentration(
             Number_Species, Reduced_Reaction_Mechanism.species,
             initial_parameters.GasPhase);
         write_output.WriteLabelsReactionRates(Number_Reactions);

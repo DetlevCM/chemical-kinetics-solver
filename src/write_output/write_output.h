@@ -68,31 +68,17 @@ public:
   // Function to write the labels
 
   // Write labels for concentrations, then stream output
-  void Write_Header_Species_Temperature_Pressure(size_t Number_Species,
-                                                 vector<Species> species,
-                                                 bool GasPhasePressure);
-  /*
-    void StreamConcentrations(bool GasPhasePressure, size_t Number_Species,
-                              double CurrentTime, double Pressure,
-                              const vector<double> &Concentration);
-                              //*/
-
-  // ref: https://en.cppreference.com/w/cpp/language/enum.html
-  enum stream_type { concentration, rates, petrooxy };
-
-  void StreamData(stream_type type, double CurrentTime, bool GasPhasePressure,
-                  double Pressure, const vector<double> &data);
-
-  // void StreamConcentrationsV2(double CurrentTime, size_t Number_Species,
-  //                             double *Concentration);
-
+  void WriteLabelsConcentration(size_t Number_Species, vector<Species> species,
+                                bool GasPhasePressure);
   // write labels for reactions then stream output
   void WriteLabelsReactionRates(size_t);
 
-  // void StreamReactionRates(double, const vector<double> &Rates);
+  // ref: https://en.cppreference.com/w/cpp/language/enum.html
+  enum stream_type { concentration, rates, petrooxy };
+  void StreamData(stream_type type, double CurrentTime, bool GasPhasePressure,
+                  double Pressure, const vector<double> &data);
 
   // output of input files
-
   static void
   Write_Stoichiometric_Matrix_For_Opt(string,
                                       const vector<SingleReactionData> &);
