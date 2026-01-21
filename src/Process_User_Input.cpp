@@ -18,7 +18,7 @@ void Process_User_Input(Filenames &filenames, vector<string> User_Inputs) {
   // default without keywords
   filenames.mechanism = "chem.inp"; // standard
   filenames.initial_data =
-      "initial.inp"; // old input format officially depreciated
+      "initial.inp"; // old input format officially deprecated
   filenames.species_mapping = "";
 
   // legacy options without keywords:
