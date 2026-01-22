@@ -27,6 +27,10 @@ void RunIntegrator::Integrate(
   size_t Number_Species = reaction_mechanism.species.size();
   size_t Number_Reactions = reaction_mechanism.reactions_size();
 
+  // Set the number of threads to use:
+  // Threading has limited use in small mechanisms.
+  omp_set_num_threads(InitialParameters.Solver_Parameters.threads);
+
   // outputting mechanism size in integration routing so that it is printed
   // every time
   cout << "The mechanism to be integrated contains " << Number_Species

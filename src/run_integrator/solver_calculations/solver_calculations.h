@@ -8,6 +8,8 @@
 #ifndef SOLVER_CALCULATION
 #define SOLVER_CALCULATION
 
+#include <omp.h>
+
 #include "../../global_struct.h"
 // #include "../../get_process_input/get_initial_data/Initial_Data.h"
 #include "../../get_process_input/get_mechanism/Reaction.h"
