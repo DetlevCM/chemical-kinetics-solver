@@ -5,6 +5,8 @@
  *      Author: DetlevCM
  */
 
+#include <chrono>
+
 #include "./run_integrator.h"
 #include "./write_output/write_output.h"
 
@@ -56,9 +58,6 @@ void RunIntegrator::Integrate(
   int solver_choice = 0;
   solver_choice = Prepare_Integrator_Settings(InitialParameters, Number_Species,
                                               LSODA, Intel);
-
-  // For performance assessment, use a clock:
-  clock_t cpu_time_begin, cpu_time_end, cpu_time_current;
 
   // just make sure the Delta_N is current
   vector<double> prep_delta_n = Get_Delta_N(reaction_mechanism.reactions);
@@ -268,8 +267,11 @@ void RunIntegrator::Integrate(
   // enables reset of Rates Analysis
   size_t RatesAnalysisTimepoint = 0;
 
+  // For performance assessment, use a clock:
+
   // start the clock:
-  cpu_time_begin = cpu_time_current = clock();
+  auto chrono_current = std::chrono::high_resolution_clock::now();
+  auto chrono_begin = chrono_current;
 
   do {
     time_step = time_current + time_step1;
@@ -436,10 +438,10 @@ void RunIntegrator::Integrate(
 
     if (tracker < (TimeChanges - 1) &&
         time_step >= InitialParameters.TimeEnd[tracker]) {
-      cout << "CPU Time: "
-           << ((double)(clock() - cpu_time_current)) / CLOCKS_PER_SEC
-           << " seconds\n";
-      cpu_time_current = clock();
+      std::chrono::duration<double> chrono_time_taken =
+          std::chrono::high_resolution_clock::now() - chrono_current;
+      cout << "CPU Time: " << chrono_time_taken.count() << " seconds\n";
+      chrono_current = std::chrono::high_resolution_clock::now();
 
       tracker = tracker + 1;
       time_step1 = InitialParameters.TimeStep[tracker];
@@ -450,9 +452,10 @@ void RunIntegrator::Integrate(
   } while (time_step < time_end);
   // end of loop from t_zero to t_end
 
-  cout << "CPU Time: "
-       << ((double)(clock() - cpu_time_current)) / CLOCKS_PER_SEC
-       << " seconds\n";
+  std::chrono::duration<double> chrono_time_taken =
+      std::chrono::high_resolution_clock::now() - chrono_current;
+
+  cout << "CPU Time: " << chrono_time_taken.count() << " seconds\n";
 
   write_output.close_stream_concentrations();
   write_output.close_stream_rates();
@@ -464,8 +467,8 @@ void RunIntegrator::Integrate(
   }
 
   // stop the clock
-  cpu_time_end = clock();
-  cout << "\nTotal CPU time: "
-       << ((double)(cpu_time_end - cpu_time_begin)) / CLOCKS_PER_SEC
-       << " seconds\n\n";
+  auto chrono_end = std::chrono::high_resolution_clock::now();
+  chrono_time_taken = chrono_end - chrono_begin;
+
+  cout << "\nTotal CPU time: " << chrono_time_taken.count() << " seconds\n\n";
 }
