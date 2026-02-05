@@ -233,5 +233,6 @@ void Species::Get_Thermodynamic_Data(string filename,
 
     Mechanism_Data.close();
   }
-  cout << ThermoCounter << " Thermodynamic entries processed.\n";
+  cout << "Thermodynamic entries processed: " << std::setw(8) << ThermoCounter
+       << "\n";
 }

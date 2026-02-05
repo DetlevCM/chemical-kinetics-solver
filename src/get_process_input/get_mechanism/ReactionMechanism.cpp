@@ -31,7 +31,8 @@ void ReactionMechanism::get_mechanism(string filename,
       Species::VectorClass(Species::Get_Species(filename));
   // vector<string> vec_str_species = Species::Get_Species(filename);
   size_t Number_Species = species.size();
-  cout << "The Mechanism contains " << Number_Species << " Species.\n";
+  cout << "Number species in mechanism:     " << std::setw(8) << Number_Species
+       << " \n";
   Species::Get_Thermodynamic_Data(filename, species);
 
   reaction_mechanism.Set_Species(species);
@@ -51,5 +52,6 @@ void ReactionMechanism::get_mechanism(string filename,
   //// NOTE: above assignment stores data in class ReactionMechanism,
   /// implementation is ugly
 
-  cout << "The Mechanism contains " << Number_Reactions << " Reactions.\n";
+  cout << "Number reactions in mechanism:   " << std::setw(8)
+       << Number_Reactions << "\n";
 }

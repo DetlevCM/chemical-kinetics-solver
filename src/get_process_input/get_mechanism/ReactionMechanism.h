@@ -16,6 +16,7 @@ using std::string;
 using std::vector;
 
 using std::cout;
+#include <iomanip>
 
 class ReactionMechanism {
 
