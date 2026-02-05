@@ -68,6 +68,14 @@ Reaction::Prepare_Single_Reaction_Output(size_t Number_Species,
             Reaction_Order + fabs(Reaction.Reactants[i]); // stoichiometry not 1
       }
     }
+    // third body
+    if (Reaction.ThirdBodyType == 1) // = +M
+    {
+      convert << " + M ";
+    } else if (Reaction.ThirdBodyType == 2) // = (+M)
+    {
+      convert << " (+ M) ";
+    }
   }
 
   // sign
@@ -95,6 +103,15 @@ Reaction::Prepare_Single_Reaction_Output(size_t Number_Species,
         convert << Reaction.Products[i] << species[i].Name;
         check = true;
       }
+    }
+
+    // third body
+    if (Reaction.ThirdBodyType == 1) // = +M
+    {
+      convert << " + M ";
+    } else if (Reaction.ThirdBodyType == 2) // = (+M)
+    {
+      convert << " (+ M) ";
     }
   }
 

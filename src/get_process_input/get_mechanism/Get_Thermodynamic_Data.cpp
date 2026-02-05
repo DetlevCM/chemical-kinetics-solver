@@ -19,6 +19,7 @@ void Species::Get_Thermodynamic_Data(string filename,
   size_t Number_Species = species.size();
   size_t i;
 
+  size_t ThermoCounter = 0;
   // Vector to store all data as a struct (more efficient than vector< vector> >
   // vector< Species::ThermodynamicData > read_in_thermodynamics;
   // read_in_thermodynamics.resize(Number_Species);
@@ -32,7 +33,7 @@ void Species::Get_Thermodynamic_Data(string filename,
     while (Mechanism_Data.good()) {
       getline(Mechanism_Data, line1);
 
-      // Check if the Thermodynamic Data is Over and terminate the scheme
+      //  Check if the Thermodynamic Data is Over and terminate the scheme
       found =
           line1.find("End"); // need to check for end in loop for 4 line blocks
 
@@ -83,38 +84,16 @@ void Species::Get_Thermodynamic_Data(string filename,
 
           // now the 3 temperature readings
           getline(Mechanism_Data, line1);
-
           temp_split_line_double1 = Tokenise_String_To_Double(line1, " 	");
-          // temp_read_in_single_species.TLow = temp_split_line_double[0];
-          // temp_read_in_single_species.THigh = temp_split_line_double[1];
-          // temp_read_in_single_species.TChange = temp_split_line_double[2];
-          // temp_split_line_double.clear();
 
           // now the low thermodynamics
           getline(Mechanism_Data, line1);
-
           temp_split_line_double2 = Tokenise_String_To_Double(line1, " 	");
-          // temp_read_in_single_species.NasaLow1 = temp_split_line_double[0];
-          // temp_read_in_single_species.NasaLow2 = temp_split_line_double[1];
-          // temp_read_in_single_species.NasaLow3 = temp_split_line_double[2];
-          // temp_read_in_single_species.NasaLow4 = temp_split_line_double[3];
-          // temp_read_in_single_species.NasaLow5 = temp_split_line_double[4];
-          // temp_read_in_single_species.NasaLow6 = temp_split_line_double[5];
-          // temp_read_in_single_species.NasaLow7 = temp_split_line_double[6];
-          // temp_split_line_double.clear();
 
           // now the high thermodynamics
           getline(Mechanism_Data, line1);
-
           temp_split_line_double3 = Tokenise_String_To_Double(line1, " 	");
-          // temp_read_in_single_species.NasaHigh1 = temp_split_line_double[0];
-          // temp_read_in_single_species.NasaHigh2 = temp_split_line_double[1];
-          // temp_read_in_single_species.NasaHigh3 = temp_split_line_double[2];
-          // temp_read_in_single_species.NasaHigh4 = temp_split_line_double[3];
-          // temp_read_in_single_species.NasaHigh5 = temp_split_line_double[4];
-          // temp_read_in_single_species.NasaHigh6 = temp_split_line_double[5];
-          // temp_read_in_single_species.NasaHigh7 = temp_split_line_double[6];
-          // temp_split_line_double.clear();
+
           std::cout << line1 << "\n";
           std::cout << temp_split_line_double1[0] << "\n";
           species[temp_species_id].thermodynamicdata.SetNasa(
@@ -122,9 +101,7 @@ void Species::Get_Thermodynamic_Data(string filename,
               temp_split_line_double1[2], temp_split_line_double2,
               temp_split_line_double3);
 
-          // retain the input for one species mapped into the right location
-          // read_in_thermodynamics[temp_species_id] =
-          // temp_read_in_single_species;
+          ThermoCounter = ThermoCounter + 1;
         }
       }
 
@@ -151,6 +128,7 @@ void Species::Get_Thermodynamic_Data(string filename,
       getline(Mechanism_Data, line1);
 
       if (begin_flag && !end_flag) {
+
         found = line1.find(
             "END"); // need to check for end in loop for 4 line blocks
         if (found != string::npos && begin_flag) {
@@ -239,49 +217,12 @@ void Species::Get_Thermodynamic_Data(string filename,
           species[temp_species_id].thermodynamicdata.SetNasa(
               TLow, THigh, TChange, NasaLow, NasaHigh);
 
-          /*
-          temp_read_in_single_species.TLow = SingleSpeciesData[0];
-          temp_read_in_single_species.THigh = SingleSpeciesData[1];
-          temp_read_in_single_species.TChange = SingleSpeciesData[2];
-
-          temp_read_in_single_species.NasaHigh1 =
-                          strtod(line2.substr( 0,15).c_str(),NULL);
-          temp_read_in_single_species.NasaHigh2 =
-                          strtod(line2.substr(15,15).c_str(),NULL);
-          temp_read_in_single_species.NasaHigh3 =
-                          strtod(line2.substr(30,15).c_str(),NULL);
-          temp_read_in_single_species.NasaHigh4 =
-                          strtod(line2.substr(45,15).c_str(),NULL);
-          temp_read_in_single_species.NasaHigh5 =
-                          strtod(line2.substr(60,15).c_str(),NULL);
-
-          temp_read_in_single_species.NasaHigh6 =
-                          strtod(line3.substr( 0,15).c_str(),NULL);
-          temp_read_in_single_species.NasaHigh7 =
-                          strtod(line3.substr(15,15).c_str(),NULL);
-          temp_read_in_single_species.NasaLow1 =
-                          strtod(line3.substr(30,15).c_str(),NULL);
-          temp_read_in_single_species.NasaLow2 =
-                          strtod(line3.substr(45,15).c_str(),NULL);
-          temp_read_in_single_species.NasaLow3 =
-                          strtod(line3.substr(60,15).c_str(),NULL);
-
-          temp_read_in_single_species.NasaLow4 =
-                          strtod(line4.substr( 0,15).c_str(),NULL);
-          temp_read_in_single_species.NasaLow5 =
-                          strtod(line4.substr(15,15).c_str(),NULL);
-          temp_read_in_single_species.NasaLow6 =
-                          strtod(line4.substr(30,15).c_str(),NULL);
-          temp_read_in_single_species.NasaLow7 =
-                          strtod(line4.substr(45,15).c_str(),NULL);
-          read_in_thermodynamics[temp_species_id] = temp_read_in_single_species;
-//*/
+          ThermoCounter = ThermoCounter + 1;
         }
       }
 
       // Moving thermo data check to end of function avoids "THERMO" being read
       // in as a name
-
       found = line1.find("THERM");
       if (found != string::npos && !end_flag) {
         // cout << "found begining of thermo \n";
@@ -292,6 +233,5 @@ void Species::Get_Thermodynamic_Data(string filename,
 
     Mechanism_Data.close();
   }
-
-  // return read_in_thermodynamics;
+  cout << ThermoCounter << " Thermodynamic entries processed.\n";
 }

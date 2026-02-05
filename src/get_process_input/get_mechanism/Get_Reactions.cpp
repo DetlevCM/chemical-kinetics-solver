@@ -223,14 +223,14 @@ ReactionMechanism::Get_Reactions(string filename,
         SingleReactionData temp;
         vector<ThirdBodyParameters> ThBd_param;
         // check for Third Body Indicator:
-        temp.ThirdBodyType = 0;             // no third body, default
-        if (Test_If_Word_Found(line, "+M")) // first type, set parameter
-        {
+        temp.ThirdBodyType = 0; // no third body, default
+        if (Test_If_Word_Found(line, "+M") || Test_If_Word_Found(line, "+ M")) {
+          // first type: low-pressure limiting region
           temp.ThirdBodyType = 1;
         }
-        if (Test_If_Word_Found(
-                line, "+(M)")) // apparently not the first, but the second type
-        {
+        if (Test_If_Word_Found(line, "(+M)") ||
+            Test_If_Word_Found(line, "(+ M)")) {
+          // second type : fall-off region -> Lindemann or Troe
           temp.ThirdBodyType = 2;
         }
         // if there is a third body reaction, we need to read in the
