@@ -109,6 +109,16 @@ ReactionMechanism::Get_Reactions(string filename,
                                  // parameters and whether irreversible or not
     ReactionData.resize(4); // A, n, Ea and whether reversible or irreversible
 
+    // step 1: strip off comments
+    vector<string> Remove_Comments;
+    if (line.find("!") != string::npos) // contains comments, so remove comments
+    {
+      Remove_Comments = Tokenise_String_To_String(line, "!");
+      line = Remove_Comments[0];
+    }
+    Remove_Comments.clear();
+    // now have comment free data
+
     // Reaction is marked a duplicate (First line cannot be "DUP", else this
     // will crash...)
     if (line.compare(0, 1, "!") != 0 && line.compare(0, 1, "/") != 0 &&
@@ -120,10 +130,21 @@ ReactionMechanism::Get_Reactions(string filename,
     // DUP
     else if (line.compare(0, 1, "!") != 0 && line.compare(0, 1, "/") != 0 &&
              line.compare(0, 3, "DUP") != 0 &&
-             !Test_If_Word_Found(line,
-                                 "LOW/") && // not LOW term for third bodies
-             !Test_If_Word_Found(line,
-                                 "TROE/") // not TROE term for third bodies
+             !Test_If_Word_Found(
+                 line,
+                 "DUPLICATE") // if it doe not start in first place...
+             && !Test_If_Word_Found(line,
+                                    "LOW/") // not LOW term for third bodies
+             && !Test_If_Word_Found(line,
+                                    "LOW  /") // not LOW term for third bodies
+             && !Test_If_Word_Found(line,
+                                    "TROE/") // not TROE term for third bodies
+                                             //*
+             && !Test_If_Word_Found(
+                    line,
+                    "/") // the slash indicates some form of parameter
+                         // but is also used in RMG reaction comments
+                         //*/
     ) {
       // Split by = or => sign
       vector<string> SplitLineIn;
