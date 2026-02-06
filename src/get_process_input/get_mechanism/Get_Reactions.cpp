@@ -74,7 +74,7 @@ ReactionMechanism::Get_Reactions(string filename,
              line.find("=") == string::npos) // LOW term for third bodies line
                                              // contains no equal
     {
-      //cout << "low: " << line << "\n";
+      // cout << "low: " << line << "\n";
       vector<double> tmp =
           Tokenise_String_To_Double(line, " \t/"); // retain low
       //  position 1 is "low"
@@ -91,7 +91,7 @@ ReactionMechanism::Get_Reactions(string filename,
       vector<double> tmp = Tokenise_String_To_Double(line, " \t/");
       // values are: a, T3, T1, T2
       // position 1 is troe
-      //cout << "troe: " << line << "\n";
+      // cout << "troe: " << line << "\n";
       if (tmp.size() == 4 || tmp.size() == 5) // at least 3 parameter troe
       {
         Reaction_Data[counter].TB_troe.has_troe = true;
@@ -108,7 +108,7 @@ ReactionMechanism::Get_Reactions(string filename,
                line.find("=") ==
                    string::npos) // SRI term line contains no equal
     {
-      //cout << "sri: " << line << "\n";
+      // cout << "sri: " << line << "\n";
       vector<double> tmp = Tokenise_String_To_Double(line, " \t/");
 
       // values are: a, T3, T1, T2
@@ -127,51 +127,51 @@ ReactionMechanism::Get_Reactions(string filename,
       }
     }
     // we checked for low and troe, still a slash? Another third body config
-    // TODO: !!!!
-    /*
-                      else if(Reaction_Data.size() > 0 &&
-      Test_If_Word_Found(line,"/"))
-                      {
-                              // separated by slashes, so...
-                              vector<string> tmp =
-      Tokenise_String_To_String(line, "\t /");
-                              // we now have species/value pairs in a
-      consecutive order
+    else if (Reaction_Data.size() > 0 && Test_If_Word_Found(line, "/") &&
+             !Test_If_Word_Found(line,
+                                 "LOW") // not LOW term for third bodies
+             && !Test_If_Word_Found(line,
+                                    "TROE") // not TROE term for third bodies)
+    ) {
+      // separated by slashes, so...
+      cout << "other TB: " << line << "\n";
+      vector<string> tmp = Tokenise_String_To_String(line, "\t /");
+      // we now have species/value pairs in a consecutive order
 
-                              for(size_t steps = 0; steps < tmp.size();
-      steps+=2) // note, steps of 2 !!
-                              {
-                                      // get the species ID:
-                                      size_t species_ID = 0;
-                                      size_t j = 0;
-                                      bool is_matched = false;
-                                      while(j<Species.size() && !is_matched) //
-      just loop until the species is found
-                                      {
-                                              string Comparator = Species[j];
-                                              // Find the appropriate species
-      and its position if(strcmp(Species[j].c_str(),Comparator.c_str()) == 0){
-                                                      species_ID = j;
-                                                      is_matched = true;
-                                              }
-                                              j = j + 1;
-                                      }
+      for (size_t steps = 0; steps < tmp.size();
+           steps += 2) // note, steps of 2 !!
+      {
+        // get the species ID:
+        size_t species_ID = 0;
+        size_t m = 0;
+        bool is_matched = false;
+        string Comparator = tmp[steps];
 
-                                      if(is_matched)
-                                      {
-                                              ThirdBodyParameters tmp_TB;
+        vector<ThirdBodyParameters> vec_TB_param;
 
-                                              tmp_TB.SpeciesID = species_ID;
-                                              tmp_TB.value =
-      strtod(tmp[steps+1].c_str(),NULL);
-
-                                              // belongs to the previous/last
-      entry size_t position = Reaction_Data.size() - 1;
-                                              Reaction_Data[position].ThBd_param.push_back(tmp_TB);
-                                      }
-                              }
-                      }
-      //*/
+        while (m < species.size() &&
+               !is_matched) // just loop until the species is found
+        {
+          //  Find the appropriate species and its position
+          if (strcmp(species[m].Name.c_str(), Comparator.c_str()) == 0) {
+            // species_ID = m;
+            cout << counter << " " << Comparator << " " << species[m].Name
+                 << "\n";
+            ThirdBodyParameters tmp_TB;
+            tmp_TB.SpeciesID = species_ID;
+            tmp_TB.value = strtod(tmp[steps + 1].c_str(), NULL);
+            // belongs to the previous/last entry
+            // Reaction_Data[counter].TB_param.push_back(tmp_TB);
+            vec_TB_param.push_back(tmp_TB);
+            is_matched = true;
+          }
+          m = m + 1;
+        }
+        /// TODO: this fails !!
+        Reaction_Data[counter].TB_param = vec_TB_param;
+      }
+    }
+    //*/
     // content in here - check if line does not start with a comment, ! or / or
     // DUP
     else if // well, not a comment, not a duplicate, not a third body config ->

@@ -41,11 +41,6 @@ public:
   static void get_mechanism(string filename,
                             ReactionMechanism &reaction_mechanism);
 
-  struct ThirdBodyParameters {
-    size_t SpeciesID;
-    double value;
-  };
-
   struct SpeciesWithCoefficient {
     size_t SpeciesID;
     double coefficient;

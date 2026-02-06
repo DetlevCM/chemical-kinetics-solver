@@ -49,6 +49,11 @@ struct ThirdBody_SRI {
   bool is_5_param = false;
 };
 
+struct ThirdBodyParameters {
+  size_t SpeciesID;
+  double value;
+};
+
 struct SingleReactionData {
   bool Reversible;
   bool IsDuplicate;
@@ -65,10 +70,8 @@ struct SingleReactionData {
   ThirdBody_troe TB_troe;   // preparation
   ThirdBody_SRI TB_sri;
 
-  vector<double> ThBd_LOW;
-  vector<double> ThBd_TROE;
+  vector<ThirdBodyParameters> TB_param;
 
-  // vector<ThirdBodyParameters> ThBd_param;
   vector<double> Reactants;
   vector<double> Products;
 };
