@@ -74,6 +74,7 @@ ReactionMechanism::Get_Reactions(string filename,
              line.find("=") == string::npos) // LOW term for third bodies line
                                              // contains no equal
     {
+      //cout << "low: " << line << "\n";
       vector<double> tmp =
           Tokenise_String_To_Double(line, " \t/"); // retain low
       //  position 1 is "low"
@@ -90,6 +91,7 @@ ReactionMechanism::Get_Reactions(string filename,
       vector<double> tmp = Tokenise_String_To_Double(line, " \t/");
       // values are: a, T3, T1, T2
       // position 1 is troe
+      //cout << "troe: " << line << "\n";
       if (tmp.size() == 4 || tmp.size() == 5) // at least 3 parameter troe
       {
         Reaction_Data[counter].TB_troe.has_troe = true;
@@ -106,6 +108,7 @@ ReactionMechanism::Get_Reactions(string filename,
                line.find("=") ==
                    string::npos) // SRI term line contains no equal
     {
+      //cout << "sri: " << line << "\n";
       vector<double> tmp = Tokenise_String_To_Double(line, " \t/");
 
       // values are: a, T3, T1, T2
