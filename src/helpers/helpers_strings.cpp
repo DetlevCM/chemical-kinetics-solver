@@ -90,3 +90,12 @@ string trim_string(string str, string whitespace = " \t") {
 
   return str.substr(strBegin, strRange);
 }
+
+string Remove_Substring(string line, string to_remove) {
+  //  erase string until no longer found
+  size_t pos = std::string::npos;
+  while ((pos = line.find(to_remove)) != std::string::npos) {
+    line.erase(pos, to_remove.length());
+  }
+  return line;
+}

@@ -52,6 +52,8 @@ public:
     bool ismatched; // = false;
   };
 
+  static vector<string> Read_Chemkin_Block(string filename, string blockname);
+
   static SpeciesWithCoefficient
   Return_Species_With_Coefficient(string, const vector<Species> &);
 
@@ -64,6 +66,10 @@ public:
 
   static vector<SingleReactionData>
   Get_Reactions(string filename, const vector<Species> &species);
+
+  static SingleReactionData
+  Parse_Chemkin_Reaction_String(const vector<int> SchemeUnits,
+                                const vector<Species> &species, string line);
 };
 
 #endif

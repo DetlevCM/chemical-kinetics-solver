@@ -31,20 +31,43 @@ struct ReactionParameter {
   double Ea;
 };
 
+struct ThirdBody_troe {
+  double a = 0.0;
+  double T1 = 0.0;
+  double T2 = 0.0; // only in 4 parameter troe
+  double T3 = 0.0;
+  bool is_4_param = false; // default
+  bool has_troe = false;
+};
+
+struct ThirdBody_SRI {
+  double a = 0.0;
+  double b = 0.0;
+  double c = 0.0;
+  double d = 1.0; // default
+  double e = 0.0; // default
+  bool is_5_param = false;
+};
+
 struct SingleReactionData {
   bool Reversible;
   bool IsDuplicate;
-  // double paramA;
-  // double paramN;
-  // double paramEa;
 
   ReactionParameter forward;
   bool explicit_reverse;
-  ReactionParameter reverse;
+  ReactionParameter reverse; // not yet used, but preparation
 
   int ThirdBodyType; // 1: +M  2: (+M)
+
+  bool collision_efficiency = false; // for third body reactions
+
+  ReactionParameter TB_low; // preparation
+  ThirdBody_troe TB_troe;   // preparation
+  ThirdBody_SRI TB_sri;
+
   vector<double> ThBd_LOW;
   vector<double> ThBd_TROE;
+
   // vector<ThirdBodyParameters> ThBd_param;
   vector<double> Reactants;
   vector<double> Products;

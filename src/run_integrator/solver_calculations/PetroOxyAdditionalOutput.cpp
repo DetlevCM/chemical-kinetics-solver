@@ -45,11 +45,10 @@ void SolverCalculation::PetroOxyOutputStream(
     double CurrentTime) {
   ofstream PetroOxyOutput(filename.c_str(), ios::app);
 
-  PetroOxyOutput << CurrentTime << "	";                 // time
-  PetroOxyOutput << PetroOxyData.HeadSpaceGas << "	"; // concentration
-  PetroOxyOutput << PetroOxyData.HeadSpaceGasMol << "	"; // concentration
-  PetroOxyOutput << PetroOxyData.HeadSpaceGasPressure
-                 << "	"; // concentration
+  PetroOxyOutput << CurrentTime << "	";                      // time
+  PetroOxyOutput << PetroOxyData.HeadSpaceGas << "	";      // concentration
+  PetroOxyOutput << PetroOxyData.HeadSpaceGasMol << "	";      // concentration
+  PetroOxyOutput << PetroOxyData.HeadSpaceGasPressure << "	"; // concentration
   PetroOxyOutput << PetroOxyData.HeadSpaceSolventComponentPressure
                  << "	";                               // concentration
   PetroOxyOutput << PetroOxyData.HenryConstantk << "\n"; // concentration
