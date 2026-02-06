@@ -113,9 +113,9 @@ void MechanismReduction::Reduce_Species_Thermo_Mechanism(
       SingleReactionData.Reactants = Reactants;
       SingleReactionData.Products = Products;
 
-      SingleReactionData.paramA = Reactions[j].paramA;
-      SingleReactionData.paramN = Reactions[j].paramN;
-      SingleReactionData.paramEa = Reactions[j].paramEa;
+      SingleReactionData.forward.A = Reactions[j].forward.A;
+      SingleReactionData.forward.n = Reactions[j].forward.n;
+      SingleReactionData.forward.Ea = Reactions[j].forward.Ea;
       SingleReactionData.Reversible = Reactions[j].Reversible;
       SingleReactionData.IsDuplicate = Reactions[j].IsDuplicate;
 

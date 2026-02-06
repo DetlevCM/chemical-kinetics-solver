@@ -24,25 +24,30 @@ using std::vector;
 
 namespace Reaction {
 
+struct ReactionParameter {
+  bool Reversible; // want to get rid of this
+  double A;
+  double n;
+  double Ea;
+};
+
 struct SingleReactionData {
   bool Reversible;
   bool IsDuplicate;
-  double paramA;
-  double paramN;
-  double paramEa;
+  // double paramA;
+  // double paramN;
+  // double paramEa;
+
+  ReactionParameter forward;
+  bool explicit_reverse;
+  ReactionParameter reverse;
+
   int ThirdBodyType; // 1: +M  2: (+M)
   vector<double> ThBd_LOW;
   vector<double> ThBd_TROE;
   // vector<ThirdBodyParameters> ThBd_param;
   vector<double> Reactants;
   vector<double> Products;
-};
-
-struct ReactionParameter {
-  bool Reversible;
-  double paramA;
-  double paramN;
-  double paramEa;
 };
 
 string Prepare_Single_Reaction_Output(size_t, const vector<Species> &,

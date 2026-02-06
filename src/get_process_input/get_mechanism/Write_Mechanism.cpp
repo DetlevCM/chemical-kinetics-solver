@@ -116,17 +116,18 @@ Reaction::Prepare_Single_Reaction_Output(size_t Number_Species,
   }
 
   // Arrhenius parameters correct moles/l to moles/cm^3
-  /*convert << "\t\t" << Reaction.paramA*1000 << "\t" << Reaction.paramN << "\t"
-   * << Reaction.paramEa << "\n"; //*/
+  /*convert << "\t\t" << Reaction.forward.A*1000 << "\t" << Reaction.forward.n
+   * << "\t"
+   * << Reaction.forward.Ea << "\n"; //*/
 
   // ensure that A is scaled correctly to per cm^3 units depending on the
   // reaction order
   double preexponential_A =
-      Reaction.paramA * pow(1000.0, (Reaction_Order - 1.0));
+      Reaction.forward.A * pow(1000.0, (Reaction_Order - 1.0));
 
   convert << "\t\t" << preexponential_A << "\t" <<
-      // Reaction.paramA*1000 << "\t" << // mol / cm^3
-      Reaction.paramN << "\t" << (Reaction.paramEa / 1000 * 1.98709)
+      // Reaction.forward.A*1000 << "\t" << // mol / cm^3
+      Reaction.forward.n << "\t" << (Reaction.forward.Ea / 1000 * 1.98709)
           << "\n"; // correct for kcal/mol
 
   return convert.str();

@@ -22,9 +22,9 @@ MechanismReduction::n_zero_k_fitted_Slow(vector<SingleReactionData> &Reactions,
       double temp_mod = (double)k - 20.0;
 
       Group_k[k] = Group_k[k] +
-                   Reactions[j].paramA *
-                       pow((temperature + temp_mod), Reactions[j].paramN) *
-                       exp(-Reactions[j].paramEa / (temperature + temp_mod));
+                   Reactions[j].forward.A *
+                       pow((temperature + temp_mod), Reactions[j].forward.n) *
+                       exp(-Reactions[j].forward.Ea / (temperature + temp_mod));
     }
   }
 
@@ -56,9 +56,9 @@ MechanismReduction::n_zero_k_fitted_Slow(vector<SingleReactionData> &Reactions,
   intercept = Group_k[20] + (1 / temperature) * gradient;
 
   ParameterOutput.Reversible = false;
-  ParameterOutput.paramA = exp(intercept);
-  ParameterOutput.paramN = 0;
-  ParameterOutput.paramEa = gradient;
+  ParameterOutput.A = exp(intercept);
+  ParameterOutput.n = 0;
+  ParameterOutput.Ea = gradient;
 
   return ParameterOutput;
 }

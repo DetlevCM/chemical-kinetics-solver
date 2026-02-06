@@ -112,9 +112,9 @@ vector<ReactionParameter> RunIntegrator::Process_Reaction_Parameters(
   for (size_t i = 0; i < Reactions.size(); i++) {
     ReactionParameter temp_one_reaction;
 
-    temp_one_reaction.paramA = Reactions[i].paramA;   // A
-    temp_one_reaction.paramN = Reactions[i].paramN;   // n
-    temp_one_reaction.paramEa = Reactions[i].paramEa; // Ea
+    temp_one_reaction.A = Reactions[i].forward.A;   // A
+    temp_one_reaction.n = Reactions[i].forward.n;   // n
+    temp_one_reaction.Ea = Reactions[i].forward.Ea; // Ea
     temp_one_reaction.Reversible = Reactions[i].Reversible;
 
     temp_output.push_back(temp_one_reaction);

@@ -79,7 +79,17 @@ ReactionMechanism::Get_Reactions(string filename,
             line.compare(0, 1, "!") !=
                 0) // Abort if end reached or initial line is comment
         {
-          Reactions_List.push_back(line);
+          // strip comments from the reaction line if they are present:
+          vector<string> RemoveComments;
+          RemoveComments = Tokenise_String_To_String(line, "!");
+          line = RemoveComments[0];
+          RemoveComments.clear();
+
+          // if we still have text, store
+          // i.e. line not empty or only whitespace
+          if (!line.empty() && line.find_first_not_of("\t ") != string::npos) {
+            Reactions_List.push_back(line);
+          }
         }
       }
 
@@ -128,32 +138,27 @@ ReactionMechanism::Get_Reactions(string filename,
     }
     // content in here - check if line does not start with a comment, ! or / or
     // DUP
-    else if (line.compare(0, 1, "!") != 0 && line.compare(0, 1, "/") != 0 &&
-             line.compare(0, 3, "DUP") != 0 &&
-             !Test_If_Word_Found(
-                 line,
-                 "DUPLICATE") // if it doe not start in first place...
-             && !Test_If_Word_Found(line,
-                                    "LOW/") // not LOW term for third bodies
-             && !Test_If_Word_Found(line,
-                                    "LOW  /") // not LOW term for third bodies
-             && !Test_If_Word_Found(line,
-                                    "TROE/") // not TROE term for third bodies
-                                             //*
-             && !Test_If_Word_Found(
-                    line,
-                    "/") // the slash indicates some form of parameter
-                         // but is also used in RMG reaction comments
-                         //*/
+    else if ( // line.compare(0, 1, "!") != 0 &&  // comments are already
+              // stripped off
+        line.compare(0, 1, "/") != 0 && line.compare(0, 3, "DUP") != 0 &&
+        !Test_If_Word_Found(
+            line,
+            "DUPLICATE") // if it doe not start in first place...
+        && !Test_If_Word_Found(line,
+                               "LOW/") // not LOW term for third bodies
+        && !Test_If_Word_Found(line,
+                               "LOW  /") // not LOW term for third bodies
+        && !Test_If_Word_Found(line,
+                               "TROE/") // not TROE term for third bodies
+                                        //*
+        &&
+        !Test_If_Word_Found(line,
+                            "/") // the slash indicates some form of parameter
+                                 // but is also used in RMG reaction comments
+                                 //*/
     ) {
       // Split by = or => sign
       vector<string> SplitLineIn;
-      vector<string> RemoveComments;
-
-      RemoveComments = Tokenise_String_To_String(line, "!");
-      line = RemoveComments[0];
-      RemoveComments.clear();
-
       // cout << "0010" << line << "\n";
 
       // only continue if the string is not empty or only whitespace or only tab
@@ -342,9 +347,10 @@ ReactionMechanism::Get_Reactions(string filename,
 
         temp.Reactants = ReactantData;
         temp.Products = ProductData;
-        temp.paramA = ReactionData[0];
-        temp.paramN = ReactionData[1];
-        temp.paramEa = ReactionData[2];
+
+        temp.forward.A = ReactionData[0];
+        temp.forward.n = ReactionData[1];
+        temp.forward.Ea = ReactionData[2];
         temp.Reversible = is_reversible;
         temp.IsDuplicate = false; // default, not a duplicate
 

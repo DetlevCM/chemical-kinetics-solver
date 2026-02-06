@@ -52,20 +52,20 @@ void SolverCalculation::Calculate_Rate_Constant(const double Temperature)
   for (size_t i = 0; i < Number_Reactions;
        i++) // Straightforward Arrhenius Expression/Equation
   {
-    Kf[i] = ReactionParameters[i].paramA *
-            exp(-ReactionParameters[i].paramEa /
-                Temperature); // do NOT forget the - !!!
+    Kf[i] =
+        ReactionParameters[i].A *
+        exp(-ReactionParameters[i].Ea / Temperature); // do NOT forget the - !!!
 
     //* Speedup by only raising temperature to power where needed: improvement
     // is large :)
-    if (ReactionParameters[i].paramN !=
+    if (ReactionParameters[i].n !=
         0.0) // raising to power 0 has no effect, so only if not 0
     {
       // unsure if this check really gives a performance improvement...
       // maybe it used to and no longer does with a modern
       // compiler/processor/kernel -> seems to be ever so slightly faster
       // if (ReactionParameters[i].paramN != 1.0) {
-      Kf[i] = Kf[i] * pow(Temperature, ReactionParameters[i].paramN);
+      Kf[i] = Kf[i] * pow(Temperature, ReactionParameters[i].n);
       /*} else {
         Kf[i] = Kf[i] * Temperature; // raise temp^1 = temp
       }//*/
@@ -75,9 +75,9 @@ void SolverCalculation::Calculate_Rate_Constant(const double Temperature)
     cout <<
     //		Temperature << " , " <<
     //		exp(-ReactionParameters[i].paramEa/Temperature) << " , " <<
-                    ReactionParameters[i].paramA << " , " <<
-                    ReactionParameters[i].paramN << " , " <<
-                    ReactionParameters[i].paramEa << " , " <<
+                    ReactionParameters[i].forward.A << " , " <<
+                    ReactionParameters[i].forward.n << " , " <<
+                    ReactionParameters[i].forward.Ea << " , " <<
                     Kf[i] << "\n";//*/
 
     // default, change if reversible - seems a little bit faster...
