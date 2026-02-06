@@ -44,7 +44,8 @@ ReactionMechanism::Get_Reactions(string filename,
   // - duplicate indicators
   // - third body parameters
 
-  size_t counter = 0; // track counter where we are
+  int counter = -1; // track counter where we are -> first reaction = 0, add
+                    // one, so start at -1
 
   // start at line 2, as line 1 is mechanism units
   // cout << "mechanism length: " << Reactions_List.size() << "\n";
@@ -134,10 +135,11 @@ ReactionMechanism::Get_Reactions(string filename,
                                     "TROE") // not TROE term for third bodies)
     ) {
       // separated by slashes, so...
-      cout << "other TB: " << line << "\n";
+      //cout << "other TB: " << line << "\n";
       vector<string> tmp = Tokenise_String_To_String(line, "\t /");
       // we now have species/value pairs in a consecutive order
 
+      vector<ThirdBodyParameters> vec_TB_param;
       for (size_t steps = 0; steps < tmp.size();
            steps += 2) // note, steps of 2 !!
       {
@@ -147,29 +149,28 @@ ReactionMechanism::Get_Reactions(string filename,
         bool is_matched = false;
         string Comparator = tmp[steps];
 
-        vector<ThirdBodyParameters> vec_TB_param;
-
         while (m < species.size() &&
                !is_matched) // just loop until the species is found
         {
           //  Find the appropriate species and its position
           if (strcmp(species[m].Name.c_str(), Comparator.c_str()) == 0) {
             // species_ID = m;
-            cout << counter << " " << Comparator << " " << species[m].Name
-                 << "\n";
+            // cout << counter << " " << Comparator << " " << species[m].Name
+            //     << " " << strtod(tmp[steps + 1].c_str(), NULL) << "\n";
             ThirdBodyParameters tmp_TB;
             tmp_TB.SpeciesID = species_ID;
             tmp_TB.value = strtod(tmp[steps + 1].c_str(), NULL);
-            // belongs to the previous/last entry
-            // Reaction_Data[counter].TB_param.push_back(tmp_TB);
             vec_TB_param.push_back(tmp_TB);
             is_matched = true;
           }
           m = m + 1;
         }
-        /// TODO: this fails !!
-        Reaction_Data[counter].TB_param = vec_TB_param;
       }
+      // belongs to the previous/last entry
+      //// TODO: this causes a segfault...
+      // cout << vec_TB_param.size() << "\n";
+      // cout << Reaction_Data[counter].TB_param.size() << "\n";
+      Reaction_Data[counter].TB_param = vec_TB_param;
     }
     //*/
     // content in here - check if line does not start with a comment, ! or / or
