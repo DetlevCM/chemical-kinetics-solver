@@ -68,6 +68,8 @@ struct SingleReactionData {
 
   ReactionParameter TB_low; // preparation
   ThirdBody_troe TB_troe;   // preparation
+
+  size_t sri_flag = 0; // default //// TODO improve
   ThirdBody_SRI TB_sri;
 
   vector<ThirdBodyParameters> TB_param;

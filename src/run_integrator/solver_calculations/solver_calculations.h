@@ -127,6 +127,28 @@ public:
 
   void Evaluate_Thermodynamic_Parameters(const double Temperature);
 
+  //// BEGIN third body preparation
+  //// needs a unit check
+
+  static double Calculate_no_LOW_Troe(const SingleReactionData &ReactionData,
+                                      const vector<double> &Concentration,
+                                      double T, double third_body);
+
+  static double
+  Calculate_Lindeman_Hinshelwood_SRI(const SingleReactionData &ReactionData,
+                                     const vector<double> &Concentration,
+                                     double T, double third_body);
+
+  static double Calculate_Lindeman_Hinshelwood_Low_Troe(
+      const SingleReactionData &ReactionData,
+      const vector<double> &Concentration,
+      double T,         // current temperature
+      double third_body // sum of third bodies, but which units, original
+                        // molecules per cm3
+  );
+
+  //// END third body preparation
+
   void Calculate_Rate_Constant(const double Temperature);
 
   void CalculateReactionRates(const vector<double> &Concentration,
