@@ -78,8 +78,9 @@ public:
 
   ConstantInitRHSODE InitialDataConstants;
 
-  vector<Reaction::ReactionParameter>
-      ReactionParameters; // tidier than reactions vector
+  //// TODO: the following vector is slated for removal
+  vector<Reaction::ReactionParameter> ReactionParameters; // tidier
+  //  than reactions vector
 
   size_t Number_Species;   // old variable
   size_t Number_Reactions; // old variable

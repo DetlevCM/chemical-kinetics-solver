@@ -89,8 +89,8 @@ void RunIntegrator::Integrate(
       ProductsForReactions, reaction_mechanism.reactions, SpeciesLossAll,
       prep_delta_n);
 
-  solver_calculation.ReactionParameters =
-      Process_Reaction_Parameters(reaction_mechanism.reactions);
+  // solver_calculation.ReactionParameters =
+  // Process_Reaction_Parameters(reaction_mechanism.reactions);
 
   solver_calculation.Concentration =
       InitialParameters.InitialSpeciesConcentration;

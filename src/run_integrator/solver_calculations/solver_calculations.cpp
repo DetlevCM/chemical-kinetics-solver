@@ -271,31 +271,22 @@ void SolverCalculation::Calculate_Rate_Constant(const double Temperature) {
        i++) // Straightforward Arrhenius Expression/Equation
   {
     Kf[i] =
-        ReactionParameters[i].A *
-        exp(-ReactionParameters[i].Ea / Temperature); // do NOT forget the - !!!
+        reactions[i].forward.A *
+        exp(-reactions[i].forward.Ea / Temperature); // do NOT forget the - !!!
 
-    //* Speedup by only raising temperature to power where needed: improvement
-    // is large :)
-    if (ReactionParameters[i].n !=
-        0.0) // raising to power 0 has no effect, so only if not 0
+    //* Speedup by only raising temperature to power where needed
+    if (reactions[i].forward.n != 0.0) // raising to power 0 has no effect
     {
-      // unsure if this check really gives a performance improvement...
-      // maybe it used to and no longer does with a modern
-      // compiler/processor/kernel -> seems to be ever so slightly faster
-      // if (ReactionParameters[i].paramN != 1.0) {
-      Kf[i] = Kf[i] * pow(Temperature, ReactionParameters[i].n);
-      /*} else {
-        Kf[i] = Kf[i] * Temperature; // raise temp^1 = temp
-      }//*/
+      Kf[i] = Kf[i] * pow(Temperature, reactions[i].forward.n);
     }
 
     /*
     cout <<
     //		Temperature << " , " <<
-    //		exp(-ReactionParameters[i].paramEa/Temperature) << " , " <<
-                    ReactionParameters[i].forward.A << " , " <<
-                    ReactionParameters[i].forward.n << " , " <<
-                    ReactionParameters[i].forward.Ea << " , " <<
+    //		exp(-reactions[i].paramEa/Temperature) << " , " <<
+                    reactions[i].forward.A << " , " <<
+                    reactions[i].forward.n << " , " <<
+                    reactions[i].forward.Ea << " , " <<
                     Kf[i] << "\n";//*/
 
     //*
@@ -320,9 +311,7 @@ void SolverCalculation::Calculate_Rate_Constant(const double Temperature) {
     // default, change if reversible - seems a little bit faster...
     Kr[i] = 0;
     // then calculate and set the reverse if required
-    // if (ReactionParameters[i].Reversible) {
-    if (ReactionParameters[i].Reversible &&
-        reactions[i].explicit_reverse == false) {
+    if (reactions[i].Reversible && reactions[i].explicit_reverse == false) {
       double temp_kp, temp_kc;
       delta_G[i] = delta_H[i] - Temperature * delta_S[i];
       temp_kp = exp(-delta_G[i] / (R * Temperature));
@@ -331,10 +320,9 @@ void SolverCalculation::Calculate_Rate_Constant(const double Temperature) {
       {
         Kr[i] = Kf[i] / temp_kp;
       } else {
-        temp_kc = temp_kp * pow((0.0820578 * Temperature),
-                                (-delta_n[i])); // L atm K^(-1) mol^(-1)
-        // temp_kc = temp_kp*pow((1.3624659e-22*Temperature),(-Delta_N[i])); //
-        // for molecules cm^(-3)
+        // (0.0820578 * Temperature)   for L atm K^(-1) mol^(-1)
+        // (1.3624659e-22*Temperature) for molecules cm^(-3)
+        temp_kc = temp_kp * pow((0.0820578 * Temperature), (-delta_n[i]));
         Kr[i] = Kf[i] / temp_kc;
       }
 
@@ -342,17 +330,14 @@ void SolverCalculation::Calculate_Rate_Constant(const double Temperature) {
                true) // a reaction with explicit reverse parameters must be
                      // reversible
     {
-      // can explicit reversible reactions also be suject to third body terms?
+      // can explicit reversible reactions also be subject to third body terms?
       // Not supported here...
-
       Kr[i] =
           reactions[i].reverse.A * exp(-reactions[i].reverse.Ea /
                                        Temperature); // do NOT forget the - !!!
 
-      // Speedup by only raising temperature to power where needed: improvement
-      // is large :)
-      if (reactions[i].reverse.n !=
-          0) // raising to power 0 has no effect, so only if not 0
+      // Speedup by only raising temperature to power where needed
+      if (reactions[i].reverse.n != 0.0) // raising to power 0 has no effect
       {
         Kr[i] = Kr[i] * pow(Temperature, reactions[i].reverse.n);
       }

@@ -29,14 +29,15 @@
 // variant of the function for solver calculations to make irreversible
 void Calculate_Rate_Constant(
     vector<double> &Kf, vector<double> &Kr, const double Temperature,
-    const vector<Reaction::ReactionParameter> &ReactionParameters,
+    // const vector<Reaction::ReactionParameter> &ReactionParameters,
+    const vector<Reaction::SingleReactionData> &reactions,
     const vector<Species::ThermodynamicData::CalculatedThermodynamics>
         &CalculatedThermo,
     const vector<TrackSpecies> &SpeciesAll, const vector<double> &Delta_N)
 
 {
 
-  size_t Number_Reactions = ReactionParameters.size();
+  size_t Number_Reactions = reactions.size();
 
   // Pressure Independent Reactions Only
   /*
@@ -72,12 +73,12 @@ void Calculate_Rate_Constant(
        i++) // Straightforward Arrhenius Expression/Equation
   {
     Kf[i] =
-        ReactionParameters[i].A *
-        exp(-ReactionParameters[i].Ea / Temperature); // do NOT forget the - !!!
+        reactions[i].forward.A *
+        exp(-reactions[i].forward.Ea / Temperature); // do NOT forget the - !!!
 
     //* Speedup by only raising temperature to power where needed: improvement
     // is large :)
-    if (ReactionParameters[i].n !=
+    if (reactions[i].forward.n !=
         0) // raising to power 0 has no effect, so only if not 0
     {
       // unsure if this check really gives a performance improvement...
@@ -85,7 +86,7 @@ void Calculate_Rate_Constant(
       // compiler/processor/kernel
       // if(ReactionParameters[i].paramN != 1)
       //{
-      Kf[i] = Kf[i] * pow(Temperature, ReactionParameters[i].n);
+      Kf[i] = Kf[i] * pow(Temperature, reactions[i].forward.n);
       /*}
       else
       {
@@ -105,7 +106,7 @@ void Calculate_Rate_Constant(
     // default, change if reversible - seems a little bit faster...
     Kr[i] = 0;
     // then calculate and set the reverse if required
-    if (ReactionParameters[i].Reversible) {
+    if (reactions[i].Reversible) {
       double temp_kp, temp_kc;
       delta_G[i] = delta_H[i] - Temperature * delta_S[i];
       temp_kp = exp(-delta_G[i] / (R * Temperature));
@@ -166,13 +167,13 @@ vector<SingleReactionData> Make_Irreversible(
     Range = Initial_Temperature - 1;
   }
 
-  vector<ReactionParameter> LocalReactionParameters;
+  // vector<ReactionParameter> LocalReactionParameters;
   vector<TrackSpecies> LocalReactantsForReactions;
   vector<TrackSpecies> LocalProductsForReactions;
   vector<TrackSpecies> LocalSpeciesLossAll;
 
-  LocalReactionParameters =
-      RunIntegrator::Process_Reaction_Parameters(Reactions);
+  // LocalReactionParameters =
+  //     RunIntegrator::Process_Reaction_Parameters(Reactions);
   LocalReactantsForReactions =
       RunIntegrator::Reactants_ForReactionRate(Reactions);
   LocalProductsForReactions =
@@ -206,9 +207,8 @@ vector<SingleReactionData> Make_Irreversible(
       CalculatedThermo[k] =
           species[k].thermodynamicdata.calculate_thermodynamics(temperatures);
     }
-    Calculate_Rate_Constant(Kf, Kr, Temperature, LocalReactionParameters,
-                            CalculatedThermo, LocalSpeciesLossAll,
-                            Local_Delta_N);
+    Calculate_Rate_Constant(Kf, Kr, Temperature, Reactions, CalculatedThermo,
+                            LocalSpeciesLossAll, Local_Delta_N);
 
     for (size_t j = 0; j < Kr.size(); j++) {
       Kr[j] = log(Kr[j]);
@@ -347,17 +347,21 @@ vector<SingleReactionData> Make_Irreversible(
 
     SingleReaction.Reactants = Reactions[i].Reactants;
     SingleReaction.Products = Reactions[i].Products;
+
     SingleReaction.forward.A = Reactions[i].forward.A;
     SingleReaction.forward.n = Reactions[i].forward.n;
     SingleReaction.forward.Ea = Reactions[i].forward.Ea;
+
     // switch reaction to irreversible:
     SingleReaction.Reversible = false;
+    SingleReaction.explicit_reverse = false;
     SingleReaction.IsDuplicate = Reactions[i].IsDuplicate;
 
-    /*
-    printf("Reaction %u Forward: %.3e %.3e %.3e %.3e || ",i,
-                    ReactionParameters[0],ReactionParameters[1],
-                    ReactionParameters[2],ReactionParameters[3]); // Works :) */
+    // Default is no third body for mechanism made irreversible
+    //// TODO: verify, expand code if necessary
+    SingleReaction.collision_efficiency = false; // default
+    // check for Third Body Indicator:
+    SingleReaction.ThirdBodyType = 0; // no third body, default
 
     Irreversible_Scheme.push_back(SingleReaction);
 
@@ -384,18 +388,21 @@ vector<SingleReactionData> Make_Irreversible(
 
       SingleReaction.Reactants = ReactantData;
       SingleReaction.Products = ProductData;
+
       SingleReaction.forward.A = exp(beta[0]);
       SingleReaction.forward.n = beta[1];
       SingleReaction.forward.Ea = -beta[2];
+
       // retain reaction as irreversible:
       SingleReaction.Reversible = false;
+      SingleReaction.explicit_reverse = false;
       SingleReaction.IsDuplicate = Reactions[i].IsDuplicate;
 
-      /*
-      printf("Reverse %.3e %.3e %.3e %.3e \n",
-                      ReactionParameters[0],ReactionParameters[1],
-                      ReactionParameters[2],ReactionParameters[3]); // Works :)
-    */
+      // Default is no third body for mechanism made irreversible
+      //// TODO: verify, expand code if necessary
+      SingleReaction.collision_efficiency = false; // default
+      // check for Third Body Indicator:
+      SingleReaction.ThirdBodyType = 0; // no third body, default
 
       Irreversible_Scheme.push_back(SingleReaction);
     }
