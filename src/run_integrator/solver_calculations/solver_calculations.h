@@ -136,16 +136,16 @@ public:
   //// BEGIN third body preparation
   //// needs a unit check
 
-  static double Calculate_no_LOW_Troe(const SingleReactionData &ReactionData,
-                                      const vector<double> &Concentration,
-                                      double T, double third_body);
+  double Calculate_no_LOW_Troe(const SingleReactionData &ReactionData,
+                               const vector<double> &Concentration, double T,
+                               double third_body);
 
-  static double
+  double
   Calculate_Lindeman_Hinshelwood_SRI(const SingleReactionData &ReactionData,
                                      const vector<double> &Concentration,
                                      double T, double third_body);
 
-  static double Calculate_Lindeman_Hinshelwood_Low_Troe(
+  double Calculate_Lindeman_Hinshelwood_Low_Troe(
       const SingleReactionData &ReactionData,
       const vector<double> &Concentration,
       double T,         // current temperature
