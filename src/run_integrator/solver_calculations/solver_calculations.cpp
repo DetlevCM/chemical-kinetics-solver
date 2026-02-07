@@ -89,7 +89,7 @@ double SolverCalculation::Calculate_Lindeman_Hinshelwood_SRI(
     kzero *= pow(T, n0);
 
   // SRI flag which provides 3 calculation methods for three distinct cases
-  // Special Water reactions that use the specis concentration for H20, N2, H2,
+  // Special Water reactions that use the species concentration for H20, N2, H2,
   // Ar, CO2, CH4, C2H6, O2 calculations without collision efficiency
   // corrections that use a "third body" parameter calculations using a
   // corrected collision efficiency
