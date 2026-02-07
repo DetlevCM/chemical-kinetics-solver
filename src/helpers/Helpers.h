@@ -62,4 +62,8 @@ bool Line_Not_Comment_Or_Empty(string InputLine);
 
 bool Test_If_Word_Found(string string_to_search, string search_term);
 
+string trim_string(string str, string whitespace);
+
+string Remove_Substring(string line, string to_remove);
+
 #endif

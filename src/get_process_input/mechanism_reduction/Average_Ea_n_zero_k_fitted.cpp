@@ -33,13 +33,13 @@ ReactionParameter MechanismReduction::Average_Ea_n_zero_k_fitted(
 
       Group_k[k] =
           Group_k[k] +
-          temp_reactions3[j].paramA *
-              pow((temperature + temp_mod), temp_reactions3[j].paramN) *
-              exp(-temp_reactions3[j].paramEa / (temperature + temp_mod));
+          temp_reactions3[j].forward.A *
+              pow((temperature + temp_mod), temp_reactions3[j].forward.n) *
+              exp(-temp_reactions3[j].forward.Ea / (temperature + temp_mod));
     }
 
     // get average Ea
-    fitted_Ea = fitted_Ea + temp_reactions3[j].paramEa;
+    fitted_Ea = fitted_Ea + temp_reactions3[j].forward.Ea;
   }
 
   // this is the new Ea for our fitted reaction
@@ -99,9 +99,9 @@ ReactionParameter MechanismReduction::Average_Ea_n_zero_k_fitted(
   // double intercept  = Group_k[20]+(1/temperature)*gradient;
 
   ParameterOutput.Reversible = false;
-  ParameterOutput.paramA = exp(ln_fitted_a);
-  ParameterOutput.paramN = fitted_n;
-  ParameterOutput.paramEa = fitted_Ea;
+  ParameterOutput.A = exp(ln_fitted_a);
+  ParameterOutput.n = fitted_n;
+  ParameterOutput.Ea = fitted_Ea;
 
   return ParameterOutput;
 }

@@ -71,13 +71,13 @@ void Calculate_Rate_Constant(
   for (i = 0; i < Number_Reactions;
        i++) // Straightforward Arrhenius Expression/Equation
   {
-    Kf[i] = ReactionParameters[i].paramA *
-            exp(-ReactionParameters[i].paramEa /
-                Temperature); // do NOT forget the - !!!
+    Kf[i] =
+        ReactionParameters[i].A *
+        exp(-ReactionParameters[i].Ea / Temperature); // do NOT forget the - !!!
 
     //* Speedup by only raising temperature to power where needed: improvement
     // is large :)
-    if (ReactionParameters[i].paramN !=
+    if (ReactionParameters[i].n !=
         0) // raising to power 0 has no effect, so only if not 0
     {
       // unsure if this check really gives a performance improvement...
@@ -85,7 +85,7 @@ void Calculate_Rate_Constant(
       // compiler/processor/kernel
       // if(ReactionParameters[i].paramN != 1)
       //{
-      Kf[i] = Kf[i] * pow(Temperature, ReactionParameters[i].paramN);
+      Kf[i] = Kf[i] * pow(Temperature, ReactionParameters[i].n);
       /*}
       else
       {
@@ -97,9 +97,9 @@ void Calculate_Rate_Constant(
     cout <<
     //		Temperature << " , " <<
     //		exp(-ReactionParameters[i].paramEa/Temperature) << " , " <<
-                    ReactionParameters[i].paramA << " , " <<
-                    ReactionParameters[i].paramN << " , " <<
-                    ReactionParameters[i].paramEa << " , " <<
+                    ReactionParameters[i].A << " , " <<
+                    ReactionParameters[i].n << " , " <<
+                    ReactionParameters[i].Ea << " , " <<
                     Kf[i] << "\n";//*/
 
     // default, change if reversible - seems a little bit faster...
@@ -347,9 +347,9 @@ vector<SingleReactionData> Make_Irreversible(
 
     SingleReaction.Reactants = Reactions[i].Reactants;
     SingleReaction.Products = Reactions[i].Products;
-    SingleReaction.paramA = Reactions[i].paramA;
-    SingleReaction.paramN = Reactions[i].paramN;
-    SingleReaction.paramEa = Reactions[i].paramEa;
+    SingleReaction.forward.A = Reactions[i].forward.A;
+    SingleReaction.forward.n = Reactions[i].forward.n;
+    SingleReaction.forward.Ea = Reactions[i].forward.Ea;
     // switch reaction to irreversible:
     SingleReaction.Reversible = false;
     SingleReaction.IsDuplicate = Reactions[i].IsDuplicate;
@@ -384,9 +384,9 @@ vector<SingleReactionData> Make_Irreversible(
 
       SingleReaction.Reactants = ReactantData;
       SingleReaction.Products = ProductData;
-      SingleReaction.paramA = exp(beta[0]);
-      SingleReaction.paramN = beta[1];
-      SingleReaction.paramEa = -beta[2];
+      SingleReaction.forward.A = exp(beta[0]);
+      SingleReaction.forward.n = beta[1];
+      SingleReaction.forward.Ea = -beta[2];
       // retain reaction as irreversible:
       SingleReaction.Reversible = false;
       SingleReaction.IsDuplicate = Reactions[i].IsDuplicate;

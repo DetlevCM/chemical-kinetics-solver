@@ -19,23 +19,23 @@ MechanismReduction::n_zero_k_fitted_Fast(vector<SingleReactionData> &Reactions,
 
   for (j = 0; j < Reaction_Group_Size; j++) {
     // lower temperature point
-    Group_k[0] =
-        Group_k[0] +
-        Reactions[j].paramA *
-            pow((temperature - temperature_endpoints), Reactions[j].paramN) *
-            exp(-Reactions[j].paramEa / (temperature - temperature_endpoints));
+    Group_k[0] = Group_k[0] + Reactions[j].forward.A *
+                                  pow((temperature - temperature_endpoints),
+                                      Reactions[j].forward.n) *
+                                  exp(-Reactions[j].forward.Ea /
+                                      (temperature - temperature_endpoints));
 
     // middle temperature point
-    Group_k[1] = Group_k[1] + Reactions[j].paramA *
-                                  pow((temperature), Reactions[j].paramN) *
-                                  exp(-Reactions[j].paramEa / (temperature));
+    Group_k[1] = Group_k[1] + Reactions[j].forward.A *
+                                  pow((temperature), Reactions[j].forward.n) *
+                                  exp(-Reactions[j].forward.Ea / (temperature));
 
     // upper temperature point
-    Group_k[2] =
-        Group_k[2] +
-        Reactions[j].paramA *
-            pow((temperature + temperature_endpoints), Reactions[j].paramN) *
-            exp(-Reactions[j].paramEa / (temperature + temperature_endpoints));
+    Group_k[2] = Group_k[2] + Reactions[j].forward.A *
+                                  pow((temperature + temperature_endpoints),
+                                      Reactions[j].forward.n) *
+                                  exp(-Reactions[j].forward.Ea /
+                                      (temperature + temperature_endpoints));
   }
 
   // Fit new A and Ea with n = 0 - I have k over a temperature range of 40K
@@ -56,9 +56,9 @@ MechanismReduction::n_zero_k_fitted_Fast(vector<SingleReactionData> &Reactions,
   intercept = Group_k[1] + (1 / temperature) * gradient;
 
   ParameterOutput.Reversible = false;
-  ParameterOutput.paramA = exp(intercept);
-  ParameterOutput.paramN = 0;
-  ParameterOutput.paramEa = gradient;
+  ParameterOutput.A = exp(intercept);
+  ParameterOutput.n = 0;
+  ParameterOutput.Ea = gradient;
 
   return ParameterOutput;
 }

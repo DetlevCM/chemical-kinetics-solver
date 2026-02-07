@@ -57,6 +57,7 @@ void Initial_Data::Get_Initial_Conditions(string filename,
   Default_Solver_Parameters.minimum_stepsize = 1.e-12; // for IntelODE
   Default_Solver_Parameters.initial_stepsize = 1.e-7;  // for IntelODE
   Default_Solver_Parameters.separator = ","; // use comma as a default separator
+  Default_Solver_Parameters.threads = 1;     // default to no threading
   /* end default solver settings */
 
   InitialParameters.EnforceStability = false; // default setting

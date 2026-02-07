@@ -144,6 +144,19 @@ void Initial_Data::Handle_Solver_Parameters(Initial_Data &InitialParameters,
       }
     }
 
+    if (Test_If_Word_Found(Input[i], "threads")) {
+      p = strtok(cstr, " \t"); // break at space or tab
+      p = strtok(NULL, " \t"); // break again as first is the keyword
+
+      if (p != NULL) { // only read remainder is something is left
+        InitialParameters.Solver_Parameters.threads = std::stoi(p, NULL);
+        p = strtok(NULL, " \t");
+      }
+
+      cout << "threads: " << InitialParameters.Solver_Parameters.threads
+           << "\n";
+    }
+
     if (Test_If_Word_Found(Input[i], "Stoichiometry Matrix For Opt")) {
       InitialParameters.StoichiometryMatrixForOpt = true;
     }

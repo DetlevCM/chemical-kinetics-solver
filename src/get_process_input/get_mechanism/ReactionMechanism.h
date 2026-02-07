@@ -16,6 +16,7 @@ using std::string;
 using std::vector;
 
 using std::cout;
+#include <iomanip>
 
 class ReactionMechanism {
 
@@ -29,42 +30,6 @@ public:
 
   size_t species_size() { return species.size(); }
 
-  /*
-  struct ReactionParameter {
-          bool Reversible;
-          double paramA;
-          double paramN;
-          double paramEa;
-  };
-  //*/
-
-  //// NOTE: Vector of Single Reaction Data is what we want to work with
-  /*
-  struct SingleReactionData {
-          bool Reversible;
-          bool IsDuplicate;
-          double paramA;
-          double paramN;
-          double paramEa;
-          int ThirdBodyType; // 1: +M  2: (+M)
-          vector<double> ThBd_LOW;
-          vector<double> ThBd_TROE;
-          //vector<ThirdBodyParameters> ThBd_param;
-          vector<double> Reactants;
-          vector<double> Products;
-  };
-  //*/
-
-  // a class to store the mechanism
-  // struct Reaction_Mechanism {
-  //	size_t species;
-  //	size_t reactions;
-
-  //	vector< string > Species;
-  // vector< ThermodynamicData > Thermodynamics;
-  //	vector< SingleReactionData > Reactions;
-  //};
-
 private:
 public:
   vector<SingleReactionData> reactions;
@@ -76,16 +41,13 @@ public:
   static void get_mechanism(string filename,
                             ReactionMechanism &reaction_mechanism);
 
-  struct ThirdBodyParameters {
-    size_t SpeciesID;
-    double value;
-  };
-
   struct SpeciesWithCoefficient {
     size_t SpeciesID;
     double coefficient;
     bool ismatched; // = false;
   };
+
+  static vector<string> Read_Chemkin_Block(string filename, string blockname);
 
   static SpeciesWithCoefficient
   Return_Species_With_Coefficient(string, const vector<Species> &);
@@ -99,6 +61,10 @@ public:
 
   static vector<SingleReactionData>
   Get_Reactions(string filename, const vector<Species> &species);
+
+  static SingleReactionData
+  Parse_Chemkin_Reaction_String(const vector<int> SchemeUnits,
+                                const vector<Species> &species, string line);
 };
 
 #endif

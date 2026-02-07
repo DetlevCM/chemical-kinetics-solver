@@ -77,6 +77,8 @@ public:
     double minimum_stepsize; // hm
     double initial_stepsize; // h
     string separator;        // separator in text output, e.g. comma delimited
+    int threads; // allow the user to use threading, not useful for small
+                 // mechanisms
   };
 
   // to allow modifying some solver behaviour during the run, for IntelODE only

@@ -18,6 +18,7 @@ using std::vector;
 #include <string>
 using std::string;
 
+#include <iomanip>
 using std::ifstream;
 using std::ios;
 using std::ofstream;
