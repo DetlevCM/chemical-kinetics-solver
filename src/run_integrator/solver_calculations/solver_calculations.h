@@ -35,9 +35,6 @@ private:
   vector<double> Kr;
   vector<double> Rates;
 
-  vector<SingleReactionData>
-      reactions; // This is ugly, but a quick fix... FIXME
-
   // functions needed for access to the private variables:
 public:
   const vector<TrackSpecies> &Get_ReactantsForReactions() {
@@ -59,6 +56,9 @@ public:
   // for limited Oxy
   double time_previous;
 
+  vector<SingleReactionData>
+      reactions; // This is ugly, but a quick fix... FIXME
+
   // end PetroOxy variables
 
   struct ConstantInitRHSODE {
@@ -78,10 +78,6 @@ public:
 
   ConstantInitRHSODE InitialDataConstants;
 
-  //// TODO: the following vector is slated for removal
-  vector<Reaction::ReactionParameter> ReactionParameters; // tidier
-  //  than reactions vector
-
   size_t Number_Species;   // old variable
   size_t Number_Reactions; // old variable
 
@@ -91,16 +87,17 @@ public:
   // cannot use the object in the solver with a member function
   // so use a global object and then init & use helper function?
   void init(vector<Species> vec_species, // quick and ugly...
-            size_t number_species, size_t number_reactions,
+                                         // size_t number_reactions,
+            const vector<SingleReactionData> &Reactions,
             vector<TrackSpecies> reactantsForReactions,
             vector<TrackSpecies> productsForReactions,
-            vector<SingleReactionData> Reactions,
             vector<TrackSpecies> speciesLossAll, vector<double> prep_delta_n) {
     //// constant (i.e. set once) ////
 
     ConstantInitRHSODE InitialDataConstants;
     ReactantsForReactions = reactantsForReactions;
     ProductsForReactions = productsForReactions;
+
     reactions = Reactions;
 
     SpeciesLossAll = speciesLossAll;
@@ -108,13 +105,15 @@ public:
 
     species = vec_species;
 
-    Number_Species = species.size();
+    size_t number_species = species.size();
+    size_t number_reactions = Reactions.size();
+
+    Number_Species = number_species;
     Number_Reactions = number_reactions;
 
     //// variable (values change during calculation ////
     CalculatedThermo.resize(number_species);
 
-    ReactionParameters.resize(number_reactions);
     Kf.resize(number_reactions);
     Kr.resize(number_reactions);
     Rates.resize(number_reactions);

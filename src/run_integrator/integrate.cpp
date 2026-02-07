@@ -83,14 +83,11 @@ void RunIntegrator::Integrate(
 
   //// NOTE: Here initialises the Solver Calc class, in which the members act as
   //// global variables / for and during the calculation
-  solver_calculation.init(
-      reaction_mechanism.species, reaction_mechanism.species.size(),
-      reaction_mechanism.reactions_size(), ReactantsForReactions,
-      ProductsForReactions, reaction_mechanism.reactions, SpeciesLossAll,
-      prep_delta_n);
-
-  // solver_calculation.ReactionParameters =
-  // Process_Reaction_Parameters(reaction_mechanism.reactions);
+  solver_calculation.init(reaction_mechanism.species,
+                          // reaction_mechanism.species.size(),
+                          // reaction_mechanism.reactions_size(),
+                          reaction_mechanism.reactions, ReactantsForReactions,
+                          ProductsForReactions, SpeciesLossAll, prep_delta_n);
 
   solver_calculation.Concentration =
       InitialParameters.InitialSpeciesConcentration;

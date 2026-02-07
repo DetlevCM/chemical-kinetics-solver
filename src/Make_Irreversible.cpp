@@ -29,7 +29,6 @@
 // variant of the function for solver calculations to make irreversible
 void Calculate_Rate_Constant(
     vector<double> &Kf, vector<double> &Kr, const double Temperature,
-    // const vector<Reaction::ReactionParameter> &ReactionParameters,
     const vector<Reaction::SingleReactionData> &reactions,
     const vector<Species::ThermodynamicData::CalculatedThermodynamics>
         &CalculatedThermo,
@@ -84,7 +83,7 @@ void Calculate_Rate_Constant(
       // unsure if this check really gives a performance improvement...
       // maybe it used to and no longer does with a modern
       // compiler/processor/kernel
-      // if(ReactionParameters[i].paramN != 1)
+      // if(reactions[i].paramN != 1)
       //{
       Kf[i] = Kf[i] * pow(Temperature, reactions[i].forward.n);
       /*}
@@ -97,10 +96,10 @@ void Calculate_Rate_Constant(
     /*
     cout <<
     //		Temperature << " , " <<
-    //		exp(-ReactionParameters[i].paramEa/Temperature) << " , " <<
-                    ReactionParameters[i].A << " , " <<
-                    ReactionParameters[i].n << " , " <<
-                    ReactionParameters[i].Ea << " , " <<
+    //		exp(-reactions[i].forward.Ea/Temperature) << " , " <<
+                    reactions[i].forward.A << " , " <<
+                    reactions[i].forward.n << " , " <<
+                    reactions[i].forward.Ea << " , " <<
                     Kf[i] << "\n";//*/
 
     // default, change if reversible - seems a little bit faster...
@@ -167,13 +166,10 @@ vector<SingleReactionData> Make_Irreversible(
     Range = Initial_Temperature - 1;
   }
 
-  // vector<ReactionParameter> LocalReactionParameters;
   vector<TrackSpecies> LocalReactantsForReactions;
   vector<TrackSpecies> LocalProductsForReactions;
   vector<TrackSpecies> LocalSpeciesLossAll;
 
-  // LocalReactionParameters =
-  //     RunIntegrator::Process_Reaction_Parameters(Reactions);
   LocalReactantsForReactions =
       RunIntegrator::Reactants_ForReactionRate(Reactions);
   LocalProductsForReactions =
@@ -339,8 +335,6 @@ vector<SingleReactionData> Make_Irreversible(
   ReactantData.resize(Number_Species);
   vector<double> ProductData; // Product Information
   ProductData.resize(Number_Species);
-  vector<double> ReactionParameters;
-  ReactionParameters.resize(4);
 
   for (size_t i = 0; i < Number_Reactions; i++) {
     // 1) retain the old forward reaction

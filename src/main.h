@@ -84,7 +84,7 @@ void Process_User_Input(Filenames &filenames, vector<string> User_Inputs);
 
 void Calculate_Rate_Constant(
     vector<double> &Kf, vector<double> &Kr, const double Temperature,
-    const vector<Reaction::ReactionParameter> &ReactionParameters,
+    const vector<Reaction::SingleReactionData> &reactions,
     const vector<Species::ThermodynamicData::CalculatedThermodynamics>
         &CalculatedThermo,
     const vector<TrackSpecies> &SpeciesAll, const vector<double> &Delta_N);

@@ -282,12 +282,10 @@ void SolverCalculation::Calculate_Rate_Constant(const double Temperature) {
 
     /*
     cout <<
-    //		Temperature << " , " <<
-    //		exp(-reactions[i].paramEa/Temperature) << " , " <<
-                    reactions[i].forward.A << " , " <<
-                    reactions[i].forward.n << " , " <<
-                    reactions[i].forward.Ea << " , " <<
-                    Kf[i] << "\n";//*/
+        //		Temperature << " , " <<
+        //		exp(-reactions[i].paramEa/Temperature) << " , " <<
+        reactions[i].forward.A << " , " << reactions[i].forward.n << " , "
+         << reactions[i].forward.Ea << " , " << Kf[i] << "\n"; //*/
 
     //*
 
