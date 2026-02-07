@@ -341,7 +341,8 @@ ReactionMechanism::Parse_Chemkin_Reaction_String(const vector<int> SchemeUnits,
   temp.Reactants = ReactantData;
   temp.Products = ProductData;
   temp.Reversible = is_reversible;
-  temp.IsDuplicate = false; // default, not a duplicate
+  temp.explicit_reverse = false; // default not explicit reverse
+  temp.IsDuplicate = false;      // default, not a duplicate
 
   return temp;
 }

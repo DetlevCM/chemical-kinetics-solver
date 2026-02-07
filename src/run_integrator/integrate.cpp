@@ -86,7 +86,8 @@ void RunIntegrator::Integrate(
   solver_calculation.init(
       reaction_mechanism.species, reaction_mechanism.species.size(),
       reaction_mechanism.reactions_size(), ReactantsForReactions,
-      ProductsForReactions, SpeciesLossAll, prep_delta_n);
+      ProductsForReactions, reaction_mechanism.reactions, SpeciesLossAll,
+      prep_delta_n);
 
   solver_calculation.ReactionParameters =
       Process_Reaction_Parameters(reaction_mechanism.reactions);

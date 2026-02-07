@@ -245,6 +245,11 @@ void SolverCalculation::Calculate_Rate_Constant(const double Temperature) {
   // as we have the value of the calculated thermodynamics, we just need to put
   // them together per reaction, going through every species
 
+  // Worked out per reaction
+  // as we have the value of the calculated thermodynamics, we just need to put
+  // them together per reaction, going through every species
+  double third_body_sum = 0.0;
+
   for (size_t i = 0; i < SpeciesLossAll.size();
        i++) { // loop over every reaction
     delta_H[SpeciesLossAll[i].ReactionID] =
@@ -256,6 +261,9 @@ void SolverCalculation::Calculate_Rate_Constant(const double Temperature) {
         delta_S[SpeciesLossAll[i].ReactionID] +
         (CalculatedThermo[SpeciesLossAll[i].SpeciesID].S *
          SpeciesLossAll[i].coefficient);
+
+    // summing concentrations for third bodies
+    third_body_sum = third_body_sum + Concentration[i];
   }
 
 #pragma omp parallel for
@@ -290,10 +298,31 @@ void SolverCalculation::Calculate_Rate_Constant(const double Temperature) {
                     ReactionParameters[i].forward.Ea << " , " <<
                     Kf[i] << "\n";//*/
 
+    //*
+
+    // Note: third_body_sum is in mol/L at this point
+
+    // Calculate_Lindeman_Hinshelwood_SRI_Low();
+    if (reactions[i].ThirdBodyType == 1) {
+      Kf[i] = Calculate_no_LOW_Troe(reactions[i], Concentration, Temperature,
+                                    third_body_sum);
+    } else if (reactions[i].ThirdBodyType == 2 &&
+               reactions[i].TB_troe.has_troe == false) {
+      Kf[i] = Calculate_Lindeman_Hinshelwood_SRI(reactions[i], Concentration,
+                                                 Temperature, third_body_sum);
+    } else if (reactions[i].ThirdBodyType == 2 &&
+               reactions[i].TB_troe.has_troe) {
+      Kf[i] = Calculate_Lindeman_Hinshelwood_Low_Troe(
+          reactions[i], Concentration, Temperature, third_body_sum);
+    }
+    //*/
+
     // default, change if reversible - seems a little bit faster...
     Kr[i] = 0;
     // then calculate and set the reverse if required
-    if (ReactionParameters[i].Reversible) {
+    // if (ReactionParameters[i].Reversible) {
+    if (ReactionParameters[i].Reversible &&
+        reactions[i].explicit_reverse == false) {
       double temp_kp, temp_kc;
       delta_G[i] = delta_H[i] - Temperature * delta_S[i];
       temp_kp = exp(-delta_G[i] / (R * Temperature));
@@ -309,13 +338,31 @@ void SolverCalculation::Calculate_Rate_Constant(const double Temperature) {
         Kr[i] = Kf[i] / temp_kc;
       }
 
-      // IEEE standards hack to avoid Nan Rate, shouldn't exist in the first
-      // place...
-      /*if(Kr[i] != Kr[i])
+    } else if (reactions[i].explicit_reverse ==
+               true) // a reaction with explicit reverse parameters must be
+                     // reversible
+    {
+      // can explicit reversible reactions also be suject to third body terms?
+      // Not supported here...
+
+      Kr[i] =
+          reactions[i].reverse.A * exp(-reactions[i].reverse.Ea /
+                                       Temperature); // do NOT forget the - !!!
+
+      // Speedup by only raising temperature to power where needed: improvement
+      // is large :)
+      if (reactions[i].reverse.n !=
+          0) // raising to power 0 has no effect, so only if not 0
       {
-              Kr[i] = 0;
-      }//*/
+        Kr[i] = Kr[i] * pow(Temperature, reactions[i].reverse.n);
+      }
     }
+    // IEEE standards hack to avoid Nan Rate, shouldn't exist in the first
+    // place...
+    /*if(Kr[i] != Kr[i])
+    {
+            Kr[i] = 0;
+    }//*/
   }
 #pragma omp barrier
 }

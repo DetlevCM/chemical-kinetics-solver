@@ -35,6 +35,9 @@ private:
   vector<double> Kr;
   vector<double> Rates;
 
+  vector<SingleReactionData>
+      reactions; // This is ugly, but a quick fix... FIXME
+
   // functions needed for access to the private variables:
 public:
   const vector<TrackSpecies> &Get_ReactantsForReactions() {
@@ -90,12 +93,15 @@ public:
             size_t number_species, size_t number_reactions,
             vector<TrackSpecies> reactantsForReactions,
             vector<TrackSpecies> productsForReactions,
+            vector<SingleReactionData> Reactions,
             vector<TrackSpecies> speciesLossAll, vector<double> prep_delta_n) {
     //// constant (i.e. set once) ////
 
     ConstantInitRHSODE InitialDataConstants;
     ReactantsForReactions = reactantsForReactions;
     ProductsForReactions = productsForReactions;
+    reactions = Reactions;
+
     SpeciesLossAll = speciesLossAll;
     delta_n = prep_delta_n;
 
