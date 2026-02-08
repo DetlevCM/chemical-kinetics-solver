@@ -8,7 +8,7 @@
 #include "./write_output.h"
 
 void WriteOutput::Input_File_For_Ehsan_Opt(
-    string filename, const vector<ReactionParameters> &Reactions) {
+    string filename, const vector<SingleReactionData> &Reactions) {
   size_t i, j;
   ofstream Output(filename.c_str(), ios::out);
 
@@ -58,8 +58,9 @@ void WriteOutput::Input_File_For_Ehsan_Opt(
       }
 
       // followed by reaction parameters in the right units
-      Output << Reactions[i].forward.A * 1000 << "\t" << Reactions[i].forward.n
-             << "\t" << Reactions[i].forward.Ea / 1000 * 1.98709;
+      Output << Reactions[i].parameters.forward.A * 1000 << "\t"
+             << Reactions[i].parameters.forward.n << "\t"
+             << Reactions[i].parameters.forward.Ea / 1000 * 1.98709;
 
       Output << "\n";
     }

@@ -79,9 +79,9 @@ public:
   // output of input files
   static void
   Write_Stoichiometric_Matrix_For_Opt(string,
-                                      const vector<ReactionParameters> &);
+                                      const vector<SingleReactionData> &);
   static void Input_File_For_Ehsan_Opt(string,
-                                       const vector<ReactionParameters> &);
+                                       const vector<SingleReactionData> &);
 };
 
 #endif

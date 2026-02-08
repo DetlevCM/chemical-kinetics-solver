@@ -35,15 +35,16 @@ public:
                                const vector<TrackSpecies> &,
                                const vector<double>, const double);
 
-  static void RatesAnalysisAtTimes(const vector<TrackSpecies> &,
-                                   const vector<TrackSpecies> &,
-                                   const vector<double> &, const double,
-                                   const vector<Species> species,
-                                   const vector<ReactionParameters> &);
+  static void
+  RatesAnalysisAtTimes(const vector<TrackSpecies> &,
+                       const vector<TrackSpecies> &, const vector<double> &,
+                       const double, const vector<Species> species,
+                       const vector<Reaction::SingleReactionData> &);
 
-  static void WriteMaxRatesAnalysis(vector<vector<str_RatesAnalysis>> &,
-                                    const vector<Species> &species,
-                                    const vector<ReactionParameters> &, string);
+  static void
+  WriteMaxRatesAnalysis(vector<vector<str_RatesAnalysis>> &,
+                        const vector<Species> &species,
+                        const vector<Reaction::SingleReactionData> &, string);
 
   static void PrepareStreamRatesAnalysis(const vector<Species> &species,
                                          string);

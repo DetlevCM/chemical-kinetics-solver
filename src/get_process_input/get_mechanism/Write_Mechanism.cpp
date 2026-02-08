@@ -8,7 +8,7 @@
 #include "./Reaction.h"
 
 void Reaction::WriteReactions(string filename, const vector<Species> &species,
-                              const vector<ReactionParameters> &Reactions) {
+                              const vector<SingleReactionData> &Reactions) {
   size_t i;
   ofstream ReactionsOutput(filename.c_str(), std::ios::out);
 
@@ -24,7 +24,7 @@ void Reaction::WriteReactions(string filename, const vector<Species> &species,
     for (i = 0; i < Number_Reactions; i++) {
       ReactionsOutput << Prepare_Single_Reaction_Output(Number_Species, species,
                                                         Reactions[i]);
-      if (Reactions[i].IsDuplicate == true) {
+      if (Reactions[i].parameters.IsDuplicate == true) {
         ReactionsOutput << "DUPLICATE\n";
       }
     }
@@ -39,7 +39,7 @@ void Reaction::WriteReactions(string filename, const vector<Species> &species,
 string
 Reaction::Prepare_Single_Reaction_Output(size_t Number_Species,
                                          const vector<Species> &species,
-                                         const ReactionParameters &Reaction) {
+                                         const SingleReactionData &Reaction) {
   size_t i;
   bool check;
 
@@ -69,17 +69,17 @@ Reaction::Prepare_Single_Reaction_Output(size_t Number_Species,
       }
     }
     // third body
-    if (Reaction.ThirdBodyType == 1) // = +M
+    if (Reaction.parameters.ThirdBodyType == 1) // = +M
     {
       convert << " + M ";
-    } else if (Reaction.ThirdBodyType == 2) // = (+M)
+    } else if (Reaction.parameters.ThirdBodyType == 2) // = (+M)
     {
       convert << " (+ M) ";
     }
   }
 
   // sign
-  if (Reaction.Reversible) {
+  if (Reaction.parameters.Reversible) {
     convert << " =  ";
   } else {
     convert << " => ";
@@ -106,10 +106,10 @@ Reaction::Prepare_Single_Reaction_Output(size_t Number_Species,
     }
 
     // third body
-    if (Reaction.ThirdBodyType == 1) // = +M
+    if (Reaction.parameters.ThirdBodyType == 1) // = +M
     {
       convert << " + M ";
-    } else if (Reaction.ThirdBodyType == 2) // = (+M)
+    } else if (Reaction.parameters.ThirdBodyType == 2) // = (+M)
     {
       convert << " (+ M) ";
     }
@@ -123,11 +123,12 @@ Reaction::Prepare_Single_Reaction_Output(size_t Number_Species,
   // ensure that A is scaled correctly to per cm^3 units depending on the
   // reaction order
   double preexponential_A =
-      Reaction.forward.A * pow(1000.0, (Reaction_Order - 1.0));
+      Reaction.parameters.forward.A * pow(1000.0, (Reaction_Order - 1.0));
 
   convert << "\t\t" << preexponential_A << "\t" <<
       // Reaction.forward.A*1000 << "\t" << // mol / cm^3
-      Reaction.forward.n << "\t" << (Reaction.forward.Ea / 1000 * 1.98709)
+      Reaction.parameters.forward.n << "\t"
+          << (Reaction.parameters.forward.Ea / 1000 * 1.98709)
           << "\n"; // correct for kcal/mol
 
   return convert.str();

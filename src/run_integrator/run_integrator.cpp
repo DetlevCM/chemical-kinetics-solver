@@ -10,7 +10,7 @@
 //// NOTE: 4 pre-processing functions for the integration to proceed efficiently
 
 vector<TrackSpecies> RunIntegrator::PrepareSpecies_ForSpeciesLoss(
-    const vector<ReactionParameters> &Reactions) {
+    const vector<SingleReactionData> &Reactions) {
 
   vector<TrackSpecies> SpeciesLossAll;
   TrackSpecies temp;
@@ -42,7 +42,7 @@ vector<TrackSpecies> RunIntegrator::PrepareSpecies_ForSpeciesLoss(
 }
 
 vector<TrackSpecies> RunIntegrator::Reactants_ForReactionRate(
-    const vector<ReactionParameters> &Reactions) {
+    const vector<SingleReactionData> &Reactions) {
   vector<TrackSpecies> temp_proc_reac;
   // Basically go through the reactions and accumulate the Relevant species
 
@@ -64,7 +64,7 @@ vector<TrackSpecies> RunIntegrator::Reactants_ForReactionRate(
 }
 
 vector<TrackSpecies> RunIntegrator::Products_ForReactionRate(
-    const vector<ReactionParameters> &Reactions, bool SwitchType) {
+    const vector<SingleReactionData> &Reactions, bool SwitchType) {
   vector<TrackSpecies> temp_proc_reac;
   // Basically go through the reactions and accumulate the Relevant species
 
@@ -74,7 +74,8 @@ vector<TrackSpecies> RunIntegrator::Products_ForReactionRate(
   {
     // Output per reaction
     for (size_t i = 0; i < Reactions.size(); i++) {
-      if (Reactions[i].Reversible) // only include if the reaction is reversible
+      if (Reactions[i].parameters.Reversible) // only include if the reaction is
+                                              // reversible
       {
         for (size_t j = 0; j < Reactions[0].Reactants.size(); j++) {
           if (Reactions[i].Products[j] != 0) {
@@ -103,28 +104,40 @@ vector<TrackSpecies> RunIntegrator::Products_ForReactionRate(
   return temp_proc_reac;
 }
 
-vector<ReactionParameter> RunIntegrator::Process_Reaction_Parameters(
-    const vector<ReactionParameters> &Reactions) {
+vector<ReactionParameters> RunIntegrator::Process_Reaction_Parameters(
+    const vector<SingleReactionData> &Reactions) {
 
+  vector<ReactionParameters> output;
+  output.resize(Reactions.size());
+
+  for (size_t i = 0; i < Reactions.size(); i++) {
+    output[i] = Reactions[i].parameters;
+  }
+  return output;
+
+  // new implementation
+
+  /*
   vector<ReactionParameter> temp_output;
-
   // Output per reaction
   for (size_t i = 0; i < Reactions.size(); i++) {
     ReactionParameter temp_one_reaction;
 
-    temp_one_reaction.A = Reactions[i].forward.A;   // A
-    temp_one_reaction.n = Reactions[i].forward.n;   // n
-    temp_one_reaction.Ea = Reactions[i].forward.Ea; // Ea
-    temp_one_reaction.Reversible = Reactions[i].Reversible;
+    temp_one_reaction.A = Reactions[i].parameters.forward.A;   // A
+    temp_one_reaction.n = Reactions[i].parameters.forward.n;   // n
+    temp_one_reaction.Ea = Reactions[i].parameters.forward.Ea; // Ea
+    temp_one_reaction.Reversible = Reactions[i].parameters.Reversible;
 
     temp_output.push_back(temp_one_reaction);
   }
+    return temp_output;
+  //*/
 
-  return temp_output;
+  return output;
 }
 
 vector<double>
-RunIntegrator::Get_Delta_N(const vector<ReactionParameters> Reactions) {
+RunIntegrator::Get_Delta_N(const vector<SingleReactionData> Reactions) {
 
   vector<double> delta_n(Reactions.size());
 

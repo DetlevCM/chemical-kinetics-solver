@@ -8,7 +8,7 @@
 #include "./Mechanism_Reduction.h"
 
 ReactionParameter MechanismReduction::Average_Ea_n_zero_k_fitted(
-    vector<ReactionParameters> &temp_reactions3, double temperature,
+    vector<SingleReactionData> &temp_reactions3, double temperature,
     size_t Reaction_Group_Size) {
 
   /*
@@ -32,14 +32,15 @@ ReactionParameter MechanismReduction::Average_Ea_n_zero_k_fitted(
       double temp_mod = (double)k - 20.0;
 
       Group_k[k] =
-          Group_k[k] +
-          temp_reactions3[j].forward.A *
-              pow((temperature + temp_mod), temp_reactions3[j].forward.n) *
-              exp(-temp_reactions3[j].forward.Ea / (temperature + temp_mod));
+          Group_k[k] + temp_reactions3[j].parameters.forward.A *
+                           pow((temperature + temp_mod),
+                               temp_reactions3[j].parameters.forward.n) *
+                           exp(-temp_reactions3[j].parameters.forward.Ea /
+                               (temperature + temp_mod));
     }
 
     // get average Ea
-    fitted_Ea = fitted_Ea + temp_reactions3[j].forward.Ea;
+    fitted_Ea = fitted_Ea + temp_reactions3[j].parameters.forward.Ea;
   }
 
   // this is the new Ea for our fitted reaction

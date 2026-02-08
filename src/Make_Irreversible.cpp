@@ -29,7 +29,7 @@
 // variant of the function for solver calculations to make irreversible
 void Calculate_Rate_Constant(
     vector<double> &Kf, vector<double> &Kr, const double Temperature,
-    const vector<Reaction::ReactionParameters> &reactions,
+    const vector<Reaction::SingleReactionData> &reactions,
     const vector<Species::ThermodynamicData::CalculatedThermodynamics>
         &CalculatedThermo,
     const vector<TrackSpecies> &SpeciesAll, const vector<double> &Delta_N)
@@ -71,13 +71,13 @@ void Calculate_Rate_Constant(
   for (i = 0; i < Number_Reactions;
        i++) // Straightforward Arrhenius Expression/Equation
   {
-    Kf[i] =
-        reactions[i].forward.A *
-        exp(-reactions[i].forward.Ea / Temperature); // do NOT forget the - !!!
+    Kf[i] = reactions[i].parameters.forward.A *
+            exp(-reactions[i].parameters.forward.Ea /
+                Temperature); // do NOT forget the - !!!
 
     //* Speedup by only raising temperature to power where needed: improvement
     // is large :)
-    if (reactions[i].forward.n !=
+    if (reactions[i].parameters.forward.n !=
         0) // raising to power 0 has no effect, so only if not 0
     {
       // unsure if this check really gives a performance improvement...
@@ -85,7 +85,7 @@ void Calculate_Rate_Constant(
       // compiler/processor/kernel
       // if(reactions[i].paramN != 1)
       //{
-      Kf[i] = Kf[i] * pow(Temperature, reactions[i].forward.n);
+      Kf[i] = Kf[i] * pow(Temperature, reactions[i].parameters.forward.n);
       /*}
       else
       {
@@ -105,7 +105,7 @@ void Calculate_Rate_Constant(
     // default, change if reversible - seems a little bit faster...
     Kr[i] = 0;
     // then calculate and set the reverse if required
-    if (reactions[i].Reversible) {
+    if (reactions[i].parameters.Reversible) {
       double temp_kp, temp_kc;
       delta_G[i] = delta_H[i] - Temperature * delta_S[i];
       temp_kp = exp(-delta_G[i] / (R * Temperature));
@@ -139,12 +139,12 @@ void Calculate_Rate_Constant(
   }
 }
 
-vector<ReactionParameters> Make_Irreversible(
-    vector<ReactionParameters> Reactions, vector<Species> species,
+vector<SingleReactionData> Make_Irreversible(
+    vector<SingleReactionData> Reactions, vector<Species> species,
     double Initial_Temperature, /// use initial temperature from initial data
     double Range                // specify +/- range around initial temperature
 ) {
-  vector<ReactionParameters> Irreversible_Scheme;
+  vector<SingleReactionData> Irreversible_Scheme;
 
   cout << "Initial temperature for conversion to irreversible scheme: "
        << Initial_Temperature << "\n";
@@ -329,7 +329,8 @@ vector<ReactionParameters> Make_Irreversible(
     }
   }
 
-  ReactionParameters SingleReaction;
+  SingleReactionData SingleReaction;
+  ReactionParameters reaction_parameters;
   // assemble the arrays for writing a new reactions array
   vector<double> ReactantData; // Reactant Information
   ReactantData.resize(Number_Species);
@@ -342,21 +343,22 @@ vector<ReactionParameters> Make_Irreversible(
     SingleReaction.Reactants = Reactions[i].Reactants;
     SingleReaction.Products = Reactions[i].Products;
 
-    SingleReaction.forward.A = Reactions[i].forward.A;
-    SingleReaction.forward.n = Reactions[i].forward.n;
-    SingleReaction.forward.Ea = Reactions[i].forward.Ea;
+    reaction_parameters.forward.A = Reactions[i].parameters.forward.A;
+    reaction_parameters.forward.n = Reactions[i].parameters.forward.n;
+    reaction_parameters.forward.Ea = Reactions[i].parameters.forward.Ea;
 
     // switch reaction to irreversible:
-    SingleReaction.Reversible = false;
-    SingleReaction.explicit_reverse = false;
-    SingleReaction.IsDuplicate = Reactions[i].IsDuplicate;
+    reaction_parameters.Reversible = false;
+    reaction_parameters.explicit_reverse = false;
+    reaction_parameters.IsDuplicate = Reactions[i].parameters.IsDuplicate;
 
     // Default is no third body for mechanism made irreversible
     //// TODO: verify, expand code if necessary
-    SingleReaction.collision_efficiency = false; // default
+    reaction_parameters.collision_efficiency = false; // default
     // check for Third Body Indicator:
-    SingleReaction.ThirdBodyType = 0; // no third body, default
+    reaction_parameters.ThirdBodyType = 0; // no third body, default
 
+    SingleReaction.parameters = reaction_parameters;
     Irreversible_Scheme.push_back(SingleReaction);
 
     // Calculate the parameters
@@ -365,7 +367,7 @@ vector<ReactionParameters> Make_Irreversible(
 
     // check if the reaction was reversible - if yes, calculate irreversible
     // form
-    if (Reactions[i].Reversible) {
+    if (Reactions[i].parameters.Reversible) {
 
       for (size_t j = 0; j < 3; j++) {
         for (size_t k = 0; k < SensitivityMatrix.size(); k++) {
@@ -383,20 +385,21 @@ vector<ReactionParameters> Make_Irreversible(
       SingleReaction.Reactants = ReactantData;
       SingleReaction.Products = ProductData;
 
-      SingleReaction.forward.A = exp(beta[0]);
-      SingleReaction.forward.n = beta[1];
-      SingleReaction.forward.Ea = -beta[2];
+      reaction_parameters.forward.A = exp(beta[0]);
+      reaction_parameters.forward.n = beta[1];
+      reaction_parameters.forward.Ea = -beta[2];
 
       // retain reaction as irreversible:
-      SingleReaction.Reversible = false;
-      SingleReaction.explicit_reverse = false;
-      SingleReaction.IsDuplicate = Reactions[i].IsDuplicate;
+      reaction_parameters.Reversible = false;
+      reaction_parameters.explicit_reverse = false;
+      reaction_parameters.IsDuplicate = Reactions[i].parameters.IsDuplicate;
 
       // Default is no third body for mechanism made irreversible
       //// TODO: verify, expand code if necessary
-      SingleReaction.collision_efficiency = false; // default
+      reaction_parameters.collision_efficiency = false; // default
       // check for Third Body Indicator:
-      SingleReaction.ThirdBodyType = 0; // no third body, default
+      reaction_parameters.ThirdBodyType = 0; // no third body, default
+      SingleReaction.parameters = reaction_parameters;
 
       Irreversible_Scheme.push_back(SingleReaction);
     }

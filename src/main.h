@@ -89,8 +89,8 @@ void Calculate_Rate_Constant(
         &CalculatedThermo,
     const vector<TrackSpecies> &SpeciesAll, const vector<double> &Delta_N);
 
-vector<ReactionParameters> Make_Irreversible(
-    vector<ReactionParameters> Reactions, const vector<Species> species,
+vector<SingleReactionData> Make_Irreversible(
+    vector<SingleReactionData> Reactions, const vector<Species> species,
     double Initial_Temperature, /// use initial temperature from initial data
     double Range                // specify +/- range around initial temperature
 );

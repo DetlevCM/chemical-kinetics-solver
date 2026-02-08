@@ -63,14 +63,15 @@ void MechanismReduction::Reduce_Species_Thermo_Mechanism(
     vector<bool> RetainOrNot, vector<Species> &species,
     // vector< vector< double > >& Thermodynamics,
     // vector< Species::ThermodynamicData > & Thermodynamics,
-    vector<ReactionParameters> &Reactions) {
+    vector<SingleReactionData> &Reactions) {
 
   size_t i, j;
   size_t Number_Species = species.size();
   vector<Species> NewSpecies;
   // vector< vector< double > >
   vector<Species::ThermodynamicData> NewThermodynamics;
-  vector<ReactionParameters> NewReactions;
+  // vector<ReactionParameters> NewReactions;
+  vector<SingleReactionData> NewReactions;
 
   for (i = 0; i < Number_Species; i++) {
     if (RetainOrNot[i]) { // if we retain the species, write it to the new
@@ -110,16 +111,22 @@ void MechanismReduction::Reduce_Species_Thermo_Mechanism(
         }
       }
 
-      ReactionParameters.Reactants = Reactants;
-      ReactionParameters.Products = Products;
+      // ReactionParameters.Reactants = Reactants;
+      // ReactionParameters.Products = Products;
 
-      ReactionParameters.forward.A = Reactions[j].forward.A;
-      ReactionParameters.forward.n = Reactions[j].forward.n;
-      ReactionParameters.forward.Ea = Reactions[j].forward.Ea;
-      ReactionParameters.Reversible = Reactions[j].Reversible;
-      ReactionParameters.IsDuplicate = Reactions[j].IsDuplicate;
+      ReactionParameters.forward.A = Reactions[j].parameters.forward.A;
+      ReactionParameters.forward.n = Reactions[j].parameters.forward.n;
+      ReactionParameters.forward.Ea = Reactions[j].parameters.forward.Ea;
+      ReactionParameters.Reversible = Reactions[j].parameters.Reversible;
+      ReactionParameters.IsDuplicate = Reactions[j].parameters.IsDuplicate;
 
-      NewReactions.push_back(ReactionParameters);
+      SingleReactionData new_reaction;
+      new_reaction.parameters = ReactionParameters;
+      new_reaction.Reactants = Reactants;
+      new_reaction.Products = Products;
+
+      // NewReactions.push_back(ReactionParameters);
+      NewReactions.push_back(new_reaction);
     }
   }
 

@@ -10,10 +10,10 @@
 
 #include <omp.h>
 
-#include "../../global_struct.h"
 #include "../../get_process_input/get_mechanism/Reaction.h"
 #include "../../get_process_input/get_mechanism/ReactionMechanism.h"
 #include "../../get_process_input/get_mechanism/Species.h"
+#include "../../global_struct.h"
 
 class SolverCalculation {
 
@@ -86,7 +86,7 @@ public:
   // cannot use the object in the solver with a member function
   // so use a global object and then init & use helper function?
   void init(vector<Species> vec_species, // quick and ugly...
-            const vector<ReactionParameters> &Reactions,
+            vector<ReactionParameters> reactionParameters,
             vector<TrackSpecies> reactantsForReactions,
             vector<TrackSpecies> productsForReactions,
             vector<TrackSpecies> speciesLossAll, vector<double> prep_delta_n) {
@@ -96,7 +96,7 @@ public:
     ReactantsForReactions = reactantsForReactions;
     ProductsForReactions = productsForReactions;
 
-    reactions = Reactions;
+    reactions = reactionParameters;
 
     SpeciesLossAll = speciesLossAll;
     delta_n = prep_delta_n;
@@ -104,7 +104,7 @@ public:
     species = vec_species;
 
     size_t number_species = species.size();
-    size_t number_reactions = Reactions.size();
+    size_t number_reactions = reactionParameters.size();
 
     Number_Species = number_species;
     Number_Reactions = number_reactions;
@@ -184,7 +184,7 @@ public:
 
   void Prepare_Jacobian_Matrix(
       vector<JacobianData> &JacobianColumnWise,
-      const vector<Reaction::ReactionParameters> &Reactions);
+      const vector<Reaction::SingleReactionData> &Reactions);
 
   void Jacobian_Matrix_Intel(int *, double *, double *, double *);
 

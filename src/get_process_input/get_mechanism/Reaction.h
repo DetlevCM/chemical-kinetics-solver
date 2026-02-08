@@ -73,16 +73,20 @@ struct ReactionParameters {
   ThirdBody_SRI TB_sri;
 
   vector<ThirdBodyParameters> TB_param;
+};
+
+struct SingleReactionData {
+  ReactionParameters parameters;
 
   vector<double> Reactants;
   vector<double> Products;
 };
 
 string Prepare_Single_Reaction_Output(size_t, const vector<Species> &,
-                                      const ReactionParameters &);
+                                      const SingleReactionData &);
 
 void WriteReactions(string, const vector<Species> &species,
-                    const vector<ReactionParameters> &);
+                    const vector<SingleReactionData> &);
 
 } // namespace Reaction
 

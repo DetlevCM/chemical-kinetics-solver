@@ -8,7 +8,7 @@
 #include "./Mechanism_Reduction.h"
 
 ReactionParameter
-MechanismReduction::n_zero_k_fitted_Slow(vector<ReactionParameters> &Reactions,
+MechanismReduction::n_zero_k_fitted_Slow(vector<SingleReactionData> &Reactions,
                                          double temperature,
                                          size_t Reaction_Group_Size) {
   ReactionParameter ParameterOutput;
@@ -21,10 +21,11 @@ MechanismReduction::n_zero_k_fitted_Slow(vector<ReactionParameters> &Reactions,
     for (k = 0; k < 41; k++) {
       double temp_mod = (double)k - 20.0;
 
-      Group_k[k] = Group_k[k] +
-                   Reactions[j].forward.A *
-                       pow((temperature + temp_mod), Reactions[j].forward.n) *
-                       exp(-Reactions[j].forward.Ea / (temperature + temp_mod));
+      Group_k[k] = Group_k[k] + Reactions[j].parameters.forward.A *
+                                    pow((temperature + temp_mod),
+                                        Reactions[j].parameters.forward.n) *
+                                    exp(-Reactions[j].parameters.forward.Ea /
+                                        (temperature + temp_mod));
     }
   }
 

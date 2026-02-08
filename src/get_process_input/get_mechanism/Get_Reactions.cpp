@@ -21,12 +21,14 @@
 // http://stackoverflow.com/questions/7677007/passing-vector-to-function-c
 // Pass vector by reference as input needs not be changed
 
-vector<ReactionParameters>
+// vector<ReactionParameters>
+vector<SingleReactionData>
 ReactionMechanism::Get_Reactions(string filename,
                                  const vector<Species> &species) {
 
   // we prepare the output vector that we will return
-  vector<ReactionParameters> Reaction_Data;
+  // vector<ReactionParameters> Reactions_Data;
+  vector<SingleReactionData> Reactions_Data;
 
   vector<int> SchemeUnits(2); // identifiers for units of A and Ea
   vector<int> mapping;
@@ -56,22 +58,23 @@ ReactionMechanism::Get_Reactions(string filename,
 
     // if not, is is a duplicate? - some bad structure for how duplicates are
     // entered...
-    if (Reaction_Data.size() > 0 && line.compare(0, 1, "/") != 0 &&
+    if (Reactions_Data.size() > 0 && line.compare(0, 1, "/") != 0 &&
         line.compare(0, 3, "DUP") == 0) {
-      Reaction_Data[counter].IsDuplicate = true;
+      Reactions_Data[counter].parameters.IsDuplicate = true;
     }
     // TODO: REV not yet implemented in calculation
-    else if (Reaction_Data.size() > 0 && Test_If_Word_Found(line, "REV") &&
+    else if (Reactions_Data.size() > 0 && Test_If_Word_Found(line, "REV") &&
              line.find("=") == string::npos) {
       vector<double> tmp = Tokenise_String_To_Double(line, " \t/");
-      Reaction_Data[counter].explicit_reverse = true;
-      Reaction_Data[counter].reverse.A =
-          Scale_A(tmp[1], Reaction_Data[counter].Reactants, SchemeUnits[0]);
-      Reaction_Data[counter].reverse.n = tmp[2];
-      Reaction_Data[counter].reverse.Ea = Scale_Ea(tmp[3], SchemeUnits[1]);
+      Reactions_Data[counter].parameters.explicit_reverse = true;
+      Reactions_Data[counter].parameters.reverse.A =
+          Scale_A(tmp[1], Reactions_Data[counter].Reactants, SchemeUnits[0]);
+      Reactions_Data[counter].parameters.reverse.n = tmp[2];
+      Reactions_Data[counter].parameters.reverse.Ea =
+          Scale_Ea(tmp[3], SchemeUnits[1]);
     }
     // is it a third body configuration?
-    else if (Reaction_Data.size() > 0 && Test_If_Word_Found(line, "LOW") &&
+    else if (Reactions_Data.size() > 0 && Test_If_Word_Found(line, "LOW") &&
              line.find("=") == string::npos) // LOW term for third bodies line
                                              // contains no equal
     {
@@ -80,12 +83,13 @@ ReactionMechanism::Get_Reactions(string filename,
           Tokenise_String_To_Double(line, " \t/"); // retain low
       //  position 1 is "low"
       if (tmp.size() == 4) {
-        Reaction_Data[counter].TB_low.A =
-            Scale_A(tmp[1], Reaction_Data[counter].Reactants, SchemeUnits[0]);
-        Reaction_Data[counter].TB_low.n = tmp[2];
-        Reaction_Data[counter].TB_low.Ea = Scale_Ea(tmp[3], SchemeUnits[1]);
+        Reactions_Data[counter].parameters.TB_low.A =
+            Scale_A(tmp[1], Reactions_Data[counter].Reactants, SchemeUnits[0]);
+        Reactions_Data[counter].parameters.TB_low.n = tmp[2];
+        Reactions_Data[counter].parameters.TB_low.Ea =
+            Scale_Ea(tmp[3], SchemeUnits[1]);
       }
-    } else if (Reaction_Data.size() > 0 && Test_If_Word_Found(line, "TROE") &&
+    } else if (Reactions_Data.size() > 0 && Test_If_Word_Found(line, "TROE") &&
                line.find("=") == string::npos) // TROE term for third bodies
                                                // line contains no equal
     {
@@ -95,17 +99,17 @@ ReactionMechanism::Get_Reactions(string filename,
       // cout << "troe: " << line << "\n";
       if (tmp.size() == 4 || tmp.size() == 5) // at least 3 parameter troe
       {
-        Reaction_Data[counter].TB_troe.has_troe = true;
-        Reaction_Data[counter].TB_troe.a = tmp[1];
-        Reaction_Data[counter].TB_troe.T3 = tmp[2];
-        Reaction_Data[counter].TB_troe.T1 = tmp[3];
+        Reactions_Data[counter].parameters.TB_troe.has_troe = true;
+        Reactions_Data[counter].parameters.TB_troe.a = tmp[1];
+        Reactions_Data[counter].parameters.TB_troe.T3 = tmp[2];
+        Reactions_Data[counter].parameters.TB_troe.T1 = tmp[3];
         if (tmp.size() == 5) // 4 parameter troe -> first string is TROE/
         {
-          Reaction_Data[counter].TB_troe.T2 = tmp[4];
-          Reaction_Data[counter].TB_troe.is_4_param = true;
+          Reactions_Data[counter].parameters.TB_troe.T2 = tmp[4];
+          Reactions_Data[counter].parameters.TB_troe.is_4_param = true;
         }
       }
-    } else if (Reaction_Data.size() > 0 && Test_If_Word_Found(line, "SRI") &&
+    } else if (Reactions_Data.size() > 0 && Test_If_Word_Found(line, "SRI") &&
                line.find("=") ==
                    string::npos) // SRI term line contains no equal
     {
@@ -115,20 +119,20 @@ ReactionMechanism::Get_Reactions(string filename,
       // values are: a, T3, T1, T2
       if (tmp.size() == 4 || tmp.size() == 6) // at least 3 parameter troe
       {
-        Reaction_Data[counter].TB_sri.a = tmp[1];
-        Reaction_Data[counter].TB_sri.b = tmp[2];
-        Reaction_Data[counter].TB_sri.c = tmp[3];
+        Reactions_Data[counter].parameters.TB_sri.a = tmp[1];
+        Reactions_Data[counter].parameters.TB_sri.b = tmp[2];
+        Reactions_Data[counter].parameters.TB_sri.c = tmp[3];
         if (tmp.size() == 4) // 4 parameter troe
         {
-          Reaction_Data[counter].TB_sri.d = tmp[4];
-          Reaction_Data[counter].TB_sri.e = tmp[5];
-          Reaction_Data[counter].TB_sri.is_5_param = true;
+          Reactions_Data[counter].parameters.TB_sri.d = tmp[4];
+          Reactions_Data[counter].parameters.TB_sri.e = tmp[5];
+          Reactions_Data[counter].parameters.TB_sri.is_5_param = true;
           ;
         }
       }
     }
     // we checked for low and troe, still a slash? Another third body config
-    else if (Reaction_Data.size() > 0 && Test_If_Word_Found(line, "/") &&
+    else if (Reactions_Data.size() > 0 && Test_If_Word_Found(line, "/") &&
              !Test_If_Word_Found(line,
                                  "LOW") // not LOW term for third bodies
              && !Test_If_Word_Found(line,
@@ -169,8 +173,8 @@ ReactionMechanism::Get_Reactions(string filename,
       // belongs to the previous/last entry
       //// TODO: this causes a segfault...
       // cout << vec_TB_param.size() << "\n";
-      // cout << Reaction_Data[counter].TB_param.size() << "\n";
-      Reaction_Data[counter].TB_param = vec_TB_param;
+      // cout << Reactions_Data[counter].TB_param.size() << "\n";
+      Reactions_Data[counter].parameters.TB_param = vec_TB_param;
     }
     //*/
     // content in here - check if line does not start with a comment, ! or / or
@@ -196,19 +200,21 @@ ReactionMechanism::Get_Reactions(string filename,
         ) {
       // cout << "reached regular reaction\n";
       //  let us extract the reaction then:
-      ReactionParameters tmp = Parse_Chemkin_Reaction_String(
+      // ReactionParameters
+      SingleReactionData tmp = Parse_Chemkin_Reaction_String(
           SchemeUnits, species, line); // only pushback if successful
-      Reaction_Data.push_back(tmp);
+      Reactions_Data.push_back(tmp);
       counter = counter + 1; // advance the number of processed reactions by 1
     }
   }
 
-  return Reaction_Data;
+  return Reactions_Data;
 }
 
 // could have a line that is empty after stripping comments, should not happen,
 // but...
-ReactionParameters
+// ReactionParameters
+SingleReactionData
 ReactionMechanism::Parse_Chemkin_Reaction_String(const vector<int> SchemeUnits,
                                                  const vector<Species> &species,
                                                  string line) {
@@ -338,13 +344,19 @@ ReactionMechanism::Parse_Chemkin_Reaction_String(const vector<int> SchemeUnits,
   temp.forward.Ea =
       Scale_Ea(step, SchemeUnits[1]); // Ea in adjusted units for calc.
 
-  temp.Reactants = ReactantData;
-  temp.Products = ProductData;
+  // temp.Reactants = ReactantData;
+  // temp.Products = ProductData;
   temp.Reversible = is_reversible;
   temp.explicit_reverse = false; // default not explicit reverse
   temp.IsDuplicate = false;      // default, not a duplicate
 
-  return temp;
+  SingleReactionData Output;
+  Output.parameters = temp;
+  Output.Reactants = ReactantData;
+  Output.Products = ProductData;
+
+  // return temp;
+  return Output;
 }
 
 // Helper function which splits species coefficient from species name

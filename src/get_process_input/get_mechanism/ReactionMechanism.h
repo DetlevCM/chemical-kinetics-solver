@@ -32,11 +32,11 @@ public:
 
 private:
 public:
-  vector<ReactionParameters> reactions;
+  vector<SingleReactionData> reactions;
 
   size_t reactions_size() { return reactions.size(); }
 
-  void Set_Reactions(const vector<ReactionParameters> &set_reactions);
+  void Set_Reactions(const vector<SingleReactionData> &set_reactions);
 
   static void get_mechanism(string filename,
                             ReactionMechanism &reaction_mechanism);
@@ -59,10 +59,12 @@ public:
   static double Scale_A(double A_read_in, vector<double> ReactantData,
                         int scaling_type);
 
-  static vector<ReactionParameters>
+  // static vector<ReactionParameters>
+  static vector<SingleReactionData>
   Get_Reactions(string filename, const vector<Species> &species);
 
-  static ReactionParameters
+  // static ReactionParameters
+  static SingleReactionData
   Parse_Chemkin_Reaction_String(const vector<int> SchemeUnits,
                                 const vector<Species> &species, string line);
 };

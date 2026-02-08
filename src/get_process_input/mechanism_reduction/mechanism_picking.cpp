@@ -9,8 +9,7 @@
 
 void MechanismReduction::mechanism_picking(
     string filename, vector<Species> &species,
-    // vector< Species::ThermodynamicData >& Thermodynamics,
-    vector<ReactionParameters> &Reactions) {
+    vector<SingleReactionData> &Reactions) {
 
   // Input File via a stream:
   ifstream ReductionData;
@@ -97,15 +96,12 @@ void MechanismReduction::mechanism_picking(
   }
 
   handle_reactions_with_chosen_species(line1, ChosenSpecies, species,
-                                       // Thermodynamics,
                                        Reactions);
 }
 
 void MechanismReduction::handle_reactions_with_chosen_species(
     string type, vector<SpeciesPicking> &ChosenSpecies,
-    vector<Species> &species,
-    // vector< Species::ThermodynamicData >& Thermodynamics,
-    vector<ReactionParameters> &Reactions) {
+    vector<Species> &species, vector<SingleReactionData> &Reactions) {
 
   // So, I_ need to find all and any reaction that contains a chosen species
   bool RunLoop;
@@ -115,9 +111,8 @@ void MechanismReduction::handle_reactions_with_chosen_species(
   size_t Number_Species = species.size();
 
   vector<string> PickedSpecies;
-  // vector< vector< double > > PickedThermodynamics;
   vector<Species::ThermodynamicData> PickedThermodynamics;
-  vector<ReactionParameters> PickedReactions;
+  vector<SingleReactionData> PickedReactions;
 
   for (i = 0; i < Number_Reactions; i++) {
     // for every reaction, check if every species is desired, if yes, retain
@@ -184,8 +179,8 @@ void MechanismReduction::handle_reactions_with_chosen_species(
   /// Now I could resort the reactions, identify recombination reactions
   /// I have my species classes
 
-  vector<ReactionParameters> RegularReaction;
-  vector<ReactionParameters> RecombinationReaction;
+  vector<SingleReactionData> RegularReaction;
+  vector<SingleReactionData> RecombinationReaction;
 
   Number_Reactions = PickedReactions.size();
   Number_Species = species.size();
