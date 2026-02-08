@@ -7,11 +7,11 @@
 
 #include "./Mechanism_Reduction.h"
 
-ReactionParameter
+ArrheniusParameters
 MechanismReduction::n_zero_k_fitted_Slow(vector<SingleReactionData> &Reactions,
                                          double temperature,
                                          size_t Reaction_Group_Size) {
-  ReactionParameter ParameterOutput;
+  ArrheniusParameters ParameterOutput;
   size_t j, k;
 
   vector<double> Group_k(41);

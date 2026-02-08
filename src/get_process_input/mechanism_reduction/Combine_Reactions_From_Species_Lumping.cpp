@@ -228,7 +228,7 @@ MechanismReduction::Process_Reactions_For_Species_Lumping(
     vector<double> ProductData(
         temp_reactions3[i].Products); // Product Information
 
-    ReactionParameter NewParameters; // create working variable and initialise
+    ArrheniusParameters NewParameters; // create working variable and initialise
     NewParameters.Reversible = true;
     NewParameters.A = 0;
     NewParameters.n = 0;

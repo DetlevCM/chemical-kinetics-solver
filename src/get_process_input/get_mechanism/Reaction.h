@@ -24,7 +24,7 @@ using std::vector;
 
 namespace Reaction {
 
-struct ReactionParameter {
+struct ArrheniusParameters {
   bool Reversible; // want to get rid of this
   double A;
   double n;
@@ -58,16 +58,16 @@ struct ReactionParameters {
   bool Reversible;
   bool IsDuplicate;
 
-  ReactionParameter forward;
+  ArrheniusParameters forward;
   bool explicit_reverse;
-  ReactionParameter reverse; // not yet used, but preparation
+  ArrheniusParameters reverse; // not yet used, but preparation
 
   int ThirdBodyType; // 1: +M  2: (+M)
 
   bool collision_efficiency = false; // for third body reactions
 
-  ReactionParameter TB_low; // preparation
-  ThirdBody_troe TB_troe;   // preparation
+  ArrheniusParameters TB_low; // preparation
+  ThirdBody_troe TB_troe;     // preparation
 
   size_t sri_flag = 0; // default //// TODO improve
   ThirdBody_SRI TB_sri;

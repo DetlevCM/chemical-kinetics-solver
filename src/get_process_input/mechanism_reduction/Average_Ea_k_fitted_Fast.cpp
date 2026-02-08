@@ -7,11 +7,11 @@
 
 #include "./Mechanism_Reduction.h"
 
-ReactionParameter MechanismReduction::Average_Ea_k_fitted_Fast(
+ArrheniusParameters MechanismReduction::Average_Ea_k_fitted_Fast(
     vector<SingleReactionData> &Reactions, double temperature,
     size_t Reaction_Group_Size) {
 
-  ReactionParameter ParameterOutput;
+  ArrheniusParameters ParameterOutput;
   size_t j;
 
   vector<double> Group_k(3);

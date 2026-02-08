@@ -114,26 +114,6 @@ vector<ReactionParameters> RunIntegrator::Process_Reaction_Parameters(
     output[i] = Reactions[i].parameters;
   }
   return output;
-
-  // new implementation
-
-  /*
-  vector<ReactionParameter> temp_output;
-  // Output per reaction
-  for (size_t i = 0; i < Reactions.size(); i++) {
-    ReactionParameter temp_one_reaction;
-
-    temp_one_reaction.A = Reactions[i].parameters.forward.A;   // A
-    temp_one_reaction.n = Reactions[i].parameters.forward.n;   // n
-    temp_one_reaction.Ea = Reactions[i].parameters.forward.Ea; // Ea
-    temp_one_reaction.Reversible = Reactions[i].parameters.Reversible;
-
-    temp_output.push_back(temp_one_reaction);
-  }
-    return temp_output;
-  //*/
-
-  return output;
 }
 
 vector<double>
