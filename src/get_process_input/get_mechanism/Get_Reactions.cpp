@@ -21,13 +21,11 @@
 // http://stackoverflow.com/questions/7677007/passing-vector-to-function-c
 // Pass vector by reference as input needs not be changed
 
-// vector<ReactionParameters>
 vector<SingleReactionData>
 ReactionMechanism::Get_Reactions(string filename,
                                  const vector<Species> &species) {
 
   // we prepare the output vector that we will return
-  // vector<ReactionParameters> Reactions_Data;
   vector<SingleReactionData> Reactions_Data;
 
   vector<int> SchemeUnits(2); // identifiers for units of A and Ea
@@ -200,7 +198,6 @@ ReactionMechanism::Get_Reactions(string filename,
         ) {
       // cout << "reached regular reaction\n";
       //  let us extract the reaction then:
-      // ReactionParameters
       SingleReactionData tmp = Parse_Chemkin_Reaction_String(
           SchemeUnits, species, line); // only pushback if successful
       Reactions_Data.push_back(tmp);
@@ -213,7 +210,6 @@ ReactionMechanism::Get_Reactions(string filename,
 
 // could have a line that is empty after stripping comments, should not happen,
 // but...
-// ReactionParameters
 SingleReactionData
 ReactionMechanism::Parse_Chemkin_Reaction_String(const vector<int> SchemeUnits,
                                                  const vector<Species> &species,

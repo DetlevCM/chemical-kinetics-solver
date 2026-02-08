@@ -61,16 +61,12 @@ vector<bool> MechanismReduction::Read_Kill_List(string filename,
 
 void MechanismReduction::Reduce_Species_Thermo_Mechanism(
     vector<bool> RetainOrNot, vector<Species> &species,
-    // vector< vector< double > >& Thermodynamics,
-    // vector< Species::ThermodynamicData > & Thermodynamics,
     vector<SingleReactionData> &Reactions) {
 
   size_t i, j;
   size_t Number_Species = species.size();
   vector<Species> NewSpecies;
-  // vector< vector< double > >
   vector<Species::ThermodynamicData> NewThermodynamics;
-  // vector<ReactionParameters> NewReactions;
   vector<SingleReactionData> NewReactions;
 
   for (i = 0; i < Number_Species; i++) {
@@ -111,9 +107,6 @@ void MechanismReduction::Reduce_Species_Thermo_Mechanism(
         }
       }
 
-      // ReactionParameters.Reactants = Reactants;
-      // ReactionParameters.Products = Products;
-
       ReactionParameters.forward.A = Reactions[j].parameters.forward.A;
       ReactionParameters.forward.n = Reactions[j].parameters.forward.n;
       ReactionParameters.forward.Ea = Reactions[j].parameters.forward.Ea;
@@ -125,7 +118,6 @@ void MechanismReduction::Reduce_Species_Thermo_Mechanism(
       new_reaction.Reactants = Reactants;
       new_reaction.Products = Products;
 
-      // NewReactions.push_back(ReactionParameters);
       NewReactions.push_back(new_reaction);
     }
   }
@@ -133,7 +125,6 @@ void MechanismReduction::Reduce_Species_Thermo_Mechanism(
   // clear out the old arrays
   species.clear();
   Reactions.clear();
-  // Thermodynamics.clear();
 
   cout << "\nAfter species removal, the scheme contains the following counts:\n"
        << "Species: " << NewSpecies.size() << "\n"
@@ -142,6 +133,5 @@ void MechanismReduction::Reduce_Species_Thermo_Mechanism(
 
   // assign new arrays
   species = NewSpecies;
-  // Thermodynamics = NewThermodynamics;
   Reactions = NewReactions;
 }

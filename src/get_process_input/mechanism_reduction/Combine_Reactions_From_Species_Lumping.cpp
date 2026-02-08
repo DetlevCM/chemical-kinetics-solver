@@ -34,7 +34,6 @@ MechanismReduction::Process_Reactions_For_Species_Lumping(
    * the reaction matrix
    */
 
-  // vector<ReactionParameters> temp_reactions1;
   vector<SingleReactionData> temp_reactions1;
 
   vector<double> ReactantData; // Reactant Information
@@ -75,12 +74,7 @@ MechanismReduction::Process_Reactions_For_Species_Lumping(
           ProductData[SpeciesID] + Reactions[i].Products[j];
     }
 
-    // Reaction Parameters Unaffected
-
-    // reassemble output
-    // ReactionParameters.Reactants = ReactantData;
-    // ReactionParameters.Products = ProductData;
-
+    // Reaction Parameters Unaffected, reassemble output
     ReactionParameters.forward.A = Reactions[i].parameters.forward.A;
     ReactionParameters.forward.n = Reactions[i].parameters.forward.n;
     ReactionParameters.forward.Ea = Reactions[i].parameters.forward.Ea;
@@ -91,14 +85,11 @@ MechanismReduction::Process_Reactions_For_Species_Lumping(
     reaction.Reactants = ReactantData;
     reaction.Products = ProductData;
 
-    // ReactionParameters.push_back(ReactionData);
     ReactantData.clear();
     ProductData.clear();
     ReactionData.clear();
 
     temp_reactions1.push_back(reaction);
-    // temp_reactions1.push_back(ReactionParameters);
-    //  ReactionParameters.clear();
   }
 
   /*//Test Matrix

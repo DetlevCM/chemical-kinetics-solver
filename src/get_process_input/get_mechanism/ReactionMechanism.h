@@ -21,8 +21,6 @@ using std::cout;
 class ReactionMechanism {
 
 private:
-  // vector< Species > species;
-
 public:
   vector<Species> species;
 

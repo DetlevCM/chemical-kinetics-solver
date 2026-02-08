@@ -122,8 +122,6 @@ double SolverCalculation::Calculate_Lindeman_Hinshelwood_SRI(
     if (mod_third_body < 1.0e-30) {
       mod_third_body = 1.0e-30;
     }
-    // F = T*pow((sri.a*exp(-sri.b/T)+exp(-T/sri.c)),
-    // ((1.0/(1.0+pow((log10(kzero*mod_third_body/kinf)), 2)))));
     F = T *
         pow((sri.a * exp(-sri.b / T) + exp(-T / sri.c)),
             ((1.0 / (1.0 + pow((log10(kzero * mod_third_body / kinf)), 2)))));
@@ -133,8 +131,6 @@ double SolverCalculation::Calculate_Lindeman_Hinshelwood_SRI(
     if (mod_third_body < 1.0e-30) {
       mod_third_body = 1.0e-30;
     }
-    // F = sri.d*pow(T, sri.e)*pow((sri.a*exp(-sri.b/T)+exp(-T/sri.c)),
-    // ((1.0/(1.0+pow((log10(kzero*mod_third_body/kinf)), 2)))));
     F = sri.d * pow(T, sri.e) *
         pow((sri.a * exp(-sri.b / T) + exp(-T / sri.c)),
             ((1.0 / (1.0 + pow((log10(kzero * mod_third_body / kinf)), 2)))));
@@ -360,8 +356,7 @@ void SolverCalculation::CalculateReactionRates(
        i++) { // Forward Rates determined by the reactants
 
     if (ReactantsForReactions[i].coefficient ==
-        1) // this is quicker than raising to the power of 1 - but check with
-           // the struct
+        1.0) // quicker than raising to the power of 1
     {
       Forward_Rates[ReactantsForReactions[i].ReactionID] =
           Forward_Rates[ReactantsForReactions[i].ReactionID] *
@@ -378,8 +373,7 @@ void SolverCalculation::CalculateReactionRates(
        i++) { // Reverse Rates determined by the products
 
     if (ProductsForReactions[i].coefficient ==
-        1) // this is quicker than raising to the power of 1 - but check with
-           // the struct
+        1.0) // quicker than raising to the power of 1
     {
       Reverse_Rates[ProductsForReactions[i].ReactionID] =
           Reverse_Rates[ProductsForReactions[i].ReactionID] *

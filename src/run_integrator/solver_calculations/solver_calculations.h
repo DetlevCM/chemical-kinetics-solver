@@ -23,6 +23,7 @@ private:
   vector<TrackSpecies> ReactantsForReactions;
   vector<TrackSpecies> ProductsForReactions;
   vector<TrackSpecies> SpeciesLossAll; // vector for recording species loss
+  vector<ReactionParameters> reaction_parameters;
 
   // vector of data needed for the calculation, really just set once
   vector<double> delta_n;
@@ -54,9 +55,6 @@ public:
   PressureVesselCalc PetroOxyData;
   // for limited Oxy
   double time_previous;
-
-  vector<ReactionParameters> reaction_parameters;
-
   // end PetroOxy variables
 
   struct ConstantInitRHSODE {
@@ -82,11 +80,9 @@ public:
   vector<Species> species; // quickest and easiest way right now...
 
 public:
-  // cannot use the object in the solver with a member function
-  // so use a global object and then init & use helper function?
+  // initialize the vectors that are needed for efficient calculation
   void init(vector<Species> vec_species,
             const vector<SingleReactionData> &mechanism_reactions) {
-    //// constant (i.e. set once) ////
 
     ConstantInitRHSODE InitialDataConstants;
 

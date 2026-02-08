@@ -38,7 +38,6 @@ void Initial_Data::Handle_Initial_Conditions(
       vector<string> line_content;
       line_content = Tokenise_String_To_String(line, " \t");
 
-      // vector <double> temperature_range(3);
       //  allows users to provide multiple time points
       if ((int)line_content.size() >= 3) {
         InitialParameters.TGA_rate = stod(line_content[1], NULL);

@@ -8,25 +8,16 @@
 #include "./Rates-Analysis.h"
 
 void RatesAnalysis::Prepare_Print_Rates_Per_Species(
-    // vector< TrackSpecies > & ProductsForRates,
-    // vector< TrackSpecies > & ReactantsForRates,
-    string separator,
-    // vector< double > & Rates,
-    vector<Species> species, vector<size_t> SelectedSpeciesID,
-    vector<vector<size_t>> ReactionsForSpeciesSelectedForRates //,
-    // vector< ReactionParameters >& Reactions
-) {
+    string separator, vector<Species> species, vector<size_t> SelectedSpeciesID,
+    vector<vector<size_t>> ReactionsForSpeciesSelectedForRates) {
 
   size_t i;
-  // int Number_Species = (int) Species.size();
-  // int Number_Reactions = (int) Rates.size();
 
   ofstream OutfileProd;
   ofstream OutfileCons;
 
   size_t Number_Selected_Species = SelectedSpeciesID.size();
 
-  // for(i=0;i<Number_Species;i++)
   for (i = 0; i < Number_Selected_Species; i++) {
     string OutFilenameProd, OutFilenameCons;
 

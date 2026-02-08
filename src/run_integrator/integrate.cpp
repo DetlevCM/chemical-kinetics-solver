@@ -59,11 +59,6 @@ void RunIntegrator::Integrate(
   solver_choice = Prepare_Integrator_Settings(InitialParameters, Number_Species,
                                               LSODA, Intel);
 
-  // just make sure the Delta_N is current
-  // vector<double> prep_delta_n = Get_Delta_N(reaction_mechanism.reactions);
-  // Reduce the matrix from a sparse matrix to something more manageable and
-  // quicker to use
-
   if (InitialParameters.MechanismAnalysis.MaximumRates ||
       InitialParameters.MechanismAnalysis.StreamRatesAnalysis ||
       InitialParameters.MechanismAnalysis.RatesAnalysisAtTime ||
