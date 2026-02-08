@@ -7,11 +7,11 @@
 
 #include "./Mechanism_Reduction.h"
 
-ReactionParameter
+ArrheniusParameters
 MechanismReduction::n_zero_k_fitted_Slow(vector<SingleReactionData> &Reactions,
                                          double temperature,
                                          size_t Reaction_Group_Size) {
-  ReactionParameter ParameterOutput;
+  ArrheniusParameters ParameterOutput;
   size_t j, k;
 
   vector<double> Group_k(41);
@@ -21,10 +21,11 @@ MechanismReduction::n_zero_k_fitted_Slow(vector<SingleReactionData> &Reactions,
     for (k = 0; k < 41; k++) {
       double temp_mod = (double)k - 20.0;
 
-      Group_k[k] = Group_k[k] +
-                   Reactions[j].forward.A *
-                       pow((temperature + temp_mod), Reactions[j].forward.n) *
-                       exp(-Reactions[j].forward.Ea / (temperature + temp_mod));
+      Group_k[k] = Group_k[k] + Reactions[j].parameters.forward.A *
+                                    pow((temperature + temp_mod),
+                                        Reactions[j].parameters.forward.n) *
+                                    exp(-Reactions[j].parameters.forward.Ea /
+                                        (temperature + temp_mod));
     }
   }
 
@@ -55,7 +56,6 @@ MechanismReduction::n_zero_k_fitted_Slow(vector<SingleReactionData> &Reactions,
   // now need the intercept
   intercept = Group_k[20] + (1 / temperature) * gradient;
 
-  ParameterOutput.Reversible = false;
   ParameterOutput.A = exp(intercept);
   ParameterOutput.n = 0;
   ParameterOutput.Ea = gradient;

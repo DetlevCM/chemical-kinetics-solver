@@ -20,9 +20,6 @@ void Species::Get_Thermodynamic_Data(string filename,
   size_t i;
 
   size_t ThermoCounter = 0;
-  // Vector to store all data as a struct (more efficient than vector< vector> >
-  // vector< Species::ThermodynamicData > read_in_thermodynamics;
-  // read_in_thermodynamics.resize(Number_Species);
 
   if (Mechanism_Data.is_open()) {
     string line1;

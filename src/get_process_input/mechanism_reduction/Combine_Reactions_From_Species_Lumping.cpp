@@ -56,7 +56,7 @@ MechanismReduction::Process_Reactions_For_Species_Lumping(
        << " species classes to process.\n";
 
   for (i = 0; i < Number_Reactions; i++) {
-    SingleReactionData SingleReactionData;
+    ReactionParameters ReactionParameters;
 
     // printf("i: %i \n j:",i);
     ReactantData.resize(Number_Species_Classes);
@@ -74,24 +74,22 @@ MechanismReduction::Process_Reactions_For_Species_Lumping(
           ProductData[SpeciesID] + Reactions[i].Products[j];
     }
 
-    // Reaction Parameters Unaffected
+    // Reaction Parameters Unaffected, reassemble output
+    ReactionParameters.forward.A = Reactions[i].parameters.forward.A;
+    ReactionParameters.forward.n = Reactions[i].parameters.forward.n;
+    ReactionParameters.forward.Ea = Reactions[i].parameters.forward.Ea;
+    ReactionParameters.Reversible = Reactions[i].parameters.Reversible;
 
-    // reassemble output
-    SingleReactionData.Reactants = ReactantData;
-    SingleReactionData.Products = ProductData;
+    SingleReactionData reaction;
+    reaction.parameters = ReactionParameters;
+    reaction.Reactants = ReactantData;
+    reaction.Products = ProductData;
 
-    SingleReactionData.forward.A = Reactions[i].forward.A;
-    SingleReactionData.forward.n = Reactions[i].forward.n;
-    SingleReactionData.forward.Ea = Reactions[i].forward.Ea;
-    SingleReactionData.Reversible = Reactions[i].Reversible;
-
-    // SingleReactionData.push_back(ReactionData);
     ReactantData.clear();
     ProductData.clear();
     ReactionData.clear();
 
-    temp_reactions1.push_back(SingleReactionData);
-    // SingleReactionData.clear();
+    temp_reactions1.push_back(reaction);
   }
 
   /*//Test Matrix
@@ -119,7 +117,9 @@ MechanismReduction::Process_Reactions_For_Species_Lumping(
    * combined parameters. (Stupidly simple approximation again?)
    * */
 
+  // vector<ReactionParameters> temp_reactions2(temp_reactions1);
   vector<SingleReactionData> temp_reactions2(temp_reactions1);
+  // vector<ReactionParameters> temp_reactions3;
   vector<SingleReactionData> temp_reactions3;
 
   vector<size_t> Reaction_Grouping;
@@ -219,13 +219,10 @@ MechanismReduction::Process_Reactions_For_Species_Lumping(
     vector<double> ProductData(
         temp_reactions3[i].Products); // Product Information
 
-    SingleReactionData SingleReaction;
-
-    ReactionParameter NewParameters; // create working variable and initialise
-    NewParameters.Reversible = true;
-    NewParameters.A = 0;
-    NewParameters.n = 0;
-    NewParameters.Ea = 0;
+    ArrheniusParameters NewParameters; // create working variable and initialise
+    NewParameters.A = 0.0;
+    NewParameters.n = 0.0;
+    NewParameters.Ea = 0.0;
 
     if (Reaction_Grouping[i] > 1) {
       if (LumpingType == 1) {
@@ -251,25 +248,27 @@ MechanismReduction::Process_Reactions_For_Species_Lumping(
     } else // avoid the mathematics for reactions that aren't grouped, use
            // previous values
     {
-      NewParameters.Reversible = false; // must be irreversible, else no lumping
-      NewParameters.A = temp_reactions3[i].forward.A;
-      NewParameters.n = temp_reactions3[i].forward.n;
-      NewParameters.Ea = temp_reactions3[i].forward.Ea;
+      NewParameters.A = temp_reactions3[i].parameters.forward.A;
+      NewParameters.n = temp_reactions3[i].parameters.forward.n;
+      NewParameters.Ea = temp_reactions3[i].parameters.forward.Ea;
     }
 
-    SingleReaction.Reactants = ReactantData;
-    SingleReaction.Products = ProductData;
+    ReactionParameters SingleReactionParameters;
 
-    SingleReaction.forward.A = NewParameters.A;
-    SingleReaction.forward.n = NewParameters.n;
-    SingleReaction.forward.Ea = NewParameters.Ea;
+    SingleReactionParameters.forward.A = NewParameters.A;
+    SingleReactionParameters.forward.n = NewParameters.n;
+    SingleReactionParameters.forward.Ea = NewParameters.Ea;
 
-    SingleReaction.Reversible = NewParameters.Reversible;
-    // SingleReaction.Reversible = false; // lumping only works on irreversible
-    // scheme
-    SingleReaction.IsDuplicate =
+    SingleReactionParameters.Reversible =
+        false; // lumping only works on irreversible scheme
+    SingleReactionParameters.IsDuplicate =
         false; // this will break Chemkin compatibility, but short of
                // reanalyzing the scheme duplicates can't be identified
+
+    SingleReactionData SingleReaction;
+    SingleReaction.parameters = SingleReactionParameters;
+    SingleReaction.Reactants = ReactantData;
+    SingleReaction.Products = ProductData;
 
     temp_reactions2.push_back(SingleReaction);
 
@@ -296,8 +295,8 @@ MechanismReduction::Process_Reactions_For_Species_Lumping(
                                temp_reactions2[i].Reactants[j]));
     }
 
-    temp_reactions2[i].forward.A =
-        (double)temp_reactions2[i].forward.A * Scale_A;
+    temp_reactions2[i].parameters.forward.A =
+        (double)temp_reactions2[i].parameters.forward.A * Scale_A;
   }
 
   return temp_reactions2;

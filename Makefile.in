@@ -45,6 +45,10 @@ code:
 	$(foreach SOURCE, $(SOURCES), $(CC) -c $(CFLAGS) $(INCLUDES) $(SOURCE) -o $(SOURCE:.cpp=.o) $(LFLAGS) $(LIBS);)
 	$(CC) -o $(MAIN) $(INCLUDES) $(OBJS) $(LFLAGS) $(LIBS)
 
+libs:
+	$(MAKE) lib_odepack 
+	$(MAKE) lib_intel
+
 all:
 	$(MAKE) lib_odepack 
 	$(MAKE) lib_intel

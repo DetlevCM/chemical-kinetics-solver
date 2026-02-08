@@ -61,14 +61,11 @@ vector<bool> MechanismReduction::Read_Kill_List(string filename,
 
 void MechanismReduction::Reduce_Species_Thermo_Mechanism(
     vector<bool> RetainOrNot, vector<Species> &species,
-    // vector< vector< double > >& Thermodynamics,
-    // vector< Species::ThermodynamicData > & Thermodynamics,
     vector<SingleReactionData> &Reactions) {
 
   size_t i, j;
   size_t Number_Species = species.size();
   vector<Species> NewSpecies;
-  // vector< vector< double > >
   vector<Species::ThermodynamicData> NewThermodynamics;
   vector<SingleReactionData> NewReactions;
 
@@ -95,7 +92,7 @@ void MechanismReduction::Reduce_Species_Thermo_Mechanism(
       }
     }
 
-    SingleReactionData SingleReactionData;
+    ReactionParameters ReactionParameters;
 
     if (!kill) // if not kill true, retain
     {
@@ -110,23 +107,24 @@ void MechanismReduction::Reduce_Species_Thermo_Mechanism(
         }
       }
 
-      SingleReactionData.Reactants = Reactants;
-      SingleReactionData.Products = Products;
+      ReactionParameters.forward.A = Reactions[j].parameters.forward.A;
+      ReactionParameters.forward.n = Reactions[j].parameters.forward.n;
+      ReactionParameters.forward.Ea = Reactions[j].parameters.forward.Ea;
+      ReactionParameters.Reversible = Reactions[j].parameters.Reversible;
+      ReactionParameters.IsDuplicate = Reactions[j].parameters.IsDuplicate;
 
-      SingleReactionData.forward.A = Reactions[j].forward.A;
-      SingleReactionData.forward.n = Reactions[j].forward.n;
-      SingleReactionData.forward.Ea = Reactions[j].forward.Ea;
-      SingleReactionData.Reversible = Reactions[j].Reversible;
-      SingleReactionData.IsDuplicate = Reactions[j].IsDuplicate;
+      SingleReactionData new_reaction;
+      new_reaction.parameters = ReactionParameters;
+      new_reaction.Reactants = Reactants;
+      new_reaction.Products = Products;
 
-      NewReactions.push_back(SingleReactionData);
+      NewReactions.push_back(new_reaction);
     }
   }
 
   // clear out the old arrays
   species.clear();
   Reactions.clear();
-  // Thermodynamics.clear();
 
   cout << "\nAfter species removal, the scheme contains the following counts:\n"
        << "Species: " << NewSpecies.size() << "\n"
@@ -135,6 +133,5 @@ void MechanismReduction::Reduce_Species_Thermo_Mechanism(
 
   // assign new arrays
   species = NewSpecies;
-  // Thermodynamics = NewThermodynamics;
   Reactions = NewReactions;
 }

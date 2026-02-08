@@ -25,7 +25,7 @@ using std::string;
 #include "../get_process_input/get_mechanism/Species.h"
 
 //// TODO:
-using Reaction::SingleReactionData; // remove in future or optimize
+using Reaction::ReactionParameters; // remove in future or optimize
 
 class RatesAnalysis {
 
@@ -35,15 +35,16 @@ public:
                                const vector<TrackSpecies> &,
                                const vector<double>, const double);
 
-  static void RatesAnalysisAtTimes(const vector<TrackSpecies> &,
-                                   const vector<TrackSpecies> &,
-                                   const vector<double> &, const double,
-                                   const vector<Species> species,
-                                   const vector<SingleReactionData> &);
+  static void
+  RatesAnalysisAtTimes(const vector<TrackSpecies> &,
+                       const vector<TrackSpecies> &, const vector<double> &,
+                       const double, const vector<Species> species,
+                       const vector<Reaction::SingleReactionData> &);
 
-  static void WriteMaxRatesAnalysis(vector<vector<str_RatesAnalysis>> &,
-                                    const vector<Species> &species,
-                                    const vector<SingleReactionData> &, string);
+  static void
+  WriteMaxRatesAnalysis(vector<vector<str_RatesAnalysis>> &,
+                        const vector<Species> &species,
+                        const vector<Reaction::SingleReactionData> &, string);
 
   static void PrepareStreamRatesAnalysis(const vector<Species> &species,
                                          string);

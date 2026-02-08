@@ -21,8 +21,6 @@ using std::cout;
 class ReactionMechanism {
 
 private:
-  // vector< Species > species;
-
 public:
   vector<Species> species;
 
@@ -59,9 +57,11 @@ public:
   static double Scale_A(double A_read_in, vector<double> ReactantData,
                         int scaling_type);
 
+  // static vector<ReactionParameters>
   static vector<SingleReactionData>
   Get_Reactions(string filename, const vector<Species> &species);
 
+  // static ReactionParameters
   static SingleReactionData
   Parse_Chemkin_Reaction_String(const vector<int> SchemeUnits,
                                 const vector<Species> &species, string line);

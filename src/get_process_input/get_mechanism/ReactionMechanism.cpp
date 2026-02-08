@@ -25,11 +25,10 @@ void ReactionMechanism::get_mechanism(string filename,
   /* Read in the mechanism, that is species, thermodynamic data and reactions.
    * Report on the progress as the sections are read in.
    */
-  // reaction_mechanism.Species = Get_Species(filename);
 
   vector<Species> species =
       Species::VectorClass(Species::Get_Species(filename));
-  // vector<string> vec_str_species = Species::Get_Species(filename);
+
   size_t Number_Species = species.size();
   cout << "Number species in mechanism:     " << std::setw(8) << Number_Species
        << " \n";
@@ -44,8 +43,6 @@ void ReactionMechanism::get_mechanism(string filename,
 
   vector<SingleReactionData> reactions =
       ReactionMechanism::Get_Reactions(filename, species);
-  // reaction_mechanism.Reactions = Get_Reactions(filename,
-  // reaction_mechanism.Species);
   size_t Number_Reactions = reactions.size();
   reaction_mechanism.Set_Reactions(reactions);
 

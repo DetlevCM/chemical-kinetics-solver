@@ -93,7 +93,8 @@ void SolverCalculation::Prepare_Jacobian_Matrix(
         }
 
         // reverse reaction - species production
-        if (Reactions[k].Reversible && Reactions[k].Products[i] != 0 &&
+        if (Reactions[k].parameters.Reversible &&
+            Reactions[k].Products[i] != 0 &&
             Reactions[k].Products[j] != 0) // differentiation species is present
         {
           temp.ColumnWiseArrayPosition = i * (Number_Species + 1) + j;
@@ -120,7 +121,8 @@ void SolverCalculation::Prepare_Jacobian_Matrix(
         }
 
         // species consumption
-        if (Reactions[k].Reversible && Reactions[k].Products[i] != 0 &&
+        if (Reactions[k].parameters.Reversible &&
+            Reactions[k].Products[i] != 0 &&
             Reactions[k].Reactants[j] !=
                 0) // differentiation species is present
         {

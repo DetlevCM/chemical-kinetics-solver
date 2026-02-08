@@ -10,11 +10,10 @@
 
 #include <omp.h>
 
-#include "../../global_struct.h"
-// #include "../../get_process_input/get_initial_data/Initial_Data.h"
 #include "../../get_process_input/get_mechanism/Reaction.h"
 #include "../../get_process_input/get_mechanism/ReactionMechanism.h"
 #include "../../get_process_input/get_mechanism/Species.h"
+#include "../../global_struct.h"
 
 class SolverCalculation {
 
@@ -24,6 +23,7 @@ private:
   vector<TrackSpecies> ReactantsForReactions;
   vector<TrackSpecies> ProductsForReactions;
   vector<TrackSpecies> SpeciesLossAll; // vector for recording species loss
+  vector<ReactionParameters> reaction_parameters;
 
   // vector of data needed for the calculation, really just set once
   vector<double> delta_n;
@@ -55,7 +55,6 @@ public:
   PressureVesselCalc PetroOxyData;
   // for limited Oxy
   double time_previous;
-
   // end PetroOxy variables
 
   struct ConstantInitRHSODE {
@@ -75,39 +74,35 @@ public:
 
   ConstantInitRHSODE InitialDataConstants;
 
-  vector<Reaction::ReactionParameter>
-      ReactionParameters; // tidier than reactions vector
-
   size_t Number_Species;   // old variable
   size_t Number_Reactions; // old variable
 
   vector<Species> species; // quickest and easiest way right now...
 
 public:
-  // cannot use the object in the solver with a member function
-  // so use a global object and then init & use helper function?
-  void init(vector<Species> vec_species, // quick and ugly...
-            size_t number_species, size_t number_reactions,
-            vector<TrackSpecies> reactantsForReactions,
-            vector<TrackSpecies> productsForReactions,
-            vector<TrackSpecies> speciesLossAll, vector<double> prep_delta_n) {
-    //// constant (i.e. set once) ////
+  // initialize the vectors that are needed for efficient calculation
+  void init(vector<Species> vec_species,
+            const vector<SingleReactionData> &mechanism_reactions) {
 
     ConstantInitRHSODE InitialDataConstants;
-    ReactantsForReactions = reactantsForReactions;
-    ProductsForReactions = productsForReactions;
-    SpeciesLossAll = speciesLossAll;
-    delta_n = prep_delta_n;
+
+    reaction_parameters = Process_Reaction_Parameters(mechanism_reactions);
+    ReactantsForReactions = Reactants_ForReactionRate(mechanism_reactions);
+    ProductsForReactions = Products_ForReactionRate(mechanism_reactions, false);
+    SpeciesLossAll = PrepareSpecies_ForSpeciesLoss(mechanism_reactions);
+    delta_n = Get_Delta_N(mechanism_reactions);
 
     species = vec_species;
 
-    Number_Species = species.size();
+    size_t number_species = species.size();
+    size_t number_reactions = reaction_parameters.size();
+
+    Number_Species = number_species;
     Number_Reactions = number_reactions;
 
     //// variable (values change during calculation ////
     CalculatedThermo.resize(number_species);
 
-    ReactionParameters.resize(number_reactions);
     Kf.resize(number_reactions);
     Kr.resize(number_reactions);
     Rates.resize(number_reactions);
@@ -116,6 +111,18 @@ public:
     Concentration.resize(number_species + 1);
     ConcentrationChange.resize(number_species + 1);
   };
+
+  static vector<double> Get_Delta_N(const vector<SingleReactionData> Reactions);
+
+  // pre-processing functions
+  static vector<ReactionParameters>
+  Process_Reaction_Parameters(const vector<SingleReactionData> &);
+  static vector<TrackSpecies>
+  Reactants_ForReactionRate(const vector<SingleReactionData> &);
+  static vector<TrackSpecies>
+  Products_ForReactionRate(const vector<SingleReactionData> &, bool);
+  static vector<TrackSpecies>
+  PrepareSpecies_ForSpeciesLoss(const vector<SingleReactionData> &);
 
   // The ODE RHS functions are split - regular initial value & pressure vessel
   // (reservoir)
@@ -130,17 +137,17 @@ public:
   //// BEGIN third body preparation
   //// needs a unit check
 
-  static double Calculate_no_LOW_Troe(const SingleReactionData &ReactionData,
-                                      const vector<double> &Concentration,
-                                      double T, double third_body);
+  double Calculate_no_LOW_Troe(const ReactionParameters &ReactionData,
+                               const vector<double> &Concentration, double T,
+                               double third_body);
 
-  static double
-  Calculate_Lindeman_Hinshelwood_SRI(const SingleReactionData &ReactionData,
+  double
+  Calculate_Lindeman_Hinshelwood_SRI(const ReactionParameters &ReactionData,
                                      const vector<double> &Concentration,
                                      double T, double third_body);
 
-  static double Calculate_Lindeman_Hinshelwood_Low_Troe(
-      const SingleReactionData &ReactionData,
+  double Calculate_Lindeman_Hinshelwood_Low_Troe(
+      const ReactionParameters &ReactionData,
       const vector<double> &Concentration,
       double T,         // current temperature
       double third_body // sum of third bodies, but which units, original

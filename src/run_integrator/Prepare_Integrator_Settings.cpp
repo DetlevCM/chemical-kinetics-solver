@@ -5,7 +5,7 @@
  *      Author: detlevcm
  */
 
-#include "run_integrator.h"
+#include "./integrate.h"
 
 int RunIntegrator::Prepare_Integrator_Settings(Initial_Data InitialParameters,
                                                size_t Number_Species,
@@ -62,7 +62,7 @@ int RunIntegrator::Prepare_Integrator_Settings(Initial_Data InitialParameters,
     Intel.hm =
         InitialParameters.Solver_Parameters
             .minimum_stepsize; // minimal step size for the methods, 1.0e-12
-                               // recommended for normalised problems
+                               // recommended for normalized problems
 
     Intel.Solver_Type = InitialParameters.Solver_Type[0];
 

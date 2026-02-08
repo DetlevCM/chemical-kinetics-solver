@@ -7,7 +7,7 @@
 
 #include "./Mechanism_Reduction.h"
 
-ReactionParameter MechanismReduction::Average_Ea_k_fitted_Slow(
+ArrheniusParameters MechanismReduction::Average_Ea_k_fitted_Slow(
     vector<SingleReactionData> &temp_reactions3, double temperature,
     size_t Reaction_Group_Size) {
 
@@ -16,7 +16,7 @@ ReactionParameter MechanismReduction::Average_Ea_k_fitted_Slow(
    */
 
   // cout << "Slow Parameter Calculation Function \n";
-  ReactionParameter ParameterOutput;
+  ArrheniusParameters ParameterOutput;
   size_t j;
 
   vector<double> Group_k(41);
@@ -28,13 +28,14 @@ ReactionParameter MechanismReduction::Average_Ea_k_fitted_Slow(
       double temp_mod = (double)k - 20.0;
 
       Group_k[k] =
-          Group_k[k] +
-          temp_reactions3[j].forward.A *
-              pow((temperature + temp_mod), temp_reactions3[j].forward.n) *
-              exp(-temp_reactions3[j].forward.Ea / (temperature + temp_mod));
+          Group_k[k] + temp_reactions3[j].parameters.forward.A *
+                           pow((temperature + temp_mod),
+                               temp_reactions3[j].parameters.forward.n) *
+                           exp(-temp_reactions3[j].parameters.forward.Ea /
+                               (temperature + temp_mod));
     }
     // get average Ea
-    fitted_Ea = fitted_Ea + temp_reactions3[j].forward.Ea;
+    fitted_Ea = fitted_Ea + temp_reactions3[j].parameters.forward.Ea;
   }
 
   // this is the new Ea for our fitted reaction
@@ -113,7 +114,6 @@ ReactionParameter MechanismReduction::Average_Ea_k_fitted_Slow(
   // fitted_A = Group_k[20] /
   // (pow(temperature,fitted_n)*exp(-fitted_Ea/temperature));
 
-  ParameterOutput.Reversible = false;
   ParameterOutput.A = fitted_A;
   ParameterOutput.n = fitted_n;
   ParameterOutput.Ea = fitted_Ea;

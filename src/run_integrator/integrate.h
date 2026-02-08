@@ -1,5 +1,5 @@
 /*
- * Run_Integrator.h
+ * integrate.h
  *
  *  Created on: 20 Oct 2017
  *      Author: detlevcm
@@ -68,8 +68,6 @@ public:
   static int Prepare_Integrator_Settings(Initial_Data, size_t, Settings_LSODA &,
                                          Settings_Intel &);
 
-  static vector<double> Get_Delta_N(const vector<SingleReactionData> Reactions);
-
   // solve based on concentrations in the liquid phase
   static void Integrate(ReactionMechanism reaction_mechanism,
                         Initial_Data InitialParameters,
@@ -78,18 +76,6 @@ public:
                         vector<vector<str_RatesAnalysis>> &RatesAnalysisData);
 
   //// Pre-Processing:
-
-  static vector<ReactionParameter>
-  Process_Reaction_Parameters(const vector<SingleReactionData> &);
-
-  static vector<TrackSpecies>
-  Reactants_ForReactionRate(const vector<SingleReactionData> &);
-
-  static vector<TrackSpecies>
-  Products_ForReactionRate(const vector<SingleReactionData> &, bool);
-
-  static vector<TrackSpecies>
-  PrepareSpecies_ForSpeciesLoss(const vector<SingleReactionData> &);
 };
 
 #endif

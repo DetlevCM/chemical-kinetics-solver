@@ -33,7 +33,7 @@ public:
                                               vector<SingleReactionData> &);
 
   static void mechanism_picking(string filename, vector<Species> &species,
-                                vector<SingleReactionData> &);
+                                vector<SingleReactionData> &Reactions);
 
   static void
   handle_reactions_with_chosen_species(string, vector<SpeciesPicking> &,
@@ -88,20 +88,20 @@ public:
       int LumpingType);
 
   // Some helpers for the reduction:
-  static Reaction::ReactionParameter
+  static Reaction::ArrheniusParameters
   Average_Ea_k_fitted_Fast(vector<SingleReactionData> &, double, size_t);
 
-  static Reaction::ReactionParameter
+  static Reaction::ArrheniusParameters
   Average_Ea_k_fitted_Slow(vector<SingleReactionData> &, double, size_t);
 
   // Some helpers for the reduction:
-  static Reaction::ReactionParameter
+  static Reaction::ArrheniusParameters
   n_zero_k_fitted_Fast(vector<SingleReactionData> &, double, size_t);
 
-  static Reaction::ReactionParameter
+  static Reaction::ArrheniusParameters
   n_zero_k_fitted_Slow(vector<SingleReactionData> &, double, size_t);
 
-  static Reaction::ReactionParameter
+  static Reaction::ArrheniusParameters
   Average_Ea_n_zero_k_fitted(vector<SingleReactionData> &, double, size_t);
 };
 

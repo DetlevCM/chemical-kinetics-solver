@@ -24,11 +24,11 @@ using std::vector;
 
 namespace Reaction {
 
-struct ReactionParameter {
-  bool Reversible; // want to get rid of this
-  double A;
-  double n;
-  double Ea;
+struct ArrheniusParameters {
+  // bool Reversible;
+  double A = 0.0;
+  double n = 0.0;
+  double Ea = 0.0;
 };
 
 struct ThirdBody_troe {
@@ -54,25 +54,29 @@ struct ThirdBodyParameters {
   double value;
 };
 
-struct SingleReactionData {
-  bool Reversible;
-  bool IsDuplicate;
+struct ReactionParameters {
+  bool Reversible = true;   // default
+  bool IsDuplicate = false; // default
 
-  ReactionParameter forward;
-  bool explicit_reverse;
-  ReactionParameter reverse; // not yet used, but preparation
+  ArrheniusParameters forward;
+  bool explicit_reverse = false; // default
+  ArrheniusParameters reverse;   // not yet used, but preparation
 
-  int ThirdBodyType; // 1: +M  2: (+M)
+  int ThirdBodyType = 0; // default is none, 0,  1: +M  2: (+M)
 
   bool collision_efficiency = false; // for third body reactions
 
-  ReactionParameter TB_low; // preparation
-  ThirdBody_troe TB_troe;   // preparation
+  ArrheniusParameters TB_low; // preparation
+  ThirdBody_troe TB_troe;     // preparation
 
   size_t sri_flag = 0; // default //// TODO improve
   ThirdBody_SRI TB_sri;
 
   vector<ThirdBodyParameters> TB_param;
+};
+
+struct SingleReactionData {
+  ReactionParameters parameters;
 
   vector<double> Reactants;
   vector<double> Products;

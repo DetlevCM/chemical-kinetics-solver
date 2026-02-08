@@ -9,7 +9,6 @@
 
 void MechanismReduction::mechanism_picking(
     string filename, vector<Species> &species,
-    // vector< Species::ThermodynamicData >& Thermodynamics,
     vector<SingleReactionData> &Reactions) {
 
   // Input File via a stream:
@@ -97,15 +96,12 @@ void MechanismReduction::mechanism_picking(
   }
 
   handle_reactions_with_chosen_species(line1, ChosenSpecies, species,
-                                       // Thermodynamics,
                                        Reactions);
 }
 
 void MechanismReduction::handle_reactions_with_chosen_species(
     string type, vector<SpeciesPicking> &ChosenSpecies,
-    vector<Species> &species,
-    // vector< Species::ThermodynamicData >& Thermodynamics,
-    vector<SingleReactionData> &Reactions) {
+    vector<Species> &species, vector<SingleReactionData> &Reactions) {
 
   // So, I_ need to find all and any reaction that contains a chosen species
   bool RunLoop;
@@ -115,7 +111,6 @@ void MechanismReduction::handle_reactions_with_chosen_species(
   size_t Number_Species = species.size();
 
   vector<string> PickedSpecies;
-  // vector< vector< double > > PickedThermodynamics;
   vector<Species::ThermodynamicData> PickedThermodynamics;
   vector<SingleReactionData> PickedReactions;
 

@@ -7,11 +7,11 @@
 
 #include "./Mechanism_Reduction.h"
 
-ReactionParameter
+ArrheniusParameters
 MechanismReduction::n_zero_k_fitted_Fast(vector<SingleReactionData> &Reactions,
                                          double temperature,
                                          size_t Reaction_Group_Size) {
-  ReactionParameter ParameterOutput;
+  ArrheniusParameters ParameterOutput;
   size_t j;
 
   vector<double> Group_k(3);
@@ -19,22 +19,23 @@ MechanismReduction::n_zero_k_fitted_Fast(vector<SingleReactionData> &Reactions,
 
   for (j = 0; j < Reaction_Group_Size; j++) {
     // lower temperature point
-    Group_k[0] = Group_k[0] + Reactions[j].forward.A *
+    Group_k[0] = Group_k[0] + Reactions[j].parameters.forward.A *
                                   pow((temperature - temperature_endpoints),
-                                      Reactions[j].forward.n) *
-                                  exp(-Reactions[j].forward.Ea /
+                                      Reactions[j].parameters.forward.n) *
+                                  exp(-Reactions[j].parameters.forward.Ea /
                                       (temperature - temperature_endpoints));
 
     // middle temperature point
-    Group_k[1] = Group_k[1] + Reactions[j].forward.A *
-                                  pow((temperature), Reactions[j].forward.n) *
-                                  exp(-Reactions[j].forward.Ea / (temperature));
+    Group_k[1] = Group_k[1] +
+                 Reactions[j].parameters.forward.A *
+                     pow((temperature), Reactions[j].parameters.forward.n) *
+                     exp(-Reactions[j].parameters.forward.Ea / (temperature));
 
     // upper temperature point
-    Group_k[2] = Group_k[2] + Reactions[j].forward.A *
+    Group_k[2] = Group_k[2] + Reactions[j].parameters.forward.A *
                                   pow((temperature + temperature_endpoints),
-                                      Reactions[j].forward.n) *
-                                  exp(-Reactions[j].forward.Ea /
+                                      Reactions[j].parameters.forward.n) *
+                                  exp(-Reactions[j].parameters.forward.Ea /
                                       (temperature + temperature_endpoints));
   }
 
@@ -55,7 +56,6 @@ MechanismReduction::n_zero_k_fitted_Fast(vector<SingleReactionData> &Reactions,
   // now need the intercept, use the middled point (average of end points)
   intercept = Group_k[1] + (1 / temperature) * gradient;
 
-  ParameterOutput.Reversible = false;
   ParameterOutput.A = exp(intercept);
   ParameterOutput.n = 0;
   ParameterOutput.Ea = gradient;

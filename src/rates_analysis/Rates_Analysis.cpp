@@ -7,7 +7,7 @@
 
 #include "./Rates-Analysis.h"
 
-// Indentify the largest rates
+// Identify the largest rates
 void RatesAnalysis::MaxRatesAnalysis(
     vector<vector<str_RatesAnalysis>> &RatesAnalysisData,
     const vector<TrackSpecies> &ProductsForRates,
@@ -51,7 +51,8 @@ void RatesAnalysis::MaxRatesAnalysis(
 // Simple for now
 void RatesAnalysis::WriteMaxRatesAnalysis(
     vector<vector<str_RatesAnalysis>> &RatesAnalysisData,
-    const vector<Species> &species, const vector<SingleReactionData> &Reactions,
+    const vector<Species> &species,
+    const vector<Reaction::SingleReactionData> &Reactions,
     string rates_analysis_stream_filename) {
 
   size_t Number_Species = RatesAnalysisData.size();
@@ -172,7 +173,7 @@ void RatesAnalysis::StreamRatesAnalysis(
 
   vector<str_RatesAnalysis> RatesAnalysisData(Number_Species);
 
-  // Sum the rates for all species - I'm not intereste in recording which
+  // Sum the rates for all species - I'm not interested in recording which
   // reactions take part
   for (i = 0; i < ProductsForRates.size(); i++) {
     RatesAnalysisData[ProductsForRates[i].SpeciesID].productionrate =
@@ -224,7 +225,7 @@ void RatesAnalysis::RatesAnalysisAtTimes(
     const vector<TrackSpecies> &ProductsForRates,
     const vector<TrackSpecies> &ReactantsForRates, const vector<double> &Rates,
     const double current_time, const vector<Species> species,
-    const vector<SingleReactionData> &Reactions) {
+    const vector<Reaction::SingleReactionData> &Reactions) {
   size_t i, j;
 
   i = 0;

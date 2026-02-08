@@ -8,7 +8,7 @@
 
 #include "./get_process_input/mechanism_reduction/Mechanism_Reduction.h"
 
-#include "./run_integrator/run_integrator.h"
+#include "./run_integrator/integrate.h"
 
 #include "./get_process_input/get_initial_data/Initial_Data.h"
 #include "./get_process_input/get_mechanism/ReactionMechanism.h"
@@ -84,7 +84,7 @@ void Process_User_Input(Filenames &filenames, vector<string> User_Inputs);
 
 void Calculate_Rate_Constant(
     vector<double> &Kf, vector<double> &Kr, const double Temperature,
-    const vector<Reaction::ReactionParameter> &ReactionParameters,
+    const vector<Reaction::ReactionParameters> &reactions,
     const vector<Species::ThermodynamicData::CalculatedThermodynamics>
         &CalculatedThermo,
     const vector<TrackSpecies> &SpeciesAll, const vector<double> &Delta_N);
