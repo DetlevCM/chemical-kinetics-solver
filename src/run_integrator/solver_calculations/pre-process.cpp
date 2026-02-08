@@ -1,47 +1,9 @@
-/*
- * Run_Integrator.cpp
- *
- *  Created on: 20.10.2017
- *      Author: DetlevCM
- */
 
-#include "./run_integrator.h"
+#include "./solver_calculations.h"
 
 //// NOTE: 4 pre-processing functions for the integration to proceed efficiently
 
-vector<TrackSpecies> RunIntegrator::PrepareSpecies_ForSpeciesLoss(
-    const vector<SingleReactionData> &Reactions) {
-
-  vector<TrackSpecies> SpeciesLossAll;
-  TrackSpecies temp;
-
-  for (size_t i = 0; i < Reactions[0].Reactants.size(); i++) {
-    for (size_t j = 0; j < Reactions.size(); j++) {
-      if (Reactions[j].Reactants[i] != 0) // Reactants
-      {
-        temp.SpeciesID = i;
-        temp.ReactionID = j;
-        temp.coefficient = Reactions[j].Reactants[i];
-        SpeciesLossAll.push_back(temp);
-      }
-    }
-    // not sure if this may not be more efficient - first just negative, then
-    // just positive
-    for (size_t j = 0; j < Reactions.size(); j++) {
-      if (Reactions[j].Products[i] != 0) // Products
-      {
-        temp.SpeciesID = i;
-        temp.ReactionID = j;
-        temp.coefficient = Reactions[j].Products[i];
-        SpeciesLossAll.push_back(temp);
-      }
-    }
-  }
-
-  return SpeciesLossAll;
-}
-
-vector<TrackSpecies> RunIntegrator::Reactants_ForReactionRate(
+vector<TrackSpecies> SolverCalculation::Reactants_ForReactionRate(
     const vector<SingleReactionData> &Reactions) {
   vector<TrackSpecies> temp_proc_reac;
   // Basically go through the reactions and accumulate the Relevant species
@@ -63,7 +25,7 @@ vector<TrackSpecies> RunIntegrator::Reactants_ForReactionRate(
   return temp_proc_reac;
 }
 
-vector<TrackSpecies> RunIntegrator::Products_ForReactionRate(
+vector<TrackSpecies> SolverCalculation::Products_ForReactionRate(
     const vector<SingleReactionData> &Reactions, bool SwitchType) {
   vector<TrackSpecies> temp_proc_reac;
   // Basically go through the reactions and accumulate the Relevant species
@@ -104,7 +66,7 @@ vector<TrackSpecies> RunIntegrator::Products_ForReactionRate(
   return temp_proc_reac;
 }
 
-vector<ReactionParameters> RunIntegrator::Process_Reaction_Parameters(
+vector<ReactionParameters> SolverCalculation::Process_Reaction_Parameters(
     const vector<SingleReactionData> &Reactions) {
 
   vector<ReactionParameters> output;
@@ -116,8 +78,40 @@ vector<ReactionParameters> RunIntegrator::Process_Reaction_Parameters(
   return output;
 }
 
+vector<TrackSpecies> SolverCalculation::PrepareSpecies_ForSpeciesLoss(
+    const vector<SingleReactionData> &Reactions) {
+
+  vector<TrackSpecies> SpeciesLossAll;
+  TrackSpecies temp;
+
+  for (size_t i = 0; i < Reactions[0].Reactants.size(); i++) {
+    for (size_t j = 0; j < Reactions.size(); j++) {
+      if (Reactions[j].Reactants[i] != 0) // Reactants
+      {
+        temp.SpeciesID = i;
+        temp.ReactionID = j;
+        temp.coefficient = Reactions[j].Reactants[i];
+        SpeciesLossAll.push_back(temp);
+      }
+    }
+    // not sure if this may not be more efficient - first just negative, then
+    // just positive
+    for (size_t j = 0; j < Reactions.size(); j++) {
+      if (Reactions[j].Products[i] != 0) // Products
+      {
+        temp.SpeciesID = i;
+        temp.ReactionID = j;
+        temp.coefficient = Reactions[j].Products[i];
+        SpeciesLossAll.push_back(temp);
+      }
+    }
+  }
+
+  return SpeciesLossAll;
+}
+
 vector<double>
-RunIntegrator::Get_Delta_N(const vector<SingleReactionData> Reactions) {
+SolverCalculation::Get_Delta_N(const vector<SingleReactionData> Reactions) {
 
   vector<double> delta_n(Reactions.size());
 

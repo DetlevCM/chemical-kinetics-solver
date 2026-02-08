@@ -8,7 +8,7 @@
 
 #include "./get_process_input/mechanism_reduction/Mechanism_Reduction.h"
 
-#include "./run_integrator/run_integrator.h"
+#include "./run_integrator/integrate.h"
 
 #include "./get_process_input/get_initial_data/Initial_Data.h"
 #include "./get_process_input/get_mechanism/ReactionMechanism.h"

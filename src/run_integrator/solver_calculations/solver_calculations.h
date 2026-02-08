@@ -55,8 +55,7 @@ public:
   // for limited Oxy
   double time_previous;
 
-  vector<ReactionParameters>
-      reactions; // This is ugly, but a quick fix... FIXME
+  vector<ReactionParameters> reaction_parameters;
 
   // end PetroOxy variables
 
@@ -85,26 +84,22 @@ public:
 public:
   // cannot use the object in the solver with a member function
   // so use a global object and then init & use helper function?
-  void init(vector<Species> vec_species, // quick and ugly...
-            vector<ReactionParameters> reactionParameters,
-            vector<TrackSpecies> reactantsForReactions,
-            vector<TrackSpecies> productsForReactions,
-            vector<TrackSpecies> speciesLossAll, vector<double> prep_delta_n) {
+  void init(vector<Species> vec_species,
+            const vector<SingleReactionData> &mechanism_reactions) {
     //// constant (i.e. set once) ////
 
     ConstantInitRHSODE InitialDataConstants;
-    ReactantsForReactions = reactantsForReactions;
-    ProductsForReactions = productsForReactions;
 
-    reactions = reactionParameters;
-
-    SpeciesLossAll = speciesLossAll;
-    delta_n = prep_delta_n;
+    reaction_parameters = Process_Reaction_Parameters(mechanism_reactions);
+    ReactantsForReactions = Reactants_ForReactionRate(mechanism_reactions);
+    ProductsForReactions = Products_ForReactionRate(mechanism_reactions, false);
+    SpeciesLossAll = PrepareSpecies_ForSpeciesLoss(mechanism_reactions);
+    delta_n = Get_Delta_N(mechanism_reactions);
 
     species = vec_species;
 
     size_t number_species = species.size();
-    size_t number_reactions = reactionParameters.size();
+    size_t number_reactions = reaction_parameters.size();
 
     Number_Species = number_species;
     Number_Reactions = number_reactions;
@@ -120,6 +115,18 @@ public:
     Concentration.resize(number_species + 1);
     ConcentrationChange.resize(number_species + 1);
   };
+
+  static vector<double> Get_Delta_N(const vector<SingleReactionData> Reactions);
+
+  // pre-processing functions
+  static vector<ReactionParameters>
+  Process_Reaction_Parameters(const vector<SingleReactionData> &);
+  static vector<TrackSpecies>
+  Reactants_ForReactionRate(const vector<SingleReactionData> &);
+  static vector<TrackSpecies>
+  Products_ForReactionRate(const vector<SingleReactionData> &, bool);
+  static vector<TrackSpecies>
+  PrepareSpecies_ForSpeciesLoss(const vector<SingleReactionData> &);
 
   // The ODE RHS functions are split - regular initial value & pressure vessel
   // (reservoir)

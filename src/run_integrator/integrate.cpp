@@ -7,7 +7,7 @@
 
 #include <chrono>
 
-#include "./run_integrator.h"
+#include "./integrate.h"
 #include "./write_output/write_output.h"
 
 void RunIntegrator::Integrate(
@@ -60,39 +60,22 @@ void RunIntegrator::Integrate(
                                               LSODA, Intel);
 
   // just make sure the Delta_N is current
-  vector<double> prep_delta_n = Get_Delta_N(reaction_mechanism.reactions);
+  // vector<double> prep_delta_n = Get_Delta_N(reaction_mechanism.reactions);
   // Reduce the matrix from a sparse matrix to something more manageable and
   // quicker to use
-
-  // vector<TrackSpecies> ReactantsForReactions =
-  //     Reactants_ForReactionRate(reaction_mechanism.reactions);
-
-  // vector<TrackSpecies> ProductsForReactions =
-  //     Products_ForReactionRate(reaction_mechanism.reactions, false);
 
   if (InitialParameters.MechanismAnalysis.MaximumRates ||
       InitialParameters.MechanismAnalysis.StreamRatesAnalysis ||
       InitialParameters.MechanismAnalysis.RatesAnalysisAtTime ||
       InitialParameters.MechanismAnalysis.RatesOfSpecies) {
-    ProductsForRatesAnalysis =
-        Products_ForReactionRate(reaction_mechanism.reactions, true);
+    ProductsForRatesAnalysis = SolverCalculation::Products_ForReactionRate(
+        reaction_mechanism.reactions, true);
   }
-
-  vector<TrackSpecies> SpeciesLossAll = PrepareSpecies_ForSpeciesLoss(
-      reaction_mechanism.reactions); // New method of listing species
 
   //// NOTE: Here initialises the Solver Calc class, in which the members act as
   //// global variables / for and during the calculation
-  solver_calculation.init(
-      reaction_mechanism.species,
-      // reaction_mechanism.species.size(),
-      // reaction_mechanism.reactions_size(),
-      RunIntegrator::Process_Reaction_Parameters(reaction_mechanism.reactions),
-      // ReactantsForReactions,
-      Reactants_ForReactionRate(reaction_mechanism.reactions),
-      // ProductsForReactions
-      Products_ForReactionRate(reaction_mechanism.reactions, false),
-      SpeciesLossAll, prep_delta_n);
+  solver_calculation.init(reaction_mechanism.species,
+                          reaction_mechanism.reactions);
 
   solver_calculation.Concentration =
       InitialParameters.InitialSpeciesConcentration;

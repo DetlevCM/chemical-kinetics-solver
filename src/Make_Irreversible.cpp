@@ -23,7 +23,7 @@
 
 #include "./main.h"
 
-#include "./run_integrator/run_integrator.h"
+#include "./run_integrator/integrate.h"
 #include "./run_integrator/solver_calculations/solver_calculations.h"
 
 // variant of the function for solver calculations to make irreversible
@@ -152,7 +152,7 @@ vector<SingleReactionData> Make_Irreversible(
   size_t Number_Species = species.size();
   size_t Number_Reactions = Reactions.size();
 
-  vector<double> Local_Delta_N = RunIntegrator::Get_Delta_N(Reactions);
+  vector<double> Local_Delta_N = SolverCalculation::Get_Delta_N(Reactions);
 
   // check temperature and range provided, else use default
   if (Initial_Temperature == 0) {
@@ -171,10 +171,11 @@ vector<SingleReactionData> Make_Irreversible(
   vector<TrackSpecies> LocalSpeciesLossAll;
 
   LocalReactantsForReactions =
-      RunIntegrator::Reactants_ForReactionRate(Reactions);
+      SolverCalculation::Reactants_ForReactionRate(Reactions);
   LocalProductsForReactions =
-      RunIntegrator::Products_ForReactionRate(Reactions, false);
-  LocalSpeciesLossAll = RunIntegrator::PrepareSpecies_ForSpeciesLoss(Reactions);
+      SolverCalculation::Products_ForReactionRate(Reactions, false);
+  LocalSpeciesLossAll =
+      SolverCalculation::PrepareSpecies_ForSpeciesLoss(Reactions);
   // Local copy of the global version. Needed to work out rate constants, but
   // are based on data in Reactions array
 
