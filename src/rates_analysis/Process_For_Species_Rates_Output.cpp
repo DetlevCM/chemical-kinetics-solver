@@ -14,7 +14,7 @@ void RatesAnalysis::Prepare_Print_Rates_Per_Species(
     // vector< double > & Rates,
     vector<Species> species, vector<size_t> SelectedSpeciesID,
     vector<vector<size_t>> ReactionsForSpeciesSelectedForRates //,
-    // vector< SingleReactionData >& Reactions
+    // vector< ReactionParameters >& Reactions
 ) {
 
   size_t i;

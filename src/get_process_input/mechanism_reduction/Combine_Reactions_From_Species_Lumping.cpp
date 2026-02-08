@@ -16,10 +16,10 @@
  * Ea as estimated by RMG (or as used in the supplied mechanism).
  */
 
-vector<SingleReactionData>
+vector<ReactionParameters>
 MechanismReduction::Process_Reactions_For_Species_Lumping(
     size_t Number_Species_Classes, const vector<size_t> SpeciesClassMapping,
-    vector<SingleReactionData> Reactions, double temperature,
+    vector<ReactionParameters> Reactions, double temperature,
     bool FastLumping, // this will calculated only 3 points, hence is fast
     int LumpingType) {
 
@@ -34,7 +34,7 @@ MechanismReduction::Process_Reactions_For_Species_Lumping(
    * the reaction matrix
    */
 
-  vector<SingleReactionData> temp_reactions1;
+  vector<ReactionParameters> temp_reactions1;
 
   vector<double> ReactantData; // Reactant Information
   ReactantData.resize(Number_Species_Classes);
@@ -56,7 +56,7 @@ MechanismReduction::Process_Reactions_For_Species_Lumping(
        << " species classes to process.\n";
 
   for (i = 0; i < Number_Reactions; i++) {
-    SingleReactionData SingleReactionData;
+    ReactionParameters ReactionParameters;
 
     // printf("i: %i \n j:",i);
     ReactantData.resize(Number_Species_Classes);
@@ -77,21 +77,21 @@ MechanismReduction::Process_Reactions_For_Species_Lumping(
     // Reaction Parameters Unaffected
 
     // reassemble output
-    SingleReactionData.Reactants = ReactantData;
-    SingleReactionData.Products = ProductData;
+    ReactionParameters.Reactants = ReactantData;
+    ReactionParameters.Products = ProductData;
 
-    SingleReactionData.forward.A = Reactions[i].forward.A;
-    SingleReactionData.forward.n = Reactions[i].forward.n;
-    SingleReactionData.forward.Ea = Reactions[i].forward.Ea;
-    SingleReactionData.Reversible = Reactions[i].Reversible;
+    ReactionParameters.forward.A = Reactions[i].forward.A;
+    ReactionParameters.forward.n = Reactions[i].forward.n;
+    ReactionParameters.forward.Ea = Reactions[i].forward.Ea;
+    ReactionParameters.Reversible = Reactions[i].Reversible;
 
-    // SingleReactionData.push_back(ReactionData);
+    // ReactionParameters.push_back(ReactionData);
     ReactantData.clear();
     ProductData.clear();
     ReactionData.clear();
 
-    temp_reactions1.push_back(SingleReactionData);
-    // SingleReactionData.clear();
+    temp_reactions1.push_back(ReactionParameters);
+    // ReactionParameters.clear();
   }
 
   /*//Test Matrix
@@ -119,8 +119,8 @@ MechanismReduction::Process_Reactions_For_Species_Lumping(
    * combined parameters. (Stupidly simple approximation again?)
    * */
 
-  vector<SingleReactionData> temp_reactions2(temp_reactions1);
-  vector<SingleReactionData> temp_reactions3;
+  vector<ReactionParameters> temp_reactions2(temp_reactions1);
+  vector<ReactionParameters> temp_reactions3;
 
   vector<size_t> Reaction_Grouping;
 
@@ -219,7 +219,7 @@ MechanismReduction::Process_Reactions_For_Species_Lumping(
     vector<double> ProductData(
         temp_reactions3[i].Products); // Product Information
 
-    SingleReactionData SingleReaction;
+    ReactionParameters SingleReaction;
 
     ReactionParameter NewParameters; // create working variable and initialise
     NewParameters.Reversible = true;

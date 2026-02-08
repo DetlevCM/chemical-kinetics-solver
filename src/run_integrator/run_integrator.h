@@ -68,7 +68,7 @@ public:
   static int Prepare_Integrator_Settings(Initial_Data, size_t, Settings_LSODA &,
                                          Settings_Intel &);
 
-  static vector<double> Get_Delta_N(const vector<SingleReactionData> Reactions);
+  static vector<double> Get_Delta_N(const vector<ReactionParameters> Reactions);
 
   // solve based on concentrations in the liquid phase
   static void Integrate(ReactionMechanism reaction_mechanism,
@@ -80,16 +80,16 @@ public:
   //// Pre-Processing:
 
   static vector<ReactionParameter>
-  Process_Reaction_Parameters(const vector<SingleReactionData> &);
+  Process_Reaction_Parameters(const vector<ReactionParameters> &);
 
   static vector<TrackSpecies>
-  Reactants_ForReactionRate(const vector<SingleReactionData> &);
+  Reactants_ForReactionRate(const vector<ReactionParameters> &);
 
   static vector<TrackSpecies>
-  Products_ForReactionRate(const vector<SingleReactionData> &, bool);
+  Products_ForReactionRate(const vector<ReactionParameters> &, bool);
 
   static vector<TrackSpecies>
-  PrepareSpecies_ForSpeciesLoss(const vector<SingleReactionData> &);
+  PrepareSpecies_ForSpeciesLoss(const vector<ReactionParameters> &);
 };
 
 #endif

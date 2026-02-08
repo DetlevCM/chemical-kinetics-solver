@@ -7,7 +7,7 @@ void ReactionMechanism::Set_Species(const vector<Species> &set_species) {
 }
 
 void ReactionMechanism::Set_Reactions(
-    const vector<SingleReactionData> &set_reactions) {
+    const vector<ReactionParameters> &set_reactions) {
   reactions = set_reactions;
 }
 
@@ -42,7 +42,7 @@ void ReactionMechanism::get_mechanism(string filename,
   //// NOTE: There is no longer a way to determine how many thermodynamic data
   /// entries have been read in
 
-  vector<SingleReactionData> reactions =
+  vector<ReactionParameters> reactions =
       ReactionMechanism::Get_Reactions(filename, species);
   // reaction_mechanism.Reactions = Get_Reactions(filename,
   // reaction_mechanism.Species);

@@ -169,7 +169,7 @@ int main(int argc, char *argv[]) {
 
     //*
     if (initial_parameters.MechanismReduction.ReduceReactions != 0) {
-      vector<SingleReactionData> ReducedReactions;
+      vector<ReactionParameters> ReducedReactions;
       ReducedReactions = MechanismReduction::ReduceReactionsNew(
           reaction_mechanism.species, reaction_mechanism.reactions, KeyRates);
 

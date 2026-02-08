@@ -8,7 +8,7 @@
 #include "./Reaction.h"
 
 void Reaction::WriteReactions(string filename, const vector<Species> &species,
-                              const vector<SingleReactionData> &Reactions) {
+                              const vector<ReactionParameters> &Reactions) {
   size_t i;
   ofstream ReactionsOutput(filename.c_str(), std::ios::out);
 
@@ -39,7 +39,7 @@ void Reaction::WriteReactions(string filename, const vector<Species> &species,
 string
 Reaction::Prepare_Single_Reaction_Output(size_t Number_Species,
                                          const vector<Species> &species,
-                                         const SingleReactionData &Reaction) {
+                                         const ReactionParameters &Reaction) {
   size_t i;
   bool check;
 

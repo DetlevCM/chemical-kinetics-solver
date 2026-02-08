@@ -84,13 +84,13 @@ void Process_User_Input(Filenames &filenames, vector<string> User_Inputs);
 
 void Calculate_Rate_Constant(
     vector<double> &Kf, vector<double> &Kr, const double Temperature,
-    const vector<Reaction::SingleReactionData> &reactions,
+    const vector<Reaction::ReactionParameters> &reactions,
     const vector<Species::ThermodynamicData::CalculatedThermodynamics>
         &CalculatedThermo,
     const vector<TrackSpecies> &SpeciesAll, const vector<double> &Delta_N);
 
-vector<SingleReactionData> Make_Irreversible(
-    vector<SingleReactionData> Reactions, const vector<Species> species,
+vector<ReactionParameters> Make_Irreversible(
+    vector<ReactionParameters> Reactions, const vector<Species> species,
     double Initial_Temperature, /// use initial temperature from initial data
     double Range                // specify +/- range around initial temperature
 );

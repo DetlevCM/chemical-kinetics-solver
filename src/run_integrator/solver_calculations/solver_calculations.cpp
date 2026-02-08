@@ -17,7 +17,7 @@ void SolverCalculation::Evaluate_Thermodynamic_Parameters(
 }
 
 double
-SolverCalculation::Calculate_no_LOW_Troe(const SingleReactionData &ReactionData,
+SolverCalculation::Calculate_no_LOW_Troe(const ReactionParameters &ReactionData,
                                          const vector<double> &Concentration,
                                          double T, double third_body) {
   double inv_T = 1.0 / T;
@@ -59,7 +59,7 @@ SolverCalculation::Calculate_no_LOW_Troe(const SingleReactionData &ReactionData,
 }
 
 double SolverCalculation::Calculate_Lindeman_Hinshelwood_SRI(
-    const SingleReactionData &ReactionData, const vector<double> &Concentration,
+    const ReactionParameters &ReactionData, const vector<double> &Concentration,
     double T, double third_body) {
   double inv_T = 1.0 / T;
   double kinf;
@@ -147,7 +147,7 @@ double SolverCalculation::Calculate_Lindeman_Hinshelwood_SRI(
 }
 
 double SolverCalculation::Calculate_Lindeman_Hinshelwood_Low_Troe(
-    const SingleReactionData &ReactionData, const vector<double> &Concentration,
+    const ReactionParameters &ReactionData, const vector<double> &Concentration,
     double T,         // current temperature
     double third_body // sum of third bodies, but which units, original
                       // molecules per cm3

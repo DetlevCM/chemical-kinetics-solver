@@ -8,7 +8,7 @@
 #include "./Mechanism_Reduction.h"
 
 ReactionParameter MechanismReduction::Average_Ea_k_fitted_Fast(
-    vector<SingleReactionData> &Reactions, double temperature,
+    vector<ReactionParameters> &Reactions, double temperature,
     size_t Reaction_Group_Size) {
 
   ReactionParameter ParameterOutput;

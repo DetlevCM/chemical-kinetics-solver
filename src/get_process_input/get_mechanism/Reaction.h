@@ -54,7 +54,7 @@ struct ThirdBodyParameters {
   double value;
 };
 
-struct SingleReactionData {
+struct ReactionParameters {
   bool Reversible;
   bool IsDuplicate;
 
@@ -79,10 +79,10 @@ struct SingleReactionData {
 };
 
 string Prepare_Single_Reaction_Output(size_t, const vector<Species> &,
-                                      const SingleReactionData &);
+                                      const ReactionParameters &);
 
 void WriteReactions(string, const vector<Species> &species,
-                    const vector<SingleReactionData> &);
+                    const vector<ReactionParameters> &);
 
 } // namespace Reaction
 

@@ -10,7 +10,7 @@
 //// NOTE: 4 pre-processing functions for the integration to proceed efficiently
 
 vector<TrackSpecies> RunIntegrator::PrepareSpecies_ForSpeciesLoss(
-    const vector<SingleReactionData> &Reactions) {
+    const vector<ReactionParameters> &Reactions) {
 
   vector<TrackSpecies> SpeciesLossAll;
   TrackSpecies temp;
@@ -42,7 +42,7 @@ vector<TrackSpecies> RunIntegrator::PrepareSpecies_ForSpeciesLoss(
 }
 
 vector<TrackSpecies> RunIntegrator::Reactants_ForReactionRate(
-    const vector<SingleReactionData> &Reactions) {
+    const vector<ReactionParameters> &Reactions) {
   vector<TrackSpecies> temp_proc_reac;
   // Basically go through the reactions and accumulate the Relevant species
 
@@ -64,7 +64,7 @@ vector<TrackSpecies> RunIntegrator::Reactants_ForReactionRate(
 }
 
 vector<TrackSpecies> RunIntegrator::Products_ForReactionRate(
-    const vector<SingleReactionData> &Reactions, bool SwitchType) {
+    const vector<ReactionParameters> &Reactions, bool SwitchType) {
   vector<TrackSpecies> temp_proc_reac;
   // Basically go through the reactions and accumulate the Relevant species
 
@@ -104,7 +104,7 @@ vector<TrackSpecies> RunIntegrator::Products_ForReactionRate(
 }
 
 vector<ReactionParameter> RunIntegrator::Process_Reaction_Parameters(
-    const vector<SingleReactionData> &Reactions) {
+    const vector<ReactionParameters> &Reactions) {
 
   vector<ReactionParameter> temp_output;
 
@@ -124,7 +124,7 @@ vector<ReactionParameter> RunIntegrator::Process_Reaction_Parameters(
 }
 
 vector<double>
-RunIntegrator::Get_Delta_N(const vector<SingleReactionData> Reactions) {
+RunIntegrator::Get_Delta_N(const vector<ReactionParameters> Reactions) {
 
   vector<double> delta_n(Reactions.size());
 

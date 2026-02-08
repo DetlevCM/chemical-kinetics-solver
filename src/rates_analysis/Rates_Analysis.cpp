@@ -51,7 +51,7 @@ void RatesAnalysis::MaxRatesAnalysis(
 // Simple for now
 void RatesAnalysis::WriteMaxRatesAnalysis(
     vector<vector<str_RatesAnalysis>> &RatesAnalysisData,
-    const vector<Species> &species, const vector<SingleReactionData> &Reactions,
+    const vector<Species> &species, const vector<ReactionParameters> &Reactions,
     string rates_analysis_stream_filename) {
 
   size_t Number_Species = RatesAnalysisData.size();
@@ -224,7 +224,7 @@ void RatesAnalysis::RatesAnalysisAtTimes(
     const vector<TrackSpecies> &ProductsForRates,
     const vector<TrackSpecies> &ReactantsForRates, const vector<double> &Rates,
     const double current_time, const vector<Species> species,
-    const vector<SingleReactionData> &Reactions) {
+    const vector<ReactionParameters> &Reactions) {
   size_t i, j;
 
   i = 0;

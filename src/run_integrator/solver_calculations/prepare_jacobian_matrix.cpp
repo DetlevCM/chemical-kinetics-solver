@@ -11,7 +11,7 @@
 
 void SolverCalculation::Prepare_Jacobian_Matrix(
     vector<JacobianData> &JacobianColumnWise,
-    const vector<Reaction::SingleReactionData> &Reactions) {
+    const vector<Reaction::ReactionParameters> &Reactions) {
   JacobianColumnWise.clear();
 
   size_t Number_Species =

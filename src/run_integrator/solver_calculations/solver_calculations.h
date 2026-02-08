@@ -55,7 +55,7 @@ public:
   // for limited Oxy
   double time_previous;
 
-  vector<SingleReactionData>
+  vector<ReactionParameters>
       reactions; // This is ugly, but a quick fix... FIXME
 
   // end PetroOxy variables
@@ -86,7 +86,7 @@ public:
   // cannot use the object in the solver with a member function
   // so use a global object and then init & use helper function?
   void init(vector<Species> vec_species, // quick and ugly...
-            const vector<SingleReactionData> &Reactions,
+            const vector<ReactionParameters> &Reactions,
             vector<TrackSpecies> reactantsForReactions,
             vector<TrackSpecies> productsForReactions,
             vector<TrackSpecies> speciesLossAll, vector<double> prep_delta_n) {
@@ -134,17 +134,17 @@ public:
   //// BEGIN third body preparation
   //// needs a unit check
 
-  double Calculate_no_LOW_Troe(const SingleReactionData &ReactionData,
+  double Calculate_no_LOW_Troe(const ReactionParameters &ReactionData,
                                const vector<double> &Concentration, double T,
                                double third_body);
 
   double
-  Calculate_Lindeman_Hinshelwood_SRI(const SingleReactionData &ReactionData,
+  Calculate_Lindeman_Hinshelwood_SRI(const ReactionParameters &ReactionData,
                                      const vector<double> &Concentration,
                                      double T, double third_body);
 
   double Calculate_Lindeman_Hinshelwood_Low_Troe(
-      const SingleReactionData &ReactionData,
+      const ReactionParameters &ReactionData,
       const vector<double> &Concentration,
       double T,         // current temperature
       double third_body // sum of third bodies, but which units, original
@@ -184,7 +184,7 @@ public:
 
   void Prepare_Jacobian_Matrix(
       vector<JacobianData> &JacobianColumnWise,
-      const vector<Reaction::SingleReactionData> &Reactions);
+      const vector<Reaction::ReactionParameters> &Reactions);
 
   void Jacobian_Matrix_Intel(int *, double *, double *, double *);
 

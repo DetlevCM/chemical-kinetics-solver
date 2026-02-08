@@ -63,14 +63,14 @@ void MechanismReduction::Reduce_Species_Thermo_Mechanism(
     vector<bool> RetainOrNot, vector<Species> &species,
     // vector< vector< double > >& Thermodynamics,
     // vector< Species::ThermodynamicData > & Thermodynamics,
-    vector<SingleReactionData> &Reactions) {
+    vector<ReactionParameters> &Reactions) {
 
   size_t i, j;
   size_t Number_Species = species.size();
   vector<Species> NewSpecies;
   // vector< vector< double > >
   vector<Species::ThermodynamicData> NewThermodynamics;
-  vector<SingleReactionData> NewReactions;
+  vector<ReactionParameters> NewReactions;
 
   for (i = 0; i < Number_Species; i++) {
     if (RetainOrNot[i]) { // if we retain the species, write it to the new
@@ -95,7 +95,7 @@ void MechanismReduction::Reduce_Species_Thermo_Mechanism(
       }
     }
 
-    SingleReactionData SingleReactionData;
+    ReactionParameters ReactionParameters;
 
     if (!kill) // if not kill true, retain
     {
@@ -110,16 +110,16 @@ void MechanismReduction::Reduce_Species_Thermo_Mechanism(
         }
       }
 
-      SingleReactionData.Reactants = Reactants;
-      SingleReactionData.Products = Products;
+      ReactionParameters.Reactants = Reactants;
+      ReactionParameters.Products = Products;
 
-      SingleReactionData.forward.A = Reactions[j].forward.A;
-      SingleReactionData.forward.n = Reactions[j].forward.n;
-      SingleReactionData.forward.Ea = Reactions[j].forward.Ea;
-      SingleReactionData.Reversible = Reactions[j].Reversible;
-      SingleReactionData.IsDuplicate = Reactions[j].IsDuplicate;
+      ReactionParameters.forward.A = Reactions[j].forward.A;
+      ReactionParameters.forward.n = Reactions[j].forward.n;
+      ReactionParameters.forward.Ea = Reactions[j].forward.Ea;
+      ReactionParameters.Reversible = Reactions[j].Reversible;
+      ReactionParameters.IsDuplicate = Reactions[j].IsDuplicate;
 
-      NewReactions.push_back(SingleReactionData);
+      NewReactions.push_back(ReactionParameters);
     }
   }
 

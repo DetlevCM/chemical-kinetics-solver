@@ -30,15 +30,15 @@ public:
 
   static void Reduce_Species_Thermo_Mechanism(vector<bool>,
                                               vector<Species> &species,
-                                              vector<SingleReactionData> &);
+                                              vector<ReactionParameters> &);
 
   static void mechanism_picking(string filename, vector<Species> &species,
-                                vector<SingleReactionData> &);
+                                vector<ReactionParameters> &);
 
   static void
   handle_reactions_with_chosen_species(string, vector<SpeciesPicking> &,
                                        vector<Species> &species,
-                                       vector<SingleReactionData> &);
+                                       vector<ReactionParameters> &);
 
   /* ******************************************************* */
   /*  various functions associated with mechanism reduction  */
@@ -53,9 +53,9 @@ public:
                                      const vector<double> &Rates,
                                      double parameter);
 
-  static vector<SingleReactionData>
+  static vector<ReactionParameters>
   ReduceReactionsNew(const vector<Species> &species,
-                     const vector<SingleReactionData> &,
+                     const vector<ReactionParameters> &,
                      const vector<double> &);
 
   static vector<double>
@@ -81,28 +81,28 @@ public:
   Process_Thermodynamics_Species_Classes(const vector<size_t> &SpeciesMapping,
                                          vector<Species> species);
 
-  static vector<SingleReactionData> Process_Reactions_For_Species_Lumping(
+  static vector<ReactionParameters> Process_Reactions_For_Species_Lumping(
       size_t Number_Species_Classes, const vector<size_t> SpeciesClassMapping,
-      vector<SingleReactionData> Reactions, double temperature,
+      vector<ReactionParameters> Reactions, double temperature,
       bool FastLumping, // this will calculated only 3 points, hence is fast
       int LumpingType);
 
   // Some helpers for the reduction:
   static Reaction::ReactionParameter
-  Average_Ea_k_fitted_Fast(vector<SingleReactionData> &, double, size_t);
+  Average_Ea_k_fitted_Fast(vector<ReactionParameters> &, double, size_t);
 
   static Reaction::ReactionParameter
-  Average_Ea_k_fitted_Slow(vector<SingleReactionData> &, double, size_t);
+  Average_Ea_k_fitted_Slow(vector<ReactionParameters> &, double, size_t);
 
   // Some helpers for the reduction:
   static Reaction::ReactionParameter
-  n_zero_k_fitted_Fast(vector<SingleReactionData> &, double, size_t);
+  n_zero_k_fitted_Fast(vector<ReactionParameters> &, double, size_t);
 
   static Reaction::ReactionParameter
-  n_zero_k_fitted_Slow(vector<SingleReactionData> &, double, size_t);
+  n_zero_k_fitted_Slow(vector<ReactionParameters> &, double, size_t);
 
   static Reaction::ReactionParameter
-  Average_Ea_n_zero_k_fitted(vector<SingleReactionData> &, double, size_t);
+  Average_Ea_n_zero_k_fitted(vector<ReactionParameters> &, double, size_t);
 };
 
 #endif

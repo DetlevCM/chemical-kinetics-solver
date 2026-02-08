@@ -8,7 +8,7 @@
 #include "./write_output.h"
 
 void WriteOutput::Input_File_For_Ehsan_Opt(
-    string filename, const vector<SingleReactionData> &Reactions) {
+    string filename, const vector<ReactionParameters> &Reactions) {
   size_t i, j;
   ofstream Output(filename.c_str(), ios::out);
 

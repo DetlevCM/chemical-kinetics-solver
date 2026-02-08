@@ -36,14 +36,14 @@ void MechanismReduction::ReactionRateImportance(vector<double> &KeyRates,
 }
 
 // retain the reactions found to be important
-vector<SingleReactionData> MechanismReduction::ReduceReactionsNew(
-    const vector<Species> &species, const vector<SingleReactionData> &Reactions,
+vector<ReactionParameters> MechanismReduction::ReduceReactionsNew(
+    const vector<Species> &species, const vector<ReactionParameters> &Reactions,
     const vector<double> &SelectedReactions) {
 
   size_t i;
 
-  vector<SingleReactionData> ReducedReactions;
-  vector<SingleReactionData> ReducedReactionsRemoved;
+  vector<ReactionParameters> ReducedReactions;
+  vector<ReactionParameters> ReducedReactionsRemoved;
 
   for (i = 0; i < SelectedReactions.size(); i++) {
     // cout << i << "\n";

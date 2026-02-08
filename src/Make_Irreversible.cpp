@@ -29,7 +29,7 @@
 // variant of the function for solver calculations to make irreversible
 void Calculate_Rate_Constant(
     vector<double> &Kf, vector<double> &Kr, const double Temperature,
-    const vector<Reaction::SingleReactionData> &reactions,
+    const vector<Reaction::ReactionParameters> &reactions,
     const vector<Species::ThermodynamicData::CalculatedThermodynamics>
         &CalculatedThermo,
     const vector<TrackSpecies> &SpeciesAll, const vector<double> &Delta_N)
@@ -139,12 +139,12 @@ void Calculate_Rate_Constant(
   }
 }
 
-vector<SingleReactionData> Make_Irreversible(
-    vector<SingleReactionData> Reactions, vector<Species> species,
+vector<ReactionParameters> Make_Irreversible(
+    vector<ReactionParameters> Reactions, vector<Species> species,
     double Initial_Temperature, /// use initial temperature from initial data
     double Range                // specify +/- range around initial temperature
 ) {
-  vector<SingleReactionData> Irreversible_Scheme;
+  vector<ReactionParameters> Irreversible_Scheme;
 
   cout << "Initial temperature for conversion to irreversible scheme: "
        << Initial_Temperature << "\n";
@@ -329,7 +329,7 @@ vector<SingleReactionData> Make_Irreversible(
     }
   }
 
-  SingleReactionData SingleReaction;
+  ReactionParameters SingleReaction;
   // assemble the arrays for writing a new reactions array
   vector<double> ReactantData; // Reactant Information
   ReactantData.resize(Number_Species);

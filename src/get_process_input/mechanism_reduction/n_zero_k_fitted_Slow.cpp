@@ -8,7 +8,7 @@
 #include "./Mechanism_Reduction.h"
 
 ReactionParameter
-MechanismReduction::n_zero_k_fitted_Slow(vector<SingleReactionData> &Reactions,
+MechanismReduction::n_zero_k_fitted_Slow(vector<ReactionParameters> &Reactions,
                                          double temperature,
                                          size_t Reaction_Group_Size) {
   ReactionParameter ParameterOutput;
