@@ -114,7 +114,6 @@ ArrheniusParameters MechanismReduction::Average_Ea_k_fitted_Slow(
   // fitted_A = Group_k[20] /
   // (pow(temperature,fitted_n)*exp(-fitted_Ea/temperature));
 
-  ParameterOutput.Reversible = false;
   ParameterOutput.A = fitted_A;
   ParameterOutput.n = fitted_n;
   ParameterOutput.Ea = fitted_Ea;

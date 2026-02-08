@@ -56,7 +56,6 @@ MechanismReduction::n_zero_k_fitted_Fast(vector<SingleReactionData> &Reactions,
   // now need the intercept, use the middled point (average of end points)
   intercept = Group_k[1] + (1 / temperature) * gradient;
 
-  ParameterOutput.Reversible = false;
   ParameterOutput.A = exp(intercept);
   ParameterOutput.n = 0;
   ParameterOutput.Ea = gradient;

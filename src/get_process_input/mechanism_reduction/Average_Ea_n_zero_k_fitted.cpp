@@ -99,7 +99,6 @@ ArrheniusParameters MechanismReduction::Average_Ea_n_zero_k_fitted(
   // now need the intercept
   // double intercept  = Group_k[20]+(1/temperature)*gradient;
 
-  ParameterOutput.Reversible = false;
   ParameterOutput.A = exp(ln_fitted_a);
   ParameterOutput.n = fitted_n;
   ParameterOutput.Ea = fitted_Ea;

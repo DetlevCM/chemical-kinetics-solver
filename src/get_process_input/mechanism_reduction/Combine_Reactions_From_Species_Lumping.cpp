@@ -220,10 +220,9 @@ MechanismReduction::Process_Reactions_For_Species_Lumping(
         temp_reactions3[i].Products); // Product Information
 
     ArrheniusParameters NewParameters; // create working variable and initialise
-    NewParameters.Reversible = true;
-    NewParameters.A = 0;
-    NewParameters.n = 0;
-    NewParameters.Ea = 0;
+    NewParameters.A = 0.0;
+    NewParameters.n = 0.0;
+    NewParameters.Ea = 0.0;
 
     if (Reaction_Grouping[i] > 1) {
       if (LumpingType == 1) {
@@ -249,7 +248,6 @@ MechanismReduction::Process_Reactions_For_Species_Lumping(
     } else // avoid the mathematics for reactions that aren't grouped, use
            // previous values
     {
-      NewParameters.Reversible = false; // must be irreversible, else no lumping
       NewParameters.A = temp_reactions3[i].parameters.forward.A;
       NewParameters.n = temp_reactions3[i].parameters.forward.n;
       NewParameters.Ea = temp_reactions3[i].parameters.forward.Ea;
@@ -261,9 +259,8 @@ MechanismReduction::Process_Reactions_For_Species_Lumping(
     SingleReactionParameters.forward.n = NewParameters.n;
     SingleReactionParameters.forward.Ea = NewParameters.Ea;
 
-    SingleReactionParameters.Reversible = NewParameters.Reversible;
-    // SingleReaction.Reversible = false; // lumping only works on irreversible
-    // scheme
+    SingleReactionParameters.Reversible =
+        false; // lumping only works on irreversible scheme
     SingleReactionParameters.IsDuplicate =
         false; // this will break Chemkin compatibility, but short of
                // reanalyzing the scheme duplicates can't be identified

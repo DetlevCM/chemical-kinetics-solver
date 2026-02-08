@@ -56,7 +56,6 @@ MechanismReduction::n_zero_k_fitted_Slow(vector<SingleReactionData> &Reactions,
   // now need the intercept
   intercept = Group_k[20] + (1 / temperature) * gradient;
 
-  ParameterOutput.Reversible = false;
   ParameterOutput.A = exp(intercept);
   ParameterOutput.n = 0;
   ParameterOutput.Ea = gradient;

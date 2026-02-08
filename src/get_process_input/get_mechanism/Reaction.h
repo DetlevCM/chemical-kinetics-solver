@@ -25,10 +25,10 @@ using std::vector;
 namespace Reaction {
 
 struct ArrheniusParameters {
-  bool Reversible; // want to get rid of this
-  double A;
-  double n;
-  double Ea;
+  // bool Reversible;
+  double A = 0.0;
+  double n = 0.0;
+  double Ea = 0.0;
 };
 
 struct ThirdBody_troe {
@@ -55,14 +55,14 @@ struct ThirdBodyParameters {
 };
 
 struct ReactionParameters {
-  bool Reversible;
-  bool IsDuplicate;
+  bool Reversible = true;   // default
+  bool IsDuplicate = false; // default
 
   ArrheniusParameters forward;
-  bool explicit_reverse;
-  ArrheniusParameters reverse; // not yet used, but preparation
+  bool explicit_reverse = false; // default
+  ArrheniusParameters reverse;   // not yet used, but preparation
 
-  int ThirdBodyType; // 1: +M  2: (+M)
+  int ThirdBodyType = 0; // default is none, 0,  1: +M  2: (+M)
 
   bool collision_efficiency = false; // for third body reactions
 

@@ -114,9 +114,6 @@ ArrheniusParameters MechanismReduction::Average_Ea_k_fitted_Fast(
   // fitted_A = Group_k[1] / denominator;
   // cout << fitted_A << "\n";
 
-  ParameterOutput.Reversible =
-      false; // reactions must be irreversible for lumping, they will come out
-             // irreversible
   ParameterOutput.A = fitted_A;
   ParameterOutput.n = fitted_n;
   ParameterOutput.Ea = fitted_Ea;
