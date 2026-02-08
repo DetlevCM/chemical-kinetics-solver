@@ -217,8 +217,6 @@ double SolverCalculation::Calculate_Lindeman_Hinshelwood_Low_Troe(
   }
 
   // double mod_third_body_molecules_cm3 = mod_third_body/1000.0*6.0221e23;
-
-  // kappa = log10(kzero*mod_third_body/kinf) - 0.4 -0.67*log10(Fc);
   kappa = log10(kzero * mod_third_body / kinf) - 0.4 - 0.67 * log10(Fc);
   F = pow(10,
           (log10(Fc) /

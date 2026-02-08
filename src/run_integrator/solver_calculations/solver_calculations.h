@@ -11,7 +11,6 @@
 #include <omp.h>
 
 #include "../../global_struct.h"
-// #include "../../get_process_input/get_initial_data/Initial_Data.h"
 #include "../../get_process_input/get_mechanism/Reaction.h"
 #include "../../get_process_input/get_mechanism/ReactionMechanism.h"
 #include "../../get_process_input/get_mechanism/Species.h"
@@ -87,7 +86,6 @@ public:
   // cannot use the object in the solver with a member function
   // so use a global object and then init & use helper function?
   void init(vector<Species> vec_species, // quick and ugly...
-                                         // size_t number_reactions,
             const vector<SingleReactionData> &Reactions,
             vector<TrackSpecies> reactantsForReactions,
             vector<TrackSpecies> productsForReactions,
