@@ -273,9 +273,6 @@ bool Handle_Mechanism_Input(Filenames filenames,
           SpeciesClassMapping[InitialParameters.PetroOxy.GasSpecies];
     }
 
-    // Number_Species = Number_Species_Classes; // Number_Species is accessed
-    // later
-    //  and not re-evaluated
     InitialParameters.InitialSpeciesConcentration
         .clear(); // we overwrite the reactions, so why not the initial
                   // concentrations, can be used later for reset

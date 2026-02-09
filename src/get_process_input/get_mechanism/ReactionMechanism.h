@@ -6,8 +6,14 @@
 
 #include "Species.h"
 
-#include "./Reaction.h"
-using namespace Reaction;
+#include <fstream>
+#include <iostream>
+
+using std::cout;
+using std::ofstream;
+
+#include <sstream>
+using std::ostringstream;
 
 #include <string>
 using std::string;
@@ -17,6 +23,78 @@ using std::vector;
 
 using std::cout;
 #include <iomanip>
+
+#include <math.h>
+
+namespace Reaction {
+
+struct ArrheniusParameters {
+  // bool Reversible;
+  double A = 0.0;
+  double n = 0.0;
+  double Ea = 0.0;
+};
+
+struct ThirdBody_troe {
+  double a = 0.0;
+  double T1 = 0.0;
+  double T2 = 0.0; // only in 4 parameter troe
+  double T3 = 0.0;
+  bool is_4_param = false; // default
+  bool has_troe = false;
+};
+
+struct ThirdBody_SRI {
+  double a = 0.0;
+  double b = 0.0;
+  double c = 0.0;
+  double d = 1.0; // default
+  double e = 0.0; // default
+  bool is_5_param = false;
+};
+
+struct ThirdBodyParameters {
+  size_t SpeciesID;
+  double value;
+};
+
+struct ReactionParameters {
+  bool Reversible = true;   // default
+  bool IsDuplicate = false; // default
+
+  ArrheniusParameters forward;
+  bool explicit_reverse = false; // default
+  ArrheniusParameters reverse;   // not yet used, but preparation
+
+  int ThirdBodyType = 0; // default is none, 0,  1: +M  2: (+M)
+
+  bool collision_efficiency = false; // for third body reactions
+
+  ArrheniusParameters TB_low; // preparation
+  ThirdBody_troe TB_troe;     // preparation
+
+  size_t sri_flag = 0; // default //// TODO improve
+  ThirdBody_SRI TB_sri;
+
+  vector<ThirdBodyParameters> TB_param;
+};
+
+struct SingleReactionData {
+  ReactionParameters parameters;
+
+  vector<double> Reactants;
+  vector<double> Products;
+};
+
+string Prepare_Single_Reaction_Output(size_t, const vector<Species> &,
+                                      const SingleReactionData &);
+
+void WriteReactions(string, const vector<Species> &species,
+                    const vector<SingleReactionData> &);
+
+} // namespace Reaction
+
+using namespace Reaction;
 
 class ReactionMechanism {
 
@@ -28,7 +106,6 @@ public:
 
   size_t species_size() { return species.size(); }
 
-private:
 public:
   vector<SingleReactionData> reactions;
 

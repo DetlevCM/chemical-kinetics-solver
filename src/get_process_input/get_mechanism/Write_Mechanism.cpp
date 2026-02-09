@@ -5,7 +5,7 @@
  *      Author: DetlevCM
  */
 
-#include "./Reaction.h"
+#include "./ReactionMechanism.h"
 
 void Reaction::WriteReactions(string filename, const vector<Species> &species,
                               const vector<SingleReactionData> &Reactions) {

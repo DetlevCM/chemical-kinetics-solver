@@ -10,7 +10,6 @@
 
 #include <omp.h>
 
-#include "../../get_process_input/get_mechanism/Reaction.h"
 #include "../../get_process_input/get_mechanism/ReactionMechanism.h"
 #include "../../get_process_input/get_mechanism/Species.h"
 #include "../../global_struct.h"
