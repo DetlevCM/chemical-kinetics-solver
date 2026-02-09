@@ -38,7 +38,6 @@ void MechanismReduction::mechanism_picking(
       getline(ReductionData, line); // Output Control
 
       // read species name, compare to known species, ID which is it
-      size_t found;
 
       // strip any comments
       if (!line.empty()) {
@@ -51,7 +50,6 @@ void MechanismReduction::mechanism_picking(
                            // reached or comment
 
         // create a list of species
-        // string species_name = trim_string(line, " \t");
         vector<string> picked_species = Tokenise_String_To_String(line, " \t");
 
         // check which species I need to retain

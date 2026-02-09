@@ -13,8 +13,6 @@ void MechanismReduction::ReportAccuracy(string separator, size_t Number_Species,
                                         string base_concentrations,
                                         string reduced_concentrations) {
 
-  size_t i;
-
   ifstream Input_Data_Full;
   Input_Data_Full.open(base_concentrations.c_str());
 
