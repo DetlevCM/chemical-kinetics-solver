@@ -122,7 +122,7 @@ void Initial_Data::Handle_Solver_Parameters(Initial_Data &InitialParameters,
       vector<string> entries = Tokenise_String_To_String(Input[i], " \t");
       if (entries.size() >= 2) // should be two positions, 2nd is value
       {
-        InitialParameters.Solver_Parameters.threads = stod(entries[1]);
+        InitialParameters.Solver_Parameters.threads = stoi(entries[1]);
       }
       cout << "threads: " << InitialParameters.Solver_Parameters.threads
            << "\n";

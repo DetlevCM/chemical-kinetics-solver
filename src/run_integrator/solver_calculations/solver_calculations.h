@@ -83,8 +83,6 @@ public:
   void init(vector<Species> vec_species,
             const vector<SingleReactionData> &mechanism_reactions) {
 
-    ConstantInitRHSODE InitialDataConstants;
-
     reaction_parameters = Process_Reaction_Parameters(mechanism_reactions);
     ReactantsForReactions = Reactants_ForReactionRate(mechanism_reactions);
     ProductsForReactions = Products_ForReactionRate(mechanism_reactions, false);

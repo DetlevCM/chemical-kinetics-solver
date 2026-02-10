@@ -260,35 +260,38 @@ void SolverCalculation::Calculate_Rate_Constant(const double Temperature) {
     third_body_sum = third_body_sum + Concentration[i];
   }
 
+  // cout << omp_get_num_threads() << "\n";
+
 #pragma omp parallel for
   for (size_t i = 0; i < Number_Reactions;
        i++) // Straightforward Arrhenius Expression/Equation
   {
-    Kf[i] = reaction_parameters[i].forward.A *
-            exp(-reaction_parameters[i].forward.Ea /
-                Temperature); // do NOT forget the - !!!
 
-    //* Speedup by only raising temperature to power where needed
-    if (reaction_parameters[i].forward.n !=
-        0.0) // raising to power 0 has no effect
+    if (reaction_parameters[i].ThirdBodyType == 0) // normal reaction
     {
-      Kf[i] = Kf[i] * pow(Temperature, reaction_parameters[i].forward.n);
+      Kf[i] = reaction_parameters[i].forward.A *
+              exp(-reaction_parameters[i].forward.Ea /
+                  Temperature); // do NOT forget the - !!!
+
+      //* Speedup by only raising temperature to power where needed
+      if (reaction_parameters[i].forward.n !=
+          0.0) // raising to power 0 has no effect
+      {
+        Kf[i] = Kf[i] * pow(Temperature, reaction_parameters[i].forward.n);
+      }
+
+      /*
+      cout <<
+          //		Temperature << " , " <<
+          //		exp(-reaction_parameters[i].paramEa/Temperature) << " ,
+      " << reaction_parameters[i].forward.A << " , " <<
+      reaction_parameters[i].forward.n << " , "
+           << reaction_parameters[i].forward.Ea << " , " << Kf[i] << "\n"; //*/
+
     }
-
-    /*
-    cout <<
-        //		Temperature << " , " <<
-        //		exp(-reaction_parameters[i].paramEa/Temperature) << " ,
-    " << reaction_parameters[i].forward.A << " , " <<
-    reaction_parameters[i].forward.n << " , "
-         << reaction_parameters[i].forward.Ea << " , " << Kf[i] << "\n"; //*/
-
-    //*
-
     // Note: third_body_sum is in mol/L at this point
-
     // Calculate_Lindeman_Hinshelwood_SRI_Low();
-    if (reaction_parameters[i].ThirdBodyType == 1) {
+    else if (reaction_parameters[i].ThirdBodyType == 1) {
       Kf[i] = Calculate_no_LOW_Troe(reaction_parameters[i], Concentration,
                                     Temperature, third_body_sum);
     } else if (reaction_parameters[i].ThirdBodyType == 2 &&
@@ -300,10 +303,9 @@ void SolverCalculation::Calculate_Rate_Constant(const double Temperature) {
       Kf[i] = Calculate_Lindeman_Hinshelwood_Low_Troe(
           reaction_parameters[i], Concentration, Temperature, third_body_sum);
     }
-    //*/
 
     // default, change if reversible - seems a little bit faster...
-    Kr[i] = 0;
+    // Kr[i] = 0;
     // then calculate and set the reverse if required
     if (reaction_parameters[i].Reversible &&
         reaction_parameters[i].explicit_reverse == false) {
@@ -311,7 +313,7 @@ void SolverCalculation::Calculate_Rate_Constant(const double Temperature) {
       delta_G[i] = delta_H[i] - Temperature * delta_S[i];
       temp_kp = exp(-delta_G[i] / (R * Temperature));
 
-      if (delta_n[i] == 0) // an if check is less expensive than a pow(,)
+      if (delta_n[i] == 0.0) // an if check is less expensive than a pow(,)
       {
         Kr[i] = Kf[i] / temp_kp;
       } else {
@@ -337,6 +339,9 @@ void SolverCalculation::Calculate_Rate_Constant(const double Temperature) {
       {
         Kr[i] = Kr[i] * pow(Temperature, reaction_parameters[i].reverse.n);
       }
+    } else // if it isn't reversible, set to zero
+    {
+      Kr[i] = 0;
     }
     // IEEE standards hack to avoid Nan Rate, shouldn't exist in the first
     // place...
