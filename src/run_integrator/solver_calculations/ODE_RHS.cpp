@@ -68,9 +68,9 @@ void SolverCalculation::ODE_RHS(int *n, double *t, double *y, double *f) {
       y[Number_Species] =
           InitialDataConstants
               .temperature; // ensure temperature is not exceeded
-      InitialDataConstants.PetroOxyTemperatureRise = 0;
+      InitialDataConstants.PetroOxyTemperatureRise = 0.0;
 
-      f[Number_Species] = 0;
+      f[Number_Species] = 0.0;
     }
 
     if (InitialDataConstants.PetroOxyTemperatureRise !=
@@ -89,7 +89,7 @@ void SolverCalculation::ODE_RHS(int *n, double *t, double *y, double *f) {
   if (InitialDataConstants.ConstantConcentration) {
     // cout << "preparing constant species \n";
     for (size_t i = 0; i < Number_Species; i++) {
-      if (InitialDataConstants.ConstantSpecies[i] != 0) {
+      if (InitialDataConstants.ConstantSpecies[i] != 0.0) {
         f[i] = 0.0; // concentration reset
                     // cout << "f[" << i << "] = " << f[i];
       }

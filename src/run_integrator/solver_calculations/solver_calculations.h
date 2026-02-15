@@ -10,7 +10,6 @@
 
 #include <omp.h>
 
-#include "../../get_process_input/get_mechanism/Reaction.h"
 #include "../../get_process_input/get_mechanism/ReactionMechanism.h"
 #include "../../get_process_input/get_mechanism/Species.h"
 #include "../../global_struct.h"
@@ -83,8 +82,6 @@ public:
   // initialize the vectors that are needed for efficient calculation
   void init(vector<Species> vec_species,
             const vector<SingleReactionData> &mechanism_reactions) {
-
-    ConstantInitRHSODE InitialDataConstants;
 
     reaction_parameters = Process_Reaction_Parameters(mechanism_reactions);
     ReactantsForReactions = Reactants_ForReactionRate(mechanism_reactions);

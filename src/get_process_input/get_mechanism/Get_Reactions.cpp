@@ -246,24 +246,30 @@ ReactionMechanism::Parse_Chemkin_Reaction_String(const vector<int> SchemeUnits,
   // indicator:
   temp.collision_efficiency = false; // default
   // check for Third Body Indicator:
-  temp.ThirdBodyType = 0; // no third body, default
+  //// TODO: allow reactions such as +methyl without detecting the +M
 
   // need to check for the brackets first, as otherwise (+M) is missed, also
   // options are exclusive
   if (Test_If_Word_Found(line, "+(M)") || Test_If_Word_Found(line, "(+M)")) {
     // second type : fall-off region -> Lindemann or Troe
-    temp.ThirdBodyType = 2;
+    temp.ThirdBodyType = sri;
     // strip off the +M
     line = Remove_Substring(line, "+ (M)");
     line = Remove_Substring(line, "+(M)");
     line = Remove_Substring(line, "(+M)");
-  } else if (Test_If_Word_Found(line, "+M") ||
-             Test_If_Word_Found(line, "+ M")) {
+  } else if (Test_If_Word_Found(line, "+M ") ||
+             Test_If_Word_Found(line, "+ M ") ||
+             Test_If_Word_Found(line, "+M=") ||
+             Test_If_Word_Found(line, "+ M=") ||
+             Test_If_Word_Found(line, "+ M =")) {
     // first type: low-pressure limiting region
-    temp.ThirdBodyType = 1;
+    temp.ThirdBodyType = troe;
     // strip off the +M
-    line = Remove_Substring(line, "+M");
-    line = Remove_Substring(line, "+ M");
+    line = Remove_Substring(line, "+M ");
+    line = Remove_Substring(line, "+ M ");
+    line = Remove_Substring(line, "+M=");
+    line = Remove_Substring(line, "+ M=");
+    line = Remove_Substring(line, "+ M =");
   }
 
   // there is also special third body configs for water not yet treated...

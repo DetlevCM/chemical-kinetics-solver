@@ -38,59 +38,36 @@ void MechanismReduction::mechanism_picking(
       getline(ReductionData, line); // Output Control
 
       // read species name, compare to known species, ID which is it
-      size_t found;
+
+      // strip any comments
+      if (!line.empty()) {
+        vector<string> tokens;
+        tokens.push_back("!");
+        line = Strip_Single_Line_Comments(line1, tokens);
+      }
 
       if (!line.empty()) { // && line1.compare(0,1,"!") != 0){ // stop if end
                            // reached or comment
 
-        // filter comment
-        char *cstr, *p;
+        // create a list of species
+        vector<string> picked_species = Tokenise_String_To_String(line, " \t");
 
-        string str = line;
-        cstr = new char[str.size() + 1];
-        strcpy(cstr, str.c_str());
-
-        vector<string> RemoveComments;
-
-        found = line.find("!");
-        if (found != string::npos) {
-          p = strtok(cstr, "!");
-          RemoveComments.push_back(p);
-          str = RemoveComments[0];
-          delete[] cstr;
-        } else {
-          RemoveComments.push_back(cstr);
-          str = RemoveComments[0];
-          delete[] cstr;
-        }
-
-        // remove whitespaces
-        RemoveComments.clear();
-        cstr = new char[str.size() + 1];
-        strcpy(cstr, str.c_str());
-
-        p = strtok(cstr, " 	"); // split by space and tab
-        while (p != NULL) {
-          RemoveComments.push_back(p);
-          p = strtok(NULL, " 	");
-        }
-        delete[] cstr;
         // check which species I need to retain
         for (i = 0; i < Number_Species; i++) {
           // compare the name of the species with the species in the kill list
-          if (strcmp(species[i].Name.c_str(), RemoveComments[0].c_str()) == 0) {
+          if (strcmp(species[i].Name.c_str(), picked_species[0].c_str()) == 0) {
             ChosenSpecies[i].Choice = true;
-            if (RemoveComments.size() > 1) {
+            if (picked_species.size() > 1) {
               // ChosenSpecies[i].SpcClass =
               // strtod(RemoveComments[1].c_str(),NULL);
               ChosenSpecies[i].SpcClass =
-                  (size_t)atoi(RemoveComments[1].c_str());
+                  (size_t)atoi(picked_species[1].c_str());
             } else {
               ChosenSpecies[i].SpcClass = 0;
             }
           }
         }
-        RemoveComments.clear(); // tidy up
+        picked_species.clear(); // tidy up
       }
     }
   }

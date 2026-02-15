@@ -21,7 +21,7 @@ using std::string;
 
 #include "../global_struct.h"
 
-#include "../get_process_input/get_mechanism/Reaction.h"
+#include "../get_process_input/get_mechanism/ReactionMechanism.h"
 #include "../get_process_input/get_mechanism/Species.h"
 
 //// TODO:
