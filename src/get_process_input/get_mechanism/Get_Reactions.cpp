@@ -258,12 +258,18 @@ ReactionMechanism::Parse_Chemkin_Reaction_String(const vector<int> SchemeUnits,
     line = Remove_Substring(line, "+(M)");
     line = Remove_Substring(line, "(+M)");
   } else if (Test_If_Word_Found(line, "+M ") ||
-             Test_If_Word_Found(line, "+ M ")) {
+             Test_If_Word_Found(line, "+ M ") ||
+             Test_If_Word_Found(line, "+M=") ||
+             Test_If_Word_Found(line, "+ M=") ||
+             Test_If_Word_Found(line, "+ M =")) {
     // first type: low-pressure limiting region
     temp.ThirdBodyType = troe;
     // strip off the +M
     line = Remove_Substring(line, "+M ");
-    line = Remove_Substring(line, "+ M");
+    line = Remove_Substring(line, "+ M ");
+    line = Remove_Substring(line, "+M=");
+    line = Remove_Substring(line, "+ M=");
+    line = Remove_Substring(line, "+ M =");
   }
 
   // there is also special third body configs for water not yet treated...
