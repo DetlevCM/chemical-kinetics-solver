@@ -271,12 +271,9 @@ void SolverCalculation::Calculate_Rate_Constant(const double Temperature) {
   {
 
     // cout << reaction_parameters[i].ThirdBodyType << "\n";
-
     switch (reaction_parameters[i].ThirdBodyType) {
 
     case none:
-      // if (reaction_parameters[i].ThirdBodyType == 0) // normal reaction
-      //{
       Kf[i] = reaction_parameters[i].forward.A *
               exp(-reaction_parameters[i].forward.Ea /
                   Temperature); // do NOT forget the - !!!
@@ -295,25 +292,19 @@ void SolverCalculation::Calculate_Rate_Constant(const double Temperature) {
            << reaction_parameters[i].forward.n << " , "
            << reaction_parameters[i].forward.Ea << " , " << Kf[i] << "\n";
       //*/
-      //}
       break;
+
     case troe:
       // Note: third_body_sum is in mol/L at this point
-      // Calculate_Lindeman_Hinshelwood_SRI_Low();
-      // else if (reaction_parameters[i].ThirdBodyType == 1) {
       Kf[i] = Calculate_no_LOW_Troe(reaction_parameters[i], Concentration,
                                     Temperature, third_body_sum);
-      //}
       break;
+
     case sri:
-      // else
-      if ( // reaction_parameters[i].ThirdBodyType == 2 &&
-          reaction_parameters[i].TB_troe.has_troe == false) {
+      if (reaction_parameters[i].TB_troe.has_troe == false) {
         Kf[i] = Calculate_Lindeman_Hinshelwood_SRI(
             reaction_parameters[i], Concentration, Temperature, third_body_sum);
-      } else // if (//reaction_parameters[i].ThirdBodyType == 2 &&
-      //           reaction_parameters[i].TB_troe.has_troe)
-      {
+      } else {
         Kf[i] = Calculate_Lindeman_Hinshelwood_Low_Troe(
             reaction_parameters[i], Concentration, Temperature, third_body_sum);
       }

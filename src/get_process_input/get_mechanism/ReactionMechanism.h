@@ -68,9 +68,7 @@ struct ReactionParameters {
   bool explicit_reverse = false; // default
   ArrheniusParameters reverse;   // not yet used, but preparation
 
-  // int ThirdBodyType = 0; // default is none, 0,  1: +M  2: (+M)
-  TBtype ThirdBodyType = none; // default is none, 0,  1: +M  2: (+M)
-
+  TBtype ThirdBodyType = none;       // default is none
   bool collision_efficiency = false; // for third body reactions
 
   ArrheniusParameters TB_low; // preparation
