@@ -357,7 +357,7 @@ vector<SingleReactionData> Make_Irreversible(
     //// TODO: verify, expand code if necessary
     reaction_parameters.collision_efficiency = false; // default
     // check for Third Body Indicator:
-    reaction_parameters.ThirdBodyType = 0; // no third body, default
+    // reaction_parameters.ThirdBodyType = 0; // no third body, default
 
     SingleReaction.parameters = reaction_parameters;
     Irreversible_Scheme.push_back(SingleReaction);
@@ -399,7 +399,7 @@ vector<SingleReactionData> Make_Irreversible(
       //// TODO: verify, expand code if necessary
       reaction_parameters.collision_efficiency = false; // default
       // check for Third Body Indicator:
-      reaction_parameters.ThirdBodyType = 0; // no third body, default
+      // reaction_parameters.ThirdBodyType = 0; // no third body, default
       SingleReaction.parameters = reaction_parameters;
 
       Irreversible_Scheme.push_back(SingleReaction);

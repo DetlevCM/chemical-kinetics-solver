@@ -170,6 +170,9 @@ double SolverCalculation::Calculate_Lindeman_Hinshelwood_Low_Troe(
 
   double mod_third_body;
 
+  /* NOTE from Chemkin Manual: note that the units for k are cm3/moles-sec, k0
+are cm6/moles2-sec, and k∞ are cm3/moles-sec.)  */
+
   /* LOW & Troe */
   kinf = a1 * exp(-e1 * inv_T);
   if (n1 != 0.0)
@@ -267,8 +270,13 @@ void SolverCalculation::Calculate_Rate_Constant(const double Temperature) {
        i++) // Straightforward Arrhenius Expression/Equation
   {
 
-    if (reaction_parameters[i].ThirdBodyType == 0) // normal reaction
-    {
+    // cout << reaction_parameters[i].ThirdBodyType << "\n";
+
+    switch (reaction_parameters[i].ThirdBodyType) {
+
+    case none:
+      // if (reaction_parameters[i].ThirdBodyType == 0) // normal reaction
+      //{
       Kf[i] = reaction_parameters[i].forward.A *
               exp(-reaction_parameters[i].forward.Ea /
                   Temperature); // do NOT forget the - !!!
@@ -281,31 +289,39 @@ void SolverCalculation::Calculate_Rate_Constant(const double Temperature) {
       }
 
       /*
-      cout <<
-          //		Temperature << " , " <<
-          //		exp(-reaction_parameters[i].paramEa/Temperature) << " ,
-      " << reaction_parameters[i].forward.A << " , " <<
-      reaction_parameters[i].forward.n << " , "
-           << reaction_parameters[i].forward.Ea << " , " << Kf[i] << "\n"; //*/
-
-    }
-    // Note: third_body_sum is in mol/L at this point
-    // Calculate_Lindeman_Hinshelwood_SRI_Low();
-    else if (reaction_parameters[i].ThirdBodyType == 1) {
+      cout << Temperature << " , "
+           << exp(-reaction_parameters[i].forward.Ea / Temperature) << " ,"
+           << reaction_parameters[i].forward.A << " , "
+           << reaction_parameters[i].forward.n << " , "
+           << reaction_parameters[i].forward.Ea << " , " << Kf[i] << "\n";
+      //*/
+      //}
+      break;
+    case troe:
+      // Note: third_body_sum is in mol/L at this point
+      // Calculate_Lindeman_Hinshelwood_SRI_Low();
+      // else if (reaction_parameters[i].ThirdBodyType == 1) {
       Kf[i] = Calculate_no_LOW_Troe(reaction_parameters[i], Concentration,
                                     Temperature, third_body_sum);
-    } else if (reaction_parameters[i].ThirdBodyType == 2 &&
-               reaction_parameters[i].TB_troe.has_troe == false) {
-      Kf[i] = Calculate_Lindeman_Hinshelwood_SRI(
-          reaction_parameters[i], Concentration, Temperature, third_body_sum);
-    } else if (reaction_parameters[i].ThirdBodyType == 2 &&
-               reaction_parameters[i].TB_troe.has_troe) {
-      Kf[i] = Calculate_Lindeman_Hinshelwood_Low_Troe(
-          reaction_parameters[i], Concentration, Temperature, third_body_sum);
+      //}
+      break;
+    case sri:
+      // else
+      if ( // reaction_parameters[i].ThirdBodyType == 2 &&
+          reaction_parameters[i].TB_troe.has_troe == false) {
+        Kf[i] = Calculate_Lindeman_Hinshelwood_SRI(
+            reaction_parameters[i], Concentration, Temperature, third_body_sum);
+      } else // if (//reaction_parameters[i].ThirdBodyType == 2 &&
+      //           reaction_parameters[i].TB_troe.has_troe)
+      {
+        Kf[i] = Calculate_Lindeman_Hinshelwood_Low_Troe(
+            reaction_parameters[i], Concentration, Temperature, third_body_sum);
+      }
+      break;
     }
 
     // default, change if reversible - seems a little bit faster...
-    // Kr[i] = 0;
+    // Kr[i] = 0.0;
     // then calculate and set the reverse if required
     if (reaction_parameters[i].Reversible &&
         reaction_parameters[i].explicit_reverse == false) {
@@ -322,10 +338,12 @@ void SolverCalculation::Calculate_Rate_Constant(const double Temperature) {
         temp_kc = temp_kp * pow((0.0820578 * Temperature), (-delta_n[i]));
         Kr[i] = Kf[i] / temp_kc;
       }
+      // std::cout << Kf[i] << " " << Kr[i] << "\n";
 
-    } else if (reaction_parameters[i].explicit_reverse ==
-               true) // a reaction with explicit reverse parameters must be
-                     // reversible
+    } else if (reaction_parameters[i].Reversible &&
+               reaction_parameters[i].explicit_reverse ==
+                   true) // a reaction with explicit reverse parameters must be
+                         // reversible
     {
       // can explicit reversible reaction_parameters also be subject to third
       // body terms? Not supported here...
@@ -341,14 +359,17 @@ void SolverCalculation::Calculate_Rate_Constant(const double Temperature) {
       }
     } else // if it isn't reversible, set to zero
     {
-      Kr[i] = 0;
+      Kr[i] = 0.0;
     }
     // IEEE standards hack to avoid Nan Rate, shouldn't exist in the first
     // place...
-    /*if(Kr[i] != Kr[i])
-    {
-            Kr[i] = 0;
-    }//*/
+    //*
+    if (Kr[i] != Kr[i]) {
+      Kr[i] = 0.0;
+    } //*/
+    if (Kf[i] != Kf[i]) {
+      Kf[i] = 0.0;
+    }
   }
 #pragma omp barrier
 }

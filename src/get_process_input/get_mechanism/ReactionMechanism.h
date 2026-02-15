@@ -58,6 +58,8 @@ struct ThirdBodyParameters {
   double value;
 };
 
+enum TBtype { none, troe, sri };
+
 struct ReactionParameters {
   bool Reversible = true;   // default
   bool IsDuplicate = false; // default
@@ -66,7 +68,8 @@ struct ReactionParameters {
   bool explicit_reverse = false; // default
   ArrheniusParameters reverse;   // not yet used, but preparation
 
-  int ThirdBodyType = 0; // default is none, 0,  1: +M  2: (+M)
+  // int ThirdBodyType = 0; // default is none, 0,  1: +M  2: (+M)
+  TBtype ThirdBodyType = none; // default is none, 0,  1: +M  2: (+M)
 
   bool collision_efficiency = false; // for third body reactions
 
