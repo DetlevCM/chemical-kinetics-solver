@@ -73,5 +73,6 @@
         "unclassed",
         "Vgas",
         "Vliq"
-    ]
+    ],
+    "C_Cpp.default.compilerPath": "/usr/bin/clang++"
 }
