@@ -21,6 +21,8 @@ AC_PROG_FC
 # Checks for header files.
 
 AX_CXX_COMPILE_STDCXX_11([ext], [mandatory])
+AX_CXX_COMPILE_STDCXX_14([ext], [optional])
+AX_CXX_COMPILE_STDCXX_17([ext], [optional])
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_CHECK_HEADERS(vector math.h)
