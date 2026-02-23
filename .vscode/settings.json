@@ -74,5 +74,8 @@
         "Vgas",
         "Vliq"
     ],
+    "cSpell.ignorePaths" : [
+			"configure",
+    ], 
     "C_Cpp.default.compilerPath": "/usr/bin/clang++"
 }
