@@ -15,7 +15,7 @@ lib_odepack:
 
 
 CC=g++
-CFLAGS=-O2 -Wall 
+CFLAGS=-Wall 
 
 #INCLUDES = -Iinclude
 INCLUDES = -Isrc
@@ -36,14 +36,18 @@ OBJS = $(SOURCES:.cpp=.o)
 
 # legacy name...
 MAIN = CKS.exe
+MAIND = CKSd.exe
 
 # $(addprefix $(OBJ)/, $(notdir $(SRC: .cpp=.o)))
 # $(MAIN)
 
 code:  
-#	$(MAIN): $(OBJS) 
-	$(foreach SOURCE, $(SOURCES), $(CC) -c $(CFLAGS) $(INCLUDES) $(SOURCE) -o $(SOURCE:.cpp=.o) $(LFLAGS) $(LIBS);)
+	$(foreach SOURCE, $(SOURCES), $(CC) -c -O2 $(CFLAGS) $(INCLUDES) $(SOURCE) -o $(SOURCE:.cpp=.o) $(LFLAGS) $(LIBS);)
 	$(CC) -o $(MAIN) $(INCLUDES) $(OBJS) $(LFLAGS) $(LIBS)
+
+code_debug:
+	$(foreach SOURCE, $(SOURCES), $(CC) -g3 -c -O0 -Wall $(INCLUDES) $(SOURCE) -o $(SOURCE:.cpp=.o) $(LFLAGS) $(LIBS);)
+	$(CC) -o $(MAIND) $(INCLUDES) $(OBJS) $(LFLAGS) $(LIBS)
 
 libs:
 	$(MAKE) lib_odepack 
