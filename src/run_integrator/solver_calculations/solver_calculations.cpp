@@ -258,7 +258,9 @@ void SolverCalculation::Calculate_Rate_Constant(const double Temperature) {
         delta_S[SpeciesLossAll[i].ReactionID] +
         (CalculatedThermo[SpeciesLossAll[i].SpeciesID].S *
          SpeciesLossAll[i].coefficient);
+  }
 
+  for (size_t i = 0; i < Concentration.size(); i++) {
     // summing concentrations for third bodies
     third_body_sum = third_body_sum + Concentration[i];
   }
