@@ -15,7 +15,7 @@ lib_odepack:
 
 
 CC=g++
-CFLAGS="" 
+CFLAGS=
 
 #INCLUDES = -Iinclude
 INCLUDES = -Isrc
