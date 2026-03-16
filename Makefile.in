@@ -15,7 +15,7 @@ lib_odepack:
 
 
 CC=g++
-CFLAGS=-O2 -Wall 
+CFLAGS=
 
 #INCLUDES = -Iinclude
 INCLUDES = -Isrc
@@ -27,23 +27,31 @@ SOURCES += $(wildcard src/*/*/*.cpp)
 show: 
 	echo $(SOURCES)
 
-LFLAGS =  -Llib/intel -Llib/odepack
+LFLAGS = -Llib/intel -Llib/odepack
 
 # gfortran must be linked for the fortran ODE libraries
 LIBS = -liode_intel64 -lodepack -lm -lgfortran -fopenmp
 
 OBJS = $(SOURCES:.cpp=.o)
 
-# legacy name...
-MAIN = CKS.exe
-
 # $(addprefix $(OBJ)/, $(notdir $(SRC: .cpp=.o)))
 # $(MAIN)
 
 code:  
-#	$(MAIN): $(OBJS) 
-	$(foreach SOURCE, $(SOURCES), $(CC) -c $(CFLAGS) $(INCLUDES) $(SOURCE) -o $(SOURCE:.cpp=.o) $(LFLAGS) $(LIBS);)
-	$(CC) -o $(MAIN) $(INCLUDES) $(OBJS) $(LFLAGS) $(LIBS)
+	$(foreach SOURCE, $(SOURCES), $(CC) -c -O2 -Wall $(CFLAGS) $(INCLUDES) $(SOURCE) -o $(SOURCE:.cpp=.o) $(LFLAGS) $(LIBS);)
+	$(CC) -o CKS.exe $(INCLUDES) $(OBJS) $(LFLAGS) $(LIBS)
+
+code_profile:  
+	$(foreach SOURCE, $(SOURCES), $(CC) -c -O2 -Wall $(CFLAGS) $(INCLUDES) $(SOURCE) -o $(SOURCE:.cpp=.o) $(LFLAGS) $(LIBS) -pg ;)
+	$(CC) -o CKSp.exe $(INCLUDES) $(OBJS) -rdynamic $(LFLAGS) $(LIBS) -pg
+
+code_debug:
+	$(foreach SOURCE, $(SOURCES), $(CC) -g3 -c -O0 -Wall $(INCLUDES) $(SOURCE) -o $(SOURCE:.cpp=.o) $(LFLAGS) $(LIBS);)
+	$(CC) -o CKSd.exe $(INCLUDES) $(OBJS) $(LFLAGS) $(LIBS)
+
+code_debug_profile:
+	$(foreach SOURCE, $(SOURCES), $(CC) -g3 -c -O0 -Wall $(INCLUDES) $(SOURCE) -o $(SOURCE:.cpp=.o) $(LFLAGS) $(LIBS) -pg ;)
+	$(CC) -o CKSdp.exe $(INCLUDES) $(OBJS) -rdynamic $(LFLAGS) $(LIBS) -pg
 
 libs:
 	$(MAKE) lib_odepack 

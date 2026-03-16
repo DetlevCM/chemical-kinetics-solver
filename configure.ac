@@ -9,7 +9,7 @@ AC_INIT([Chemical Kinetics Solver], [VERSION], [BUG-REPORT-ADDRESS])
 
 # defines header and source code
 AC_CONFIG_SRCDIR([src/main.cpp])
-#AC_CONFIG_HEADERS([include/Headers.hpp])
+#AC_CONFIG_HEADERS([src/main.h])
 
 # Checks for programs/compilers:
 AC_PROG_CXX
@@ -20,13 +20,19 @@ AC_PROG_FC
 
 # Checks for header files.
 
+AX_CXX_COMPILE_STDCXX_11([ext], [mandatory])
+AX_CXX_COMPILE_STDCXX_14([ext], [optional])
+AX_CXX_COMPILE_STDCXX_17([ext], [optional])
+
 # Checks for typedefs, structures, and compiler characteristics.
+AC_CHECK_HEADERS(vector math.h)
 AC_CHECK_HEADER_STDBOOL
+
 AC_TYPE_SIZE_T
 
 # Checks for library functions.
 AC_FUNC_STRTOD
-AC_CHECK_FUNCS([pow strtol])
+#AC_CHECK_FUNCS(pow stoi stod)
 
 AC_CONFIG_FILES([Makefile])
 AC_OUTPUT

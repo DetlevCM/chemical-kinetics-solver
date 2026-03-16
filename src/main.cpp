@@ -1,9 +1,9 @@
 
 // Central header file that collates all header, functions etc.
 
-#include "global_const.h"
-#include "global_struct.h"
-#include "helpers/Helpers.h"
+#include "./global_const.h"
+#include "./global_struct.h"
+#include "./helpers/Helpers.h"
 
 #include "./main.h"
 

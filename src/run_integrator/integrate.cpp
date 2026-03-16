@@ -490,11 +490,11 @@ void RunIntegrator::Integrate(
           solver_calculation.Get_Rates(), time_current, Number_Species);
     }
 
-    double pressure = 0;
+    double pressure = 0.0;
     //* // this is used in the PetroOxy code
     if (InitialParameters.GasPhase) {
       //  Pressure Tracking for Gas Phase Kinetics
-      double total_mol = 0;
+      double total_mol = 0.0;
       for (size_t i = 0; i < Number_Species; i++) {
         total_mol = total_mol + solver_calculation.Concentration[i];
       }
