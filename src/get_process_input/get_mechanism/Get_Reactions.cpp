@@ -120,7 +120,7 @@ ReactionMechanism::Get_Reactions(string filename,
         Reactions_Data[counter].parameters.TB_sri.a = tmp[1];
         Reactions_Data[counter].parameters.TB_sri.b = tmp[2];
         Reactions_Data[counter].parameters.TB_sri.c = tmp[3];
-        if (tmp.size() == 4) // 4 parameter troe
+        if (tmp.size() > 4) // 4 parameter troe
         {
           Reactions_Data[counter].parameters.TB_sri.d = tmp[4];
           Reactions_Data[counter].parameters.TB_sri.e = tmp[5];
