@@ -59,8 +59,8 @@ void MechanismReduction::ReportAccuracy(string separator, size_t Number_Species,
               MinDiff[i] = difference;
             }
           }
-          number_lines = number_lines + 1;
         }
+        number_lines = number_lines + 1;
       }
     }
 
