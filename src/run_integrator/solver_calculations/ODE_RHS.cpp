@@ -54,24 +54,24 @@ void SolverCalculation::ODE_RHS(int *n, double *t, double *y, double *f) {
   }
   // ctot = ctot / 1000; // working in moles/l so no Na;
 
-vector<double> delta_H(Number_Reactions);
+  vector<double> delta_H(Number_Reactions);
   for (size_t i = 0; i < SpeciesLossAll.size();
        i++) { // loop over every reaction
     delta_H[SpeciesLossAll[i].ReactionID] =
         delta_H[SpeciesLossAll[i].ReactionID] +
         (CalculatedThermo[SpeciesLossAll[i].SpeciesID].Hf *
          SpeciesLossAll[i].coefficient);
-        }
+  }
 
   for (size_t i = 0; i < Number_Reactions; i++) {
-  //  qint = qint + (double)delta_n[i] * Rates[i];
+    //  qint = qint + (double)delta_n[i] * Rates[i];
     qint = qint + delta_H[i] * Rates[i];
   }
   qtot = -qint / (ctot); //*1000); // scale l to ml and Na not needed for
                          // moles/l * Na); //*/
 
   f[Number_Species] = qtot; // Temperature equation
-  //cout << ctot << " " << qint << " " << qtot << "\n";
+  // cout << ctot << " " << qint << " " << qtot << "\n";
 
   if (InitialDataConstants.PetroOxy) {
     if (Concentration[Number_Species] >= InitialDataConstants.temperature) {

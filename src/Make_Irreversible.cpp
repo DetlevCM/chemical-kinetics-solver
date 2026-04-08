@@ -95,8 +95,8 @@ void Calculate_Rate_Constant(
 
     /*
     cout <<
-    //		Temperature << " , " <<
-    //		exp(-reactions[i].forward.Ea/Temperature) << " , " <<
+    //  Temperature << " , " <<
+    //  exp(-reactions[i].forward.Ea/Temperature) << " , " <<
                     reactions[i].forward.A << " , " <<
                     reactions[i].forward.n << " , " <<
                     reactions[i].forward.Ea << " , " <<
