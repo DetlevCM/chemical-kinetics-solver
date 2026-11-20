@@ -18,8 +18,8 @@ void Reaction::WriteReactions(string filename, const vector<Species> &species,
     size_t Number_Species = 0;
     Number_Species = Reactions[0].Reactants.size();
 
-    // ReactionsOutput << "REACTIONS	KELVINS	MOLES 	\n";
-    ReactionsOutput << "REACTIONS 	KCAL/MOL 	MOLES 	\n";
+    // ReactionsOutput << "REACTIONS KELVINS MOLES  \n";
+    ReactionsOutput << "REACTIONS  KCAL/MOL  MOLES  \n";
 
     for (i = 0; i < Number_Reactions; i++) {
       ReactionsOutput << Prepare_Single_Reaction_Output(Number_Species, species,

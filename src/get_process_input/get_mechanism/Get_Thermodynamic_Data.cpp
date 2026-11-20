@@ -53,7 +53,7 @@ void Species::Get_Thermodynamic_Data(string filename,
           vector<double> temp_split_line_double2;
           vector<double> temp_split_line_double3;
 
-          temp_split_line = Tokenise_String_To_String(line1, " 	");
+          temp_split_line = Tokenise_String_To_String(line1, " \t");
 
           // for now we just want the species name, that is the initial input
           // Species Name is now temp_split_line[0]
@@ -73,15 +73,16 @@ void Species::Get_Thermodynamic_Data(string filename,
 
           // now the 3 temperature readings
           getline(Mechanism_Data, line1);
-          temp_split_line_double1 = Tokenise_String_To_Double(line1, " 	");
+          //temp_split_line_double1 = Tokenise_String_To_Double(line1, " 	");
+          temp_split_line_double1 = Tokenise_String_To_Double(line1, " \t");
 
           // now the low thermodynamics
           getline(Mechanism_Data, line1);
-          temp_split_line_double2 = Tokenise_String_To_Double(line1, " 	");
+          temp_split_line_double2 = Tokenise_String_To_Double(line1, " \t");
 
           // now the high thermodynamics
           getline(Mechanism_Data, line1);
-          temp_split_line_double3 = Tokenise_String_To_Double(line1, " 	");
+          temp_split_line_double3 = Tokenise_String_To_Double(line1, " \t");
 
           std::cout << line1 << "\n";
           std::cout << temp_split_line_double1[0] << "\n";

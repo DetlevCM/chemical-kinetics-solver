@@ -78,12 +78,12 @@ void MechanismReduction::ReportAccuracy(string separator, size_t Number_Species,
 
     OutputFile.open(output_filename.c_str());
 
-    OutputFile << "Species Name 	Average Difference in % 	Min "
-                  "Diff in % 	Max Diff in % \n";
+    OutputFile << "Species Name  Average Difference in %  Min "
+                  "Diff in %  Max Diff in % \n";
 
     for (size_t i = 1; i <= Number_Species; i++) {
-      OutputFile << species[i - 1].Name << " 	" << OutputReview[i]
-                 << " 	" << MinDiff[i] << " 	" << MaxDiff[i] << " 	"
+      OutputFile << species[i - 1].Name << "  " << OutputReview[i] << "  "
+                 << MinDiff[i] << "  " << MaxDiff[i] << "  "
                  << " \n";
     }
   }

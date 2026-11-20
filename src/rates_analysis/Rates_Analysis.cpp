@@ -75,10 +75,9 @@ void RatesAnalysis::WriteMaxRatesAnalysis(
         // Avogadro's Constant is about 6.2e23 - so a rate of less than 1.0e-22
         // is less than 1.5 atoms
         if (RatesAnalysisData[i][j].productionrate > 1.0e-22) {
-          Outfile << "Reaction 	" << j << " 	"
-                  << RatesAnalysisData[i][j].productionrate
-                  << " 	, at 	" << RatesAnalysisData[i][j].prod_time
-                  << " 	 s    ";
+          Outfile << "Reaction  " << j << "  "
+                  << RatesAnalysisData[i][j].productionrate << "  , at  "
+                  << RatesAnalysisData[i][j].prod_time << "   s    ";
           // now need to print the reaction
 
           Outfile << Prepare_Single_Reaction_Output(Number_Species, species,
@@ -103,10 +102,9 @@ void RatesAnalysis::WriteMaxRatesAnalysis(
         // Avogadro's Constant is about 6.2e23 - so a rate of less than 1.0e-22
         // is less than 1.5 atoms
         if (RatesAnalysisData[i][j].consumptionrate > 1.0e-22) {
-          Outfile << "Reaction 	" << j << " 	"
-                  << RatesAnalysisData[i][j].consumptionrate
-                  << " 	, at 	" << RatesAnalysisData[i][j].cons_time
-                  << " 	s    ";
+          Outfile << "Reaction  " << j << "  "
+                  << RatesAnalysisData[i][j].consumptionrate << "  , at  "
+                  << RatesAnalysisData[i][j].cons_time << "  s    ";
 
           // now need to print the reaction
           Outfile << Prepare_Single_Reaction_Output(Number_Species, species,
@@ -137,9 +135,9 @@ void RatesAnalysis::PrepareStreamRatesAnalysis(
 
   if (Outfile.is_open()) {
 
-    Outfile << "Time 	";
+    Outfile << "Time  ";
     for (size_t i = 0; i < Number_Species; i++) {
-      Outfile << species[i].Name << " 	";
+      Outfile << species[i].Name << "  ";
     }
     Outfile << "\n";
   };
@@ -150,9 +148,9 @@ void RatesAnalysis::PrepareStreamRatesAnalysis(
   Outfile.open(filename.c_str());
 
   if (Outfile.is_open()) {
-    Outfile << "Time 	";
+    Outfile << "Time  ";
     for (size_t i = 0; i < Number_Species; i++) {
-      Outfile << species[i].Name << " 	";
+      Outfile << species[i].Name << "  ";
     }
     Outfile << "\n";
   };
@@ -189,9 +187,9 @@ void RatesAnalysis::StreamRatesAnalysis(
   Outfile.open(filename.c_str(), ios::app);
 
   if (Outfile.is_open()) {
-    Outfile << current_time << " 	";
+    Outfile << current_time << "  ";
     for (size_t i = 0; i < Number_Species - 1; i++) {
-      Outfile << RatesAnalysisData[i].productionrate << " 	";
+      Outfile << RatesAnalysisData[i].productionrate << "  ";
     }
     Outfile << "\n";
   };
@@ -202,9 +200,9 @@ void RatesAnalysis::StreamRatesAnalysis(
   Outfile.open(filename.c_str(), ios::app);
 
   if (Outfile.is_open()) {
-    Outfile << current_time << " 	";
+    Outfile << current_time << "  ";
     for (size_t i = 0; i < Number_Species - 1; i++) {
-      Outfile << RatesAnalysisData[i].consumptionrate << " 	";
+      Outfile << RatesAnalysisData[i].consumptionrate << "  ";
     }
     Outfile << "\n";
   };
@@ -284,8 +282,8 @@ void RatesAnalysis::RatesAnalysisAtTimes(
         // Avogadro's Constant is about 6.2e23 - so a rate of less than 1.0e-24
         // is less than 1.5 atoms
         if (RatesAnalysisData[i][j].productionrate > 1.0e-22) {
-          Outfile << "Reaction " << j << " 	"
-                  << RatesAnalysisData[i][j].productionrate << " 	";
+          Outfile << "Reaction " << j << "  "
+                  << RatesAnalysisData[i][j].productionrate << "  ";
           // now need to print the reaction
           Outfile << Prepare_Single_Reaction_Output(Number_Species, species,
                                                     Reactions[j]);
@@ -309,8 +307,8 @@ void RatesAnalysis::RatesAnalysisAtTimes(
         // Avogadro's Constant is about 6.2e23 - so a rate of less than 1.0e-24
         // is less than 1.5 atoms
         if (RatesAnalysisData[i][j].consumptionrate > 1.0e-22) {
-          Outfile << "Reaction " << j << " 	"
-                  << RatesAnalysisData[i][j].consumptionrate << " 	";
+          Outfile << "Reaction " << j << "  "
+                  << RatesAnalysisData[i][j].consumptionrate << "  ";
           // now need to print the reaction
           Outfile << Prepare_Single_Reaction_Output(Number_Species, species,
                                                     Reactions[j]);

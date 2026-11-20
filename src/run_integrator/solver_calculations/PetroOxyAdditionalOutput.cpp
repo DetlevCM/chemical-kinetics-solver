@@ -29,12 +29,12 @@ void SolverCalculation::PetroOxyOutputHeader(string filename) {
   ofstream ConcentrationOutput(filename.c_str(), ios::out);
 
   if (ConcentrationOutput.is_open()) {
-    ConcentrationOutput << "Time	";
-    ConcentrationOutput << "volume_O2" << "	";
-    ConcentrationOutput << "gas_mol_25C" << "	";
-    ConcentrationOutput << "p_O2" << "	";
-    ConcentrationOutput << "p_vapour_solvent" << "	";
-    ConcentrationOutput << "k_henry_const" << "	";
+    ConcentrationOutput << "Time ";
+    ConcentrationOutput << "volume_O2" << " ";
+    ConcentrationOutput << "gas_mol_25C" << " ";
+    ConcentrationOutput << "p_O2" << " ";
+    ConcentrationOutput << "p_vapour_solvent" << " ";
+    ConcentrationOutput << "k_henry_const" << " ";
     ConcentrationOutput << "\n"; // new line
     ConcentrationOutput.close();
   }
@@ -45,12 +45,12 @@ void SolverCalculation::PetroOxyOutputStream(
     double CurrentTime) {
   ofstream PetroOxyOutput(filename.c_str(), ios::app);
 
-  PetroOxyOutput << CurrentTime << "	";                      // time
-  PetroOxyOutput << PetroOxyData.HeadSpaceGas << "	";      // concentration
-  PetroOxyOutput << PetroOxyData.HeadSpaceGasMol << "	";      // concentration
-  PetroOxyOutput << PetroOxyData.HeadSpaceGasPressure << "	"; // concentration
+  PetroOxyOutput << CurrentTime << " ";                       // time
+  PetroOxyOutput << PetroOxyData.HeadSpaceGas << " ";         // concentration
+  PetroOxyOutput << PetroOxyData.HeadSpaceGasMol << " ";      // concentration
+  PetroOxyOutput << PetroOxyData.HeadSpaceGasPressure << " "; // concentration
   PetroOxyOutput << PetroOxyData.HeadSpaceSolventComponentPressure
-                 << "	";                               // concentration
+                 << " ";                                 // concentration
   PetroOxyOutput << PetroOxyData.HenryConstantk << "\n"; // concentration
 
   // PetroOxyOutput.flush(); // To get the whole line

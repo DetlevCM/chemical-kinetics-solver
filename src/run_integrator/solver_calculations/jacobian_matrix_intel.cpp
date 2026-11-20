@@ -88,7 +88,7 @@ void SolverCalculation::Jacobian_Matrix_Intel(int *n, double *t, double *y,
         JacobeanColumnWise[JacobianMatrix[i].ColumnWiseArrayPosition] + temp;
   }
 
-  for (size_t i = 0; i <= JacobeanColumnWise.size(); i++) {
+  for (size_t i = 0; i < JacobeanColumnWise.size(); i++) {
     a[i] = JacobeanColumnWise[i];
   }
 

@@ -19,19 +19,18 @@ void Species::ThermodynamicData::Write_Thermodynamic_Data(
     for (i = 0; i < Number_Species; i++) {
       ThermodynamicsOutput << species[i].Name << "\n";
 
-      ThermodynamicsOutput << species[i].thermodynamicdata.nasa.TLow << "	"
-                           << species[i].thermodynamicdata.nasa.THigh << "	"
+      ThermodynamicsOutput << species[i].thermodynamicdata.nasa.TLow << " "
+                           << species[i].thermodynamicdata.nasa.THigh << " "
                            << species[i].thermodynamicdata.nasa.TChange
 
                            << "\n";
       for (size_t j = 0; j < 7; j++) {
-        ThermodynamicsOutput << species[i].thermodynamicdata.nasa.low[j]
-                             << "	";
+        ThermodynamicsOutput << species[i].thermodynamicdata.nasa.low[j] << " ";
       }
       ThermodynamicsOutput << "\n";
       for (size_t j = 0; j < 7; j++) {
         ThermodynamicsOutput << species[i].thermodynamicdata.nasa.high[j]
-                             << "	";
+                             << " ";
       }
       ThermodynamicsOutput << "\n";
 
