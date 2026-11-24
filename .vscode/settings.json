@@ -3,6 +3,8 @@
         "addprefix",
         "allkreverse",
         "astextplain",
+        "autom",
+        "autoscan",
         "Behaviour",
         "CFLAGS",
         "chemkin",
@@ -11,12 +13,14 @@
         "Constantk",
         "consumptionrate",
         "ctot",
+        "daskr",
         "detlevcm",
         "dlsoda",
         "dlsode",
         "dodesol",
         "dpar",
         "Ehsan",
+        "fopenmp",
         "gfortran",
         "Hindmarsh",
         "Iinclude",
@@ -33,6 +37,7 @@
         "kzero",
         "LFLAGS",
         "lgfortran",
+        "libddaskr",
         "libiode",
         "libodepack",
         "liode",
@@ -63,6 +68,7 @@
         "RWORK",
         "Sebastien",
         "Simmie",
+        "synctex",
         "targetconcentration",
         "tempj",
         "thermo",
@@ -73,5 +79,9 @@
         "unclassed",
         "Vgas",
         "Vliq"
-    ]
+    ],
+    "cSpell.ignorePaths" : [
+			"configure",
+    ], 
+    "C_Cpp.default.compilerPath": "/usr/bin/clang++"
 }

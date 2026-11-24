@@ -19,7 +19,7 @@ This body reactions are work in progress and not validated/tested.
 ### initial.inp
 
 The layout for the initial input file follows the ideas of xml style blocks that specify specific parameters.
-The chemking standard exclamation mark, `!`, is used as a comment character, however comments can also be added between the input blocks.
+The chemkin standard exclamation mark, `!`, is used as a comment character, however comments can also be added between the input blocks.
 
 A minimum sample input for a mechanism involving oxygen and dodecane could look at follows:
 

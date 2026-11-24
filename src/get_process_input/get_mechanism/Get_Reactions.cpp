@@ -120,7 +120,7 @@ ReactionMechanism::Get_Reactions(string filename,
         Reactions_Data[counter].parameters.TB_sri.a = tmp[1];
         Reactions_Data[counter].parameters.TB_sri.b = tmp[2];
         Reactions_Data[counter].parameters.TB_sri.c = tmp[3];
-        if (tmp.size() == 4) // 4 parameter troe
+        if (tmp.size() > 4) // 4 parameter troe
         {
           Reactions_Data[counter].parameters.TB_sri.d = tmp[4];
           Reactions_Data[counter].parameters.TB_sri.e = tmp[5];
@@ -146,7 +146,7 @@ ReactionMechanism::Get_Reactions(string filename,
            steps += 2) // note, steps of 2 !!
       {
         // get the species ID:
-        size_t species_ID = 0;
+        // size_t species_ID = 0;
         size_t m = 0;
         bool is_matched = false;
         string Comparator = tmp[steps];
@@ -160,7 +160,7 @@ ReactionMechanism::Get_Reactions(string filename,
             // cout << counter << " " << Comparator << " " << species[m].Name
             //     << " " << strtod(tmp[steps + 1].c_str(), NULL) << "\n";
             ThirdBodyParameters tmp_TB;
-            tmp_TB.SpeciesID = species_ID;
+            tmp_TB.SpeciesID = m; // species_ID;
             tmp_TB.value = strtod(tmp[steps + 1].c_str(), NULL);
             vec_TB_param.push_back(tmp_TB);
             is_matched = true;
@@ -246,24 +246,30 @@ ReactionMechanism::Parse_Chemkin_Reaction_String(const vector<int> SchemeUnits,
   // indicator:
   temp.collision_efficiency = false; // default
   // check for Third Body Indicator:
-  temp.ThirdBodyType = 0; // no third body, default
+  //// TODO: allow reactions such as +methyl without detecting the +M
 
   // need to check for the brackets first, as otherwise (+M) is missed, also
   // options are exclusive
   if (Test_If_Word_Found(line, "+(M)") || Test_If_Word_Found(line, "(+M)")) {
     // second type : fall-off region -> Lindemann or Troe
-    temp.ThirdBodyType = 2;
+    temp.ThirdBodyType = sri;
     // strip off the +M
     line = Remove_Substring(line, "+ (M)");
     line = Remove_Substring(line, "+(M)");
     line = Remove_Substring(line, "(+M)");
-  } else if (Test_If_Word_Found(line, "+M") ||
-             Test_If_Word_Found(line, "+ M")) {
+  } else if (Test_If_Word_Found(line, "+M ") ||
+             Test_If_Word_Found(line, "+ M ") ||
+             Test_If_Word_Found(line, "+M=") ||
+             Test_If_Word_Found(line, "+ M=") ||
+             Test_If_Word_Found(line, "+ M =")) {
     // first type: low-pressure limiting region
-    temp.ThirdBodyType = 1;
+    temp.ThirdBodyType = troe;
     // strip off the +M
-    line = Remove_Substring(line, "+M");
-    line = Remove_Substring(line, "+ M");
+    line = Remove_Substring(line, "+M ");
+    line = Remove_Substring(line, "+ M ");
+    line = Remove_Substring(line, "+M=");
+    line = Remove_Substring(line, "+ M=");
+    line = Remove_Substring(line, "+ M =");
   }
 
   // there is also special third body configs for water not yet treated...

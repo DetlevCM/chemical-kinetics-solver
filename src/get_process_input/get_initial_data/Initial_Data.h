@@ -11,7 +11,6 @@
 // File Streams and IO
 
 #include "../../helpers/Helpers.h"
-
 #include "../get_mechanism/Species.h"
 
 class Initial_Data {

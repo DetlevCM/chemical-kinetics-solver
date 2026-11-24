@@ -41,7 +41,7 @@ void SolverCalculation::Jacobian_Matrix_Intel(int *n, double *t, double *y,
   Calculate_Rate_Constant(Concentration[Number_Species]);
 
   for (size_t i = 0; i < JacobianMatrix.size(); i++) {
-    double temp;
+    double temp = 0.0;
 
     if (JacobianMatrix[i].IsForward) // Forward
     {
@@ -88,7 +88,7 @@ void SolverCalculation::Jacobian_Matrix_Intel(int *n, double *t, double *y,
         JacobeanColumnWise[JacobianMatrix[i].ColumnWiseArrayPosition] + temp;
   }
 
-  for (size_t i = 0; i <= JacobeanColumnWise.size(); i++) {
+  for (size_t i = 0; i < JacobeanColumnWise.size(); i++) {
     a[i] = JacobeanColumnWise[i];
   }
 

@@ -23,7 +23,7 @@ double ReactionMechanism::Scale_A(double A_read_in, vector<double> ReactantData,
     // 6.0221e+23 <- molecules per mol
     double scale = (6.0221e23); // convert to molecules / cm^(-3)
     scale = scale / 1000.0;     // convert from cm^3 to dm^3
-    A_read_in = A_read_in * pow(scale, (order));
+    A_read_in = A_read_in * pow(scale, order);
 
     return A_read_in;           // and convert to molecules per liter (dm^3)
   } else if (scaling_type == 2) // A is in moles / cm^3
@@ -37,7 +37,7 @@ double ReactionMechanism::Scale_A(double A_read_in, vector<double> ReactantData,
 
     double scale = 1.0 / 1000.0; // convert from cm^3 to dm^3
 
-    A_read_in = A_read_in * pow(scale, (order));
+    A_read_in = A_read_in * pow(scale, order);
 
     return A_read_in; // and convert to molecules per liter (dm^3)
 

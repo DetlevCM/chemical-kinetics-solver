@@ -54,8 +54,18 @@ void SolverCalculation::ODE_RHS(int *n, double *t, double *y, double *f) {
   }
   // ctot = ctot / 1000; // working in moles/l so no Na;
 
+  vector<double> delta_H(Number_Reactions);
+  for (size_t i = 0; i < SpeciesLossAll.size();
+       i++) { // loop over every reaction
+    delta_H[SpeciesLossAll[i].ReactionID] =
+        delta_H[SpeciesLossAll[i].ReactionID] +
+        (CalculatedThermo[SpeciesLossAll[i].SpeciesID].Hf *
+         SpeciesLossAll[i].coefficient);
+  }
+
   for (size_t i = 0; i < Number_Reactions; i++) {
-    qint = qint + delta_n[i] * Rates[i];
+    //  qint = qint + (double)delta_n[i] * Rates[i];
+    qint = qint + delta_H[i] * Rates[i];
   }
   qtot = -qint / (ctot); //*1000); // scale l to ml and Na not needed for
                          // moles/l * Na); //*/
@@ -68,9 +78,9 @@ void SolverCalculation::ODE_RHS(int *n, double *t, double *y, double *f) {
       y[Number_Species] =
           InitialDataConstants
               .temperature; // ensure temperature is not exceeded
-      InitialDataConstants.PetroOxyTemperatureRise = 0;
+      InitialDataConstants.PetroOxyTemperatureRise = 0.0;
 
-      f[Number_Species] = 0;
+      f[Number_Species] = 0.0;
     }
 
     if (InitialDataConstants.PetroOxyTemperatureRise !=
@@ -89,7 +99,7 @@ void SolverCalculation::ODE_RHS(int *n, double *t, double *y, double *f) {
   if (InitialDataConstants.ConstantConcentration) {
     // cout << "preparing constant species \n";
     for (size_t i = 0; i < Number_Species; i++) {
-      if (InitialDataConstants.ConstantSpecies[i] != 0) {
+      if (InitialDataConstants.ConstantSpecies[i] != 0.0) {
         f[i] = 0.0; // concentration reset
                     // cout << "f[" << i << "] = " << f[i];
       }
@@ -105,6 +115,7 @@ void SolverCalculation::ODE_RHS(int *n, double *t, double *y, double *f) {
     }
   }
 
+  // cout << f[Number_Species] << "\n";
   // IEEE standard hack to check for NaN
   // if temperature blows up, freeze it
   //*

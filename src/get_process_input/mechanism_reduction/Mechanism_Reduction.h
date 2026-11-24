@@ -9,10 +9,8 @@
 #define MECHANISM_REDUCTION
 
 #include "../get_initial_data/Initial_Data.h"
-#include "../get_mechanism/Reaction.h"
-#include "../get_mechanism/Species.h"
-using namespace Reaction;
 #include "../get_mechanism/ReactionMechanism.h"
+#include "../get_mechanism/Species.h"
 
 class MechanismReduction {
 public:

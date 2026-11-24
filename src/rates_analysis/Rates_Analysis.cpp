@@ -57,12 +57,8 @@ void RatesAnalysis::WriteMaxRatesAnalysis(
 
   size_t Number_Species = RatesAnalysisData.size();
   size_t Number_Reactions = RatesAnalysisData[0].size();
-  size_t i, j;
 
-  i = 0;
-  j = 0;
   ofstream Outfile;
-
   string filename;
 
   filename =
@@ -71,18 +67,17 @@ void RatesAnalysis::WriteMaxRatesAnalysis(
   Outfile.open(filename.c_str());
 
   if (Outfile.is_open()) {
-    for (i = 0; i < Number_Species; i++) {
+    for (size_t i = 0; i < Number_Species; i++) {
       Outfile << "Rate of Production For: " << species[i].Name << "\n";
       // sort first, then print out sorted output
-      for (j = 0; j < Number_Reactions; j++) {
+      for (size_t j = 0; j < Number_Reactions; j++) {
 
         // Avogadro's Constant is about 6.2e23 - so a rate of less than 1.0e-22
         // is less than 1.5 atoms
         if (RatesAnalysisData[i][j].productionrate > 1.0e-22) {
-          Outfile << "Reaction 	" << j << " 	"
-                  << RatesAnalysisData[i][j].productionrate
-                  << " 	, at 	" << RatesAnalysisData[i][j].prod_time
-                  << " 	 s    ";
+          Outfile << "Reaction  " << j << "  "
+                  << RatesAnalysisData[i][j].productionrate << "  , at  "
+                  << RatesAnalysisData[i][j].prod_time << "   s    ";
           // now need to print the reaction
 
           Outfile << Prepare_Single_Reaction_Output(Number_Species, species,
@@ -99,18 +94,17 @@ void RatesAnalysis::WriteMaxRatesAnalysis(
   Outfile.open(filename.c_str());
 
   if (Outfile.is_open()) {
-    for (i = 0; i < Number_Species; i++) {
+    for (size_t i = 0; i < Number_Species; i++) {
       Outfile << "Rate of Consumption For: " << species[i].Name << "\n";
       // sort first, then print out sorted output
-      for (j = 0; j < Number_Reactions; j++) {
+      for (size_t j = 0; j < Number_Reactions; j++) {
 
         // Avogadro's Constant is about 6.2e23 - so a rate of less than 1.0e-22
         // is less than 1.5 atoms
         if (RatesAnalysisData[i][j].consumptionrate > 1.0e-22) {
-          Outfile << "Reaction 	" << j << " 	"
-                  << RatesAnalysisData[i][j].consumptionrate
-                  << " 	, at 	" << RatesAnalysisData[i][j].cons_time
-                  << " 	s    ";
+          Outfile << "Reaction  " << j << "  "
+                  << RatesAnalysisData[i][j].consumptionrate << "  , at  "
+                  << RatesAnalysisData[i][j].cons_time << "  s    ";
 
           // now need to print the reaction
           Outfile << Prepare_Single_Reaction_Output(Number_Species, species,
@@ -130,7 +124,6 @@ void RatesAnalysis::WriteMaxRatesAnalysis(
 void RatesAnalysis::PrepareStreamRatesAnalysis(
     const vector<Species> &species, string rates_analysis_stream_filename) {
 
-  size_t i;
   size_t Number_Species = species.size() - 1;
   ofstream Outfile;
 
@@ -142,9 +135,9 @@ void RatesAnalysis::PrepareStreamRatesAnalysis(
 
   if (Outfile.is_open()) {
 
-    Outfile << "Time 	";
-    for (i = 0; i < Number_Species; i++) {
-      Outfile << species[i].Name << " 	";
+    Outfile << "Time  ";
+    for (size_t i = 0; i < Number_Species; i++) {
+      Outfile << species[i].Name << "  ";
     }
     Outfile << "\n";
   };
@@ -155,9 +148,9 @@ void RatesAnalysis::PrepareStreamRatesAnalysis(
   Outfile.open(filename.c_str());
 
   if (Outfile.is_open()) {
-    Outfile << "Time 	";
-    for (i = 0; i < Number_Species; i++) {
-      Outfile << species[i].Name << " 	";
+    Outfile << "Time  ";
+    for (size_t i = 0; i < Number_Species; i++) {
+      Outfile << species[i].Name << "  ";
     }
     Outfile << "\n";
   };
@@ -169,19 +162,18 @@ void RatesAnalysis::StreamRatesAnalysis(
     const vector<TrackSpecies> &ProductsForRates,
     const vector<TrackSpecies> &ReactantsForRates, const vector<double> &Rates,
     const double current_time, const size_t Number_Species) {
-  size_t i;
 
   vector<str_RatesAnalysis> RatesAnalysisData(Number_Species);
 
   // Sum the rates for all species - I'm not interested in recording which
   // reactions take part
-  for (i = 0; i < ProductsForRates.size(); i++) {
+  for (size_t i = 0; i < ProductsForRates.size(); i++) {
     RatesAnalysisData[ProductsForRates[i].SpeciesID].productionrate =
         RatesAnalysisData[ProductsForRates[i].SpeciesID].productionrate +
         Rates[ProductsForRates[i].ReactionID];
   }
 
-  for (i = 0; i < ReactantsForRates.size(); i++) {
+  for (size_t i = 0; i < ReactantsForRates.size(); i++) {
     RatesAnalysisData[ReactantsForRates[i].SpeciesID].consumptionrate =
         RatesAnalysisData[ReactantsForRates[i].SpeciesID].consumptionrate +
         Rates[ReactantsForRates[i].ReactionID];
@@ -195,9 +187,9 @@ void RatesAnalysis::StreamRatesAnalysis(
   Outfile.open(filename.c_str(), ios::app);
 
   if (Outfile.is_open()) {
-    Outfile << current_time << " 	";
-    for (i = 0; i < Number_Species - 1; i++) {
-      Outfile << RatesAnalysisData[i].productionrate << " 	";
+    Outfile << current_time << "  ";
+    for (size_t i = 0; i < Number_Species - 1; i++) {
+      Outfile << RatesAnalysisData[i].productionrate << "  ";
     }
     Outfile << "\n";
   };
@@ -208,9 +200,9 @@ void RatesAnalysis::StreamRatesAnalysis(
   Outfile.open(filename.c_str(), ios::app);
 
   if (Outfile.is_open()) {
-    Outfile << current_time << " 	";
-    for (i = 0; i < Number_Species - 1; i++) {
-      Outfile << RatesAnalysisData[i].consumptionrate << " 	";
+    Outfile << current_time << "  ";
+    for (size_t i = 0; i < Number_Species - 1; i++) {
+      Outfile << RatesAnalysisData[i].consumptionrate << "  ";
     }
     Outfile << "\n";
   };
@@ -226,17 +218,13 @@ void RatesAnalysis::RatesAnalysisAtTimes(
     const vector<TrackSpecies> &ReactantsForRates, const vector<double> &Rates,
     const double current_time, const vector<Species> species,
     const vector<Reaction::SingleReactionData> &Reactions) {
-  size_t i, j;
-
-  i = 0;
-  j = 0;
 
   size_t Number_Species = species.size();
   size_t Number_Reactions = Reactions.size();
 
   vector<vector<str_RatesAnalysis>> RatesAnalysisData;
   vector<str_RatesAnalysis> temp(Number_Reactions);
-  for (i = 0; i < Number_Species; i++) {
+  for (size_t i = 0; i < Number_Species; i++) {
     RatesAnalysisData.push_back(temp);
   }
 
@@ -244,7 +232,7 @@ void RatesAnalysis::RatesAnalysisAtTimes(
 
   ofstream Outfile;
 
-  for (i = 0; i < ProductsForRates.size(); i++) {
+  for (size_t i = 0; i < ProductsForRates.size(); i++) {
     RatesAnalysisData[ProductsForRates[i].SpeciesID]
                      [ProductsForRates[i].ReactionID]
                          .productionrate =
@@ -260,7 +248,7 @@ void RatesAnalysis::RatesAnalysisAtTimes(
         Rates[ProductsForRates[i].ReactionID];
   }
 
-  for (i = 0; i < ReactantsForRates.size(); i++) {
+  for (size_t i = 0; i < ReactantsForRates.size(); i++) {
     RatesAnalysisData[ReactantsForRates[i].SpeciesID]
                      [ReactantsForRates[i].ReactionID]
                          .consumptionrate =
@@ -285,17 +273,17 @@ void RatesAnalysis::RatesAnalysisAtTimes(
 
   Outfile.open(filename.c_str());
   if (Outfile.is_open()) {
-    for (i = 0; i < Number_Species; i++) {
+    for (size_t i = 0; i < Number_Species; i++) {
       Outfile << "At Time " << current_time
               << "s , total Rate of Production for: " << species[i].Name << " "
               << RatesAnalysisDataTimeStepTotal[i].productionrate << "\n";
       // sort first, then print out sorted output
-      for (j = 0; j < Number_Reactions; j++) {
+      for (size_t j = 0; j < Number_Reactions; j++) {
         // Avogadro's Constant is about 6.2e23 - so a rate of less than 1.0e-24
         // is less than 1.5 atoms
         if (RatesAnalysisData[i][j].productionrate > 1.0e-22) {
-          Outfile << "Reaction " << j << " 	"
-                  << RatesAnalysisData[i][j].productionrate << " 	";
+          Outfile << "Reaction " << j << "  "
+                  << RatesAnalysisData[i][j].productionrate << "  ";
           // now need to print the reaction
           Outfile << Prepare_Single_Reaction_Output(Number_Species, species,
                                                     Reactions[j]);
@@ -310,17 +298,17 @@ void RatesAnalysis::RatesAnalysisAtTimes(
 
   Outfile.open(filename.c_str());
   if (Outfile.is_open()) {
-    for (i = 0; i < Number_Species; i++) {
+    for (size_t i = 0; i < Number_Species; i++) {
       Outfile << "At Time " << current_time
               << "s , total Rate of Consumption for: " << species[i].Name << " "
               << RatesAnalysisDataTimeStepTotal[i].consumptionrate << "\n";
       // sort first, then print out sorted output
-      for (j = 0; j < Number_Reactions; j++) {
+      for (size_t j = 0; j < Number_Reactions; j++) {
         // Avogadro's Constant is about 6.2e23 - so a rate of less than 1.0e-24
         // is less than 1.5 atoms
         if (RatesAnalysisData[i][j].consumptionrate > 1.0e-22) {
-          Outfile << "Reaction " << j << " 	"
-                  << RatesAnalysisData[i][j].consumptionrate << " 	";
+          Outfile << "Reaction " << j << "  "
+                  << RatesAnalysisData[i][j].consumptionrate << "  ";
           // now need to print the reaction
           Outfile << Prepare_Single_Reaction_Output(Number_Species, species,
                                                     Reactions[j]);

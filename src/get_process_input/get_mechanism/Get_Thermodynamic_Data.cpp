@@ -39,21 +39,13 @@ void Species::Get_Thermodynamic_Data(string filename,
       }
 
       if (begin_flag && !end_flag) {
-        //  Check that the End has not been reached
-        //  Check that the Line is not empty
+        //  Check that the end has not been reached
+        //  Check that the line is not empty
         //  Check the initial character is not !, whitespace or tab
         //
         //  Does NOT filter blank lines with more than one white space...
         //
-        if (!end_flag && !line1.empty() &&
-            line1.compare(0, 1, "!") !=
-                0 //&&
-                  // line1.compare(0,1," ") != 0 && // normal whitespace
-                  // line1.compare(0,1,"	") != 0 // tab
-        ) {
-          // One Species
-          // Species::ThermodynamicData temp_read_in_single_species;
-
+        if (!end_flag && !line1.empty() && line1.compare(0, 1, "!") != 0) {
           // split the line by white spaces or tabs
 
           vector<string> temp_split_line;
@@ -61,7 +53,7 @@ void Species::Get_Thermodynamic_Data(string filename,
           vector<double> temp_split_line_double2;
           vector<double> temp_split_line_double3;
 
-          temp_split_line = Tokenise_String_To_String(line1, " 	");
+          temp_split_line = Tokenise_String_To_String(line1, " \t");
 
           // for now we just want the species name, that is the initial input
           // Species Name is now temp_split_line[0]
@@ -73,23 +65,24 @@ void Species::Get_Thermodynamic_Data(string filename,
             string Comparator = species[i].Name;
             // Find the appropriate species to go with the thermodynamic data
             if (strcmp(temp_split_line[0].c_str(), Comparator.c_str()) == 0) {
-              temp_species_id = i; // mapping.push_back(i); // retain a map of
-                                   // the arrangement of the species
+              temp_species_id =
+                  i; // retain a map of the arrangement of the species
             }
           }
           temp_split_line.clear();
 
           // now the 3 temperature readings
           getline(Mechanism_Data, line1);
-          temp_split_line_double1 = Tokenise_String_To_Double(line1, " 	");
+          //temp_split_line_double1 = Tokenise_String_To_Double(line1, " 	");
+          temp_split_line_double1 = Tokenise_String_To_Double(line1, " \t");
 
           // now the low thermodynamics
           getline(Mechanism_Data, line1);
-          temp_split_line_double2 = Tokenise_String_To_Double(line1, " 	");
+          temp_split_line_double2 = Tokenise_String_To_Double(line1, " \t");
 
           // now the high thermodynamics
           getline(Mechanism_Data, line1);
-          temp_split_line_double3 = Tokenise_String_To_Double(line1, " 	");
+          temp_split_line_double3 = Tokenise_String_To_Double(line1, " \t");
 
           std::cout << line1 << "\n";
           std::cout << temp_split_line_double1[0] << "\n";
@@ -171,8 +164,8 @@ void Species::Get_Thermodynamic_Data(string filename,
             string Comparator = species[i].Name;
             // Find the appropriate species to go with the thermodynamic data
             if (strcmp(species_name.c_str(), Comparator.c_str()) == 0) {
-              temp_species_id = i; // mapping.push_back(i); // retain a map of
-                                   // the arrangement of the species
+              temp_species_id =
+                  i; // retain a map of the arrangement of the species
             }
           }
 
@@ -202,6 +195,7 @@ void Species::Get_Thermodynamic_Data(string filename,
 
           NasaHigh[5] = strtod(line3.substr(0, 15).c_str(), NULL);
           NasaHigh[6] = strtod(line3.substr(15, 15).c_str(), NULL);
+
           NasaLow[0] = strtod(line3.substr(30, 15).c_str(), NULL);
           NasaLow[1] = strtod(line3.substr(45, 15).c_str(), NULL);
           NasaLow[2] = strtod(line3.substr(60, 15).c_str(), NULL);

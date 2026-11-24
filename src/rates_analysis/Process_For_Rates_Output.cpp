@@ -33,48 +33,22 @@ void RatesAnalysis::Prepare_Print_Rates_Per_Species(
         ReactionsForSpeciesSelectedForRates[i].size();
 
     if (OutfileProd.is_open()) {
-      // OutfileProd << "Time 	Total 	";
       OutfileProd << "Time" << separator << "Total" << separator;
 
-      // sort first, then print out sorted output
-      /*
-      for(j=0;j<Number_Reactions;j++)
-      {
-
-              OutfileProd << "Reaction." << j <<". 	";
-      };//*/
       for (j = 0; j < Number_Of_Selected_Reactions; j++) {
-        // OutfileProd <<
-        // RatesAnalysisData[SelectedSpeciesID[i]][j].productionrate <<"
-        // ";
         OutfileProd << "Reaction." << ReactionsForSpeciesSelectedForRates[i][j]
-                    <<
-            //". 	";
-            "." << separator;
+                    << "." << separator;
       };
       OutfileProd << "\n";
     };
     OutfileProd.close();
 
     if (OutfileCons.is_open()) {
-      // OutfileProd << "Time 	Total 	";
       OutfileCons << "Time" << separator << "Total" << separator;
 
-      // sort first, then print out sorted output
-      /*
-      for(j=0;j<Number_Reactions;j++)
-      {
-
-              OutfileCons << "Reaction." << j <<". 	";
-      };//*/
       for (j = 0; j < Number_Of_Selected_Reactions; j++) {
-        // OutfileProd <<
-        // RatesAnalysisData[SelectedSpeciesID[i]][j].productionrate <<"
-        // ";
         OutfileCons << "Reaction." << ReactionsForSpeciesSelectedForRates[i][j]
-                    <<
-            //". 	";
-            "." << separator;
+                    << "." << separator;
       };
       OutfileCons << "\n";
     };

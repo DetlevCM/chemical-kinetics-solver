@@ -27,9 +27,6 @@ Initial_Data::Handle_Species(Initial_Data &InitialParameters,
     line_content = Tokenise_String_To_String(strip_comment[0], " \t");
     strip_comment.clear();
 
-    // Case 1: No Constant concentration, line will contain two entries
-    // if(!Test_If_Word_Found(Input[i],"ConstantConcentration") ||
-    // !Test_If_Word_Found(Input[i],"Constant Concentration"))
     if (line_content.size() >= 2) {
       for (j = 0; j < species.size(); j++) {
         if (strcmp(line_content[0].c_str(), species[j].Name.c_str()) == 0) {
