@@ -1,27 +1,27 @@
 
 
-# this builds a placeholder for the intel ODE library, as it is no longer available unless you already have it
-lib_intel:
-	gfortran -c lib/intel/if_you_do_not_have_the_library.f -o lib/intel/if_you_do_not_have_the_library.o
-	ar -rcs lib/intel/libiode_intel64.a lib/intel/if_you_do_not_have_the_library.o
-
-
-lib_odepack:
-	gfortran -c -std=legacy lib/odepack/opkda1.f  -o lib/odepack/opkda1.o
-	gfortran -c -std=legacy lib/odepack/opkda2.f -o lib/odepack/opkda2.o
-	gfortran -c -std=legacy lib/odepack/opkdmain.f -o lib/odepack/opkdmain.o
-	ar -rcs lib/odepack/libodepack.a lib/odepack/opkda1.o lib/odepack/opkda2.o lib/odepack/opkdmain.o
-
-
 FC=gfortran
 CC=g++
 CFLAGS=
+
 
 # this builds a placeholder for the intel ODE library, as it is no longer available unless you already have it
 lib_intel:
 	$(FC) -c lib/intel/if_you_do_not_have_the_library.f -o lib/intel/if_you_do_not_have_the_library.o
 	ar -rcs lib/intel/libiode_intel64.a lib/intel/if_you_do_not_have_the_library.o
 
+
+lib_odepack:
+	$(FC) -c -std=legacy lib/odepack/opkda1.f  -o lib/odepack/opkda1.o
+	$(FC) -c -std=legacy lib/odepack/opkda2.f -o lib/odepack/opkda2.o
+	$(FC) -c -std=legacy lib/odepack/opkdmain.f -o lib/odepack/opkdmain.o
+	ar -rcs lib/odepack/libodepack.a lib/odepack/opkda1.o lib/odepack/opkda2.o lib/odepack/opkdmain.o
+
+
+# this builds a placeholder for the intel ODE library, as it is no longer available unless you already have it
+lib_intel:
+	$(FC) -c lib/intel/if_you_do_not_have_the_library.f -o lib/intel/if_you_do_not_have_the_library.o
+	ar -rcs lib/intel/libiode_intel64.a lib/intel/if_you_do_not_have_the_library.o
 
 lib_odepack:
 	$(FC) -c -std=legacy lib/odepack/opkda1.f  -o lib/odepack/opkda1.o
